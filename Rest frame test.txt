@@ -1,0 +1,34 @@
+C:\Users\edoar\Google Drive\UoM MPhys 2018-2019\Macsis_10_clusters\Maps\Maps systematic routine>dir
+ Volume in drive C is OS
+ Volume Serial Number is CCC2-5E02
+
+ Directory of C:\Users\edoar\Google Drive\UoM MPhys 2018-2019\Macsis_10_clusters\Maps\Maps systematic routine
+
+06/02/2019  19:33    <DIR>          .
+06/02/2019  19:33    <DIR>          ..
+06/02/2019  15:42             7,453 clusters_retriever.py
+07/02/2019  15:20             2,507 cluster_profiler.py
+07/02/2019  11:09             3,168 kernel_convolver.py
+06/02/2019  15:25             5,574 map_plot_parameters.py
+04/02/2019  22:05               553 map_synthetizer.py
+12/02/2019  10:14             1,430 temperature_map.py
+03/02/2019  20:15            43,750 Y_3_0.jpg
+07/02/2019  15:20    <DIR>          __pycache__
+               7 File(s)         64,435 bytes
+               3 Dir(s)  796,025,122,816 bytes free
+
+C:\Users\edoar\Google Drive\UoM MPhys 2018-2019\Macsis_10_clusters\Maps\Maps systematic routine>python temperature_map.py
+C:\Users\edoar\Anaconda3\lib\site-packages\h5py\__init__.py:36: FutureWarning: Conversion of the second argument of issubdtype from `float` to `np.floating` is deprecated. In future, it will be treated as `np.float64 == np.dtype(float).type`.
+  from ._conv import register_converters as _register_converters
+../../gas/halo_0000/
+
+Pure average of velocities
+[104.97647, 187.9293, 262.8399]
+
+Average of momenta (mass weighted) for 1 part_type
+[105.75538, 187.30617, 263.36853]
+
+Average of momenta (mass weighted) for all part_types
+[104.53153638097433, 193.3415904632227, 257.1336168502324]
+ - - - - - - - - -
+End of file.
