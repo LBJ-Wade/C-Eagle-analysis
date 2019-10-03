@@ -1,0 +1,2 @@
+# C-Eagle-analysis
+Cluster EAGLE (abbr. C-Eagle) is a hydrodynamic simulation aimed at studying the formation and evolution of galaxies within their environment, i.e. clusters of galaxies. As part of my PhD, I am analysing the results of the simulation to study the dynamics of galaxies and dark matter. Secondly, I am using the C-Eagle data to benchmark the accuracy and performance of current simulations, with the aim of improving the next generation of computational cosmology projects.
