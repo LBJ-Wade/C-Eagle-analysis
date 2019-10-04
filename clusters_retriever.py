@@ -107,7 +107,7 @@ def get_redshift_catalogue():
 	}
 	return z_dict
 
-def file_dir_hdf5(subject: str = 'particledata', redshift = None) -> str:
+def file_dir_hdf5(cluster_num: int = None, subject: str = None, redshift = None) -> str:
 	"""
 	ARGS:
 		subject: particle data or group data
@@ -134,10 +134,14 @@ def file_dir_hdf5(subject: str = 'particledata', redshift = None) -> str:
 	redshift_index = get_redshift_catalogue()['z_IDNumber'][redshift_i]
 
 	sbj_string = subject + '_' + redshift_index + '_' + redshift
-	if subject == 'particledata':
-		file_string = os.path.join(sbj_string, 'eagle_subfind_particles_' + redshift_index + '_' + redshift + '.0.hdf5')
+	file_list = os.listdir(os.path.join(path_from_cluster_name(cluster_num), sbj_string)
+
+
+	if subject == 'particledata':		
+		assert 'eagle_subfind_particles_' in file_list
 	elif subject == 'groups':
-		file_string = os.path.join(sbj_string, 'eagle_subfind_tab_' + redshift_index + '_' + redshift + '.0.hdf5')
+		assert 'eagle_subfind_tab_' in file_list
+
 	elif subject == 'snapshot':
 		print("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
 		exit(1)
@@ -154,7 +158,7 @@ def file_dir_hdf5(subject: str = 'particledata', redshift = None) -> str:
 		print("[ERROR] subject file type not recognised. Must be 'particledata' or 'groups' or 'snapshot' or 'snipshot' or 'hsmldir' or 'groups_snip'.")
 		exit(1)
 
-	return file_string
+	return file_list
 
 #####################################################
 #													#
