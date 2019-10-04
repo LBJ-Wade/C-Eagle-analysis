@@ -509,8 +509,10 @@ def particle_metallicity(path, file, part_type = '0'):
 
 
 
-
+print(path_from_cluster_name(0))
 print(file_dir_hdf5(subject= 'particledata', redshift = 0.0))
+print(file_dir_hdf5(subject= 'groups', redshift = 0.0))
+
 
 
 
