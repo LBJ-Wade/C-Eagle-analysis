@@ -156,7 +156,7 @@ def file_dir_hdf5(cluster_num: int = 0, subject: str = 'particledata', redshift 
 		exit(1)
 
 	filter(lambda x: x.startswith(prefix), file_list)
-	return file_list
+	return file_dir, file_list
 
 #####################################################
 #													#
@@ -511,9 +511,6 @@ def particle_metallicity(path, file, part_type = '0'):
 	return part_metallicity
 
 
-
-print(path_from_cluster_name(0))
-print(file_dir_hdf5(subject= 'particledata', redshift = 0.0))
 print(file_dir_hdf5(subject= 'groups', redshift = 0.0))
 
 
