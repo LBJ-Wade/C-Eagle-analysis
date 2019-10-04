@@ -130,7 +130,7 @@ def file_dir_hdf5(subject: str = 'particledata', redshift = None) -> str:
 		print('[ERROR] Redshift entered does not correspond to simulated snapshot or snipshot')
 		exit(1)
 	
-	redshift_index = np.where(get_redshift_catalogue()['z_value'] == redshift)[0]
+	redshift_index = get_redshift_catalogue()['z_value'].index(redshift)
 
 	sbj_string = subject + '_' + get_redshift_catalogue()['z_IDNumber'][redshift_index] + '_' + redshift
 	if subject == 'particledata':
