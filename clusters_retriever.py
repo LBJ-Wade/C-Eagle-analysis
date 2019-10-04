@@ -5,46 +5,108 @@ import sys
 
 path_separator = '/'
 
-def convertPath(path):
-	"""
-	# os.sep #### The character used by the operating system to separate pathname components. 
-	# This is '/' for POSIX and '\\' for Windows. Note that knowing this is not sufficient to be able to parse or concatenate pathnames — 
-	# use os.path.split() and os.path.join() — but it is occasionally useful.
-	"""
-	separator = os.path.sep
-	if separator != path_separator:
-		path = path.replace(os.path.sep, path_separator)
-	return path
+#####################################################
+#													#
+#					F I L E  						#
+# 				M A N A G E M E N T 				#
+#													#
+#####################################################
 
-def halo_Num(n):
+def halo_Num(n: int):
 	"""
-	Returns the halo number in format e.g. 0001, 0010, 0100, 1000
+	Returns the halo number in format e.g. 00, 01, 02
 	OUTPUT_TYPE: str
 	"""
-	return '%04d' % (n,)
+	if n > -1 and n < 30:
+		return '%02d' % (n,)
+	else:
+		print("[ERROR] Cluster number out of bounds (00 ... 29). The C-EAGLE dataset has 30 clusters.")
+		sys.exit(1)
 
-def path_from_cluster_name(cluster_number, simulation_type = 'gas'):
+def redshift_num2str(z: float) -> str:
+	"""
+	Converts the redshift of the snapshot from numerical to text, in a format compatible with the file names.
+	E.g. float z = 2.16 ---> str z = 'z002p160'.
+	"""
+	integer_z, decimal_z = divmod(z, 1)
+	integer_z = '%03d' % (int(integer_z),)
+	decimal_z = '%03d' % (int(decimal_z),)
+	return 'z' + integer_z + 'p' + decimal_z
+
+def redshift_str2num(z: str) -> float:
+	"""
+	Converts the redshift of the snapshot from text to numerical, in a format compatible with the file names.
+	E.g. float z = 2.16 <--- str z = 'z002p160'.
+	"""
+	z = z.strip('z').replace('p', '.')
+	return float(z)
+
+def path_from_cluster_name(cluster_number):
 	"""
 	ARGS:
 		cluster_number: type = positive int 
 			number of the cluster in the simulation
-		simulation_type: HYDRO or DMO - default = HYDRO == 'gas'
-		redshift: default = '22' i.e. z=0
 
 	RETURNS:
 		string type. Path of the hdf5 file to extract data from.
 	"""
-	# Set working directory as the directory of this file.
-	os.chdir(sys.path[0])#
-	# Remember to move up TWO directories!
-	master_directory = os.path.sep.join(os.getcwd().split(os.path.sep)[:-2])
-	# Construct halo number
-	cluster_ID = 'halo_' + halo_Num(cluster_number)
+	os.chdir(sys.path[0])	# Set working directory as the directory of this file.
+	master_directory = 	'/cosma5/data/dp004/C-EAGLE/Complete_Sample'
+	cluster_ID = 		'CE_' + halo_Num(cluster_number)
+	data_dir = 			'data'
 
-	return os.path.join(master_directory, simulation_type, cluster_ID)
+	return os.path.join(master_directory, cluster_ID, data_dir)
 
+def get_redshift_catalogue():
+	return z_dict = {
+		'z_type': # either 'snapshot' or 'snipshot'
+			['snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
+			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
+			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
+			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
+			'snapshot', 'snapshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot'],
+		'z_IDNumber': # The sequential number of the sna/ipshots
+			['000', '001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011', 
+			'012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', 
+			'024', '025', '026', '027', '028', '029', '000', '001', '002', '003', '004', '005', 
+			'006', '007', '008', '009', '010', '011', '012', '013', '014', '015', '016', '017', 
+			'018', '019', '020', '021', '022', '023', '024', '025', '026', '027', '028', '029', 
+			'030', '031', '032', '033', '034', '035', '036', '037', '038', '039', '040', '041', 
+			'042', '043', '044', '045', '046', '047', '048', '049', '050', '051', '052', '053', 
+			'054', '055', '056', '057', '058', '059', '060', '061', '062', '063', '064', '065', 
+			'066', '067', '068', '069', '070', '071', '072', '073', '074', '075', '076', '077', 
+			'078', '079', '080', '081'],
+		'z_value': # The value of the sna/ipshot redshifts
+			['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825', 'z002p348', 'z001p993', 
+			'z001p716', 'z001p493', 'z001p308', 'z001p151', 'z001p017', 'z000p899', 'z000p795', 
+			'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366', 'z000p352', 
+			'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101', 'z000p073', 
+			'z000p036', 'z000p000', 'z010p873', 'z008p988', 'z007p708', 'z006p052', 'z005p478', 
+			'z005p008', 'z004p279', 'z003p989', 'z003p736', 'z003p313', 'z003p134', 'z002p972', 
+			'z002p691', 'z002p567', 'z002p453', 'z002p250', 'z002p158', 'z002p073', 'z001p917', 
+			'z001p846', 'z001p779', 'z001p656', 'z001p599', 'z001p544', 'z001p443', 'z001p396', 
+			'z001p351', 'z001p266', 'z001p226', 'z001p188', 'z001p116', 'z001p082', 'z001p049', 
+			'z000p986', 'z000p956', 'z000p927', 'z000p872', 'z000p846', 'z000p820', 'z000p771', 
+			'z000p748', 'z000p725', 'z000p681', 'z000p660', 'z000p639', 'z000p599', 'z000p580', 
+			'z000p562', 'z000p525', 'z000p508', 'z000p491', 'z000p458', 'z000p442', 'z000p426', 
+			'z000p395', 'z000p381', 'z000p366', 'z000p338', 'z000p324', 'z000p311', 'z000p284', 
+			'z000p272', 'z000p259', 'z000p234', 'z000p223', 'z000p211', 'z000p188', 'z000p177', 
+			'z000p166', 'z000p144', 'z000p133', 'z000p123', 'z000p103', 'z000p093', 'z000p083', 
+			'z000p063', 'z000p054', 'z000p045', 'z000p026', 'z000p018', 'z000p009', 'z000p000']
+	}
 
-def file_name_hdf5(subject = 'particledata', redshift = '022'):
+def file_name_hdf5(subject: str = 'particledata', redshift = None) -> str:
 	"""
 	ARGS:
 		subject: particle data or group data
@@ -54,17 +116,50 @@ def file_name_hdf5(subject = 'particledata', redshift = '022'):
 	RETURNS:
 		string type. Name of the hdf5 file to extract data from.
 	"""
-	sbj_string = subject + '_' + redshift
+	# Validate redshift
+	if type(redshift) is float: 
+		redshift = redshift_num2str(redshift)
+	elif type(redshift) is str:
+		pass
+	else:
+		print('[ERROR] Redshift variable type is neither float nor str.')
+		exit(1)
+	
+	if redshift not in get_redshift_catalogue()['z_value']:
+		print('[ERROR] Redshift entered does not correspond to simulated snapshot or snipshot')
+		exit(1)
+	
+	redshift_index = np.where(get_redshift_catalogue()['z_value'] == redshift)[0]
+
+	sbj_string = subject + '_' + get_redshift_catalogue()['z_IDNumber'][redshift_index] + '_' + redshift
 	if subject == 'particledata':
 		file_string = os.path.join(sbj_string, 'eagle_subfind_particles_' + redshift + '.0.hdf5')
 	elif subject == 'groups':
 		file_string = os.path.join(sbj_string, 'eagle_subfind_tab_' + redshift + '.0.hdf5')
+	elif subject == 'snapshot':
+		print("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+		exit(1)
+	elif subject == 'snipshot':
+		print("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+		exit(1)
+	elif subject == 'hsmldir':
+		print("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+		exit(1)
+	elif subject == 'groups_snip':
+		print("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+		exit(1)
 	else:
-		print("[ERROR] subject file type not recognised. Must be 'particledata' or 'groups'.")
+		print("[ERROR] subject file type not recognised. Must be 'particledata' or 'groups' or 'snapshot' or 'snipshot' or 'hsmldir' or 'groups_snip'.")
 		exit(1)
 
 	return file_string
 
+#####################################################
+#													#
+#					D A T A   						#
+# 				M A N A G E M E N T 				#
+#													#
+#####################################################
 
 def group_centre_of_potential(path, file):
 	"""
@@ -412,21 +507,9 @@ def particle_metallicity(path, file, part_type = '0'):
 	return part_metallicity
 
 
-def redshift_strTofloat(redshift):
-	"""
-	INPUT: string with redshift identifier as reported by Gadget
-		e.g. '022' = {redshift} 0
-	"""
-	if redshift == '022': return 0
-	if redshift == '016': return 0.57
 
-def redshift_floatTostr(redshift):
-	"""
-	INPUT: double expressing the redshift
-		e.g. 0 = '022'
-	"""
-	if redshift == 0: return '022'
-	if redshift == 0.57: return '016'
+
+
 
 
 
