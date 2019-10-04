@@ -137,11 +137,8 @@ def file_dir_hdf5(cluster_num: int = 0, subject: str = 'particledata', redshift 
 	file_dir = os.path.join(path_from_cluster_name(cluster_num), sbj_string)
 	file_list = os.listdir(file_dir)
 	
-	if subject == 'particledata':	
-		assert 'eagle_subfind_particles_' in file_list
-	elif subject == 'groups':
-		assert 'eagle_subfind_tab_' in file_list
-
+	if subject == 'particledata':	prefix = 'eagle_subfind_particles_'
+	elif subject == 'groups':		prefix = 'eagle_subfind_tab_'
 	elif subject == 'snapshot':
 		print("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
 		exit(1)
@@ -158,6 +155,7 @@ def file_dir_hdf5(cluster_num: int = 0, subject: str = 'particledata', redshift 
 		print("[ERROR] subject file type not recognised. Must be 'particledata' or 'groups' or 'snapshot' or 'snipshot' or 'hsmldir' or 'groups_snip'.")
 		exit(1)
 
+	filter(lambda x: x.startswith(prefix), file_list)
 	return file_list
 
 #####################################################
