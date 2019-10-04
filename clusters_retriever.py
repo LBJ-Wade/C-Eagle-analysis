@@ -511,7 +511,7 @@ def particle_metallicity(path, file, part_type = '0'):
 	return part_metallicity
 
 
-print(file_dir_hdf5(subject= 'groups', redshift = 0.0))
+print(file_dir_hdf5(subject= 'groups', redshift = 0.0)[0:2])
 
 
 
