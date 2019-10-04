@@ -107,7 +107,7 @@ def get_redshift_catalogue():
 	}
 	return z_dict
 
-def file_dir_hdf5(cluster_num: int = None, subject: str = None, redshift = None) -> str:
+def file_dir_hdf5(cluster_num: int = None, subject: str = 'particledata', redshift = None) -> str:
 	"""
 	ARGS:
 		subject: particle data or group data
