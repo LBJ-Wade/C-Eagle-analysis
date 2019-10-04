@@ -106,7 +106,7 @@ def get_redshift_catalogue():
 			'z000p063', 'z000p054', 'z000p045', 'z000p026', 'z000p018', 'z000p009', 'z000p000']
 	}
 
-def file_name_hdf5(subject: str = 'particledata', redshift = None) -> str:
+def file_dir_hdf5(subject: str = 'particledata', redshift = None) -> str:
 	"""
 	ARGS:
 		subject: particle data or group data
@@ -114,7 +114,7 @@ def file_name_hdf5(subject: str = 'particledata', redshift = None) -> str:
 		redshift: default = '22' i.e. z=0
 
 	RETURNS:
-		string type. Name of the hdf5 file to extract data from.
+		string type. Name of the hdf5 directory to extract data from.
 	"""
 	# Validate redshift
 	if type(redshift) is float: 
@@ -509,7 +509,7 @@ def particle_metallicity(path, file, part_type = '0'):
 
 
 
-
+print(file_dir_hdf5(subject= 'particledata', redshift = 0))
 
 
 
