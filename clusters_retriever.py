@@ -134,10 +134,10 @@ def file_dir_hdf5(cluster_num: int = None, subject: str = 'particledata', redshi
 	redshift_index = get_redshift_catalogue()['z_IDNumber'][redshift_i]
 
 	sbj_string = subject + '_' + redshift_index + '_' + redshift
-	file_list = os.listdir(os.path.join(path_from_cluster_name(cluster_num), sbj_string)
-
-
-	if subject == 'particledata':		
+	file_dir = os.path.join(path_from_cluster_name(cluster_num), sbj_string)
+	file_list = os.listdir(file_dir)
+	
+	if subject == 'particledata':	
 		assert 'eagle_subfind_particles_' in file_list
 	elif subject == 'groups':
 		assert 'eagle_subfind_tab_' in file_list
