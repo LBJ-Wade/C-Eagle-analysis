@@ -130,13 +130,14 @@ def file_dir_hdf5(subject: str = 'particledata', redshift = None) -> str:
 		print('[ERROR] Redshift entered does not correspond to simulated snapshot or snipshot')
 		exit(1)
 	
-	redshift_index = get_redshift_catalogue()['z_value'].index(redshift)
+	redshift_i = get_redshift_catalogue()['z_value'].index(redshift)
+	redshift_index = get_redshift_catalogue()['z_IDNumber'][redshift_i]
 
-	sbj_string = subject + '_' + get_redshift_catalogue()['z_IDNumber'][redshift_index] + '_' + redshift
+	sbj_string = subject + '_' + redshift_index + '_' + redshift
 	if subject == 'particledata':
-		file_string = os.path.join(sbj_string, 'eagle_subfind_particles_' + redshift + '.0.hdf5')
+		file_string = os.path.join(sbj_string, 'eagle_subfind_particles_' + redshift_index + '_' + redshift + '.0.hdf5')
 	elif subject == 'groups':
-		file_string = os.path.join(sbj_string, 'eagle_subfind_tab_' + redshift + '.0.hdf5')
+		file_string = os.path.join(sbj_string, 'eagle_subfind_tab_' + redshift_index + '_' + redshift + '.0.hdf5')
 	elif subject == 'snapshot':
 		print("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
 		exit(1)
