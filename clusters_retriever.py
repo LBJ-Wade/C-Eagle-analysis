@@ -58,7 +58,7 @@ def path_from_cluster_name(cluster_number):
 	return os.path.join(master_directory, cluster_ID, data_dir)
 
 def get_redshift_catalogue():
-	return z_dict = {
+	z_dict = {
 		'z_type': # either 'snapshot' or 'snipshot'
 			['snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
 			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
@@ -105,6 +105,7 @@ def get_redshift_catalogue():
 			'z000p166', 'z000p144', 'z000p133', 'z000p123', 'z000p103', 'z000p093', 'z000p083', 
 			'z000p063', 'z000p054', 'z000p045', 'z000p026', 'z000p018', 'z000p009', 'z000p000']
 	}
+	return z_dict
 
 def file_dir_hdf5(subject: str = 'particledata', redshift = None) -> str:
 	"""
