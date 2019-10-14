@@ -29,9 +29,13 @@ def redshift_num2str(z: float) -> str:
 	E.g. float z = 2.16 ---> str z = 'z002p160'.
 	"""
 	integer_z, decimal_z = divmod(z, 1)
+	# Integer part
 	integer_z = '%03d' % (int(integer_z),)
-	decimal_z = '%03d' % (int(decimal_z),)
+	# Decimal part
+	decimal_z = str(int(decimal_z*1000)).ljust(3, '0')
 	return 'z' + integer_z + 'p' + decimal_z
+
+print(redshift_num2str(0.1))
 
 def redshift_str2num(z: str) -> float:
 	"""
@@ -44,7 +48,7 @@ def redshift_str2num(z: str) -> float:
 def path_from_cluster_name(cluster_number):
 	"""
 	ARGS:
-		cluster_number: type = positive int 
+		cluster_number: type = positive int
 			number of the cluster in the simulation
 
 	RETURNS:
@@ -60,49 +64,49 @@ def path_from_cluster_name(cluster_number):
 def get_redshift_catalogue():
 	z_dict = {
 		'z_type': # either 'snapshot' or 'snipshot'
-			['snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
-			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
-			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
-			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 
-			'snapshot', 'snapshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
-			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 
+			['snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
+			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
+			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
+			'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
+			'snapshot', 'snapshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
+			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
 			'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot'],
 		'z_IDNumber': # The sequential number of the sna/ipshots
-			['000', '001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011', 
-			'012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', 
-			'024', '025', '026', '027', '028', '029', '000', '001', '002', '003', '004', '005', 
-			'006', '007', '008', '009', '010', '011', '012', '013', '014', '015', '016', '017', 
-			'018', '019', '020', '021', '022', '023', '024', '025', '026', '027', '028', '029', 
-			'030', '031', '032', '033', '034', '035', '036', '037', '038', '039', '040', '041', 
-			'042', '043', '044', '045', '046', '047', '048', '049', '050', '051', '052', '053', 
-			'054', '055', '056', '057', '058', '059', '060', '061', '062', '063', '064', '065', 
-			'066', '067', '068', '069', '070', '071', '072', '073', '074', '075', '076', '077', 
+			['000', '001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011',
+			'012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023',
+			'024', '025', '026', '027', '028', '029', '000', '001', '002', '003', '004', '005',
+			'006', '007', '008', '009', '010', '011', '012', '013', '014', '015', '016', '017',
+			'018', '019', '020', '021', '022', '023', '024', '025', '026', '027', '028', '029',
+			'030', '031', '032', '033', '034', '035', '036', '037', '038', '039', '040', '041',
+			'042', '043', '044', '045', '046', '047', '048', '049', '050', '051', '052', '053',
+			'054', '055', '056', '057', '058', '059', '060', '061', '062', '063', '064', '065',
+			'066', '067', '068', '069', '070', '071', '072', '073', '074', '075', '076', '077',
 			'078', '079', '080', '081'],
 		'z_value': # The value of the sna/ipshot redshifts
-			['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825', 'z002p348', 'z001p993', 
-			'z001p716', 'z001p493', 'z001p308', 'z001p151', 'z001p017', 'z000p899', 'z000p795', 
-			'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366', 'z000p352', 
-			'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101', 'z000p073', 
-			'z000p036', 'z000p000', 'z010p873', 'z008p988', 'z007p708', 'z006p052', 'z005p478', 
-			'z005p008', 'z004p279', 'z003p989', 'z003p736', 'z003p313', 'z003p134', 'z002p972', 
-			'z002p691', 'z002p567', 'z002p453', 'z002p250', 'z002p158', 'z002p073', 'z001p917', 
-			'z001p846', 'z001p779', 'z001p656', 'z001p599', 'z001p544', 'z001p443', 'z001p396', 
-			'z001p351', 'z001p266', 'z001p226', 'z001p188', 'z001p116', 'z001p082', 'z001p049', 
-			'z000p986', 'z000p956', 'z000p927', 'z000p872', 'z000p846', 'z000p820', 'z000p771', 
-			'z000p748', 'z000p725', 'z000p681', 'z000p660', 'z000p639', 'z000p599', 'z000p580', 
-			'z000p562', 'z000p525', 'z000p508', 'z000p491', 'z000p458', 'z000p442', 'z000p426', 
-			'z000p395', 'z000p381', 'z000p366', 'z000p338', 'z000p324', 'z000p311', 'z000p284', 
-			'z000p272', 'z000p259', 'z000p234', 'z000p223', 'z000p211', 'z000p188', 'z000p177', 
-			'z000p166', 'z000p144', 'z000p133', 'z000p123', 'z000p103', 'z000p093', 'z000p083', 
+			['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825', 'z002p348', 'z001p993',
+			'z001p716', 'z001p493', 'z001p308', 'z001p151', 'z001p017', 'z000p899', 'z000p795',
+			'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366', 'z000p352',
+			'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101', 'z000p073',
+			'z000p036', 'z000p000', 'z010p873', 'z008p988', 'z007p708', 'z006p052', 'z005p478',
+			'z005p008', 'z004p279', 'z003p989', 'z003p736', 'z003p313', 'z003p134', 'z002p972',
+			'z002p691', 'z002p567', 'z002p453', 'z002p250', 'z002p158', 'z002p073', 'z001p917',
+			'z001p846', 'z001p779', 'z001p656', 'z001p599', 'z001p544', 'z001p443', 'z001p396',
+			'z001p351', 'z001p266', 'z001p226', 'z001p188', 'z001p116', 'z001p082', 'z001p049',
+			'z000p986', 'z000p956', 'z000p927', 'z000p872', 'z000p846', 'z000p820', 'z000p771',
+			'z000p748', 'z000p725', 'z000p681', 'z000p660', 'z000p639', 'z000p599', 'z000p580',
+			'z000p562', 'z000p525', 'z000p508', 'z000p491', 'z000p458', 'z000p442', 'z000p426',
+			'z000p395', 'z000p381', 'z000p366', 'z000p338', 'z000p324', 'z000p311', 'z000p284',
+			'z000p272', 'z000p259', 'z000p234', 'z000p223', 'z000p211', 'z000p188', 'z000p177',
+			'z000p166', 'z000p144', 'z000p133', 'z000p123', 'z000p103', 'z000p093', 'z000p083',
 			'z000p063', 'z000p054', 'z000p045', 'z000p026', 'z000p018', 'z000p009', 'z000p000']
 	}
 	return z_dict
@@ -118,25 +122,25 @@ def file_dir_hdf5(cluster_num: int = 0, subject: str = 'particledata', redshift 
 		string type. Name of the hdf5 directory to extract data from.
 	"""
 	# Validate redshift
-	if type(redshift) is float: 
+	if type(redshift) is float:
 		redshift = redshift_num2str(redshift)
 	elif type(redshift) is str:
 		pass
 	else:
 		print('[ERROR] Redshift variable type is neither float nor str.')
 		exit(1)
-	
+
 	if redshift not in get_redshift_catalogue()['z_value']:
 		print('[ERROR] Redshift entered does not correspond to simulated snapshot or snipshot')
 		exit(1)
-	
+
 	redshift_i = get_redshift_catalogue()['z_value'].index(redshift)
 	redshift_index = get_redshift_catalogue()['z_IDNumber'][redshift_i]
 
 	sbj_string = subject + '_' + redshift_index + '_' + redshift
 	file_dir = os.path.join(path_from_cluster_name(cluster_num), sbj_string)
 	file_list = os.listdir(file_dir)
-	
+
 	if subject == 'particledata':	prefix = 'eagle_subfind_particles_'
 	elif subject == 'groups':		prefix = 'eagle_subfind_tab_'
 	elif subject == 'snapshot':
@@ -195,7 +199,7 @@ def group_r200(path, file):
 def extract_header_attribute(path, file, element_number):
 	# Import data from hdf5 file
 	h5file=h5.File(os.path.join(path, file),'r')
-	h5dset=h5file["/Header"]	
+	h5dset=h5file["/Header"]
 	attr_name = list(h5dset.attrs.keys())[element_number]
 	attr_value = list(h5dset.attrs.values())[element_number]
 	h5file.close()
@@ -204,7 +208,7 @@ def extract_header_attribute(path, file, element_number):
 def extract_header_attribute_name(path, file, element_name):
 	# Import data from hdf5 file
 	h5file=h5.File(os.path.join(path, file),'r')
-	h5dset=h5file["/Header"]	
+	h5dset=h5file["/Header"]
 	attr_name = h5dset.attrs.get(element_name, default=None)
 	attr_value = h5dset.attrs.get(element_name, default=None)
 	h5file.close()
@@ -355,29 +359,29 @@ def subgroups_mass(path, file):
 	"""
 	AIM: reads the subgroups masses from the path and file given
 	RETURNS: type = 1D np.array
-	"""	
+	"""
 	h5file=h5.File(os.path.join(path, file),'r')
 	hd5set=h5file['Subhalo/Mass']
 	sub_m = hd5set[...]
 	h5file.close()
-	return sub_m	
+	return sub_m
 
 def subgroups_mass_type(path, file):
 	"""
 	AIM: reads the subgroups mass types from the path and file given
 	RETURNS: type = 2D np.array
-	"""		
+	"""
 	h5file=h5.File(os.path.join(path, file),'r')
 	hd5set=h5file['Subhalo/MassType']
 	sub_mt = hd5set[...]
 	h5file.close()
-	return sub_mt	
+	return sub_mt
 
 def subgroups_number_of(path, file):
 	"""
 	AIM: reads the number of subgroups in FoF group from the path and file given
 	RETURNS: type = 1D np.array
-	"""	
+	"""
 	h5file=h5.File(os.path.join(path, file),'r')
 	hd5set=h5file['FOF/NumOfSubhalos']
 	sub_N = hd5set[...]
@@ -541,5 +545,3 @@ mass = particle_temperature(path, file, part_type)
 print(mass)
 print(' - - - - - - - - - \nEnd of file.')
 '''
-
-
