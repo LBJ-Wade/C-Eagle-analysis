@@ -121,26 +121,28 @@ def redshift_str2num(z: str):
 
 class Cluster (Simulation):
 
-	def __init__(self, *args, **kwargs):
+	def __init__(self, *args, clusterID:int = 0, redshift:float = 0.0, subject:str = 'particledata', **kwargs):
 		super().__init__()
 
+		# Assign the entered args and kwargs to both the relative arrays
+		# and the attributes of Cluster objects.
 		try:
-			self.clusterID = kwargs.get('clusterID', 0)
-		except self.clusterID < -1 or self.clusterID > self.totalClusters:
+			kwargs['clusterID'] = self.clusterID = clusterID
+		except clusterID < -1 or clusterID > self.totalClusters:
 			raise('[ERROR] Cluster number out of bounds (00 ... 29).\
 			 		The C-EAGLE dataset has 30 clusters.')
 
 		try:
-			self.redshift = kwargs.get('redshift', 0.0)
-		except self.redshift < 0.0:
+			kwargs['redshift'] = self.redshift = redshift
+		except redshift < 0.0:
 			raise('[ERROR] Negative redshift.')
 
 		try:
-			self.subject = kwargs.get('subject', 'particledata')
-		except self.subject not in ['particledata',	'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']:
+			kwargs['subject'] = self.subject = subject
+		except subject not in ['particledata',	'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']:
 			raise('[ERROR] Subject of data not valid.')
 
-
+	# Change the basic Cluster attributes
 	def set_clusterID(self, newID: int):
 		self.clusterID = newID
 
