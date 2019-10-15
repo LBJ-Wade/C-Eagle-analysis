@@ -3,7 +3,47 @@ import h5py as h5
 import os
 import sys
 
+#################################
+#                               #
+# 	G L O B    M E T H O D S    #
+#							    #
+#################################
 
+def halo_Num(n: int):
+	"""
+	Returns the halo number in format e.g. 00, 01, 02
+	"""
+	return '%02d' % (n,)
+
+def redshift_num2str(z: float):
+	"""
+	Converts the redshift of the snapshot from numerical to
+	text, in a format compatible with the file names.
+	E.g. float z = 2.16 ---> str z = 'z002p160'.
+	"""
+	integer_z, decimal_z = divmod(z, 1)
+	# Integer part
+	integer_z = '%03d' % (int(integer_z),)
+	# Decimal part
+	decimal_z = str(int(decimal_z*1000)).ljust(3, '0')
+	return 'z' + integer_z + 'p' + decimal_z
+
+def redshift_str2num(z: str):
+	"""
+	Converts the redshift of the snapshot from text to numerical,
+	in a format compatible with the file names.
+	E.g. float z = 2.16 <--- str z = 'z002p160'.
+	"""
+	z = z.strip('z').replace('p', '.')
+	return float(z)
+
+
+#################################
+#                               #
+#	   S I M U L A T I O N      #
+# 			C L A S S           #
+#							    #
+#################################
 
 class Simulation:
 
@@ -12,6 +52,10 @@ class Simulation:
 		self.computer = 'cosma.dur.ac.uk'
 		self.pathData = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
 		self.totalClusters = 30
+		self.clusterIDAllowed = np.linspace(0, self.totalClusters-1, self.totalClusters, dtype=int)
+		self.redshiftAllowed = self.get_redshift_catalogue()['z_value']
+		self.subjectsAllowed = ['particledata',	'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+		self.redshift_catalogue = self.get_redshift_catalogue()
 
 	def set_pathData(self, newPath: str):
 		self.pathData = newPath
@@ -69,47 +113,13 @@ class Simulation:
 		}
 		return z_dict
 
+	def get_redshiftAllowed(self, dtype = float):
+		"""	Access the allowed redshifts in the simulation.	"""
 
-#################################
-#                               #
-#		  C L U S T E R  	    #
-# 	G L O B    M E T H O D S    #
-#							    #
-#################################
-
-def halo_Num(n: int):
-	"""
-	Returns the halo number in format e.g. 00, 01, 02
-	OUTPUT_TYPE: str
-	"""
-	if n > -1 and n < 30:
-		return '%02d' % (n,)
-	else:
-		print("[ERROR] Cluster number out of bounds (00 ... 29).\
-		 		The C-EAGLE dataset has 30 clusters.")
-		sys.exit(1)
-
-def redshift_num2str(z: float):
-	"""
-	Converts the redshift of the snapshot from numerical to
-	text, in a format compatible with the file names.
-	E.g. float z = 2.16 ---> str z = 'z002p160'.
-	"""
-	integer_z, decimal_z = divmod(z, 1)
-	# Integer part
-	integer_z = '%03d' % (int(integer_z),)
-	# Decimal part
-	decimal_z = str(int(decimal_z*1000)).ljust(3, '0')
-	return 'z' + integer_z + 'p' + decimal_z
-
-def redshift_str2num(z: str):
-	"""
-	Converts the redshift of the snapshot from text to numerical,
-	in a format compatible with the file names.
-	E.g. float z = 2.16 <--- str z = 'z002p160'.
-	"""
-	z = z.strip('z').replace('p', '.')
-	return float(z)
+		if dtype == str:
+			return self.redshiftAllowed
+		if dtype == float:
+			return [redshift_str2num(z) for z in self.redshiftAllowed]
 
 
 #################################
@@ -124,33 +134,42 @@ class Cluster (Simulation):
 	def __init__(self, *args, clusterID:int = 0, redshift:float = 0.0, subject:str = 'particledata', **kwargs):
 		super().__init__()
 
-		# Assign the entered args and kwargs to both the relative arrays
-		# and the attributes of Cluster objects.
+		# Initialise and validate attributes
+		self.set_clusterID(clusterID)
+		self.set_redshift(redshift)
+		self.set_subject(subject)
+		# Pass attributed into kwargs
+		kwargs['clusterID'] = self.clusterID
+		kwargs['redshift'] = self.redshift
+		kwargs['subject'] = self.subject
+
+	# Change and validate Cluster attributes
+	def set_clusterID(self, clusterID: int):
 		try:
-			kwargs['clusterID'] = self.clusterID = clusterID
-		except clusterID < -1 or clusterID > self.totalClusters:
-			raise('[ERROR] Cluster number out of bounds (00 ... 29).\
-			 		The C-EAGLE dataset has 30 clusters.')
+			assert (type(clusterID) is int), 'clusterID must be integer.'
+			assert (clusterID in self.clusterIDAllowed), 'clusterID out of bounds (00 ... 29).'
+		except AssertionError:
+			raise
+		else:
+			self.clusterID = clusterID
 
+	def set_redshift(self, redshift: float):
 		try:
-			kwargs['redshift'] = self.redshift = redshift
-		except redshift < 0.0:
-			raise('[ERROR] Negative redshift.')
+			assert (type(redshift) is float), 'redshift must be float.'
+			assert (redshift >= 0.0), 'Negative redshift.'
+			assert (redshift_num2str(redshift) in self.redshiftAllowed), 'Redshift not valid.'
+		except AssertionError:
+			raise
+		else:
+			self.redshift = redshift
 
+	def set_subject(self, subject: str):
 		try:
-			kwargs['subject'] = self.subject = subject
-		except subject not in ['particledata',	'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']:
-			raise('[ERROR] Subject of data not valid.')
-
-	# Change the basic Cluster attributes
-	def set_clusterID(self, newID: int):
-		self.clusterID = newID
-
-	def set_redshift(self, newZ: float):
-		self.redshift = newZ
-
-	def set_subject(self, newSubject: str):
-		self.subject = newSubject
+			assert (subject in self.subjectsAllowed), 'Subject of data not valid.'
+		except AssertionError:
+			raise
+		else:
+			self.subject = subject
 
 	def path_from_cluster_name(self):
 		"""
@@ -166,20 +185,9 @@ class Cluster (Simulation):
 		"""
 		RETURNS: Name of the hdf5 directory to extract data from.
 		"""
-		# Validate redshift
-		if type(self.redshift) is float:
-			redshift_str = redshift_num2str(self.redshift)
-		elif type(self.redshift) is str:
-			redshift_str = self.redshift
-		else:
-			raise('[ERROR] Redshift variable type is neither float nor str.')
-
-		if redshift_str not in self.get_redshift_catalogue()['z_value']:
-			raise('[ERROR] Redshift entered does not correspond to simulated snapshot or snipshot')
-
-		redshift_i = self.get_redshift_catalogue()['z_value'].index(redshift_str)
-		redshift_index = self.get_redshift_catalogue()['z_IDNumber'][redshift_i]
-
+		redshift_str = redshift_num2str(self.redshift)
+		redshift_i = self.redshiftAllowed.index(redshift_str)
+		redshift_index = self.redshift_catalogue['z_IDNumber'][redshift_i]
 		sbj_string = self.subject + '_' + redshift_index + '_' + redshift_str
 		file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
 		file_list = os.listdir(file_dir)
