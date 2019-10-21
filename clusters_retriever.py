@@ -52,7 +52,7 @@ class Simulation:
 		self.computer = 'cosma.dur.ac.uk'
 		self.pathData = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
 		self.totalClusters = 30
-		self.clusterIDAllowed = np.linspace(0, self.totalClusters-1, self.totalClusters, dtype=int)
+		self.clusterIDAllowed = np.linspace(0, self.totalClusters-1, self.totalClusters, dtype=np.int)
 		self.redshiftAllowed = self.get_redshift_catalogue()['z_value']
 		self.subjectsAllowed = ['particledata',	'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
 		self.redshift_catalogue = self.get_redshift_catalogue()
@@ -115,7 +115,6 @@ class Simulation:
 
 	def get_redshiftAllowed(self, dtype = float):
 		"""	Access the allowed redshifts in the simulation.	"""
-
 		if dtype == str:
 			return self.redshiftAllowed
 		if dtype == float:
@@ -142,6 +141,17 @@ class Cluster (Simulation):
 		kwargs['clusterID'] = self.clusterID
 		kwargs['redshift'] = self.redshift
 		kwargs['subject'] = self.subject
+
+		# Set additional attributes from methods
+		self.set_filePaths()
+		self.hubble_param = self.file_hubble_param()
+		self.comic_time = self.file_comic_time()
+		self.redshift = self.file_redshift()
+		self.Ngroups = self.file_Ngroups()
+		self.Nsubgroups = self.file_Nsubgroups()
+		self.OmegaBaryon = self.file_OmegaBaryon()
+		self.Omega0 = self.file_Omega0()
+		self.OmegaLambda = self.file_OmegaLambda()
 
 	# Change and validate Cluster attributes
 	def set_clusterID(self, clusterID: int):
@@ -182,9 +192,7 @@ class Cluster (Simulation):
 		return os.path.join(master_directory, cluster_ID, data_dir)
 
 	def file_dir_hdf5(self):
-		"""
-		RETURNS: Name of the hdf5 directory to extract data from.
-		"""
+		"""	RETURNS: Name of the hdf5 directory to extract data from.	"""
 		redshift_str = redshift_num2str(self.redshift)
 		redshift_i = self.redshiftAllowed.index(redshift_str)
 		redshift_index = self.redshift_catalogue['z_IDNumber'][redshift_i]
@@ -205,8 +213,7 @@ class Cluster (Simulation):
 		elif self.subject == 'groups_snip':
 			raise("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
 
-		filter(lambda x: x.startswith(prefix), file_list)
-		return file_dir, file_list
+		return file_dir, [x for x in file_list if x.startswith(prefix)]
 
 	def file_CompletePath_hdf5(self):
 		"""
@@ -214,7 +221,11 @@ class Cluster (Simulation):
 		Returns the complete hdf5 file paths in the form of an array of strings.
 		"""
 		path, h5_files = self.file_dir_hdf5()
-		return [os.path.join(path, file) for file in h5_files]
+		return sorted([os.path.join(path, file) for file in h5_files])
+
+	def set_filePaths(self):
+		""" Associate the hdf5 file paths to the object as attribute. """
+		self.filePaths = self.file_CompletePath_hdf5()
 
 	#####################################################
 	#													#
@@ -223,45 +234,61 @@ class Cluster (Simulation):
 	#													#
 	#####################################################
 
-	def group_centre_of_potential(path, file):
+	def group_centre_of_potential(self):
 		"""
 		AIM: reads the FoF group central of potential from the path and file given
 		RETURNS: type = np.array of 3 doubles
 		ACCESS DATA: e.g. group_CoP[0] for getting the x value
 		"""
 		# Import data from hdf5 file
-		h5file=h5.File(os.path.join(path, file),'r')
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		h5file=h5.File(self.filePaths[0],'r')
 		hd5set=h5file['/FOF/GroupCentreOfPotential']
 		group_centre_of_potential = hd5set[0]
 		h5file.close()
 		return group_centre_of_potential
 
+	def group_centre_of_mass(self):
+		"""
+		AIM: reads the FoF group central of mass from the path and file given
+		RETURNS: type = np.array of 3 doubles
+		ACCESS DATA: e.g. group_CoM[0] for getting the x value
+		"""
+		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		h5file=h5.File(self.filePaths[0],'r')
+		hd5set=h5file['/Subhalo/CentreOfMass']
+		sub_CoM = hd5set[...]
+		h5file.close()
+		return sub_CoM[0]
 
-	def group_r200(path, file):
+	def group_r200(self):
 		"""
 		AIM: reads the FoF virial radius from the path and file given
 		RETURNS: type = double
 		"""
 		# Import data from hdf5 file
-		h5file=h5.File(os.path.join(path, file),'r')
+		h5file=h5.File(self.filePaths[0],'r')
 		h5dset=h5file["/FOF/Group_R_Crit200"]
 		temp=h5dset[...]
 		r200c=temp[0]
 		h5file.close()
 		return r200c
 
-	def extract_header_attribute(path, file, element_number):
+	def extract_header_attribute(self, element_number):
 		# Import data from hdf5 file
-		h5file=h5.File(os.path.join(path, file),'r')
+		h5file=h5.File(self.filePaths[0],'r')
 		h5dset=h5file["/Header"]
 		attr_name = list(h5dset.attrs.keys())[element_number]
 		attr_value = list(h5dset.attrs.values())[element_number]
 		h5file.close()
 		return attr_name, attr_value
 
-	def extract_header_attribute_name(path, file, element_name):
+	def extract_header_attribute_name(self, element_name):
 		# Import data from hdf5 file
-		h5file=h5.File(os.path.join(path, file),'r')
+		h5file=h5.File(self.filePaths[0],'r')
 		h5dset=h5file["/Header"]
 		attr_name = h5dset.attrs.get(element_name, default=None)
 		attr_value = h5dset.attrs.get(element_name, default=None)
@@ -269,77 +296,106 @@ class Cluster (Simulation):
 		return attr_name, attr_value
 
 
-	def file_hubble_param(path, file):
+	def file_hubble_param(self):
 		"""
 		AIM: retrieves the Hubble parameter of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'HubbleParam')
+		_ , attr_value = self.extract_header_attribute_name('HubbleParam')
 		return attr_value
 
-	def file_comic_time(path, file):
+	def file_comic_time(self):
 		"""
 		AIM: retrieves the Hubble parameter of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'Time')
+		_ , attr_value = self.extract_header_attribute_name('Time')
 		return attr_value
 
 
-	def file_redshift(path, file):
+	def file_redshift(self):
 		"""
 		AIM: retrieves the redshift of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'Redshift')
+		_ , attr_value = self.extract_header_attribute_name('Redshift')
 		return attr_value
 
 
-	def file_Ngroups(path, file):
+	def file_Ngroups(self):
 		"""
 		AIM: retrieves the redshift of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'Ngroups')
-		return attr_value
+		# Import data from multiple hdf5 files
+		Ngroups = 0
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			h5dset=h5file["/Header"]
+			attr_value = h5dset.attrs.get('Ngroups', default=None)
+			h5file.close()
+			Ngroups += attr_value
+		return Ngroups
 
 
-	def file_Nsubgroups(path, file):
+	def file_Nsubgroups(self):
+		"""
+		AIM: retrieves the file_Nsubgroups of the files
+		RETURNS: type = double
+		"""
+		# Import data from multiple hdf5 files
+		Nsubgroups = 0
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			h5dset=h5file["/Header"]
+			attr_value = h5dset.attrs.get('Nsubgroups', default=None)
+			h5file.close()
+			Nsubgroups += attr_value
+		return Nsubgroups
+
+
+	def file_OmegaBaryon(self):
 		"""
 		AIM: retrieves the redshift of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'Nsubgroups')
+		_ , attr_value = self.extract_header_attribute_name('OmegaBaryon')
 		return attr_value
 
 
-	def file_OmegaBaryon(path, file):
+	def file_Omega0(self):
 		"""
 		AIM: retrieves the redshift of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'OmegaBaryon')
+		_ , attr_value = self.extract_header_attribute_name('Omega0')
 		return attr_value
 
 
-	def file_Omega0(path, file):
+	def file_OmegaLambda(self):
 		"""
 		AIM: retrieves the redshift of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'Omega0')
+		_ , attr_value = self.extract_header_attribute_name('OmegaLambda')
 		return attr_value
 
-
-	def file_OmegaLambda(path, file):
+	def group_numbers(self):
 		"""
 		AIM: retrieves the redshift of the file
 		RETURNS: type = double
 		"""
-		_ , attr_value = extract_header_attribute_name(path, file, 'OmegaLambda')
-		return attr_value
+		# Import data from multiple hdf5 files
+		groupNumber = np.zeros(0, dtype=np.int32)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			h5dset=h5file["/Header"]
+			attr_value = h5dset.attrs.get('Ngroups', default=None)
+			h5file.close()
+			Ngroups += attr_value
+		return Ngroups
 
-	def subgroups_centre_of_potential(path, file):
+	def subgroups_centre_of_potential(self):
 		"""
 		AIM: reads the subgroups central of potential from the path and file given
 		RETURNS: type = 2D np.array
@@ -356,13 +412,16 @@ class Cluster (Simulation):
 
 		"""
 		# Import data from hdf5 file
-		h5file=h5.File(os.path.join(path, file),'r')
-		hd5set=h5file['/Subhalo/CentreOfPotential']
-		sub_CoP = hd5set[...]
-		h5file.close()
-		return sub_CoP
+		pos = np.zeros( (0,3) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/Subhalo/CentreOfPotential']
+			sub_CoP = hd5set[...]
+			h5file.close()
+			pos += sub_CoP
+		return pos
 
-	def subgroups_centre_of_mass(path, file):
+	def subgroups_centre_of_mass(self):
 		"""
 		AIM: reads the subgroups central of mass from the path and file given
 		RETURNS: type = 2D np.array
@@ -379,14 +438,16 @@ class Cluster (Simulation):
 
 		"""
 		# Import data from hdf5 file
-		h5file=h5.File(os.path.join(path, file),'r')
-		hd5set=h5file['/Subhalo/CentreOfMass']
-		sub_CoM = hd5set[...]
-		h5file.close()
-		return sub_CoM
+		pos = np.zeros( (0,3) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/Subhalo/CentreOfMass']
+			sub_CoM = hd5set[...]
+			h5file.close()
+			pos = np.concatenate((pos, sub_CoM))
+		return pos
 
-
-	def subgroups_velocity(path, file):
+	def subgroups_velocity(self):
 		"""
 		AIM: reads the subgroups 3d velocities from the path and file given
 		RETURNS: type = 2D np.array
@@ -403,55 +464,74 @@ class Cluster (Simulation):
 
 		"""
 		# Import data from hdf5 file
-		h5file=h5.File(os.path.join(path, file),'r')
-		hd5set=h5file['Subhalo/Velocity']
-		sub_v = hd5set[...]
-		h5file.close()
-		return sub_v
+		vel = np.zeros( (0,3) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/Subhalo/Velocity']
+			sub_v = hd5set[...]
+			h5file.close()
+			np.concatenate((vel, sub_v), axis = 0)
+		return vel
 
-	def subgroups_mass(path, file):
+	def subgroups_mass(self):
 		"""
 		AIM: reads the subgroups masses from the path and file given
 		RETURNS: type = 1D np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		hd5set=h5file['Subhalo/Mass']
-		sub_m = hd5set[...]
-		h5file.close()
-		return sub_m
+		# Import data from hdf5 file
+		mass = np.zeros( (0,1) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/Subhalo/Mass']
+			sub_m = hd5set[...]
+			h5file.close()
+			np.concatenate((mass, sub_m), axis = 0)
+		return mass
 
-	def subgroups_mass_type(path, file):
+	def subgroups_mass_type(self):
 		"""
 		AIM: reads the subgroups mass types from the path and file given
 		RETURNS: type = 2D np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		hd5set=h5file['Subhalo/MassType']
-		sub_mt = hd5set[...]
-		h5file.close()
-		return sub_mt
+		# Import data from hdf5 file
+		massType = np.zeros( (0,1) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/Subhalo/MassType']
+			sub_mType = hd5set[...]
+			h5file.close()
+			np.concatenate((massType, sub_mType), axis = 0)
+		return massType
 
-	def subgroups_number_of(path, file):
+	def subgroups_number_of(self):
 		"""
 		AIM: reads the number of subgroups in FoF group from the path and file given
 		RETURNS: type = 1D np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		hd5set=h5file['FOF/NumOfSubhalos']
-		sub_N = hd5set[...]
-		h5file.close()
-		return sub_N
+		# Import data from hdf5 file
+		sub_N_tot = np.zeros( (0,1) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['FOF/NumOfSubhalos']
+			sub_N = hd5set[...]
+			h5file.close()
+			np.concatenate((sub_N_tot, sub_N), axis = 0)
+		return sub_N_tot
 
-	def subgroups_group_number(path, file):
+	def subgroups_group_number(self):
 		"""
 		AIM: reads the group number of subgroups from the path and file given
 		RETURNS: type = 1D np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		hd5set=h5file['Subhalo/GroupNumber']
-		sub_gn = hd5set[...]
-		h5file.close()
-		return sub_gn
+		# Import data from hdf5 file
+		sub_gn_tot = np.zeros( (0,1) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['Subhalo/GroupNumber']
+			sub_gn = hd5set[...]
+			h5file.close()
+			np.concatenate((sub_gn_tot, sub_gn), axis = 0)
+		return sub_gn_tot
 
 	def particle_type(part_type = 'gas'):
 		"""
@@ -567,31 +647,3 @@ class Cluster (Simulation):
 		part_metallicity = h5dset[...]
 		h5file.close()
 		return part_metallicity
-
-
-
-###################################################################################
-'''
-### Example implementation
-num_halo = 0
-print("*****Test group_tab data")
-path = path_from_cluster_name(num_halo, simulation_type = 'gas')
-
-file = file_name_hdf5(subject = 'groups', redshift = '022')
-
-print(os.path.join(path, file))
-
-r200 = group_r200(path, file)
-group_CoP = group_centre_of_potential(path, file)
-
-print('CoP x value = ', group_CoP[0])
-print('R200 = ', r200)
-
-print("*****Test particle data")
-file = file_name_hdf5(subject = 'groups', redshift = '016')
-print(os.path.join(path, file))
-part_type = particle_type('gas')
-mass = particle_temperature(path, file, part_type)
-print(mass)
-print(' - - - - - - - - - \nEnd of file.')
-'''
