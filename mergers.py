@@ -2,6 +2,7 @@ from matplotlib import pyplot as plt
 import numpy as np
 
 from clusters_retriever import *
+from map_plot_parameters import set_defaults_plot as plotpar
 
 def dist(v, u):
     s = 0
@@ -34,8 +35,7 @@ def mergers_plot():
     ceagle = Simulation()
     z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
     mrgr_idx = np.array([], dtype = np.float)
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(7,7))
     generate_data = False
 
     for ID in range(0,30):
@@ -49,18 +49,19 @@ def mergers_plot():
             dyn_idx = dynamic_index()[ID]
         # Draw in matplotlib
         ax.scatter(dyn_idx, thermal_index()[ID], color='k')
-        ax.annotate('    ' + str(ID), (dyn_idx, thermal_index()[ID]))
+        ax.annotate(r'${}$'.format(ID), (dyn_idx+0.005, thermal_index()[ID]+0.005))
 
-    ax.set_xlabel('dynamical_index')
-    ax.set_ylabel('thermodynamical_index  (Barnes et al., 2017)')
+    ax.set_xlabel(r'$\mathrm{dynamical~index}$')
+    ax.set_ylabel(r'$\mathrm{thermodynamical~index\quad  (Barnes~et~al.,~2017)}$')
     ax.set_aspect(1.)
     ax.plot([0,1], [0,1], 'r--')
     ax.set_xlim([0.5*np.min(dynamic_index()), 1.2*np.max(dynamic_index())])
     ax.set_ylim([0.5*np.min(thermal_index()), 1.2*np.max(thermal_index())])
-    #plt.show()
+    # plt.show()
     plt.savefig('Merging index.png')
     #print(mrgr_idx)
 
+plotpar()
 mergers_plot()
 
 """

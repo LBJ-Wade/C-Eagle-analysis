@@ -180,8 +180,7 @@ def test_plot_smoothed():
 	plt.show()
 
 
-"""
+
 # Example of implementation
-set_defaults_plot()
-test_plot()
-"""
+# set_defaults_plot()
+# test_plot()

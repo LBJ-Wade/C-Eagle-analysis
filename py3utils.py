@@ -7,6 +7,14 @@ def py3load():
     system('module load python/3.6.5')
 
 def progressbar(it, prefix="", size=60, file=sys.stdout):
+    """
+    Example implementation:
+    ---
+    import time
+
+    for i in progressbar(range(15), "Computing: ", 60):
+        time.sleep(0.1) # any calculation you need
+    """
     count = len(it)
     def show(j):
         x = int(size*j/count)
@@ -18,8 +26,3 @@ def progressbar(it, prefix="", size=60, file=sys.stdout):
         show(i+1)
     file.write("\n")
     file.flush()
-
-import time
-
-for i in progressbar(range(15), "Computing: ", 60):
-    time.sleep(0.1) # any calculation you need
