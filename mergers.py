@@ -58,7 +58,7 @@ def mergers_plot():
     ax.set_xlim([0.5*np.min(dynamic_index()), 1.2*np.max(dynamic_index())])
     ax.set_ylim([0.5*np.min(thermal_index()), 1.2*np.max(thermal_index())])
     # plt.show()
-    plt.savefig('Merging index.png')
+    plt.savefig('Merging index.pdf')
     #print(mrgr_idx)
 
 plotpar()
