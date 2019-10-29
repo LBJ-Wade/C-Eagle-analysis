@@ -3,6 +3,8 @@ import h5py as h5
 import os
 import sys
 
+import redshift_catalogue_ceagle as zcat
+
 #################################
 #                               #
 # 	G L O B    M E T H O D S    #
@@ -15,6 +17,15 @@ def halo_Num(n: int):
 	"""
 	return '%02d' % (n,)
 
+def redshift_str2num(z: str):
+	"""
+	Converts the redshift of the snapshot from text to numerical,
+	in a format compatible with the file names.
+	E.g. float z = 2.16 <--- str z = 'z002p160'.
+	"""
+	z = z.strip('z').replace('p', '.')
+	return float(z)
+
 def redshift_num2str(z: float):
 	"""
 	Converts the redshift of the snapshot from numerical to
@@ -25,17 +36,26 @@ def redshift_num2str(z: float):
 	# Integer part
 	integer_z = '%03d' % (int(integer_z),)
 	# Decimal part
-	decimal_z = str(int(decimal_z*1000)).ljust(3, '0')
+	decimal_z = str(int(round(decimal_z, 4)*1000)).rjust(3, '0')
 	return 'z' + integer_z + 'p' + decimal_z
 
-def redshift_str2num(z: str):
+
+
+def free_memory(var_list, invert = False):
 	"""
-	Converts the redshift of the snapshot from text to numerical,
-	in a format compatible with the file names.
-	E.g. float z = 2.16 <--- str z = 'z002p160'.
+	Function for freeing memory dynamicallyself.
+	invert allows to delete all local variables that are NOT in var_list.
 	"""
-	z = z.strip('z').replace('p', '.')
-	return float(z)
+	if not invert:
+		for name in var_list:
+			if not name.startswith('_') and name in dir():
+				del globals()[name]
+	if invert:
+		for name in dir():
+			if name in var_list and not name.startswith('_'):
+				del globals()[name]
+
+
 
 
 #################################
@@ -51,11 +71,11 @@ class Simulation:
 		self.simulation = 'C-EAGLE'
 		self.computer = 'cosma.dur.ac.uk'
 		self.pathData = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
+		self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
 		self.totalClusters = 30
 		self.clusterIDAllowed = np.linspace(0, self.totalClusters-1, self.totalClusters, dtype=np.int)
-		self.redshiftAllowed = self.get_redshift_catalogue()['z_value']
 		self.subjectsAllowed = ['particledata',	'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
-		self.redshift_catalogue = self.get_redshift_catalogue()
+		self.redshiftAllowed = zcat.group_data()['z_value']
 
 	def set_pathData(self, newPath: str):
 		self.pathData = newPath
@@ -63,63 +83,12 @@ class Simulation:
 	def set_totalClusters(self, newNumber: int):
 		self.totalClusters = newNumber
 
-	def get_redshift_catalogue(self):
-		z_dict = {
-			'z_type': # either 'snapshot' or 'snipshot'
-				['snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
-				'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
-				'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
-				'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot', 'snapshot',
-				'snapshot', 'snapshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot',
-				'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot', 'snipshot'],
-			'z_IDNumber': # The sequential number of the sna/ipshots
-				['000', '001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011',
-				'012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023',
-				'024', '025', '026', '027', '028', '029', '000', '001', '002', '003', '004', '005',
-				'006', '007', '008', '009', '010', '011', '012', '013', '014', '015', '016', '017',
-				'018', '019', '020', '021', '022', '023', '024', '025', '026', '027', '028', '029',
-				'030', '031', '032', '033', '034', '035', '036', '037', '038', '039', '040', '041',
-				'042', '043', '044', '045', '046', '047', '048', '049', '050', '051', '052', '053',
-				'054', '055', '056', '057', '058', '059', '060', '061', '062', '063', '064', '065',
-				'066', '067', '068', '069', '070', '071', '072', '073', '074', '075', '076', '077',
-				'078', '079', '080', '081'],
-			'z_value': # The value of the sna/ipshot redshifts
-				['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825', 'z002p348', 'z001p993',
-				'z001p716', 'z001p493', 'z001p308', 'z001p151', 'z001p017', 'z000p899', 'z000p795',
-				'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366', 'z000p352',
-				'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101', 'z000p073',
-				'z000p036', 'z000p000', 'z010p873', 'z008p988', 'z007p708', 'z006p052', 'z005p478',
-				'z005p008', 'z004p279', 'z003p989', 'z003p736', 'z003p313', 'z003p134', 'z002p972',
-				'z002p691', 'z002p567', 'z002p453', 'z002p250', 'z002p158', 'z002p073', 'z001p917',
-				'z001p846', 'z001p779', 'z001p656', 'z001p599', 'z001p544', 'z001p443', 'z001p396',
-				'z001p351', 'z001p266', 'z001p226', 'z001p188', 'z001p116', 'z001p082', 'z001p049',
-				'z000p986', 'z000p956', 'z000p927', 'z000p872', 'z000p846', 'z000p820', 'z000p771',
-				'z000p748', 'z000p725', 'z000p681', 'z000p660', 'z000p639', 'z000p599', 'z000p580',
-				'z000p562', 'z000p525', 'z000p508', 'z000p491', 'z000p458', 'z000p442', 'z000p426',
-				'z000p395', 'z000p381', 'z000p366', 'z000p338', 'z000p324', 'z000p311', 'z000p284',
-				'z000p272', 'z000p259', 'z000p234', 'z000p223', 'z000p211', 'z000p188', 'z000p177',
-				'z000p166', 'z000p144', 'z000p133', 'z000p123', 'z000p103', 'z000p093', 'z000p083',
-				'z000p063', 'z000p054', 'z000p045', 'z000p026', 'z000p018', 'z000p009', 'z000p000']
-		}
-		return z_dict
-
 	def get_redshiftAllowed(self, dtype = float):
 		"""	Access the allowed redshifts in the simulation.	"""
 		if dtype == str:
 			return self.redshiftAllowed
 		if dtype == float:
 			return [redshift_str2num(z) for z in self.redshiftAllowed]
-
 
 #################################
 #                               #
@@ -137,6 +106,7 @@ class Cluster (Simulation):
 		self.set_clusterID(clusterID)
 		self.set_redshift(redshift)
 		self.set_subject(subject)
+
 		# Pass attributed into kwargs
 		kwargs['clusterID'] = self.clusterID
 		kwargs['redshift'] = self.redshift
@@ -147,8 +117,8 @@ class Cluster (Simulation):
 		self.hubble_param = self.file_hubble_param()
 		self.comic_time = self.file_comic_time()
 		self.redshift = self.file_redshift()
-		self.Ngroups = self.file_Ngroups()
-		self.Nsubgroups = self.file_Nsubgroups()
+		# self.Ngroups = self.file_Ngroups()
+		# self.Nsubgroups = self.file_Nsubgroups()
 		self.OmegaBaryon = self.file_OmegaBaryon()
 		self.Omega0 = self.file_Omega0()
 		self.OmegaLambda = self.file_OmegaLambda()
@@ -191,15 +161,10 @@ class Cluster (Simulation):
 		data_dir = 'data'
 		return os.path.join(master_directory, cluster_ID, data_dir)
 
+
+
 	def file_dir_hdf5(self):
 		"""	RETURNS: Name of the hdf5 directory to extract data from.	"""
-		redshift_str = redshift_num2str(self.redshift)
-		redshift_i = self.redshiftAllowed.index(redshift_str)
-		redshift_index = self.redshift_catalogue['z_IDNumber'][redshift_i]
-		sbj_string = self.subject + '_' + redshift_index + '_' + redshift_str
-		file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
-		file_list = os.listdir(file_dir)
-
 		if self.subject == 'particledata':
 			prefix = 'eagle_subfind_particles_'
 		elif self.subject == 'groups':
@@ -213,6 +178,12 @@ class Cluster (Simulation):
 		elif self.subject == 'groups_snip':
 			raise("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
 
+		redshift_str = redshift_num2str(self.redshift)
+		redshift_i = self.redshiftAllowed.index(redshift_str)
+		redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
+		sbj_string = self.subject + '_' + redshift_index + '_' + redshift_str
+		file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
+		file_list = os.listdir(file_dir)
 		return file_dir, [x for x in file_list if x.startswith(prefix)]
 
 	def file_CompletePath_hdf5(self):
@@ -243,11 +214,7 @@ class Cluster (Simulation):
 		# Import data from hdf5 file
 		if self.subject != 'groups':
 			raise ValueError('subject of data must be groups.')
-		h5file=h5.File(self.filePaths[0],'r')
-		hd5set=h5file['/FOF/GroupCentreOfPotential']
-		group_centre_of_potential = hd5set[0]
-		h5file.close()
-		return group_centre_of_potential
+		return self.subgroups_centre_of_potential()[0]
 
 	def group_centre_of_mass(self):
 		"""
@@ -258,11 +225,7 @@ class Cluster (Simulation):
 		# Import data from hdf5 file
 		if self.subject != 'groups':
 			raise ValueError('subject of data must be groups.')
-		h5file=h5.File(self.filePaths[0],'r')
-		hd5set=h5file['/Subhalo/CentreOfMass']
-		sub_CoM = hd5set[...]
-		h5file.close()
-		return sub_CoM[0]
+		return self.subgroups_centre_of_mass()[0]
 
 	def group_r200(self):
 		"""
@@ -276,6 +239,59 @@ class Cluster (Simulation):
 		r200c=temp[0]
 		h5file.close()
 		return r200c
+
+	def group_r500(self):
+		"""
+		AIM: reads the FoF virial radius from the path and file given
+		RETURNS: type = double
+		"""
+		# Import data from hdf5 file
+		h5file=h5.File(self.filePaths[0],'r')
+		h5dset=h5file["/FOF/Group_R_Crit500"]
+		temp=h5dset[...]
+		r500c=temp[0]
+		h5file.close()
+		return r500c
+
+	def group_velocity(self):
+		"""
+		AIM: reads the group bulk motion from the path and file given
+		RETURNS: type = np.array of 3 doubles
+		"""
+		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		return self.subgroups_velocity()[0]
+
+	def group_mass(self):
+		"""
+		AIM: reads the group mass from the path and file given
+		RETURNS: float
+		"""
+		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		return self.subgroups_mass()[0]
+
+	def group_kin_energy(self):
+		"""
+		AIM: reads the group kin_energy from the path and file given
+		RETURNS: float
+		"""
+		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		return self.subgroups_kin_energy()[0]
+
+	def group_therm_energy(self):
+		"""
+		AIM: reads the group therm_energy from the path and file given
+		RETURNS: float
+		"""
+		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		return self.subgroups_therm_energy()[0]
 
 	def extract_header_attribute(self, element_number):
 		# Import data from hdf5 file
@@ -386,6 +402,8 @@ class Cluster (Simulation):
 		RETURNS: type = double
 		"""
 		# Import data from multiple hdf5 files
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
 		groupNumber = np.zeros(0, dtype=np.int32)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
@@ -412,13 +430,16 @@ class Cluster (Simulation):
 
 		"""
 		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
 		pos = np.zeros( (0,3) ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/CentreOfPotential']
 			sub_CoP = hd5set[...]
 			h5file.close()
-			pos += sub_CoP
+			pos = np.concatenate((pos, sub_CoP), axis = 0)
+			free_memory(['pos'], invert = True)
 		return pos
 
 	def subgroups_centre_of_mass(self):
@@ -438,13 +459,16 @@ class Cluster (Simulation):
 
 		"""
 		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
 		pos = np.zeros( (0,3) ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/CentreOfMass']
 			sub_CoM = hd5set[...]
 			h5file.close()
-			pos = np.concatenate((pos, sub_CoM))
+			pos = np.concatenate((pos, sub_CoM), axis = 0)
+			free_memory(['pos'], invert = True)
 		return pos
 
 	def subgroups_velocity(self):
@@ -464,13 +488,16 @@ class Cluster (Simulation):
 
 		"""
 		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
 		vel = np.zeros( (0,3) ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/Velocity']
 			sub_v = hd5set[...]
 			h5file.close()
-			np.concatenate((vel, sub_v), axis = 0)
+			vel = np.concatenate((vel, sub_v), axis = 0)
+			free_memory(['vel'], invert = True)
 		return vel
 
 	def subgroups_mass(self):
@@ -479,14 +506,53 @@ class Cluster (Simulation):
 		RETURNS: type = 1D np.array
 		"""
 		# Import data from hdf5 file
-		mass = np.zeros( (0,1) ,dtype=np.float)
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		mass = np.zeros(0 ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/Mass']
 			sub_m = hd5set[...]
 			h5file.close()
-			np.concatenate((mass, sub_m), axis = 0)
+			mass = np.concatenate((mass, sub_m))
+			free_memory(['mass'], invert = True)
 		return mass
+
+	def subgroups_kin_energy(self):
+		"""
+		AIM: reads the subgroups kinetic energy from the path and file given
+		RETURNS: type = 1D np.array
+		"""
+		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		kin_energy = np.zeros(0 ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/Subhalo/KineticEnergy']
+			sub_ke = hd5set[...]
+			h5file.close()
+			kin_energy = np.concatenate((kin_energy, sub_ke), axis = 0)
+			free_memory(['kin_energy'], invert = True)
+		return kin_energy
+
+	def subgroups_therm_energy(self):
+		"""
+		AIM: reads the subgroups thermal energy from the path and file given
+		RETURNS: type = 1D np.array
+		"""
+		# Import data from hdf5 file
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		therm_energy = np.zeros(0 ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/Subhalo/ThermalEnergy']
+			sub_th = hd5set[...]
+			h5file.close()
+			therm_energy = np.concatenate((therm_energy, sub_th), axis = 0)
+			free_memory(['therm_energy'], invert = True)
+		return therm_energy
 
 	def subgroups_mass_type(self):
 		"""
@@ -494,13 +560,16 @@ class Cluster (Simulation):
 		RETURNS: type = 2D np.array
 		"""
 		# Import data from hdf5 file
-		massType = np.zeros( (0,1) ,dtype=np.float)
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		massType = np.zeros(0)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/MassType']
 			sub_mType = hd5set[...]
 			h5file.close()
-			np.concatenate((massType, sub_mType), axis = 0)
+			massType = np.concatenate((massType, sub_mType), axis = 0)
+			free_memory(['massType'], invert = True)
 		return massType
 
 	def subgroups_number_of(self):
@@ -509,13 +578,15 @@ class Cluster (Simulation):
 		RETURNS: type = 1D np.array
 		"""
 		# Import data from hdf5 file
-		sub_N_tot = np.zeros( (0,1) ,dtype=np.float)
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		sub_N_tot = np.zeros(0 ,dtype=np.int)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['FOF/NumOfSubhalos']
 			sub_N = hd5set[...]
 			h5file.close()
-			np.concatenate((sub_N_tot, sub_N), axis = 0)
+			sub_N_tot = np.concatenate((sub_N_tot, sub_N), axis = 0)
 		return sub_N_tot
 
 	def subgroups_group_number(self):
@@ -524,16 +595,18 @@ class Cluster (Simulation):
 		RETURNS: type = 1D np.array
 		"""
 		# Import data from hdf5 file
-		sub_gn_tot = np.zeros( (0,1) ,dtype=np.float)
+		if self.subject != 'groups':
+			raise ValueError('subject of data must be groups.')
+		sub_gn_tot = np.zeros(0, dtype=np.int)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['Subhalo/GroupNumber']
 			sub_gn = hd5set[...]
 			h5file.close()
-			np.concatenate((sub_gn_tot, sub_gn), axis = 0)
+			sub_gn_tot = np.concatenate((sub_gn_tot, sub_gn), axis = 0)
 		return sub_gn_tot
 
-	def particle_type(part_type = 'gas'):
+	def particle_type(self, part_type = 'gas'):
 		"""
 		AIM: returns a string characteristic of the particle type selected
 		RETURNS: string of number 0<= n <= 5
@@ -549,101 +622,148 @@ class Cluster (Simulation):
 			exit(1)
 
 
-	def group_number(path, file, part_type):
+	def group_number(self, part_type):
 		"""
 		RETURNS: np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		h5dset = h5file['/PartType' + part_type + '/GroupNumber']
-		group_number = h5dset[...]
-		h5file.close()
+		# Import data from hdf5 file
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
+		group_number = np.zeros(0 ,dtype=np.int)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/PartType' + part_type + '/GroupNumber']
+			sub_gn = hd5set[...]
+			h5file.close()
+			group_number = np.concatenate((group_number, sub_gn), axis = 0)
 		return group_number
 
 
-	def subgroup_number(path, file, part_type):
+	def subgroup_number(self, part_type):
 		"""
 		RETURNS: np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		h5dset = h5file['/PartType' + part_type + '/SubGroupNumber']
-		sub_group_number = h5dset[...]
-		h5file.close()
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
+		sub_group_number = np.zeros(0 ,dtype=np.int)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/PartType' + part_type + '/SubGroupNumber']
+			sub_gn = hd5set[...]
+			h5file.close()
+			sub_group_number = np.concatenate((sub_group_number, sub_gn), axis = 0)
 		return sub_group_number
 
-	def particle_coordinates(path, file, part_type):
+	def particle_coordinates(self, part_type):
 		"""
 		RETURNS: 2D np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		h5dset = h5file['/PartType' + part_type + '/Coordinates']
-		part_coord = h5dset[...]
-		h5file.close()
-		return part_coord
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
+		pos = np.zeros( (0,3) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/PartType' + part_type + '/Coordinates']
+			sub_pos = hd5set[...]
+			h5file.close()
+			pos = np.concatenate((pos, sub_pos), axis = 0)
+			free_memory(['pos'], invert = True)
+		return pos
 
-	def particle_velocity(path, file, part_type):
+	def particle_velocity(self, part_type):
 		"""
 		RETURNS: 2D np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
-		h5dset = h5file['/PartType' + part_type + '/Velocity']
-		part_vel = h5dset[...]
-		h5file.close()
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
+		part_vel = np.zeros( (0,3) ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/PartType' + part_type + '/Velocity']
+			sub_vel = hd5set[...]
+			h5file.close()
+			part_vel = np.concatenate((part_vel, sub_vel), axis = 0)
+			free_memory(['part_vel'], invert = True)
 		return part_vel
 
-	def particle_masses(path, file, part_type):
+	def particle_masses(self, part_type):
 		"""
 		RETURNS: 2D np.array
 		"""
-		h5file=h5.File(os.path.join(path, file),'r')
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
 		if (part_type != '1'):
-			h5dset = h5file['/PartType' + part_type + '/Mass']
-			part_mass = h5dset[...]
+			part_mass = np.zeros(0 ,dtype=np.float)
+			for path in self.filePaths:
+				h5file=h5.File(path,'r')
+				hd5set=h5file['/PartType' + part_type + '/Mass']
+				sub_m = hd5set[...]
+				h5file.close()
+				part_mass = np.concatenate((part_mass, sub_m), axis = 0)
+				free_memory(['part_mass'], invert = True)
 		elif part_type == '1':
-			part_mass = np.ones_like(group_number(path, file, part_type))*0.422664
-		h5file.close()
+			part_mass = np.ones_like(self.group_number(part_type))*0.422664
 		return part_mass
 
 
-	def particle_temperature(path, file, part_type = '0'):
+	def particle_temperature(self, part_type = '0'):
 		"""
 		RETURNS: 1D np.array
 		"""
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
 		# Check that we are extracting the temperature of gas particles
 		if part_type is not '0':
 			print("[ERROR] Trying to extract the temperature of non-gaseous particles.")
 			exit(1)
-		h5file=h5.File(os.path.join(path, file),'r')
-		h5dset = h5file['/PartType0/Temperature']
-		part_temperature = h5dset[...]
-		h5file.close()
-		return part_temperature
+		temperature = np.zeros(0 ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/PartType0/Temperature']
+			sub_T = hd5set[...]
+			h5file.close()
+			temperature = np.concatenate((temperature, sub_T), axis = 0)
+			free_memory(['temperature'], invert = True)
+		return temperature
 
 
-	def particle_SPH_density(path, file, part_type = '0'):
+	def particle_SPH_density(self, part_type = '0'):
 		"""
 		RETURNS: 1D np.array
 		"""
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
 		# Check that we are extracting the temperature of gas SPH density
 		if part_type is not '0':
 			print("[ERROR] Trying to extract the SPH density of non-gaseous particles.")
 			exit(1)
-		h5file=h5.File(os.path.join(path, file),'r')
-		h5dset = h5file['/PartType0/Density']
-		part_density = h5dset[...]
-		h5file.close()
-		return part_density
+		densitySPH = np.zeros(0 ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/PartType0/Density']
+			sub_den = hd5set[...]
+			h5file.close()
+			densitySPH = np.concatenate((densitySPH, sub_den), axis = 0)
+			free_memory(['densitySPH'], invert = True)
+		return densitySPH
 
 
-	def particle_metallicity(path, file, part_type = '0'):
+	def particle_metallicity(self, part_type = '0'):
 		"""
 		RETURNS: 1D np.array
 		"""
+		if self.subject != 'particledata':
+			raise ValueError('subject of data must be particledata.')
 		# Check that we are extracting the temperature of gas SPH density
 		if part_type is not '0':
 			print("[ERROR] Trying to extract the metallicity of non-gaseous particles.")
 			exit(1)
-		h5file=h5.File(os.path.join(path, file),'r')
-		h5dset = h5file['/PartType0/Metallicity']
-		part_metallicity = h5dset[...]
-		h5file.close()
-		return part_metallicity
+		metallicity = np.zeros(0 ,dtype=np.float)
+		for path in self.filePaths:
+			h5file=h5.File(path,'r')
+			hd5set=h5file['/PartType0/Metallicity']
+			sub_Z = hd5set[...]
+			h5file.close()
+			metallicity = np.concatenate((metallicity, sub_Z), axis = 0)
+			free_memory(['metallicity'], invert = True)
+		return metallicity

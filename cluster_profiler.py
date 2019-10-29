@@ -13,23 +13,23 @@ def cluster_average_velocity(velocity3D):
 	INPUT: np.array 2D exoressing the 3-component velocity of the particles.
 	RETURNS: a np.array 1D with the 3-components of the bulk velocity of the particles.
 	USES: work in the FoF group's rest frame by computing the mean velocity.
-	NOTES: the rest-mass frame depends on the mass-weights of the particles, 
+	NOTES: the rest-mass frame depends on the mass-weights of the particles,
 		hence on part-type.
 		THIS IS ONLY AVERAGE VELOCITY
 	"""
-	return  [np.mean(velocity3D[:,0]), 
-			 np.mean(velocity3D[:,1]), 
+	return  [np.mean(velocity3D[:,0]),
+			 np.mean(velocity3D[:,1]),
 			 np.mean(velocity3D[:,2])]
 
 
-def cluster_average_momentum(path, file, part_type):
+def cluster_average_momentum(self, part_type):
 	"""
 	Returns the mass-weighted average of the velocities, i.e. zero-momentum frame
 		for a SINGLE particle type.
 	"""
-	part_type = extract.particle_type(part_type)
-	mass = extract.particle_masses(path, file, part_type)
-	velocity = extract.particle_velocity(path, file, part_type)
+	part_type = extract.Cluster.particle_type(self, part_type)
+	mass = extract.Cluster.particle_masses(self, part_type)
+	velocity = extract.Cluster.particle_velocity(self, part_type)
 	sum_of_masses = np.sum(mass)
 	rest_frame = [np.sum(mass*velocity[:,0])/sum_of_masses,
 				  np.sum(mass*velocity[:,1])/sum_of_masses,
@@ -63,10 +63,10 @@ def subhalo_average_momentum(path, file, part_type):
 			np.append(sub_mom, sum(momentum[index]))
 			print("iteration", j, i)
 	"""
-	#sub_mom = [sum([mass[i]*velocity[i] for i in range(len(mass)) if (subnumber[i] == j & groupnumber[i] == 0)]) for j in range(max(subnumber))]	
+	#sub_mom = [sum([mass[i]*velocity[i] for i in range(len(mass)) if (subnumber[i] == j & groupnumber[i] == 0)]) for j in range(max(subnumber))]
 	return sub_mom
 
-def total_mass_rest_frame(path, file):
+def total_mass_rest_frame(self):
 	"""
 	Returns the mass-weighted average of the velocities, i.e. zero-momentum frame
 		for a ALL particle types.
@@ -74,7 +74,7 @@ def total_mass_rest_frame(path, file):
 	part_type_momentum = []
 	part_type_totMass = []
 	for part_type in ['gas', 'highres_DM', 'stars', 'black_holes']:
-		rest_frame, sum_of_masses = cluster_average_momentum(path, file, part_type)
+		rest_frame, sum_of_masses = cluster_average_momentum(self, part_type)
 		part_type_momentum.append(rest_frame)
 		part_type_totMass.append(sum_of_masses)
 	sum_of_masses = np.sum(part_type_totMass)
@@ -131,7 +131,7 @@ def density_units(density, unit_system = 'SI'):
 		return density*6.769911178294543*np.power(3.086, 3)/1.9891 * 10**-10
 	elif unit_system == 'nHcgs':
 		return density*6.769911178294543*10**-31/(1.674*10**-24)
-	else: 
+	else:
 		print("[ERROR] Trying to convert SPH density to an unknown metric system.")
 		exit(1)
 
@@ -154,7 +154,7 @@ def velocity_units(velocity, unit_system = 'SI'):
 	elif unit_system == 'astro':
 		# km/s
 		return velocity*1
-	else: 
+	else:
 		print("[ERROR] Trying to convert velocity to an unknown metric system.")
 		exit(1)
 
@@ -176,7 +176,7 @@ def mass_units(mass, unit_system = 'SI'):
 	elif unit_system == 'astro':
 		# km/s
 		return mass*10**10
-	else: 
+	else:
 		print("[ERROR] Trying to convert mass to an unknown metric system.")
 		exit(1)
 
@@ -188,7 +188,7 @@ def momentum_units(momentum, unit_system = 'SI'):
 	INPUTS: momentum np.array
 
 			metric system used: 'SI' or 'cgs' or astronomical 'astro'
-	"""	
+	"""
 	if unit_system == 'SI':
 		# m/s
 		return momentum*1.9891*10**43
@@ -198,7 +198,7 @@ def momentum_units(momentum, unit_system = 'SI'):
 	elif unit_system == 'astro':
 		# km/s
 		return momentum*10**10
-	else: 
+	else:
 		print("[ERROR] Trying to convert mass to an unknown metric system.")
 		exit(1)
 

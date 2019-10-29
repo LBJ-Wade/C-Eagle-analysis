@@ -1,12 +1,8 @@
 from clusters_retriever import *
+from cluster_profiler import *
+import redshift_catalogue_ceagle as zcat
 
 ceagle = Simulation()
 z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
-cluster1 = Cluster(clusterID = 0, redshift = z_catalogue[-1],
-                    subject = 'groups')
-
-print(cluster1.group_centre_of_potential())
-print(cluster1.group_centre_of_mass())
-
-print(cluster1.group_r200())
-# print(cluster1.Nsubgroups)
+cluster = Cluster(clusterID = 0, redshift = 0.101, subject = 'particledata')
+print(total_mass_rest_frame(cluster))
