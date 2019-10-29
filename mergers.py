@@ -1,9 +1,18 @@
+import os
 from os import path
-import numpy as np
 from matplotlib import pyplot as plt
+import h5py
 
 from clusters_retriever import *
 from map_plot_parameters import set_defaults_plot as plotpar
+
+"""
+GLOBAL VARS
+"""
+ceagle = Simulation()
+# z_catalogue = ceagle.get_redshiftAllowed(dtype=float)
+__pathSave__ = ceagle.pathSave + '/merger_index/'
+
 
 def dist(v, u):
     s = 0
@@ -21,6 +30,101 @@ def thermal_index(cluster):
     KE = cluster.group_kin_energy()
     TE = cluster.group_therm_energy()
     return TE/KE
+
+def gen_data():
+    """
+    Generates the dynamical index and thermodynamical index
+    for different C-EAGLE clusters.
+    :return:
+    Dictionary containing two arrays of floats.
+    """
+
+    z = 0.101
+    merg_indices = {'dynamical_index':      [],
+                    'thermodynamic_index':  []}
+    for ID in range(0, 30):
+        cluster = Cluster(clusterID=int(ID), redshift=z, subject='groups')
+        dyn_idx = dynamical_index(cluster)
+        therm_idx = thermal_index(cluster)
+        print('Process cluster', ID, '\t\tdyn: ', dyn_idx, '\t\ttherm: ', therm_idx)
+        merg_indices['dynamical_index'].append(dyn_idx)
+        merg_indices['thermodynamic_index'].append(therm_idx)
+
+    # Create a trigger that allows the save operation to proceed
+    trigger = False
+    if (len(merg_indices['dynamical_index']) == ceagle.totalClusters and
+        len(merg_indices['thermodynamic_index']) == ceagle.totalClusters and
+        np.all(np.isfinite(merg_indices['dynamical_index'])) == True and
+        np.all(np.isfinite(merg_indices['thermodynamic_index'])) == True):
+
+        trigger = True
+
+    else:
+        raise('Generated data have something wrong.')
+
+    return merg_indices, trigger
+
+def save_data(*out_data):
+    """
+    Saves intermediate data into an hdf5 file.
+    SaveDirectory: /cosma6/data/...
+    :return:
+    None - saves the hdf5 file.
+    """
+    merg_indices = out_data[0]
+    trigger      = out_data[1]
+    if trigger:
+        hf = h5py.File(__pathSave__ + 'merg_indices.h5', 'w')
+        hf.create_dataset('dynamical_index', data=merg_indices['dynamical_index'])
+        hf.create_dataset('thermodynamic_index', data=merg_indices['thermodynamic_index'])
+        hf.close()
+
+def read_data(file):
+    if path.isfile(__pathSave__+file) and os.access(__pathSave__+file, os.R_OK):
+        hf = h5py.File(__pathSave__ + 'merg_indices.h5', 'r')
+        dyn = np.array(hf.get('dynamical_index'))
+        ther = np.array(hf.get('thermodynamic_index'))
+        hf.close()
+
+        return {'dynamical_index':      dyn,
+                'thermodynamic_index':  ther}
+
+    else:
+        print('[Warning]\thdf5 intermediate data cannot be found.')
+        gen_trigger = input('Would you like to generate a new set of data? (y/n)')
+        if gen_trigger == 'y':
+            save_data(gen_data())
+        elif gen_trigger == 'n':
+            quit()
+
+
+def plot_data(data):
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(7,7))
+
+    ax.scatter(data['dynamical_index'], data['thermodynamic_index'], color='k')
+
+    labels = np.array([str(i) for i in range(0, 30)])
+    ax.annotate(labels, (data['dynamical_index']+0.005, data['thermodynamic_index']+0.005))
+
+    ax.set_xlabel(r'$\mathrm{dynamical~index}$')
+    ax.set_ylabel(r'$\mathrm{thermodynamical~index}$')
+    ax.set_title(r'$z = {}$'.format(z))
+    ax.set_aspect(1.)
+    ax.plot([0,1], [0,1], 'r--')
+    ax.set_xlim([0., 1.])
+    ax.set_ylim([0., 1.])
+    plt.show()
+    plt.savefig(path.join(__pathSave__, 'Merging_index.png'))
+    #print(mrgr_idx)
+
+
+
+if __name__ == "__main__":
+    merg_indices = read_data('merg_indices.h5')
+    plot_data(merg_indices)
+
+
+
 
 """
 thermal_index = [0.11, 0.24, 0.05, 0.06, 0.11, 0.09, 0.09, 0.09, 0.09,
@@ -61,40 +165,7 @@ dyn_index = [
 0.18064748591247506]
 """
 
-def mergers_plot():
-    ceagle = Simulation()
-    z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(7,7))
-    generate_data = True
-    z = 0.101
 
-    for ID in range(0,30):
-        if generate_data:
-            cluster = Cluster(clusterID = int(ID), redshift = z, subject = 'groups')
-            dyn_idx = dynamical_index(cluster)
-            therm_idx = thermal_index(cluster)
-            print('Process cluster', ID, '\t\t', dyn_idx, '\t\t', therm_idx)
-        else:
-            # If data are already generated, pick the stored values
-            dyn_idx = dynamic_index[ID]
-            therm_idx = thermal_index[ID]
-        # Draw in matplotlib
-        ax.scatter(dyn_idx, therm_idx, color='k')
-        ax.annotate(r'${}$'.format(ID), (dyn_idx+0.005, therm_idx+0.005))
-
-    ax.set_xlabel(r'$\mathrm{dynamical~index}$')
-    ax.set_ylabel(r'$\mathrm{thermodynamical~index\quad  (Barnes~et~al.,~2017)}$')
-    ax.set_title(r'$z = {}$'.format(z))
-    ax.set_aspect(1.)
-    ax.plot([0,1], [0,1], 'r--')
-    ax.set_xlim([0., 1.])
-    ax.set_ylim([0., 1.])
-    plt.show()
-    plt.savefig(path.join(ceagle.pathSave, 'Merging_index.png'))
-    #print(mrgr_idx)
-
-plotpar()
-mergers_plot()
 
 """
 NOTES
