@@ -1,6 +1,5 @@
 from clusters_retriever import *
 from cluster_profiler import *
-import redshift_catalogue_ceagle as zcat
 
 ceagle = Simulation()
 z_catalogue = ceagle.get_redshiftAllowed(dtype = float)

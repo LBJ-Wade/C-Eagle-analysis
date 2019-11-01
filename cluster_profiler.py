@@ -50,19 +50,6 @@ def subhalo_average_momentum(path, file, part_type):
 
 	#for i in range(len(momentum))
 	#	sub_mom[fuctionIndex(groupnumber[i], subnumber[i])] += momentum[i]
-
-	"""
-	for j in range(10000):
-		for i in range(10000):
-			index = np.where((groupnumber == j) & (subnumber == i))[0]
-			sub_mom[j,i] += momentum[index]
-
-	for j in range(10000):
-		for i in range(10000):
-			index = np.where((groupnumber == j) & (subnumber == i))[0]
-			np.append(sub_mom, sum(momentum[index]))
-			print("iteration", j, i)
-	"""
 	#sub_mom = [sum([mass[i]*velocity[i] for i in range(len(mass)) if (subnumber[i] == j & groupnumber[i] == 0)]) for j in range(max(subnumber))]
 	return sub_mom
 
