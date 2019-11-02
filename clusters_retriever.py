@@ -121,6 +121,7 @@ class Cluster (Simulation):
 		self.OmegaLambda = self.file_OmegaLambda()
 
 	# Change and validate Cluster attributes
+	@classmethod
 	def set_clusterID(self, clusterID: int):
 		try:
 			assert (type(clusterID) is int), 'clusterID must be integer.'
@@ -130,6 +131,7 @@ class Cluster (Simulation):
 		else:
 			self.clusterID = clusterID
 
+	@classmethod
 	def set_redshift(self, redshift: float):
 		try:
 			assert (type(redshift) is float), 'redshift must be float.'
@@ -140,6 +142,7 @@ class Cluster (Simulation):
 		else:
 			self.redshift = redshift
 
+	@classmethod
 	def path_from_cluster_name(self):
 		"""
 		RETURNS: string type. Path of the hdf5 file to extract data from.
@@ -213,6 +216,7 @@ class Cluster (Simulation):
 	#													#
 	#####################################################
 	@data_subject(subject = "groups")
+	@classmethod
 	def group_centre_of_potential(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF group central of potential from the path and file given
@@ -229,6 +233,7 @@ class Cluster (Simulation):
 		return pos
 
 	@data_subject(subject = "particledata")
+	@classmethod
 	def group_centre_of_mass(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF group central of mass from the path and file given
@@ -245,6 +250,7 @@ class Cluster (Simulation):
 		# return pos
 
 	@data_subject(subject = "groups")
+	@classmethod
 	def group_r200(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF virial radius from the path and file given
@@ -259,6 +265,7 @@ class Cluster (Simulation):
 		return r200c
 
 	@data_subject(subject = "groups")
+	@classmethod
 	def group_r500(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF virial radius from the path and file given
@@ -273,6 +280,7 @@ class Cluster (Simulation):
 		return r500c
 
 	@data_subject(subject = "groups")
+	@classmethod
 	def group_mass(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF virial radius from the path and file given
@@ -287,6 +295,7 @@ class Cluster (Simulation):
 		return m_tot
 
 	@data_subject(subject="groups")
+	@classmethod
 	def group_M200(self, *args, **kwargs):
 		"""
         AIM: reads the FoF virial radius from the path and file given
@@ -301,6 +310,7 @@ class Cluster (Simulation):
 		return m200
 
 	@data_subject(subject = "groups")
+	@classmethod
 	def group_M500(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF virial radius from the path and file given
@@ -315,6 +325,7 @@ class Cluster (Simulation):
 		return m500
 
 	@data_subject(subject = "groups")
+	@classmethod
 	def extract_header_attribute(self, element_number, *args, **kwargs):
 		# Import data from hdf5 file
 		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
@@ -325,6 +336,7 @@ class Cluster (Simulation):
 		return attr_name, attr_value
 
 	@data_subject(subject = "groups")
+	@classmethod
 	def extract_header_attribute_name(self, element_name, *args, **kwargs):
 		# Import data from hdf5 file
 		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
