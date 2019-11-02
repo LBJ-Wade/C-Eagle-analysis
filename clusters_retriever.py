@@ -158,6 +158,14 @@ class Cluster (Simulation):
 	#####################################################
 
 	def data_subject(**decorator_kwargs):
+		"""
+		This decorator adds functionality to the data import functions.
+		It dynamically creates attributes and filepaths, to be then
+		passed onto the actual import methods.
+		:param decorator_kwargs: subject = (str)
+		:return: decorated function with predefined **kwargs
+		The **Kwargs are dynamically allocated to the external methods.
+		"""
 		print("Reading ", decorator_kwargs['subject'], " files.")
 
 		def wrapper(f):  # a wrapper for the function
@@ -200,8 +208,6 @@ class Cluster (Simulation):
 		return wrapper
 
 
-
-
 	#####################################################
 	#													#
 	#					D A T A   						#
@@ -214,113 +220,123 @@ class Cluster (Simulation):
 		AIM: reads the FoF group central of potential from the path and file given
 		RETURNS: type = np.array of 3 doubles
 		ACCESS DATA: e.g. group_CoP[0] for getting the x value
-
 		"""
 
 		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
-		hd5set=h5file['/Subhalo/CentreOfPotential']
+		hd5set=h5file['/FOF/CentreOfPotential']
 		sub_CoP = hd5set[...]
 		h5file.close()
 		pos = sub_CoP[0]
 		free_memory(['pos'], invert = True)
-
 		return pos
 
-	def group_centre_of_mass(self):
+	@data_subject(subject = "particledata")
+	def group_centre_of_mass(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF group central of mass from the path and file given
 		RETURNS: type = np.array of 3 doubles
 		ACCESS DATA: e.g. group_CoM[0] for getting the x value
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		return self.subgroups_centre_of_mass()[0]
+		#TODO: compute the centre of mass from particledata
 
-	def group_r200(self):
+
+		h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+		hd5set = h5file['/Subhalo/CentreOfPotential']
+		sub_CoP = hd5set[...]
+		h5file.close()
+		pos = sub_CoP[0]
+		free_memory(['pos'], invert=True)
+		return pos
+
+	@data_subject(subject = "groups")
+	def group_r200(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF virial radius from the path and file given
 		RETURNS: type = double
 		"""
-		# Import data from hdf5 file
-		h5file=h5.File(self.filePaths[0],'r')
+		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
 		h5dset=h5file["/FOF/Group_R_Crit200"]
 		temp=h5dset[...]
-		r200c=temp[0]
 		h5file.close()
+		r200c=temp[0]
+		free_memory(['r200c'], invert=True)
 		return r200c
 
-	def group_r500(self):
+	@data_subject(subject = "groups")
+	def group_r500(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF virial radius from the path and file given
 		RETURNS: type = double
 		"""
-		# Import data from hdf5 file
-		h5file=h5.File(self.filePaths[0],'r')
+		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
 		h5dset=h5file["/FOF/Group_R_Crit500"]
 		temp=h5dset[...]
-		r500c=temp[0]
 		h5file.close()
+		r500c=temp[0]
+		free_memory(['r500c'], invert=True)
 		return r500c
 
-	def group_velocity(self):
+	@data_subject(subject = "groups")
+	def group_mass(self, *args, **kwargs):
 		"""
-		AIM: reads the group bulk motion from the path and file given
-		RETURNS: type = np.array of 3 doubles
+		AIM: reads the FoF virial radius from the path and file given
+		RETURNS: type = double
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		return self.subgroups_velocity()[0]
+		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
+		h5dset=h5file["/FOF/GroupMass"]
+		temp=h5dset[...]
+		h5file.close()
+		m_tot=temp[0]
+		free_memory(['m_tot'], invert=True)
+		return m_tot
 
-	def group_mass(self):
+	@data_subject(subject="groups")
+	def group_M200(self, *args, **kwargs):
 		"""
-		AIM: reads the group mass from the path and file given
-		RETURNS: float
-		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		return self.subgroups_mass()[0]
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+		h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+		h5dset = h5file["/FOF/Group_M_Crit200"]
+		temp = h5dset[...]
+		h5file.close()
+		m200 = temp[0]
+		free_memory(['m200'], invert=True)
+		return m200
 
-	def group_kin_energy(self):
+	@data_subject(subject = "groups")
+	def group_M500(self, *args, **kwargs):
 		"""
-		AIM: reads the group kin_energy from the path and file given
-		RETURNS: float
+		AIM: reads the FoF virial radius from the path and file given
+		RETURNS: type = double
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		return self.subgroups_kin_energy()[0]
+		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
+		h5dset=h5file["/FOF/Group_M_Crit500"]
+		temp=h5dset[...]
+		h5file.close()
+		m500=temp[0]
+		free_memory(['m500'], invert=True)
+		return m500
 
-	def group_therm_energy(self):
-		"""
-		AIM: reads the group therm_energy from the path and file given
-		RETURNS: float
-		"""
+	@data_subject(subject = "groups")
+	def extract_header_attribute(self, element_number, *args, **kwargs):
 		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		return self.subgroups_therm_energy()[0]
-
-	def extract_header_attribute(self, element_number):
-		# Import data from hdf5 file
-		h5file=h5.File(self.filePaths[0],'r')
+		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
 		h5dset=h5file["/Header"]
 		attr_name = list(h5dset.attrs.keys())[element_number]
 		attr_value = list(h5dset.attrs.values())[element_number]
 		h5file.close()
 		return attr_name, attr_value
 
-	def extract_header_attribute_name(self, element_name):
+	@data_subject(subject = "groups")
+	def extract_header_attribute_name(self, element_name, *args, **kwargs):
 		# Import data from hdf5 file
-		h5file=h5.File(self.filePaths[0],'r')
+		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
 		h5dset=h5file["/Header"]
 		attr_name = h5dset.attrs.get(element_name, default=None)
 		attr_value = h5dset.attrs.get(element_name, default=None)
 		h5file.close()
 		return attr_name, attr_value
-
 
 	def file_hubble_param(self):
 		"""
@@ -331,80 +347,60 @@ class Cluster (Simulation):
 		return attr_value
 
 	def file_comic_time(self):
-		"""
-		AIM: retrieves the Hubble parameter of the file
-		RETURNS: type = double
-		"""
 		_ , attr_value = self.extract_header_attribute_name('Time')
 		return attr_value
 
-
 	def file_redshift(self):
-		"""
-		AIM: retrieves the redshift of the file
-		RETURNS: type = double
-		"""
 		_ , attr_value = self.extract_header_attribute_name('Redshift')
 		return attr_value
 
-
-	def file_Ngroups(self):
-		"""
-		AIM: retrieves the redshift of the file
-		RETURNS: type = double
-		"""
-		# Import data from multiple hdf5 files
-		Ngroups = 0
-		for path in self.filePaths:
-			h5file=h5.File(path,'r')
-			h5dset=h5file["/Header"]
-			attr_value = h5dset.attrs.get('Ngroups', default=None)
-			h5file.close()
-			Ngroups += attr_value
-		return Ngroups
-
-
-	def file_Nsubgroups(self):
-		"""
-		AIM: retrieves the file_Nsubgroups of the files
-		RETURNS: type = double
-		"""
-		# Import data from multiple hdf5 files
-		Nsubgroups = 0
-		for path in self.filePaths:
-			h5file=h5.File(path,'r')
-			h5dset=h5file["/Header"]
-			attr_value = h5dset.attrs.get('Nsubgroups', default=None)
-			h5file.close()
-			Nsubgroups += attr_value
-		return Nsubgroups
-
-
 	def file_OmegaBaryon(self):
-		"""
-		AIM: retrieves the redshift of the file
-		RETURNS: type = double
-		"""
 		_ , attr_value = self.extract_header_attribute_name('OmegaBaryon')
 		return attr_value
 
-
 	def file_Omega0(self):
-		"""
-		AIM: retrieves the redshift of the file
-		RETURNS: type = double
-		"""
 		_ , attr_value = self.extract_header_attribute_name('Omega0')
 		return attr_value
 
-
 	def file_OmegaLambda(self):
-		"""
-		AIM: retrieves the redshift of the file
-		RETURNS: type = double
-		"""
 		_ , attr_value = self.extract_header_attribute_name('OmegaLambda')
 		return attr_value
+
+
+	#TODO
+	# def file_Ngroups(self):
+	# 	"""
+	# 	AIM: retrieves the redshift of the file
+	# 	RETURNS: type = double
+	# 	"""
+	# 	# Import data from multiple hdf5 files
+	# 	Ngroups = 0
+	# 	for path in self.filePaths:
+	# 		h5file=h5.File(path,'r')
+	# 		h5dset=h5file["/Header"]
+	# 		attr_value = h5dset.attrs.get('Ngroups', default=None)
+	# 		h5file.close()
+	# 		Ngroups += attr_value
+	# 	return Ngroups
+	#
+	#TODO
+	# def file_Nsubgroups(self):
+	# 	"""
+	# 	AIM: retrieves the file_Nsubgroups of the files
+	# 	RETURNS: type = double
+	# 	"""
+	# 	# Import data from multiple hdf5 files
+	# 	Nsubgroups = 0
+	# 	for path in self.filePaths:
+	# 		h5file=h5.File(path,'r')
+	# 		h5dset=h5file["/Header"]
+	# 		attr_value = h5dset.attrs.get('Nsubgroups', default=None)
+	# 		h5file.close()
+	# 		Nsubgroups += attr_value
+	# 	return Nsubgroups
+
+
+
 
 	# def group_numbers(self):
 	# 	"""
@@ -612,11 +608,11 @@ class Cluster (Simulation):
 		AIM: returns a string characteristic of the particle type selected
 		RETURNS: string of number 0<= n <= 5
 		"""
-		if part_type == 'gas' or part_type == 0 or part_type == '0': return '0'
-		elif part_type == 'highres_DM' or part_type == 1 or part_type == '1': return '1'
-		elif part_type == 'lowres_DM' or part_type == 2 or part_type == '2': return '2'
-		elif part_type == 'lowres_DM' or part_type == 3 or part_type == '3': return '3'
-		elif part_type == 'stars' or part_type == 4 or part_type == '4': return '4'
+		if part_type == 'gas' 			or part_type == 0 or part_type == '0': return '0'
+		elif part_type == 'highres_DM' 	or part_type == 1 or part_type == '1': return '1'
+		elif part_type == 'lowres_DM' 	or part_type == 2 or part_type == '2': return '2'
+		elif part_type == 'lowres_DM' 	or part_type == 3 or part_type == '3': return '3'
+		elif part_type == 'stars' 		or part_type == 4 or part_type == '4': return '4'
 		elif part_type == 'black_holes' or part_type == 5 or part_type == '5': return '5'
 		else:
 			print("[ERROR] You entered the wrong particle type!")
