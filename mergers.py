@@ -21,6 +21,7 @@ def dist(v, u):
     return s ** 0.5
 
 def dynamical_index(cluster):
+    cluster.set_subject('groups')
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
@@ -29,6 +30,7 @@ def dynamical_index(cluster):
 def thermal_index(cluster):
     plot_groups = 'FoF'
     k_B = 1.38064852e-23
+    cluster.set_subject('particledata')
 
     # Gas particles
     part_type = cluster.particle_type('gas')
@@ -157,7 +159,7 @@ def read_data(file):
 
     else:
         print('[Warning]\thdf5 intermediate data cannot be found.')
-        gen_trigger = input('Would you like to generate a new set of data? (y/n)')
+        gen_trigger = input('Would you like to generate a new set of data? ([y]/n)  ')
         if gen_trigger == 'y':
             save_data(gen_data())
         elif gen_trigger == 'n':
