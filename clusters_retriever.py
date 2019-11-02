@@ -223,7 +223,7 @@ class Cluster (Simulation):
 		"""
 
 		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
-		hd5set=h5file['/FOF/CentreOfPotential']
+		hd5set=h5file['/FOF/GroupCentreOfPotential']
 		sub_CoP = hd5set[...]
 		h5file.close()
 		pos = sub_CoP[0]
@@ -238,15 +238,13 @@ class Cluster (Simulation):
 		ACCESS DATA: e.g. group_CoM[0] for getting the x value
 		"""
 		#TODO: compute the centre of mass from particledata
-
-
-		h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-		hd5set = h5file['/Subhalo/CentreOfPotential']
-		sub_CoP = hd5set[...]
-		h5file.close()
-		pos = sub_CoP[0]
-		free_memory(['pos'], invert=True)
-		return pos
+		# h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+		# hd5set = h5file['/Subhalo/CentreOfPotential']
+		# sub_CoP = hd5set[...]
+		# h5file.close()
+		# pos = sub_CoP[0]
+		# free_memory(['pos'], invert=True)
+		# return pos
 
 	@data_subject(subject = "groups")
 	def group_r200(self, *args, **kwargs):
