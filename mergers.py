@@ -27,6 +27,9 @@ def dynamical_index(cluster):
     return dist(com, cop)/r500
 
 def thermal_index(cluster):
+    plot_groups = 'FoF'
+    k_B = 1.38064852e-23
+
     # Gas particles
     part_type = cluster.particle_type('gas')
     mass = cluster.particle_masses(part_type)
@@ -35,13 +38,16 @@ def thermal_index(cluster):
     group_number = cluster.group_number(part_type)
     subgroup_number = cluster.subgroup_number(part_type)
     temperatures = cluster.particle_temperature(part_type)
-    tot_rest_frame, _ = profile.total_mass_rest_frame()
+    tot_rest_frame, _ = profile.total_mass_rest_frame(cluster)
     # gas_rest_frame, _ = profile.cluster_average_momentum(path, file, part_type)
 
 
     h = cluster.file_hubble_param()
+    redshift = cluster.redshift
+    r500 = cluster.group_r500()
 
     # Retrieve coordinates & velocities
+    group_CoP = cluster.group_centre_of_potential()
     x = coordinates[:, 0] - group_CoP[0]
     y = coordinates[:, 1] - group_CoP[1]
     z = coordinates[:, 2] - group_CoP[2]
@@ -53,39 +59,42 @@ def thermal_index(cluster):
     x = profile.comoving_length(x, h, redshift)
     y = profile.comoving_length(y, h, redshift)
     z = profile.comoving_length(z, h, redshift)
-    r200 = profile.comoving_length(r200, h, redshift)
+    r500 = profile.comoving_length(r500, h, redshift)
     vx = profile.comoving_velocity(vx, h, redshift)
     vy = profile.comoving_velocity(vy, h, redshift)
     vz = profile.comoving_velocity(vz, h, redshift)
-    vx = profile.velocity_units(vx, unit_system='astro')
-    vy = profile.velocity_units(vy, unit_system='astro')
-    vz = profile.velocity_units(vz, unit_system='astro')
+    vx = profile.velocity_units(vx, unit_system='SI')
+    vy = profile.velocity_units(vy, unit_system='SI')
+    vz = profile.velocity_units(vz, unit_system='SI')
     mass = profile.comoving_mass(mass, h, redshift)
-    mass = profile.mass_units(mass, unit_system='astro')
+    mass = profile.mass_units(mass, unit_system='SI')
 
     # Compute radial distance
     r = np.sqrt(x ** 2 + y ** 2 + z ** 2)
 
     # Select particles within 5*r200
     if plot_groups == 'FoF':
-        index = np.where((r < 5 * r200) & (group_number > -1) & (subgroup_number > -1))[0]
+        index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number > -1))[0]
     elif plot_groups == 'subgroups':
-        index = np.where((r < 5 * r200) & (group_number > -1) & (subgroup_number > 0))[0]
+        index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number > 0))[0]
     else:
         print("[ERROR] The (sub)groups you are trying to plot are not defined.")
         exit(1)
 
     mass = mass[index]
-    x, y, z = x[index], y[index], z[index]
+    # x, y, z = x[index], y[index], z[index]
     vx, vy, vz = vx[index], vy[index], vz[index]
 
-    # Generate plot
-    plotpar.set_defaults_plot()
+    # # Generate plot
+    # plotpar.set_defaults_plot()
 
 
 
     KE = 0.5 * mass * (vx**2 + vy**2 + vz**2)
-    TE = 1.5 * temperatures * mass *
+    TE = 1.5 * k_B * temperatures * mass * 0.88 / (1.6735575e-27)
+
+
+    free_memory(['KE', 'TE'], invert=True)
     return TE/KE
 
 def gen_data():
@@ -157,6 +166,7 @@ def read_data(file):
 
 def plot_data(data):
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(7,7))
+    z = 0.101
 
     ax.scatter(data['dynamical_index'], data['thermodynamic_index'], color='k')
 
@@ -177,7 +187,7 @@ def plot_data(data):
 
 
 if __name__ == "__main__":
-    merg_indices = read_data('merg_indices.h5')
+    merg_indices = read_data('merg_indices.hdf5')
     plot_data(merg_indices)
 
 
