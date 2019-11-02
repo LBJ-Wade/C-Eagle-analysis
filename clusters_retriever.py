@@ -172,8 +172,6 @@ class Cluster (Simulation):
 			@wraps(f)
 			def decorated_function(self, *args, **kwargs):  # the decorated function
 
-				print("Constructing {} filepaths".format(decorator_kwargs['subject']))
-
 				redshift_str = redshift_num2str(self.redshift)
 				redshift_i = self.redshiftAllowed.index(redshift_str)
 				redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
