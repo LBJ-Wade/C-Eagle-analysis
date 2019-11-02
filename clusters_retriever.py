@@ -1,7 +1,7 @@
 import numpy as np
 import h5py as h5
 import os
-import sys
+from functools import wraps
 
 import redshift_catalogue_ceagle as zcat
 
@@ -99,21 +99,18 @@ class Simulation:
 
 class Cluster (Simulation):
 
-	def __init__(self, *args, clusterID:int = 0, redshift:float = 0.0, subject:str = 'particledata', **kwargs):
+	def __init__(self, *args, clusterID:int = 0, redshift:float = 0.0, **kwargs):
 		super().__init__()
 
 		# Initialise and validate attributes
 		self.set_clusterID(clusterID)
 		self.set_redshift(redshift)
-		self.set_subject(subject)
 
 		# Pass attributed into kwargs
 		kwargs['clusterID'] = self.clusterID
 		kwargs['redshift'] = self.redshift
-		kwargs['subject'] = self.subject
 
 		# Set additional attributes from methods
-		self.set_filePaths()
 		self.hubble_param = self.file_hubble_param()
 		self.comic_time = self.file_comic_time()
 		self.redshift = self.file_redshift()
@@ -143,14 +140,6 @@ class Cluster (Simulation):
 		else:
 			self.redshift = redshift
 
-	def set_subject(self, subject: str):
-		try:
-			assert (subject in self.subjectsAllowed), 'Subject of data not valid.'
-		except AssertionError:
-			raise
-		else:
-			self.subject = subject
-
 	def path_from_cluster_name(self):
 		"""
 		RETURNS: string type. Path of the hdf5 file to extract data from.
@@ -162,41 +151,56 @@ class Cluster (Simulation):
 		return os.path.join(master_directory, cluster_ID, data_dir)
 
 
+	#####################################################
+	#													#
+	#				D E C O R A T O R S  				#
+	# 									 				#
+	#####################################################
 
-	def file_dir_hdf5(self):
-		"""	RETURNS: Name of the hdf5 directory to extract data from.	"""
-		if self.subject == 'particledata':
-			prefix = 'eagle_subfind_particles_'
-		elif self.subject == 'groups':
-			prefix = 'eagle_subfind_tab_'
-		elif self.subject == 'snapshot':
-			raise("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
-		elif self.subject == 'snipshot':
-			raise("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
-		elif self.subject == 'hsmldir':
-			raise("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
-		elif self.subject == 'groups_snip':
-			raise("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+	def data_subject(**decorator_kwargs):
+		print("Reading ", decorator_kwargs['subject'], " files.")
 
-		redshift_str = redshift_num2str(self.redshift)
-		redshift_i = self.redshiftAllowed.index(redshift_str)
-		redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
-		sbj_string = self.subject + '_' + redshift_index + '_' + redshift_str
-		file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
-		file_list = os.listdir(file_dir)
-		return file_dir, [x for x in file_list if x.startswith(prefix)]
+		def wrapper(f):  # a wrapper for the function
+			@wraps(f)
+			def decorated_function(self, *args, **kwargs):  # the decorated function
 
-	def file_CompletePath_hdf5(self):
-		"""
-		Function merges file directory and file names.
-		Returns the complete hdf5 file paths in the form of an array of strings.
-		"""
-		path, h5_files = self.file_dir_hdf5()
-		return sorted([os.path.join(path, file) for file in h5_files])
+				print("Constructing {} filepaths".format(decorator_kwargs['subject']))
 
-	def set_filePaths(self):
-		""" Associate the hdf5 file paths to the object as attribute. """
-		self.filePaths = self.file_CompletePath_hdf5()
+				redshift_str = redshift_num2str(self.redshift)
+				redshift_i = self.redshiftAllowed.index(redshift_str)
+				redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
+				sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + redshift_str
+				file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
+				file_list = os.listdir(file_dir)
+
+				if decorator_kwargs['subject'] == 'particledata':
+					prefix = 'eagle_subfind_particles_'
+				elif decorator_kwargs['subject'] == 'groups':
+					prefix = 'eagle_subfind_tab_'
+				elif decorator_kwargs['subject'] == 'snapshot':
+					raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+				elif decorator_kwargs['subject'] == 'snipshot':
+					raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+				elif decorator_kwargs['subject'] == 'hsmldir':
+					raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+				elif decorator_kwargs['subject'] == 'groups_snip':
+					raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+
+				# Transfer function state into the **kwargs
+				# These **kwargs are accessible to the decorated class methods
+				kwargs['subject'] = decorator_kwargs['subject']
+				kwargs['file_dir'] = file_dir
+				kwargs['file_list'] = [x for x in file_list if x.startswith(prefix)]
+				kwargs['file_list_sorted'] = sorted([os.path.join(file_dir, file) for file in kwargs['file_list']])
+
+				return f(self, *args, **kwargs)
+
+			return decorated_function
+
+		return wrapper
+
+
+
 
 	#####################################################
 	#													#
@@ -204,17 +208,23 @@ class Cluster (Simulation):
 	# 				M A N A G E M E N T 				#
 	#													#
 	#####################################################
-
-	def group_centre_of_potential(self):
+	@data_subject(subject = "groups")
+	def group_centre_of_potential(self, *args, **kwargs):
 		"""
 		AIM: reads the FoF group central of potential from the path and file given
 		RETURNS: type = np.array of 3 doubles
 		ACCESS DATA: e.g. group_CoP[0] for getting the x value
+
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		return self.subgroups_centre_of_potential()[0]
+
+		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
+		hd5set=h5file['/Subhalo/CentreOfPotential']
+		sub_CoP = hd5set[...]
+		h5file.close()
+		pos = sub_CoP[0]
+		free_memory(['pos'], invert = True)
+
+		return pos
 
 	def group_centre_of_mass(self):
 		"""
@@ -396,22 +406,22 @@ class Cluster (Simulation):
 		_ , attr_value = self.extract_header_attribute_name('OmegaLambda')
 		return attr_value
 
-	def group_numbers(self):
-		"""
-		AIM: retrieves the redshift of the file
-		RETURNS: type = double
-		"""
-		# Import data from multiple hdf5 files
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		groupNumber = np.zeros(0, dtype=np.int32)
-		for path in self.filePaths:
-			h5file=h5.File(path,'r')
-			h5dset=h5file["/Header"]
-			attr_value = h5dset.attrs.get('Ngroups', default=None)
-			h5file.close()
-			Ngroups += attr_value
-		return Ngroups
+	# def group_numbers(self):
+	# 	"""
+	# 	AIM: retrieves the redshift of the file
+	# 	RETURNS: type = double
+	# 	"""
+	# 	# Import data from multiple hdf5 files
+	# 	if self.subject != 'groups':
+	# 		raise ValueError('subject of data must be groups.')
+	# 	groupNumber = np.zeros(0, dtype=np.int32)
+	# 	for path in self.filePaths:
+	# 		h5file=h5.File(path,'r')
+	# 		h5dset=h5file["/Header"]
+	# 		attr_value = h5dset.attrs.get('Ngroups', default=None)
+	# 		h5file.close()
+	# 		Ngroups += attr_value
+	# 	return Ngroups
 
 	def subgroups_centre_of_potential(self):
 		"""
@@ -458,9 +468,7 @@ class Cluster (Simulation):
 					.						.					]]
 
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
+
 		pos = np.zeros( (0,3) ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
@@ -487,9 +495,7 @@ class Cluster (Simulation):
 					.						.					]]
 
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
+
 		vel = np.zeros( (0,3) ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
@@ -505,9 +511,7 @@ class Cluster (Simulation):
 		AIM: reads the subgroups masses from the path and file given
 		RETURNS: type = 1D np.array
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
+
 		mass = np.zeros(0 ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
@@ -523,9 +527,6 @@ class Cluster (Simulation):
 		AIM: reads the subgroups kinetic energy from the path and file given
 		RETURNS: type = 1D np.array
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
 		kin_energy = np.zeros(0 ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
