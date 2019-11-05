@@ -1,7 +1,11 @@
+from __future__ import print_function, division, absolute_import
+
 import numpy as np
 import h5py as h5
 import os
 from functools import wraps
+# from numba import jit
+# import threading
 
 import redshift_catalogue_ceagle as zcat
 
@@ -54,8 +58,6 @@ def free_memory(var_list, invert = False):
 		for name in dir():
 			if name in var_list and not name.startswith('_'):
 				del globals()[name]
-
-
 
 
 #################################
@@ -362,58 +364,89 @@ class Cluster (Simulation):
 		_ , attr_value = self.extract_header_attribute_name('OmegaLambda')
 		return attr_value
 
+	def file_Ngroups(self):
+		_, attr_value = self.extract_header_attribute_name('TotNgroups')
+		return attr_value
 
-	#TODO
-	# def file_Ngroups(self):
-	# 	"""
-	# 	AIM: retrieves the redshift of the file
-	# 	RETURNS: type = double
-	# 	"""
-	# 	# Import data from multiple hdf5 files
-	# 	Ngroups = 0
-	# 	for path in self.filePaths:
-	# 		h5file=h5.File(path,'r')
-	# 		h5dset=h5file["/Header"]
-	# 		attr_value = h5dset.attrs.get('Ngroups', default=None)
-	# 		h5file.close()
-	# 		Ngroups += attr_value
-	# 	return Ngroups
-	#
-	#TODO
-	# def file_Nsubgroups(self):
-	# 	"""
-	# 	AIM: retrieves the file_Nsubgroups of the files
-	# 	RETURNS: type = double
-	# 	"""
-	# 	# Import data from multiple hdf5 files
-	# 	Nsubgroups = 0
-	# 	for path in self.filePaths:
-	# 		h5file=h5.File(path,'r')
-	# 		h5dset=h5file["/Header"]
-	# 		attr_value = h5dset.attrs.get('Nsubgroups', default=None)
-	# 		h5file.close()
-	# 		Nsubgroups += attr_value
-	# 	return Nsubgroups
+	def file_Nsubgroups(self):
+		_, attr_value = self.extract_header_attribute_name('TotNsubgroups')
+		return attr_value
+
+	def file_NumPart_Total(self):
+		"""
+		[NumPart_Total(part_type0),
+		NumPart_Total(part_type1),
+		NumPart_Total(part_type2),
+		NumPart_Total(part_type3),
+		NumPart_Total(part_type4),
+		NumPart_Total(part_type5)]
+
+		:return: array of 6 elements
+		"""
+		_, attr_value = self.extract_header_attribute_name('NumPart_Total')
+		return attr_value
 
 
+	@data_subject(subject="groups")
+	def NumOfSubhalos(self, *args, central_FOF = None,**kwargs):
+		"""
+		AIM: retrieves the redshift of the file
+		RETURNS: type = int
+
+		NOTES: there is no file for the FOF group number array. Instead,
+				there is an array in /FOF for the number of subhalos in each
+				FOF group. Used to gather each subgroup number
+		"""
+		if central_FOF:
+			h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+			h5dset = h5file["/FOF/NumOfSubhalos"]
+			attr_value = h5dset[...]
+			h5file.close()
+			Ngroups = attr_value[0]
+			free_memory(['Ngroups'], invert=True)
+			return Ngroups
+
+		elif central_FOF is None or not central_FOF:
+			Ngroups = np.zeros(0 ,dtype=np.int)
+			for path in kwargs['file_list_sorted']:
+				h5file=h5.File(path,'r')
+				h5dset=h5file["/FOF/NumOfSubhalos"]
+				attr_value = h5dset[...]
+				h5file.close()
+				Ngroups = np.concatenate((Ngroups, attr_value), axis = 0)
+			free_memory(['Ngroups'], invert=True)
+			return Ngroups
 
 
-	# def group_numbers(self):
-	# 	"""
-	# 	AIM: retrieves the redshift of the file
-	# 	RETURNS: type = double
-	# 	"""
-	# 	# Import data from multiple hdf5 files
-	# 	if self.subject != 'groups':
-	# 		raise ValueError('subject of data must be groups.')
-	# 	groupNumber = np.zeros(0, dtype=np.int32)
-	# 	for path in self.filePaths:
-	# 		h5file=h5.File(path,'r')
-	# 		h5dset=h5file["/Header"]
-	# 		attr_value = h5dset.attrs.get('Ngroups', default=None)
-	# 		h5file.close()
-	# 		Ngroups += attr_value
-	# 	return Ngroups
+	@data_subject(subject="groups")
+	def subgroups_number(self, *args, central_FOF = None,**kwargs):
+		"""
+		AIM: reads the group number of subgroups from the path and file given
+		RETURNS: type = 1/2D np.array
+
+		if central_FOF:
+			returns []
+
+		"""
+		if central_FOF:
+			# Build the sgn list artificially: less overhead in opening files
+			n_subhalos = self.NumOfSubhalos(*args, central_FOF=True, **kwargs)
+			sgn_list = np.linspace(0, n_subhalos - 1, n_subhalos, dtype=np.int)
+			free_memory(['sgn_list'], invert=True)
+			return sgn_list
+
+		elif central_FOF is None or not central_FOF:
+			sgn_list = np.zeros(0 ,dtype=np.int)
+			for path in kwargs['file_list_sorted']:
+				h5file=h5.File(path,'r')
+				h5dset=h5file["/Subhalo/SubGroupNumber"]
+				sgn_sublist = h5dset[...]
+				h5file.close()
+				sgn_list = np.concatenate((sgn_list, sgn_sublist), axis = 0)
+			# Check that the len of array is == total no of subhalos
+			assert np.sum(self.NumOfSubhalos(*args, central_FOF=False, **kwargs)) == sgn_list.__len__()
+			free_memory(['sgn_list'], invert=True)
+			return sgn_list
 
 	def subgroups_centre_of_potential(self):
 		"""
@@ -582,22 +615,7 @@ class Cluster (Simulation):
 			sub_N_tot = np.concatenate((sub_N_tot, sub_N), axis = 0)
 		return sub_N_tot
 
-	def subgroups_group_number(self):
-		"""
-		AIM: reads the group number of subgroups from the path and file given
-		RETURNS: type = 1D np.array
-		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		sub_gn_tot = np.zeros(0, dtype=np.int)
-		for path in self.filePaths:
-			h5file=h5.File(path,'r')
-			hd5set=h5file['Subhalo/GroupNumber']
-			sub_gn = hd5set[...]
-			h5file.close()
-			sub_gn_tot = np.concatenate((sub_gn_tot, sub_gn), axis = 0)
-		return sub_gn_tot
+
 
 	def particle_type(self, part_type = 'gas'):
 		"""
