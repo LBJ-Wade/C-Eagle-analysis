@@ -374,12 +374,14 @@ class Cluster (Simulation):
 
 	def file_NumPart_Total(self):
 		"""
-		[NumPart_Total(part_type0),
-		NumPart_Total(part_type1),
-		NumPart_Total(part_type2),
-		NumPart_Total(part_type3),
-		NumPart_Total(part_type4),
-		NumPart_Total(part_type5)]
+		[
+			NumPart_Total(part_type0),
+			NumPart_Total(part_type1),
+			NumPart_Total(part_type2),
+			NumPart_Total(part_type3),
+			NumPart_Total(part_type4),
+			NumPart_Total(part_type5)
+		]
 
 		:return: array of 6 elements
 		"""
@@ -448,7 +450,8 @@ class Cluster (Simulation):
 			free_memory(['sgn_list'], invert=True)
 			return sgn_list
 
-	def subgroups_centre_of_potential(self):
+	@data_subject(subject="groups")
+	def subgroups_centre_of_potential(self, *args, **kwargs):
 		"""
 		AIM: reads the subgroups central of potential from the path and file given
 		RETURNS: type = 2D np.array
@@ -464,11 +467,8 @@ class Cluster (Simulation):
 					.						.					]]
 
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
 		pos = np.zeros( (0,3) ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/CentreOfPotential']
 			sub_CoP = hd5set[...]
@@ -665,12 +665,11 @@ class Cluster (Simulation):
 			sub_group_number = np.concatenate((sub_group_number, sub_gn), axis = 0)
 		return sub_group_number
 
+	@data_subject(subject="particledata")
 	def particle_coordinates(self, part_type):
 		"""
 		RETURNS: 2D np.array
 		"""
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		pos = np.zeros( (0,3) ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
@@ -681,12 +680,11 @@ class Cluster (Simulation):
 			free_memory(['pos'], invert = True)
 		return pos
 
+	@data_subject(subject="particledata")
 	def particle_velocity(self, part_type):
 		"""
 		RETURNS: 2D np.array
 		"""
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		part_vel = np.zeros( (0,3) ,dtype=np.float)
 		for path in self.filePaths:
 			h5file=h5.File(path,'r')
@@ -697,12 +695,11 @@ class Cluster (Simulation):
 			free_memory(['part_vel'], invert = True)
 		return part_vel
 
+	@data_subject(subject="particledata")
 	def particle_masses(self, part_type):
 		"""
 		RETURNS: 2D np.array
 		"""
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		if (part_type != '1'):
 			part_mass = np.zeros(0 ,dtype=np.float)
 			for path in self.filePaths:
@@ -716,13 +713,11 @@ class Cluster (Simulation):
 			part_mass = np.ones_like(self.group_number(part_type))*0.422664
 		return part_mass
 
-
+	@data_subject(subject="particledata")
 	def particle_temperature(self, part_type = '0'):
 		"""
 		RETURNS: 1D np.array
 		"""
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		# Check that we are extracting the temperature of gas particles
 		if part_type is not '0':
 			print("[ERROR] Trying to extract the temperature of non-gaseous particles.")
@@ -737,13 +732,11 @@ class Cluster (Simulation):
 			free_memory(['temperature'], invert = True)
 		return temperature
 
-
+	@data_subject(subject="particledata")
 	def particle_SPH_density(self, part_type = '0'):
 		"""
 		RETURNS: 1D np.array
 		"""
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		# Check that we are extracting the temperature of gas SPH density
 		if part_type is not '0':
 			print("[ERROR] Trying to extract the SPH density of non-gaseous particles.")
@@ -758,13 +751,11 @@ class Cluster (Simulation):
 			free_memory(['densitySPH'], invert = True)
 		return densitySPH
 
-
+	@data_subject(subject="particledata")
 	def particle_metallicity(self, part_type = '0'):
 		"""
 		RETURNS: 1D np.array
 		"""
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		# Check that we are extracting the temperature of gas SPH density
 		if part_type is not '0':
 			print("[ERROR] Trying to extract the metallicity of non-gaseous particles.")
