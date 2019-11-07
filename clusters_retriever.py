@@ -28,7 +28,7 @@ def redshift_str2num(z: str):
 	E.g. float z = 2.16 <--- str z = 'z002p160'.
 	"""
 	z = z.strip('z').replace('p', '.')
-	return float(z)
+	return round(float(z), 3)
 
 def redshift_num2str(z: float):
 	"""
