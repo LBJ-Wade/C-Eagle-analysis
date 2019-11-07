@@ -23,6 +23,9 @@ if __name__ == "__main__":
 
     import numpy as np
     from matplotlib import pyplot as plt
+    import map_plot_parameters as plotpar
+
+    plotpar.set_defaults_plot()
 
     thermal_index = [0.11, 0.24, 0.05, 0.06, 0.11, 0.09, 0.09, 0.09, 0.09,
                      0.16, 0.05, 0.21, 0.08, 0.06, 0.31, 0.22, 0.12, 0.25,
