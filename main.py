@@ -17,6 +17,8 @@ if __name__ == "__main__":
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
+    print('DM_NumPart_Total()\t', cluster.DM_NumPart_Total())
+    print('DM_particleMass()\t', cluster.DM_particleMass())
     print('cop\t', cop)
     print('com\t', com)
     print('r500\t', r500)
