@@ -757,7 +757,7 @@ class Cluster (Simulation):
 			coords = self.particle_coordinates(part_type)
 			centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
 			CoM_PartTypes = np.append(CoM_PartTypes, [centre_of_mass], axis=0)
-			Mtot_PartTypes = np.concatenate((Mtot_PartTypes, sum_of_masses), axis=0)
+			Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
 			free_memory(['CoM_PartTypes', 'Mtot_PartTypes'], invert=True)
 
 		if out_allPartTypes:
@@ -785,7 +785,7 @@ class Cluster (Simulation):
 			vel = self.particle_velocity(part_type)
 			zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)
 			ZMF_PartTypes = np.append(ZMF_PartTypes, [zero_momentum], axis=0)
-			Mtot_PartTypes = np.concatenate((Mtot_PartTypes, sum_of_masses), axis=0)
+			Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
 			free_memory(['ZMF_PartTypes', 'Mtot_PartTypes'], invert=True)
 
 		if out_allPartTypes:
