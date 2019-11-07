@@ -11,6 +11,6 @@ if __name__ == "__main__":
     # print(cluster.subgroups_number(central_FOF = True))
     print('z = ', cluster.redshift, '\n---------------------')
     print('dynamical_index(cluster), thermal_index(cluster)')
-    print(dynamical_index(cluster), '\t\t', thermal_index(cluster))
+    print(dynamical_index(cluster))#, '\t\t', thermal_index(cluster))
 
 
