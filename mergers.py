@@ -15,16 +15,11 @@ ceagle = Simulation()
 __pathSave__ = ceagle.pathSave + '/merger_index/'
 
 
-def dist(v, u):
-    dist = np.sqrt( (v[0] - u[0])**2 + (v[1] - u[1])**2 + (v[2] - u[2])**2 )
-    return dist
-
-
 def dynamical_index(cluster):
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
-    return dist(com, cop)/r500
+    return np.sqrt( (cop[0] - com[0])**2 + (cop[1] - com[1])**2 + (cop[2] - com[2])**2 )/r500
 
 def thermal_index(cluster):
     plot_groups = 'FoF'
