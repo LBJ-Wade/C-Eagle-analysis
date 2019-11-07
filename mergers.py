@@ -13,28 +13,27 @@ GLOBAL VARS
 ceagle = Simulation()
 # z_catalogue = ceagle.get_redshiftAllowed(dtype=float)
 __pathSave__ = ceagle.pathSave + '/merger_index/'
+k_B = 1.38064852e-23
 
 
 def dynamical_index(cluster):
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
-    return np.sqrt( (cop[0] - com[0])**2 + (cop[1] - com[1])**2 + (cop[2] - com[2])**2 )/r500
+    return np.sqrt(np.sum([(cop[i] - com[i])**2 for i in range(0, 3)])/r500
 
 def thermal_index(cluster):
     plot_groups = 'FoF'
-    k_B = 1.38064852e-23
+    part_type = '0'
 
-    # Gas particles
-    part_type = cluster.particle_type('gas')
     mass = cluster.particle_masses(part_type)
     coordinates = cluster.particle_coordinates(part_type)
     velocities = cluster.particle_velocity(part_type)
     group_number = cluster.group_number_part(part_type)
     subgroup_number = cluster.subgroup_number_part(part_type)
     temperatures = cluster.particle_temperature(part_type)
-    tot_rest_frame = profile.cluster_average_velocity(velocities)
-    # gas_rest_frame, _ = profile.cluster_average_momentum(path, file, part_type)
+    tot_rest_frame = cluster.cluster_average_velocity(velocities)
+
 
 
     h = cluster.file_hubble_param()

@@ -226,22 +226,6 @@ class Cluster (Simulation):
 		free_memory(['pos'], invert = True)
 		return pos
 
-	@data_subject(subject = "particledata")
-	def group_centre_of_mass(self, *args, **kwargs):
-		"""
-		AIM: reads the FoF group central of mass from the path and file given
-		RETURNS: type = np.array of 3 doubles
-		ACCESS DATA: e.g. group_CoM[0] for getting the x value
-		"""
-		#TODO: compute the centre of mass from particledata
-		# h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-		# hd5set = h5file['/Subhalo/CentreOfPotential']
-		# sub_CoP = hd5set[...]
-		# h5file.close()
-		# pos = sub_CoP[0]
-		# free_memory(['pos'], invert=True)
-		# return pos
-
 	@data_subject(subject = "groups")
 	def group_r200(self, *args, **kwargs):
 		"""
@@ -614,8 +598,8 @@ class Cluster (Simulation):
 	# 	return sub_N_tot
 
 
-
-	def particle_type(self, part_type = 'gas'):
+	@staticmethod
+	def type_convert(part_type):
 		"""
 		AIM: returns a string characteristic of the particle type selected
 		RETURNS: string of number 0<= n <= 5
@@ -706,15 +690,13 @@ class Cluster (Simulation):
 			part_mass = np.ones_like(self.group_number(part_type))*0.422664
 		return part_mass
 
+
 	@data_subject(subject="particledata")
-	def particle_temperature(self, part_type = '0', *args, **kwargs):
+	def particle_temperature(self, *args, **kwargs):
 		"""
 		RETURNS: 1D np.array
 		"""
 		# Check that we are extracting the temperature of gas particles
-		if part_type is not '0':
-			print("[ERROR] Trying to extract the temperature of non-gaseous particles.")
-			exit(1)
 		temperature = np.zeros(0 ,dtype=np.float)
 		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
@@ -726,15 +708,10 @@ class Cluster (Simulation):
 		return temperature
 
 	@data_subject(subject="particledata")
-	def particle_SPH_density(self, part_type = '0', *args, **kwargs):
+	def particle_SPH_density(self, *args, **kwargs):
 		"""
 		RETURNS: 1D np.array
 		"""
-		# Check that we are extracting the temperature of gas SPH density
-		#TODO write as assert
-		if part_type is not '0':
-			print("[ERROR] Trying to extract the SPH density of non-gaseous particles.")
-			exit(1)
 		densitySPH = np.zeros(0 ,dtype=np.float)
 		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
@@ -746,14 +723,10 @@ class Cluster (Simulation):
 		return densitySPH
 
 	@data_subject(subject="particledata")
-	def particle_metallicity(self, part_type = '0', *args, **kwargs):
+	def particle_metallicity(self, *args, **kwargs):
 		"""
 		RETURNS: 1D np.array
 		"""
-		# Check that we are extracting the temperature of gas SPH density
-		if part_type is not '0':
-			print("[ERROR] Trying to extract the metallicity of non-gaseous particles.")
-			exit(1)
 		metallicity = np.zeros(0 ,dtype=np.float)
 		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
@@ -763,3 +736,99 @@ class Cluster (Simulation):
 			metallicity = np.concatenate((metallicity, sub_Z), axis = 0)
 			free_memory(['metallicity'], invert = True)
 		return metallicity
+
+	def group_centre_of_mass(self, out_allPartTypes = False):
+		"""
+		out_allPartTypes = (bool)
+			if True outputs the centre of mass and sum of masses of each
+			partType separately in arrays
+
+			if False outputs the overall CoM and sum of masses of the whole
+			cluster.
+
+		Returns the centre of mass of the cluster for a ALL particle types,
+		except for lowres_DM (2, 3).
+		"""
+		CoM_PartTypes = np.zeros( (0,3) ,dtype=np.float)
+		Mtot_PartTypes = np.zeros(0 ,dtype=np.float)
+
+		for part_type in ['0', '1', '4', '5']:
+			mass = self.particle_masses(part_type)
+			coords = self.particle_coordinates(part_type)
+			centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
+			CoM_PartTypes = np.concatenate((CoM_PartTypes, centre_of_mass), axis=0)
+			Mtot_PartTypes = np.concatenate((Mtot_PartTypes, sum_of_masses), axis=0)
+			free_memory(['CoM_PartTypes', 'Mtot_PartTypes'], invert=True)
+
+		if out_allPartTypes:
+			return CoM_PartTypes, Mtot_PartTypes
+		else:
+			return self.centre_of_mass(Mtot_PartTypes, CoM_PartTypes)
+
+	def group_zero_momentum_frame(self, out_allPartTypes=False):
+		"""
+		out_allPartTypes = (bool)
+			if True outputs the zero_momentum_frame and sum of masses of each
+			partType separately in arrays
+
+			if False outputs the overall zero_momentum_frame and sum of masses
+			of the whole cluster.
+
+		Returns the zero_momentum_frame of the cluster for a ALL particle types,
+		except for lowres_DM (2, 3).
+		"""
+		ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
+		Mtot_PartTypes = np.zeros(0, dtype=np.float)
+
+		for part_type in ['0', '1', '4', '5']:
+			mass = self.particle_masses(part_type)
+			vel = self.particle_velocity(part_type)
+			zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)
+			ZMF_PartTypes = np.concatenate((ZMF_PartTypes, zero_momentum), axis=0)
+			Mtot_PartTypes = np.concatenate((Mtot_PartTypes, sum_of_masses), axis=0)
+			free_memory(['ZMF_PartTypes', 'Mtot_PartTypes'], invert=True)
+
+		if out_allPartTypes:
+			return ZMF_PartTypes, Mtot_PartTypes
+		else:
+			return self.zero_momentum_frame(Mtot_PartTypes, ZMF_PartTypes)
+
+
+	# CLUSTER NAMESPACE
+	@staticmethod
+	def centre_of_mass(mass, coords):
+		"""
+		AIM: reads the FoF group central of mass from the path and file given
+		RETURNS: type = np.array of 3 doubles
+		ACCESS DATA: e.g. group_CoM[0] for getting the x value
+		"""
+		sum_of_masses = np.sum(mass)
+		centre_of_mass = [np.sum(mass * coords[:, 0]) / sum_of_masses,
+						  np.sum(mass * coords[:, 1]) / sum_of_masses,
+						  np.sum(mass * coords[:, 2]) / sum_of_masses]
+		free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
+		return centre_of_mass, sum_of_masses
+
+	@staticmethod
+	def zero_momentum_frame(mass, vel):
+		"""
+		AIM: reads the FoF group central of mass from the path and file given
+		RETURNS: type = np.array of 3 doubles
+		"""
+		sum_of_masses = np.sum(mass)
+		zero_momentum =	 [np.sum(mass * vel[:, 0]) / sum_of_masses,
+						  np.sum(mass * vel[:, 1]) / sum_of_masses,
+						  np.sum(mass * vel[:, 2]) / sum_of_masses]
+		free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
+		return zero_momentum, sum_of_masses
+
+	@staticmethod
+	def kinetic_energy(mass, vel):
+		ke = 0.5 * mass * np.sum([vel[i]**2 for i in range(0,3)])
+		return np.sum(ke)
+
+	@staticmethod
+	def thermal_energy(mass, temperature):
+		k_B = 1.38064852e-23
+		te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575e-27)
+		return np.sum(te)
