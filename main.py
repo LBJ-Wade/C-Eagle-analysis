@@ -1,6 +1,7 @@
 if __name__ == "__main__":
     from clusters_retriever import *
     from cluster_profiler import *
+    from mergers import thermal_index as th
 
     ceagle = Simulation()
     z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
@@ -8,7 +9,6 @@ if __name__ == "__main__":
     print(cluster.group_centre_of_potential())
     print(cluster.NumOfSubhalos(central_FOF = True))
     # print(cluster.subgroups_number(central_FOF = True))
-    print(cluster.group_number_part('0'))
-    print(cluster.subgroup_number_part('0'))
+    print(th(cluster))
 
 

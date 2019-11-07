@@ -4,8 +4,9 @@ from matplotlib import pyplot as plt
 import h5py
 
 from clusters_retriever import *
-import map_plot_parameters as plotpar
 import cluster_profiler as profile
+import map_plot_parameters as plotpar
+# import cluster_profiler as profile
 """
 GLOBAL VARS
 """
@@ -30,17 +31,16 @@ def dynamical_index(cluster):
 def thermal_index(cluster):
     plot_groups = 'FoF'
     k_B = 1.38064852e-23
-    cluster.set_subject('particledata')
 
     # Gas particles
     part_type = cluster.particle_type('gas')
     mass = cluster.particle_masses(part_type)
     coordinates = cluster.particle_coordinates(part_type)
     velocities = cluster.particle_velocity(part_type)
-    group_number = cluster.group_number(part_type)
-    subgroup_number = cluster.subgroup_number(part_type)
+    group_number = cluster.group_number_part(part_type)
+    subgroup_number = cluster.subgroup_number_part(part_type)
     temperatures = cluster.particle_temperature(part_type)
-    tot_rest_frame, _ = profile.total_mass_rest_frame(cluster)
+    tot_rest_frame = profile.cluster_average_velocity(velocities)
     # gas_rest_frame, _ = profile.cluster_average_momentum(path, file, part_type)
 
 
@@ -76,7 +76,7 @@ def thermal_index(cluster):
 
     # Select particles within 5*r200
     if plot_groups == 'FoF':
-        index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number > -1))[0]
+        index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number < 5000) & (subgroup_number > -1))[0]
     elif plot_groups == 'subgroups':
         index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number > 0))[0]
     else:
@@ -84,8 +84,10 @@ def thermal_index(cluster):
         exit(1)
 
     mass = mass[index]
-    # x, y, z = x[index], y[index], z[index]
+    temperatures = temperatures[index]
     vx, vy, vz = vx[index], vy[index], vz[index]
+
+    # x, y, z = x[index], y[index], z[index]
 
     # # Generate plot
     # plotpar.set_defaults_plot()
