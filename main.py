@@ -5,7 +5,7 @@ if __name__ == "__main__":
 
     ceagle = Simulation()
     z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
-    cluster = Cluster(clusterID = 0, redshift = 0.101)
+    cluster = Cluster(clusterID = 0, redshift = z_catalogue[-4])
     # print(cluster.group_centre_of_potential())
     # print(cluster.NumOfSubhalos(central_FOF = True))
     # print(cluster.subgroups_number(central_FOF = True))
