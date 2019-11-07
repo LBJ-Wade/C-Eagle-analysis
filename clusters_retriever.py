@@ -807,6 +807,7 @@ class Cluster (Simulation):
 						  np.sum(mass * coords[:, 1]) / sum_of_masses,
 						  np.sum(mass * coords[:, 2]) / sum_of_masses]
 		free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
+		print(centre_of_mass, sum_of_masses)
 		return centre_of_mass, sum_of_masses
 
 	@staticmethod
