@@ -83,23 +83,16 @@ def thermal_index(cluster):
         print("[ERROR] The (sub)groups you are trying to plot are not defined.")
         exit(1)
 
+    free_memory(['x', 'y', 'z'], invert=False)
     mass = mass[index]
     temperatures = temperatures[index]
     vx, vy, vz = vx[index], vy[index], vz[index]
 
-    # x, y, z = x[index], y[index], z[index]
-
-    # # Generate plot
-    # plotpar.set_defaults_plot()
-
-
-
     KE = 0.5 * mass * (vx**2 + vy**2 + vz**2)
     TE = 1.5 * k_B * temperatures * mass * 0.88 / (1.6735575e-27)
-
-
-    free_memory(['KE', 'TE'], invert=True)
-    return TE/KE
+    thermdyn = np.sum(KE)/np.sum(TE)
+    free_memory([thermdyn], invert=True)
+    return thermdyn
 
 def gen_data():
     """
