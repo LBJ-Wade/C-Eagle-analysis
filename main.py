@@ -2,7 +2,6 @@ if __name__ == "__main__":
 
     from clusters_retriever import *
     from cluster_profiler import *
-    from mergers import thermal_index, dynamical_index
 
     ceagle = Simulation()
     z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
