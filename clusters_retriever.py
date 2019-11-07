@@ -174,7 +174,7 @@ class Cluster (Simulation):
 			@wraps(f)
 			def decorated_function(self, *args, **kwargs):  # the decorated function
 
-				redshift_str = redshift_num2str(self.redshift)
+				redshift_str = redshift_num2str(round(self.redshift, 3))
 				redshift_i = self.redshiftAllowed.index(redshift_str)
 				redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
 				sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + redshift_str
