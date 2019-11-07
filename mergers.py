@@ -22,7 +22,6 @@ def dist(v, u):
     return s ** 0.5
 
 def dynamical_index(cluster):
-    cluster.set_subject('groups')
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
