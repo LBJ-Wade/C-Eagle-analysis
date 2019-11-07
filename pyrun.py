@@ -1,5 +1,5 @@
 from os import system as cmd
-from time.time import sleep
+from time import sleep
 
 cmd('module unload python/2.7.15')
 sleep(1)
