@@ -168,7 +168,7 @@ class Cluster (Simulation):
 		:return: decorated function with predefined **kwargs
 		The **Kwargs are dynamically allocated to the external methods.
 		"""
-		print("Reading ", decorator_kwargs['subject'], " files.")
+		# print("Reading ", decorator_kwargs['subject'], " files.")
 
 		def wrapper(f):  # a wrapper for the function
 			@wraps(f)
@@ -421,7 +421,7 @@ class Cluster (Simulation):
 
 
 	@data_subject(subject="groups")
-	def subgroups_number(self, *args, central_FOF = None,**kwargs):
+	def SubGroupNumber(self, *args, central_FOF = None,**kwargs):
 		"""
 		AIM: reads the group number of subgroups from the path and file given
 		RETURNS: type = 1/2D np.array
@@ -477,7 +477,8 @@ class Cluster (Simulation):
 			free_memory(['pos'], invert = True)
 		return pos
 
-	def subgroups_centre_of_mass(self):
+	@data_subject(subject="groups")
+	def subgroups_centre_of_mass(self, *args, **kwargs):
 		"""
 		AIM: reads the subgroups central of mass from the path and file given
 		RETURNS: type = 2D np.array
@@ -495,7 +496,7 @@ class Cluster (Simulation):
 		"""
 
 		pos = np.zeros( (0,3) ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/CentreOfMass']
 			sub_CoM = hd5set[...]
@@ -504,7 +505,8 @@ class Cluster (Simulation):
 			free_memory(['pos'], invert = True)
 		return pos
 
-	def subgroups_velocity(self):
+	@data_subject(subject="groups")
+	def subgroups_velocity(self, *args, **kwargs):
 		"""
 		AIM: reads the subgroups 3d velocities from the path and file given
 		RETURNS: type = 2D np.array
@@ -522,7 +524,7 @@ class Cluster (Simulation):
 		"""
 
 		vel = np.zeros( (0,3) ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/Velocity']
 			sub_v = hd5set[...]
@@ -531,14 +533,15 @@ class Cluster (Simulation):
 			free_memory(['vel'], invert = True)
 		return vel
 
-	def subgroups_mass(self):
+	@data_subject(subject="groups")
+	def subgroups_mass(self, *args, **kwargs):
 		"""
 		AIM: reads the subgroups masses from the path and file given
 		RETURNS: type = 1D np.array
 		"""
 
 		mass = np.zeros(0 ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/Mass']
 			sub_m = hd5set[...]
@@ -547,13 +550,14 @@ class Cluster (Simulation):
 			free_memory(['mass'], invert = True)
 		return mass
 
-	def subgroups_kin_energy(self):
+	@data_subject(subject="groups")
+	def subgroups_kin_energy(self, *args, **kwargs):
 		"""
 		AIM: reads the subgroups kinetic energy from the path and file given
 		RETURNS: type = 1D np.array
 		"""
 		kin_energy = np.zeros(0 ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/KineticEnergy']
 			sub_ke = hd5set[...]
@@ -562,16 +566,14 @@ class Cluster (Simulation):
 			free_memory(['kin_energy'], invert = True)
 		return kin_energy
 
-	def subgroups_therm_energy(self):
+	@data_subject(subject="groups")
+	def subgroups_therm_energy(self, *args, **kwargs):
 		"""
 		AIM: reads the subgroups thermal energy from the path and file given
 		RETURNS: type = 1D np.array
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
 		therm_energy = np.zeros(0 ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/Subhalo/ThermalEnergy']
 			sub_th = hd5set[...]
@@ -580,40 +582,40 @@ class Cluster (Simulation):
 			free_memory(['therm_energy'], invert = True)
 		return therm_energy
 
-	def subgroups_mass_type(self):
-		"""
-		AIM: reads the subgroups mass types from the path and file given
-		RETURNS: type = 2D np.array
-		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		massType = np.zeros(0)
-		for path in self.filePaths:
-			h5file=h5.File(path,'r')
-			hd5set=h5file['/Subhalo/MassType']
-			sub_mType = hd5set[...]
-			h5file.close()
-			massType = np.concatenate((massType, sub_mType), axis = 0)
-			free_memory(['massType'], invert = True)
-		return massType
-
-	def subgroups_number_of(self):
-		"""
-		AIM: reads the number of subgroups in FoF group from the path and file given
-		RETURNS: type = 1D np.array
-		"""
-		# Import data from hdf5 file
-		if self.subject != 'groups':
-			raise ValueError('subject of data must be groups.')
-		sub_N_tot = np.zeros(0 ,dtype=np.int)
-		for path in self.filePaths:
-			h5file=h5.File(path,'r')
-			hd5set=h5file['FOF/NumOfSubhalos']
-			sub_N = hd5set[...]
-			h5file.close()
-			sub_N_tot = np.concatenate((sub_N_tot, sub_N), axis = 0)
-		return sub_N_tot
+	# def subgroups_mass_type(self):
+	# 	"""
+	# 	AIM: reads the subgroups mass types from the path and file given
+	# 	RETURNS: type = 2D np.array
+	# 	"""
+	# 	# Import data from hdf5 file
+	# 	if self.subject != 'groups':
+	# 		raise ValueError('subject of data must be groups.')
+	# 	massType = np.zeros(0)
+	# 	for path in self.filePaths:
+	# 		h5file=h5.File(path,'r')
+	# 		hd5set=h5file['/Subhalo/MassType']
+	# 		sub_mType = hd5set[...]
+	# 		h5file.close()
+	# 		massType = np.concatenate((massType, sub_mType), axis = 0)
+	# 		free_memory(['massType'], invert = True)
+	# 	return massType
+	#
+	# def subgroups_number_of(self):
+	# 	"""
+	# 	AIM: reads the number of subgroups in FoF group from the path and file given
+	# 	RETURNS: type = 1D np.array
+	# 	"""
+	# 	# Import data from hdf5 file
+	# 	if self.subject != 'groups':
+	# 		raise ValueError('subject of data must be groups.')
+	# 	sub_N_tot = np.zeros(0 ,dtype=np.int)
+	# 	for path in self.filePaths:
+	# 		h5file=h5.File(path,'r')
+	# 		hd5set=h5file['FOF/NumOfSubhalos']
+	# 		sub_N = hd5set[...]
+	# 		h5file.close()
+	# 		sub_N_tot = np.concatenate((sub_N_tot, sub_N), axis = 0)
+	# 	return sub_N_tot
 
 
 
@@ -632,16 +634,13 @@ class Cluster (Simulation):
 			print("[ERROR] You entered the wrong particle type!")
 			exit(1)
 
-
-	def group_number(self, part_type):
+	@data_subject(subject="particledata")
+	def group_number_part(self, part_type, *args, **kwargs):
 		"""
 		RETURNS: np.array
 		"""
-		# Import data from hdf5 file
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		group_number = np.zeros(0 ,dtype=np.int)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/PartType' + part_type + '/GroupNumber']
 			sub_gn = hd5set[...]
@@ -649,15 +648,13 @@ class Cluster (Simulation):
 			group_number = np.concatenate((group_number, sub_gn), axis = 0)
 		return group_number
 
-
-	def subgroup_number(self, part_type):
+	@data_subject(subject="particledata")
+	def subgroup_number_part(self, part_type, *args, **kwargs):
 		"""
 		RETURNS: np.array
 		"""
-		if self.subject != 'particledata':
-			raise ValueError('subject of data must be particledata.')
 		sub_group_number = np.zeros(0 ,dtype=np.int)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/PartType' + part_type + '/SubGroupNumber']
 			sub_gn = hd5set[...]
@@ -666,12 +663,12 @@ class Cluster (Simulation):
 		return sub_group_number
 
 	@data_subject(subject="particledata")
-	def particle_coordinates(self, part_type):
+	def particle_coordinates(self, part_type, *args, **kwargs):
 		"""
 		RETURNS: 2D np.array
 		"""
 		pos = np.zeros( (0,3) ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/PartType' + part_type + '/Coordinates']
 			sub_pos = hd5set[...]
@@ -681,12 +678,12 @@ class Cluster (Simulation):
 		return pos
 
 	@data_subject(subject="particledata")
-	def particle_velocity(self, part_type):
+	def particle_velocity(self, part_type, *args, **kwargs):
 		"""
 		RETURNS: 2D np.array
 		"""
 		part_vel = np.zeros( (0,3) ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/PartType' + part_type + '/Velocity']
 			sub_vel = hd5set[...]
@@ -696,13 +693,13 @@ class Cluster (Simulation):
 		return part_vel
 
 	@data_subject(subject="particledata")
-	def particle_masses(self, part_type):
+	def particle_masses(self, part_type, *args, **kwargs):
 		"""
 		RETURNS: 2D np.array
 		"""
 		if (part_type != '1'):
 			part_mass = np.zeros(0 ,dtype=np.float)
-			for path in self.filePaths:
+			for path in kwargs['file_list_sorted']:
 				h5file=h5.File(path,'r')
 				hd5set=h5file['/PartType' + part_type + '/Mass']
 				sub_m = hd5set[...]
@@ -714,7 +711,7 @@ class Cluster (Simulation):
 		return part_mass
 
 	@data_subject(subject="particledata")
-	def particle_temperature(self, part_type = '0'):
+	def particle_temperature(self, part_type = '0', *args, **kwargs):
 		"""
 		RETURNS: 1D np.array
 		"""
@@ -723,7 +720,7 @@ class Cluster (Simulation):
 			print("[ERROR] Trying to extract the temperature of non-gaseous particles.")
 			exit(1)
 		temperature = np.zeros(0 ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/PartType0/Temperature']
 			sub_T = hd5set[...]
@@ -733,16 +730,17 @@ class Cluster (Simulation):
 		return temperature
 
 	@data_subject(subject="particledata")
-	def particle_SPH_density(self, part_type = '0'):
+	def particle_SPH_density(self, part_type = '0', *args, **kwargs):
 		"""
 		RETURNS: 1D np.array
 		"""
 		# Check that we are extracting the temperature of gas SPH density
+		#TODO write as assert
 		if part_type is not '0':
 			print("[ERROR] Trying to extract the SPH density of non-gaseous particles.")
 			exit(1)
 		densitySPH = np.zeros(0 ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/PartType0/Density']
 			sub_den = hd5set[...]
@@ -752,7 +750,7 @@ class Cluster (Simulation):
 		return densitySPH
 
 	@data_subject(subject="particledata")
-	def particle_metallicity(self, part_type = '0'):
+	def particle_metallicity(self, part_type = '0', *args, **kwargs):
 		"""
 		RETURNS: 1D np.array
 		"""
@@ -761,7 +759,7 @@ class Cluster (Simulation):
 			print("[ERROR] Trying to extract the metallicity of non-gaseous particles.")
 			exit(1)
 		metallicity = np.zeros(0 ,dtype=np.float)
-		for path in self.filePaths:
+		for path in kwargs['file_list_sorted']:
 			h5file=h5.File(path,'r')
 			hd5set=h5file['/PartType0/Metallicity']
 			sub_Z = hd5set[...]
