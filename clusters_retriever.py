@@ -352,6 +352,10 @@ class Cluster (Simulation):
 		_, attr_value = self.extract_header_attribute_name('TotNsubgroups')
 		return attr_value
 
+	def file_MassTable(self):
+		_, attr_value = self.extract_header_attribute_name('MassTable')
+		return attr_value
+
 	def file_NumPart_Total(self):
 		"""
 		[
@@ -367,6 +371,12 @@ class Cluster (Simulation):
 		"""
 		_, attr_value = self.extract_header_attribute_name('NumPart_Total')
 		return attr_value
+
+	def DM_particleMass(self):
+		return self.file_MassTable()[1]
+
+	def DM_NumPart_Total(self):
+		return self.file_NumPart_Total()[1]
 
 
 	@data_subject(subject="groups")
@@ -687,7 +697,7 @@ class Cluster (Simulation):
 				part_mass = np.concatenate((part_mass, sub_m), axis = 0)
 				free_memory(['part_mass'], invert = True)
 		elif part_type == '1':
-			part_mass = np.ones_like(self.group_number(part_type))*0.422664
+			part_mass = np.ones_like(self.DM_NumPart_Total())*self.DM_particleMass()
 		return part_mass
 
 

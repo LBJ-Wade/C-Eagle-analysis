@@ -4,4 +4,4 @@ python3 --version
 git pull
 echo Running main program...
 python3 main.py
-echo End of file.
+echo End of session.
