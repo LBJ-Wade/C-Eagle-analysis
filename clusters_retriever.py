@@ -140,7 +140,7 @@ class Cluster (Simulation):
 		except AssertionError:
 			raise
 		else:
-			self.redshift = redshift
+			self.redshift = round(redshift, 3)
 
 	def path_from_cluster_name(self):
 		"""

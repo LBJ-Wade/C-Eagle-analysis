@@ -16,10 +16,7 @@ __pathSave__ = ceagle.pathSave + '/merger_index/'
 
 
 def dist(v, u):
-    s = 0
-    for v_i, u_i in zip(v, u):
-        s += (v_i - u_i)**2
-    return s ** 0.5
+    return (v[0] - u[0])**2 + (v[1] - u[1])**2 + (v[2] - u[2])**2
 
 def dynamical_index(cluster):
     cop = cluster.group_centre_of_potential()
