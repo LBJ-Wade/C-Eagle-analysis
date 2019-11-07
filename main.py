@@ -9,12 +9,14 @@ if __name__ == "__main__":
     # print(cluster.group_centre_of_potential())
     # print(cluster.NumOfSubhalos(central_FOF = True))
     # print(cluster.subgroups_number(central_FOF = True))
-    print('z = ', cluster.redshift, '\n---------------------')
-    print('dynamical_index(cluster), thermal_index(cluster)')
+    # print('z = ', cluster.redshift, '\n---------------------')
+    # print('dynamical_index(cluster), thermal_index(cluster)')
     # print(dynamical_index(cluster))#, '\t\t', thermal_index(cluster))
 
 
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
-    print(cop, com, r500)
+    print('cop\t', cop)
+    print('com\t', com)
+    print('r500\t', r500)

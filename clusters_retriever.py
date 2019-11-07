@@ -763,6 +763,7 @@ class Cluster (Simulation):
 		Mtot_PartTypes = np.zeros(0 ,dtype=np.float)
 
 		for part_type in ['0', '1', '4', '5']:
+			print('part_type\t', part_type)
 			mass = self.particle_masses(part_type)
 			coords = self.particle_coordinates(part_type)
 			centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
