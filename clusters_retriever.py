@@ -40,7 +40,7 @@ def redshift_num2str(z: float):
 	# Integer part
 	integer_z = '%03d' % (int(integer_z),)
 	# Decimal part
-	decimal_z = str(int(round(decimal_z, 4)*1000)).rjust(3, '0')
+	decimal_z = str(int(round(decimal_z, 9)*1000)).rjust(3, '0')
 	return 'z' + integer_z + 'p' + decimal_z
 
 
