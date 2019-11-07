@@ -803,9 +803,9 @@ class Cluster (Simulation):
 		ACCESS DATA: e.g. group_CoM[0] for getting the x value
 		"""
 		sum_of_masses = np.sum(mass)
-		centre_of_mass = [np.sum(mass * coords[:, 0]) / sum_of_masses,
-						  np.sum(mass * coords[:, 1]) / sum_of_masses,
-						  np.sum(mass * coords[:, 2]) / sum_of_masses]
+		centre_of_mass = np.array([np.sum(mass * coords[:, 0]) / sum_of_masses,
+								   np.sum(mass * coords[:, 1]) / sum_of_masses,
+							 	   np.sum(mass * coords[:, 2]) / sum_of_masses])
 		free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
 		print(centre_of_mass, sum_of_masses)
 		return centre_of_mass, sum_of_masses
@@ -817,9 +817,9 @@ class Cluster (Simulation):
 		RETURNS: type = np.array of 3 doubles
 		"""
 		sum_of_masses = np.sum(mass)
-		zero_momentum =	 [np.sum(mass * vel[:, 0]) / sum_of_masses,
-						  np.sum(mass * vel[:, 1]) / sum_of_masses,
-						  np.sum(mass * vel[:, 2]) / sum_of_masses]
+		zero_momentum =	 np.array([np.sum(mass * vel[:, 0]) / sum_of_masses,
+								   np.sum(mass * vel[:, 1]) / sum_of_masses,
+								   np.sum(mass * vel[:, 2]) / sum_of_masses])
 		free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
 		return zero_momentum, sum_of_masses
 
