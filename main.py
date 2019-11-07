@@ -11,6 +11,10 @@ if __name__ == "__main__":
     # print(cluster.subgroups_number(central_FOF = True))
     print('z = ', cluster.redshift, '\n---------------------')
     print('dynamical_index(cluster), thermal_index(cluster)')
-    print(dynamical_index(cluster))#, '\t\t', thermal_index(cluster))
+    # print(dynamical_index(cluster))#, '\t\t', thermal_index(cluster))
 
 
+    cop = cluster.group_centre_of_potential()
+    com = cluster.group_centre_of_mass()
+    r500 = cluster.group_r500()
+    print(cop, com, r500)
