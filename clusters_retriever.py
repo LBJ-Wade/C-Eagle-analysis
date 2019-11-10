@@ -373,10 +373,10 @@ class Cluster (Simulation):
 		return attr_value
 
 	def DM_particleMass(self):
-		return self.file_MassTable()
+		return self.file_MassTable()[1]
 
 	def DM_NumPart_Total(self):
-		return self.file_NumPart_Total()
+		return self.file_NumPart_Total()[1]
 
 
 	@data_subject(subject="groups")

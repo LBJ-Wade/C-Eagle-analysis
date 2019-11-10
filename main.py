@@ -18,7 +18,6 @@ if __name__ == "__main__":
     # com = cluster.group_centre_of_mass()
     # r500 = cluster.group_r500()
     print('DM_NumPart_Total()\t', cluster.DM_NumPart_Total())
-    print('DM_NumPart_Total()\t', cluster.DM_NumPart_Total()[1])
     print('DM_particleMass()\t', cluster.DM_particleMass())
     print('file_NumPart_Total\t', cluster.file_NumPart_Total())
     # print('com\t', com)
