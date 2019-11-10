@@ -2,7 +2,7 @@ import os
 from os import path
 from matplotlib import pyplot as plt
 import h5py
-
+from scipy.spatial import distance
 from clusters_retriever import *
 import cluster_profiler as profile
 import map_plot_parameters as plotpar
@@ -20,7 +20,7 @@ def dynamical_index(cluster):
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
-    return np.sqrt(np.sum([(cop[i] - com[i])**2 for i in range(0, 3)])/r500
+    return distance.euclidean(cop, com)/r500
 
 def thermal_index(cluster):
     plot_groups = 'FoF'

@@ -687,7 +687,9 @@ class Cluster (Simulation):
 		"""
 		RETURNS: 2D np.array
 		"""
-		if (part_type != '1'):
+		if part_type == '1':
+			part_mass = np.ones(self.DM_NumPart_Total())*self.DM_particleMass()
+		else:
 			part_mass = np.zeros(0 ,dtype=np.float)
 			for path in kwargs['file_list_sorted']:
 				h5file=h5.File(path,'r')
@@ -696,8 +698,7 @@ class Cluster (Simulation):
 				h5file.close()
 				part_mass = np.concatenate((part_mass, sub_m), axis = 0)
 				free_memory(['part_mass'], invert = True)
-		elif part_type == '1':
-			part_mass = np.ones_like(self.DM_NumPart_Total())*self.DM_particleMass()
+
 		return part_mass
 
 
