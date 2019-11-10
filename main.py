@@ -10,8 +10,7 @@ __PROFILE__ = True
 
 def main():
 
-    from clusters_retriever import *
-    from cluster_profiler import *
+    from clusters_retriever import Cluster
 
     # ceagle = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
