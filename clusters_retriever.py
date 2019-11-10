@@ -296,7 +296,7 @@ class Cluster (Simulation):
 		free_memory(['m500'], invert=True)
 		return m500
 
-	@data_subject(subject = "groups")
+	@data_subject(subject = "particledata")
 	def extract_header_attribute(self, element_number, *args, **kwargs):
 		# Import data from hdf5 file
 		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
@@ -306,7 +306,7 @@ class Cluster (Simulation):
 		h5file.close()
 		return attr_name, attr_value
 
-	@data_subject(subject = "groups")
+	@data_subject(subject = "particledata")
 	def extract_header_attribute_name(self, element_name, *args, **kwargs):
 		# Import data from hdf5 file
 		h5file=h5.File(kwargs['file_list_sorted'][0],'r')
