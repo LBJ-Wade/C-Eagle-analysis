@@ -1,12 +1,17 @@
 """
 main.py
 
+AUTHOR: Edo Altamura
+DATE: 10-11-2019
+
 This file contains the main() function and is used for testing
 purposes. It can also be linked to shell arguments for profiling.
-
+By setting __PROFILE__ = False you are choosing to run the
+program with normal outputs, while __PROFILE__ = True will trigger
+the profiler and display the call stats associated with main().
 """
 
-__PROFILE__ = True
+__PROFILE__ = False
 
 def main():
 
