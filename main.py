@@ -35,9 +35,16 @@ def main():
 
 if __name__ == "__main__":
 
+    import datetime
+
     if __PROFILE__:
         import cProfile
+
+        datetime.datetime.now().isoformat()
         cProfile.run('main()')
+        datetime.datetime.now().isoformat()
     else:
+        datetime.datetime.now().isoformat()
         main()
+        datetime.datetime.now().isoformat()
 
