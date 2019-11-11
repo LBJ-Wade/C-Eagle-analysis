@@ -1,4 +1,4 @@
-"""
+__FILE__ = """
 main.py
 
 AUTHOR: Edo Altamura
@@ -25,11 +25,11 @@ def main():
     cop = cluster.group_centre_of_potential()
     print('cop\t', cop)
 
-    com = cluster.group_centre_of_mass()
-    print('com\t', com)
-
-    zmf = cluster.group_zero_momentum_frame()
-    print('zero mom frame\t', zmf)
+    # com = cluster.group_centre_of_mass()
+    # print('com\t', com)
+    #
+    # zmf = cluster.group_zero_momentum_frame()
+    # print('zero mom frame\t', zmf)
 
     r500 = cluster.group_r500()
     print('r500\t', r500)
@@ -47,6 +47,7 @@ if __name__ == "__main__":
         cProfile.run('main()')
         datetime.datetime.now().isoformat()
     else:
+        print(__FILE__)
         datetime.datetime.now().isoformat()
         main()
         datetime.datetime.now().isoformat()
