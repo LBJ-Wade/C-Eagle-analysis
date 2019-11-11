@@ -23,14 +23,17 @@ def main():
 
 
     cop = cluster.group_centre_of_potential()
-    com = cluster.group_centre_of_mass()
-    zmf = cluster.group_zero_momentum_frame()
-    r500 = cluster.group_r500()
-
     print('cop\t', cop)
+
+    com = cluster.group_centre_of_mass()
     print('com\t', com)
+
+    zmf = cluster.group_zero_momentum_frame()
     print('zero mom frame\t', zmf)
+
+    r500 = cluster.group_r500()
     print('r500\t', r500)
+
 
 
 if __name__ == "__main__":
