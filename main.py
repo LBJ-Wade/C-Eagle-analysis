@@ -24,10 +24,12 @@ def main():
 
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
+    zmf = cluster.group_zero_momentum_frame()
     r500 = cluster.group_r500()
 
     print('cop\t', cop)
     print('com\t', com)
+    print('zero mom frame\t', zmf)
     print('r500\t', r500)
 
 

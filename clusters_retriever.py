@@ -764,7 +764,6 @@ class Cluster (Simulation):
 		Mtot_PartTypes = np.zeros(0 ,dtype=np.float)
 
 		for part_type in ['0', '1', '4', '5']:
-			print('part_type\t', part_type)
 			mass = self.particle_masses(part_type)
 			coords = self.particle_coordinates(part_type)
 			centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
@@ -819,7 +818,6 @@ class Cluster (Simulation):
 								   np.sum(mass * coords[:, 1]) / sum_of_masses,
 							 	   np.sum(mass * coords[:, 2]) / sum_of_masses])
 		free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
-		print(centre_of_mass, sum_of_masses, '\n')
 		return centre_of_mass, sum_of_masses
 
 	@staticmethod
