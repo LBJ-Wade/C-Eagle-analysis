@@ -18,15 +18,15 @@ def time_func(function):
     # that includes the new timing behaviour
     def new_func(*args, **kwargs):
         start = datetime.datetime.now()
-        print('Start: {start}')
+        print('Start: {}'.format(start))
 
         function_result = function(*args, **kwargs)
         # Calculate the elapsed time and add it to the function
         # attributes.
         end = datetime.datetime.now()
         new_func.elapsed = end - start
-        print('End: {end}')
-        print('Elapsed: {new_func.elapsed}')
+        print('End: {}'.format(end))
+        print('Elapsed: {}'.format(new_func.elapsed))
         return function_result
     return new_func
 
