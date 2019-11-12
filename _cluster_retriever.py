@@ -14,6 +14,7 @@ They working principle is based on OOP class inheritance.
 """
 
 from cluster import *
+from cluster.Cluster import *
 
 class Mixin:
 
