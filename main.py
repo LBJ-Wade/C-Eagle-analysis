@@ -32,7 +32,7 @@ def time_func(function):
 @time_func
 def main():
 
-    from clusters_retriever import Cluster
+    from cluster import Cluster
 
     # ceagle = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
@@ -41,11 +41,11 @@ def main():
     cop = cluster.group_centre_of_potential()
     print('cop\t', cop)
 
-    com = cluster.group_centre_of_mass()
-    print('com\t', com)
-
-    zmf = cluster.group_zero_momentum_frame()
-    print('zero mom frame\t', zmf)
+    # com = cluster.group_centre_of_mass()
+    # print('com\t', com)
+    #
+    # zmf = cluster.group_zero_momentum_frame()
+    # print('zero mom frame\t', zmf)
 
     r500 = cluster.group_r500()
     print('r500\t', r500)

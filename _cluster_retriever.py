@@ -1,0 +1,425 @@
+"""
+------------------------------------------------------------------
+FILE:   _cluster_retriever.py
+AUTHOR: Edo Altamura
+DATE:   12-11-2019
+------------------------------------------------------------------
+This file is an extension of the cluster.Cluster class. It provides
+class methods for reading C-EAGLE data from the /cosma5 data system.
+This file contains a mixin class, affiliated to cluster.Cluster.
+Mixins are classes that have no data of their own — only methods —
+so although you inherit them, you never have to call super() on them.
+They working principle is based on OOP class inheritance.
+-------------------------------------------------------------------
+"""
+
+from cluster import *
+
+class Mixin:
+
+    #####################################################
+    #													#
+    #					D A T A   						#
+    # 				M A N A G E M E N T 				#
+    #													#
+    #####################################################
+    @Cluster.data_subject(subject="groups")
+    def group_centre_of_potential(self, *args, **kwargs):
+        """
+        AIM: reads the FoF group central of potential from the path and file given
+        RETURNS: type = np.array of 3 doubles
+        ACCESS DATA: e.g. group_CoP[0] for getting the x value
+        """
+
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        hd5set = h5file['/FOF/GroupCentreOfPotential']
+        sub_CoP = hd5set[...]
+        h5file.close()
+        pos = sub_CoP[0]
+        free_memory(['pos'], invert=True)
+        return pos
+
+    @Cluster.data_subject(subject="groups")
+    def group_r200(self, *args, **kwargs):
+        """
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/FOF/Group_R_Crit200"]
+        temp = h5dset[...]
+        h5file.close()
+        r200c = temp[0]
+        free_memory(['r200c'], invert=True)
+        return r200c
+
+    @Cluster.data_subject(subject="groups")
+    def group_r500(self, *args, **kwargs):
+        """
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/FOF/Group_R_Crit500"]
+        temp = h5dset[...]
+        h5file.close()
+        r500c = temp[0]
+        free_memory(['r500c'], invert=True)
+        return r500c
+
+    @Cluster.data_subject(subject="groups")
+    def group_mass(self, *args, **kwargs):
+        """
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/FOF/GroupMass"]
+        temp = h5dset[...]
+        h5file.close()
+        m_tot = temp[0]
+        free_memory(['m_tot'], invert=True)
+        return m_tot
+
+    @Cluster.data_subject(subject="groups")
+    def group_M200(self, *args, **kwargs):
+        """
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/FOF/Group_M_Crit200"]
+        temp = h5dset[...]
+        h5file.close()
+        m200 = temp[0]
+        free_memory(['m200'], invert=True)
+        return m200
+
+    @Cluster.data_subject(subject="groups")
+    def group_M500(self, *args, **kwargs):
+        """
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/FOF/Group_M_Crit500"]
+        temp = h5dset[...]
+        h5file.close()
+        m500 = temp[0]
+        free_memory(['m500'], invert=True)
+        return m500
+
+    @Cluster.data_subject(subject="groups")
+    def NumOfSubhalos(self, *args, central_FOF=None, **kwargs):
+        """
+        AIM: retrieves the redshift of the file
+        RETURNS: type = int
+
+        NOTES: there is no file for the FOF group number array. Instead,
+                there is an array in /FOF for the number of subhalos in each
+                FOF group. Used to gather each subgroup number
+        """
+        if central_FOF:
+            h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+            h5dset = h5file["/FOF/NumOfSubhalos"]
+            attr_value = h5dset[...]
+            h5file.close()
+            Ngroups = attr_value[0]
+            free_memory(['Ngroups'], invert=True)
+            return Ngroups
+
+        elif central_FOF is None or not central_FOF:
+            Ngroups = np.zeros(0, dtype=np.int)
+            for path in kwargs['file_list_sorted']:
+                h5file = h5.File(path, 'r')
+                h5dset = h5file["/FOF/NumOfSubhalos"]
+                attr_value = h5dset[...]
+                h5file.close()
+                Ngroups = np.concatenate((Ngroups, attr_value), axis=0)
+            free_memory(['Ngroups'], invert=True)
+            return Ngroups
+
+    @Cluster.data_subject(subject="groups")
+    def SubGroupNumber(self, *args, central_FOF=None, **kwargs):
+        """
+        AIM: reads the group number of subgroups from the path and file given
+        RETURNS: type = 1/2D np.array
+
+        if central_FOF:
+            returns []
+
+        """
+        if central_FOF:
+            # Build the sgn list artificially: less overhead in opening files
+            n_subhalos = self.NumOfSubhalos(*args, central_FOF=True, **kwargs)
+            sgn_list = np.linspace(0, n_subhalos - 1, n_subhalos, dtype=np.int)
+            free_memory(['sgn_list'], invert=True)
+            return sgn_list
+
+        elif central_FOF is None or not central_FOF:
+            sgn_list = np.zeros(0, dtype=np.int)
+            for path in kwargs['file_list_sorted']:
+                h5file = h5.File(path, 'r')
+                h5dset = h5file["/Subhalo/SubGroupNumber"]
+                sgn_sublist = h5dset[...]
+                h5file.close()
+                sgn_list = np.concatenate((sgn_list, sgn_sublist), axis=0)
+            # Check that the len of array is == total no of subhalos
+            assert np.sum(self.NumOfSubhalos(*args, central_FOF=False, **kwargs)) == sgn_list.__len__()
+            free_memory(['sgn_list'], invert=True)
+            return sgn_list
+
+    @Cluster.data_subject(subject="groups")
+    def subgroups_centre_of_potential(self, *args, **kwargs):
+        """
+        AIM: reads the subgroups central of potential from the path and file given
+        RETURNS: type = 2D np.array
+        FORMAT:	 sub#	  x.sub_CoP 	y.sub_CoP     z.sub_CoP
+                    0  [[			,				,			],
+                    1	[			,				,			],
+                    2	[			,				,			],
+                    3	[			,				,			],
+                    4	[			,				,			],
+                    5	[			,				,			],
+                    .						.
+                    .						.
+                    .						.					]]
+
+        """
+        pos = np.zeros((0, 3), dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/Subhalo/CentreOfPotential']
+            sub_CoP = hd5set[...]
+            h5file.close()
+            pos = np.concatenate((pos, sub_CoP), axis=0)
+            free_memory(['pos'], invert=True)
+        return pos
+
+    @Cluster.data_subject(subject="groups")
+    def subgroups_centre_of_mass(self, *args, **kwargs):
+        """
+        AIM: reads the subgroups central of mass from the path and file given
+        RETURNS: type = 2D np.array
+        FORMAT:	 sub#	  x.sub_CoM 	y.sub_CoM     z.sub_CoM
+                    0  [[			,				,			],
+                    1	[			,				,			],
+                    2	[			,				,			],
+                    3	[			,				,			],
+                    4	[			,				,			],
+                    5	[			,				,			],
+                    .						.
+                    .						.
+                    .						.					]]
+
+        """
+
+        pos = np.zeros((0, 3), dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/Subhalo/CentreOfMass']
+            sub_CoM = hd5set[...]
+            h5file.close()
+            pos = np.concatenate((pos, sub_CoM), axis=0)
+            free_memory(['pos'], invert=True)
+        return pos
+
+    @Cluster.data_subject(subject="groups")
+    def subgroups_velocity(self, *args, **kwargs):
+        """
+        AIM: reads the subgroups 3d velocities from the path and file given
+        RETURNS: type = 2D np.array
+        FORMAT:	 sub#	    vx.sub 	 	 vy.sub       	vz.sub
+                    0  [[			,				,			],
+                    1	[			,				,			],
+                    2	[			,				,			],
+                    3	[			,				,			],
+                    4	[			,				,			],
+                    5	[			,				,			],
+                    .						.
+                    .						.
+                    .						.					]]
+
+        """
+
+        vel = np.zeros((0, 3), dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/Subhalo/Velocity']
+            sub_v = hd5set[...]
+            h5file.close()
+            vel = np.concatenate((vel, sub_v), axis=0)
+            free_memory(['vel'], invert=True)
+        return vel
+
+    @Cluster.data_subject(subject="groups")
+    def subgroups_mass(self, *args, **kwargs):
+        """
+        AIM: reads the subgroups masses from the path and file given
+        RETURNS: type = 1D np.array
+        """
+
+        mass = np.zeros(0, dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/Subhalo/Mass']
+            sub_m = hd5set[...]
+            h5file.close()
+            mass = np.concatenate((mass, sub_m))
+            free_memory(['mass'], invert=True)
+        return mass
+
+    @Cluster.data_subject(subject="groups")
+    def subgroups_kin_energy(self, *args, **kwargs):
+        """
+        AIM: reads the subgroups kinetic energy from the path and file given
+        RETURNS: type = 1D np.array
+        """
+        kin_energy = np.zeros(0, dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/Subhalo/KineticEnergy']
+            sub_ke = hd5set[...]
+            h5file.close()
+            kin_energy = np.concatenate((kin_energy, sub_ke), axis=0)
+            free_memory(['kin_energy'], invert=True)
+        return kin_energy
+
+    @Cluster.data_subject(subject="groups")
+    def subgroups_therm_energy(self, *args, **kwargs):
+        """
+        AIM: reads the subgroups thermal energy from the path and file given
+        RETURNS: type = 1D np.array
+        """
+        therm_energy = np.zeros(0, dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/Subhalo/ThermalEnergy']
+            sub_th = hd5set[...]
+            h5file.close()
+            therm_energy = np.concatenate((therm_energy, sub_th), axis=0)
+            free_memory(['therm_energy'], invert=True)
+        return therm_energy
+
+    @Cluster.data_subject(subject="particledata")
+    def group_number_part(self, part_type, *args, **kwargs):
+        """
+        RETURNS: np.array
+        """
+        group_number = np.zeros(0, dtype=np.int)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType' + part_type + '/GroupNumber']
+            sub_gn = hd5set[...]
+            h5file.close()
+            group_number = np.concatenate((group_number, sub_gn), axis=0)
+        return group_number
+
+    @Cluster.data_subject(subject="particledata")
+    def subgroup_number_part(self, part_type, *args, **kwargs):
+        """
+        RETURNS: np.array
+        """
+        sub_group_number = np.zeros(0, dtype=np.int)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType' + part_type + '/SubGroupNumber']
+            sub_gn = hd5set[...]
+            h5file.close()
+            sub_group_number = np.concatenate((sub_group_number, sub_gn), axis=0)
+        return sub_group_number
+
+    @Cluster.data_subject(subject="particledata")
+    def particle_coordinates(self, part_type, *args, **kwargs):
+        """
+        RETURNS: 2D np.array
+        """
+        pos = np.zeros((0, 3), dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType' + part_type + '/Coordinates']
+            sub_pos = hd5set[...]
+            h5file.close()
+            pos = np.concatenate((pos, sub_pos), axis=0)
+            free_memory(['pos'], invert=True)
+        return pos
+
+    @Cluster.data_subject(subject="particledata")
+    def particle_velocity(self, part_type, *args, **kwargs):
+        """
+        RETURNS: 2D np.array
+        """
+        part_vel = np.zeros((0, 3), dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType' + part_type + '/Velocity']
+            sub_vel = hd5set[...]
+            h5file.close()
+            part_vel = np.concatenate((part_vel, sub_vel), axis=0)
+            free_memory(['part_vel'], invert=True)
+        return part_vel
+
+    @Cluster.data_subject(subject="particledata")
+    def particle_masses(self, part_type, *args, **kwargs):
+        """
+        RETURNS: 2D np.array
+        """
+        if part_type == '1':
+            part_mass = np.ones(self.DM_NumPart_Total()) * self.DM_particleMass()
+        else:
+            part_mass = np.zeros(0, dtype=np.float)
+            for path in kwargs['file_list_sorted']:
+                h5file = h5.File(path, 'r')
+                hd5set = h5file['/PartType' + part_type + '/Mass']
+                sub_m = hd5set[...]
+                h5file.close()
+                part_mass = np.concatenate((part_mass, sub_m), axis=0)
+                free_memory(['part_mass'], invert=True)
+
+        return part_mass
+
+    @Cluster.data_subject(subject="particledata")
+    def particle_temperature(self, *args, **kwargs):
+        """
+        RETURNS: 1D np.array
+        """
+        # Check that we are extracting the temperature of gas particles
+        temperature = np.zeros(0, dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType0/Temperature']
+            sub_T = hd5set[...]
+            h5file.close()
+            temperature = np.concatenate((temperature, sub_T), axis=0)
+            free_memory(['temperature'], invert=True)
+        return temperature
+
+    @Cluster.data_subject(subject="particledata")
+    def particle_SPH_density(self, *args, **kwargs):
+        """
+        RETURNS: 1D np.array
+        """
+        densitySPH = np.zeros(0, dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType0/Density']
+            sub_den = hd5set[...]
+            h5file.close()
+            densitySPH = np.concatenate((densitySPH, sub_den), axis=0)
+            free_memory(['densitySPH'], invert=True)
+        return densitySPH
+
+    @Cluster.data_subject(subject="particledata")
+    def particle_metallicity(self, *args, **kwargs):
+        """
+        RETURNS: 1D np.array
+        """
+        metallicity = np.zeros(0, dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType0/Metallicity']
+            sub_Z = hd5set[...]
+            h5file.close()
+            metallicity = np.concatenate((metallicity, sub_Z), axis=0)
+            free_memory(['metallicity'], invert=True)
+        return metallicity
