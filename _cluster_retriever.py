@@ -19,11 +19,66 @@ class Mixin:
 
     #####################################################
     #													#
+    #				D E C O R A T O R S  				#
+    # 									 				#
+    #####################################################
+
+    def data_subject(**decorator_kwargs):
+        """
+        This decorator adds functionality to the data import functions.
+        It dynamically creates attributes and filepaths, to be then
+        passed onto the actual import methods.
+        :param decorator_kwargs: subject = (str)
+        :return: decorated function with predefined **kwargs
+        The **Kwargs are dynamically allocated to the external methods.
+        """
+
+        # print("Reading ", decorator_kwargs['subject'], " files.")
+
+        def wrapper(f):  # a wrapper for the function
+            @wraps(f)
+            def decorated_function(self, *args, **kwargs):  # the decorated function
+
+                redshift_str = redshift_num2str(round(self.redshift, 3))
+                redshift_i = self.redshiftAllowed.index(redshift_str)
+                redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
+                sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + redshift_str
+                file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
+                file_list = os.listdir(file_dir)
+
+                if decorator_kwargs['subject'] == 'particledata':
+                    prefix = 'eagle_subfind_particles_'
+                elif decorator_kwargs['subject'] == 'groups':
+                    prefix = 'eagle_subfind_tab_'
+                elif decorator_kwargs['subject'] == 'snapshot':
+                    raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+                elif decorator_kwargs['subject'] == 'snipshot':
+                    raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+                elif decorator_kwargs['subject'] == 'hsmldir':
+                    raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+                elif decorator_kwargs['subject'] == 'groups_snip':
+                    raise ("[WARNING] This feature is not yet implemented in clusters_retriever.py.")
+
+                # Transfer function state into the **kwargs
+                # These **kwargs are accessible to the decorated class methods
+                kwargs['subject'] = decorator_kwargs['subject']
+                kwargs['file_dir'] = file_dir
+                kwargs['file_list'] = [x for x in file_list if x.startswith(prefix)]
+                kwargs['file_list_sorted'] = sorted([os.path.join(file_dir, file) for file in kwargs['file_list']])
+
+                return f(self, *args, **kwargs)
+
+            return decorated_function
+
+        return wrapper
+
+    #####################################################
+    #													#
     #					D A T A   						#
     # 				M A N A G E M E N T 				#
     #													#
     #####################################################
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def group_centre_of_potential(self, *args, **kwargs):
         """
         AIM: reads the FoF group central of potential from the path and file given
@@ -39,7 +94,7 @@ class Mixin:
         free_memory(['pos'], invert=True)
         return pos
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def group_r200(self, *args, **kwargs):
         """
         AIM: reads the FoF virial radius from the path and file given
@@ -53,7 +108,7 @@ class Mixin:
         free_memory(['r200c'], invert=True)
         return r200c
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def group_r500(self, *args, **kwargs):
         """
         AIM: reads the FoF virial radius from the path and file given
@@ -67,7 +122,7 @@ class Mixin:
         free_memory(['r500c'], invert=True)
         return r500c
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def group_mass(self, *args, **kwargs):
         """
         AIM: reads the FoF virial radius from the path and file given
@@ -81,7 +136,7 @@ class Mixin:
         free_memory(['m_tot'], invert=True)
         return m_tot
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def group_M200(self, *args, **kwargs):
         """
         AIM: reads the FoF virial radius from the path and file given
@@ -95,7 +150,7 @@ class Mixin:
         free_memory(['m200'], invert=True)
         return m200
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def group_M500(self, *args, **kwargs):
         """
         AIM: reads the FoF virial radius from the path and file given
@@ -109,7 +164,7 @@ class Mixin:
         free_memory(['m500'], invert=True)
         return m500
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def NumOfSubhalos(self, *args, central_FOF=None, **kwargs):
         """
         AIM: retrieves the redshift of the file
@@ -139,7 +194,7 @@ class Mixin:
             free_memory(['Ngroups'], invert=True)
             return Ngroups
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def SubGroupNumber(self, *args, central_FOF=None, **kwargs):
         """
         AIM: reads the group number of subgroups from the path and file given
@@ -169,7 +224,7 @@ class Mixin:
             free_memory(['sgn_list'], invert=True)
             return sgn_list
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def subgroups_centre_of_potential(self, *args, **kwargs):
         """
         AIM: reads the subgroups central of potential from the path and file given
@@ -196,7 +251,7 @@ class Mixin:
             free_memory(['pos'], invert=True)
         return pos
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def subgroups_centre_of_mass(self, *args, **kwargs):
         """
         AIM: reads the subgroups central of mass from the path and file given
@@ -224,7 +279,7 @@ class Mixin:
             free_memory(['pos'], invert=True)
         return pos
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def subgroups_velocity(self, *args, **kwargs):
         """
         AIM: reads the subgroups 3d velocities from the path and file given
@@ -252,7 +307,7 @@ class Mixin:
             free_memory(['vel'], invert=True)
         return vel
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def subgroups_mass(self, *args, **kwargs):
         """
         AIM: reads the subgroups masses from the path and file given
@@ -269,7 +324,7 @@ class Mixin:
             free_memory(['mass'], invert=True)
         return mass
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def subgroups_kin_energy(self, *args, **kwargs):
         """
         AIM: reads the subgroups kinetic energy from the path and file given
@@ -285,7 +340,7 @@ class Mixin:
             free_memory(['kin_energy'], invert=True)
         return kin_energy
 
-    @Cluster.data_subject(subject="groups")
+    @data_subject(subject="groups")
     def subgroups_therm_energy(self, *args, **kwargs):
         """
         AIM: reads the subgroups thermal energy from the path and file given
@@ -301,7 +356,7 @@ class Mixin:
             free_memory(['therm_energy'], invert=True)
         return therm_energy
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def group_number_part(self, part_type, *args, **kwargs):
         """
         RETURNS: np.array
@@ -315,7 +370,7 @@ class Mixin:
             group_number = np.concatenate((group_number, sub_gn), axis=0)
         return group_number
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def subgroup_number_part(self, part_type, *args, **kwargs):
         """
         RETURNS: np.array
@@ -329,7 +384,7 @@ class Mixin:
             sub_group_number = np.concatenate((sub_group_number, sub_gn), axis=0)
         return sub_group_number
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def particle_coordinates(self, part_type, *args, **kwargs):
         """
         RETURNS: 2D np.array
@@ -344,7 +399,7 @@ class Mixin:
             free_memory(['pos'], invert=True)
         return pos
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def particle_velocity(self, part_type, *args, **kwargs):
         """
         RETURNS: 2D np.array
@@ -359,7 +414,7 @@ class Mixin:
             free_memory(['part_vel'], invert=True)
         return part_vel
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def particle_masses(self, part_type, *args, **kwargs):
         """
         RETURNS: 2D np.array
@@ -378,7 +433,7 @@ class Mixin:
 
         return part_mass
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def particle_temperature(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
@@ -394,7 +449,7 @@ class Mixin:
             free_memory(['temperature'], invert=True)
         return temperature
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def particle_SPH_density(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
@@ -409,7 +464,7 @@ class Mixin:
             free_memory(['densitySPH'], invert=True)
         return densitySPH
 
-    @Cluster.data_subject(subject="particledata")
+    @data_subject(subject="particledata")
     def particle_metallicity(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
@@ -423,3 +478,23 @@ class Mixin:
             metallicity = np.concatenate((metallicity, sub_Z), axis=0)
             free_memory(['metallicity'], invert=True)
         return metallicity
+
+    @data_subject(subject="particledata")
+    def extract_header_attribute(self, element_number, *args, **kwargs):
+        # Import data from hdf5 file
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/Header"]
+        attr_name = list(h5dset.attrs.keys())[element_number]
+        attr_value = list(h5dset.attrs.values())[element_number]
+        h5file.close()
+        return attr_name, attr_value
+
+    @data_subject(subject="particledata")
+    def extract_header_attribute_name(self, element_name, *args, **kwargs):
+        # Import data from hdf5 file
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/Header"]
+        attr_name = h5dset.attrs.get(element_name, default=None)
+        attr_value = h5dset.attrs.get(element_name, default=None)
+        h5file.close()
+        return attr_name, attr_value
