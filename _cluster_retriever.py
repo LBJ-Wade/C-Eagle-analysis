@@ -14,7 +14,6 @@ They working principle is based on OOP class inheritance.
 """
 
 from cluster import *
-from cluster.Cluster import *
 
 class Mixin:
 
@@ -86,7 +85,6 @@ class Mixin:
         RETURNS: type = np.array of 3 doubles
         ACCESS DATA: e.g. group_CoP[0] for getting the x value
         """
-
         h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
         hd5set = h5file['/FOF/GroupCentreOfPotential']
         sub_CoP = hd5set[...]
