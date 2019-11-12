@@ -17,7 +17,7 @@ They working principle is based on OOP class inheritance.
 from cluster import *
 
 
-class Mixin:
+class Mixin():
 
     @staticmethod
     def centre_of_mass(mass, coords):
