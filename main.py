@@ -12,7 +12,6 @@ the profiler and display the call stats associated with main().
 
 __PROFILE__ = False
 
-
 def time_func(function):
     # create a new function based on the existing one,
     # that includes the new timing behaviour
@@ -39,19 +38,17 @@ def main():
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
     cluster = Cluster(clusterID = 0, redshift = 0.101)
 
-
     cop = cluster.group_centre_of_potential()
     print('cop\t', cop)
 
-    # com = cluster.group_centre_of_mass()
-    # print('com\t', com)
-    #
-    # zmf = cluster.group_zero_momentum_frame()
-    # print('zero mom frame\t', zmf)
+    com = cluster.group_centre_of_mass()
+    print('com\t', com)
+
+    zmf = cluster.group_zero_momentum_frame()
+    print('zero mom frame\t', zmf)
 
     r500 = cluster.group_r500()
     print('r500\t', r500)
-
 
 
 if __name__ == "__main__":
