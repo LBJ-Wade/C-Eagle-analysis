@@ -14,9 +14,39 @@ They working principle is based on OOP class inheritance.
 """
 
 from cluster import *
+from memory import *
 
 
-class Mixin():
+def halo_Num(n: int):
+    """
+    Returns the halo number in format e.g. 00, 01, 02
+    """
+    return '%02d' % (n,)
+
+
+def redshift_str2num(z: str):
+    """
+    Converts the redshift of the snapshot from text to numerical,
+    in a format compatible with the file names.
+    E.g. float z = 2.16 <--- str z = 'z002p160'.
+    """
+    z = z.strip('z').replace('p', '.')
+    return round(float(z), 3)
+
+
+def redshift_num2str(z: float):
+    """
+    Converts the redshift of the snapshot from numerical to
+    text, in a format compatible with the file names.
+    E.g. float z = 2.16 ---> str z = 'z002p160'.
+    """
+    integer_z, decimal_z = str(z).split('.')
+    return 'z' + integer_z.ljust(3, '0') + 'p' + decimal_z.rjust(3, '0')
+
+
+
+class Mixin:
+
 
     #####################################################
     #													#

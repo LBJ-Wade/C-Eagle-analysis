@@ -6,57 +6,12 @@ import os
 from functools import wraps
 
 # Local modules
+from memory import *
 import redshift_catalogue_ceagle as zcat
 import _cluster_retriever
 import _cluster_profiler
 
-
-#################################
-#                               #
-# 	G L O B    M E T H O D S    #
-#							    #
-#################################
-
-def halo_Num(n: int):
-    """
-    Returns the halo number in format e.g. 00, 01, 02
-    """
-    return '%02d' % (n,)
-
-
-def redshift_str2num(z: str):
-    """
-    Converts the redshift of the snapshot from text to numerical,
-    in a format compatible with the file names.
-    E.g. float z = 2.16 <--- str z = 'z002p160'.
-    """
-    z = z.strip('z').replace('p', '.')
-    return round(float(z), 3)
-
-
-def redshift_num2str(z: float):
-    """
-    Converts the redshift of the snapshot from numerical to
-    text, in a format compatible with the file names.
-    E.g. float z = 2.16 ---> str z = 'z002p160'.
-    """
-    integer_z, decimal_z = str(z).split('.')
-    return 'z' + integer_z.ljust(3, '0') + 'p' + decimal_z.rjust(3, '0')
-
-
-def free_memory(var_list, invert=False):
-    """
-    Function for freeing memory dynamically.
-    invert allows to delete all local variables that are NOT in var_list.
-    """
-    if not invert:
-        for name in var_list:
-            if not name.startswith('_') and name in dir():
-                del globals()[name]
-    if invert:
-        for name in dir():
-            if name in var_list and not name.startswith('_'):
-                del globals()[name]
+from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 
 #################################
@@ -66,7 +21,7 @@ def free_memory(var_list, invert=False):
 #							    #
 #################################
 
-class Simulation:
+class Simulation():
 
     def __init__(self):
         self.simulation = 'C-EAGLE'
@@ -115,14 +70,12 @@ class Cluster(Simulation,
         kwargs['redshift'] = self.redshift
 
         # Set additional attributes from methods
-        self.hubble_param = self.file_hubble_param()
-        self.comic_time = self.file_comic_time()
-        self.redshift = self.file_redshift()
-        # self.Ngroups = self.file_Ngroups()
-        # self.Nsubgroups = self.file_Nsubgroups()
-        self.OmegaBaryon = self.file_OmegaBaryon()
-        self.Omega0 = self.file_Omega0()
-        self.OmegaLambda = self.file_OmegaLambda()
+        # self.hubble_param = self.file_hubble_param()
+        # self.comic_time = self.file_comic_time()
+        # self.redshift = self.file_redshift()
+        # self.OmegaBaryon = self.file_OmegaBaryon()
+        # self.Omega0 = self.file_Omega0()
+        # self.OmegaLambda = self.file_OmegaLambda()
 
     # Change and validate Cluster attributes
     def set_clusterID(self, clusterID: int):
