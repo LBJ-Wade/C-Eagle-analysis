@@ -10,8 +10,8 @@ FRAMES = 360
 
 class processMoniter:
     def  __init__(self, pids):
-        self.cpu_nums = psutil.NUM_CPUS
-        self.max_mem = psutil.TOTAL_PHYMEM
+        self.cpu_nums = psutil.cpu_count()
+        self.max_mem = psutil.virtual_memory()
 
         self.plist = [psutil.Process(pid) for pid in pids]
 
