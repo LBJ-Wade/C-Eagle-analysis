@@ -48,6 +48,17 @@ class Mixin:
         free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
         return zero_momentum, sum_of_masses
 
+    @staticmethod
+    def kinetic_energy(mass, vel):
+        ke = 0.5 * mass * np.sum([vel[i] ** 2 for i in range(0, 3)])
+        return np.sum(ke)
+
+    @staticmethod
+    def thermal_energy(mass, temperature):
+        k_B = 1.38064852e-23
+        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575e-27)
+        return np.sum(te)
+
     def group_centre_of_mass(self, out_allPartTypes=False):
         """
         out_allPartTypes = (bool)
@@ -105,13 +116,3 @@ class Mixin:
             return self.zero_momentum_frame(Mtot_PartTypes, ZMF_PartTypes)
 
 
-    @staticmethod
-    def kinetic_energy(mass, vel):
-        ke = 0.5 * mass * np.sum([vel[i] ** 2 for i in range(0, 3)])
-        return np.sum(ke)
-
-    @staticmethod
-    def thermal_energy(mass, temperature):
-        k_B = 1.38064852e-23
-        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575e-27)
-        return np.sum(te)

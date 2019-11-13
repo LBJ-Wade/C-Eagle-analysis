@@ -1,6 +1,15 @@
 """
-
-
+------------------------------------------------------------------
+FILE:   memory.py
+AUTHOR: Edo Altamura
+DATE:   12-11-2019
+------------------------------------------------------------------
+This file provides methods for memory management.
+Future implementations:
+    - dynamic memory allocation
+    - automated performance optimization
+    - MPI meta-methods and multi-threading
+-------------------------------------------------------------------
 """
 
 def free_memory(var_list, invert=False):

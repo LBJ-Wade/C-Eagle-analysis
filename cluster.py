@@ -6,11 +6,11 @@ import os
 from functools import wraps
 
 # Local modules
-from memory import *
 import redshift_catalogue_ceagle as zcat
 import _cluster_retriever
 import _cluster_profiler
 
+# Import global methods separately
 from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 

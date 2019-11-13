@@ -42,7 +42,7 @@ def main():
     print('cop\t', cop)
 
     # com = cluster.group_centre_of_mass()
-    # print('com\t', com)
+    print('z\t', cluster.file_redshift())
     #
     # zmf = cluster.group_zero_momentum_frame()
     # print('zero mom frame\t', zmf)
