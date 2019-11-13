@@ -31,6 +31,7 @@ def dynamical_index(cluster):
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
+    print(cop, com, r500)
     assert cop.__len__() == 3, 'Centre of Potential does not have the right coordinates.'
     assert com.__len__() == 3, 'Centre of Mass does not have the right coordinates.'
     displacement = np.linalg.norm(np.subtract(cop, com))
