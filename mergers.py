@@ -2,7 +2,6 @@ import os
 import h5py
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.spatial import distance
 
 from cluster import Simulation, Cluster
 import memory
@@ -16,10 +15,26 @@ __pathSave__ = ceagle.pathSave + '/merger_index/'
 
 
 def dynamical_index(cluster):
+    """
+    The dynamical merging index is defined according to the displacement
+    between the centre of mass and the centre of potential of the cluster.
+
+    [SCOPE VARIABLE]
+    cop == (Centre of Potential)
+    com == (Centre of Mass)
+    r500 == (radius of the R_500 sphere)
+    displacement == (Euclidean distance between cop and mop)
+
+    :param cluster: cluster.Cluster class
+    :return: the dynamical merging index
+    """
     cop = cluster.group_centre_of_potential()
     com = cluster.group_centre_of_mass()
     r500 = cluster.group_r500()
-    return distance.euclidean(cop, com)/r500
+    assert cop.__len__() == 3, 'Centre of Potential does not have the right coordinates.'
+    assert com.__len__() == 3, 'Centre of Mass does not have the right coordinates.'
+    displacement = np.linalg.norm(np.subtract(cop, com))
+    return displacement/r500
 
 def thermal_index(cluster):
     part_type = '0'
@@ -109,7 +124,7 @@ def save_data(*out_data):
         hf.close()
 
 def read_data(file):
-    if path.isfile(__pathSave__+file) and os.access(__pathSave__+file, os.R_OK):
+    if os.path.isfile(__pathSave__+file) and os.access(__pathSave__+file, os.R_OK):
         hf = h5py.File(__pathSave__ + 'merg_indices.h5', 'r')
         dyn = np.array(hf.get('dynamical_index'))
         ther = np.array(hf.get('thermodynamic_index'))
@@ -144,7 +159,7 @@ def plot_data(data):
     ax.set_xlim([0., 1.])
     ax.set_ylim([0., 1.])
     plt.show()
-    plt.savefig(path.join(__pathSave__, 'Merging_index.png'))
+    plt.savefig(os.path.join(__pathSave__, 'Merging_index.png'))
     #print(mrgr_idx)
 
 
