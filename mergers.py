@@ -39,7 +39,7 @@ def dynamical_index(cluster):
 def thermal_index(cluster):
     part_type = '0'
 
-    mass = cluster.particle_masses(part_type)
+    # mass = cluster.particle_masses(part_type)
     coordinate = cluster.particle_coordinates(part_type)
     velocity = cluster.particle_velocity(part_type)
     temperature = cluster.particle_temperature(part_type)
@@ -53,12 +53,12 @@ def thermal_index(cluster):
     velocity = np.subtract(velocity, group_ZMF)
 
     # Convert to comoving coords and SI units
-    mass = cluster.comoving_mass(mass)
+    # mass = cluster.comoving_mass(mass)
     velocity = cluster.comoving_velocity(velocity)
     # r500 = cluster.comoving_length(r500)
     # coordinate = cluster.comoving_length(coordinate)
 
-    mass = cluster.mass_units(mass, unit_system = 'SI')
+    # mass = cluster.mass_units(mass, unit_system = 'SI')
     velocity = cluster.velocity_units(velocity, unit_system = 'SI')
 
     # Compute radial distance
@@ -66,12 +66,14 @@ def thermal_index(cluster):
 
     # Select particles within r500
     index = np.where(r < r500)[0]
-    mass = mass[index]
+    # mass = mass[index]
     velocity = velocity[index]
     temperature = temperature[index]
 
     # Compute the thermodynamic index as KE/TE
-    thermdyn = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
+    # thermdyn = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
+    k_B = 1.38064852 * 10 ** -23
+    thermdyn = np.sum(0.5 * np.linalg.norm(velocity)**2 /(1.5 * k_B * temperature * 0.88 / (1.6735575 * 10 ** -27)))
     memory.free_memory(['thermdyn'], invert=True)
     return thermdyn
 
