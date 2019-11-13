@@ -31,7 +31,6 @@ def dynamical_index(cluster):
     cop = cluster.group_centre_of_potential()
     com, _ = cluster.group_centre_of_mass()     # Remember that it returns the tuple ([com array], total_mass)
     r500 = cluster.group_r500()
-    print(cop, com, r500)
     assert cop.__len__() == 3, 'Centre of Potential does not have the right coordinates.'
     assert com.__len__() == 3, 'Centre of Mass does not have the right coordinates.'
     displacement = np.linalg.norm(np.subtract(cop, com))
@@ -55,12 +54,12 @@ def thermal_index(cluster):
 
     # Convert to comoving coords and SI units
     mass = cluster.comoving_mass(mass)
-    r500 = cluster.comoving_length(r500)
-    coordinate = cluster.comoving_length(coordinate)
     velocity = cluster.comoving_velocity(velocity)
+    # r500 = cluster.comoving_length(r500)
+    # coordinate = cluster.comoving_length(coordinate)
 
-    mass = cluster.mass_units(mass)
-    velocity = cluster.velocity_units(velocity)
+    mass = cluster.mass_units(mass, unit_system = 'SI')
+    velocity = cluster.velocity_units(velocity, unit_system = 'SI')
 
     # Compute radial distance
     r = np.linalg.norm(coordinate, axis = 1)
