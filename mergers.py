@@ -1,12 +1,12 @@
 import os
-from os import path
-from matplotlib import pyplot as plt
 import h5py
+import numpy as np
+from matplotlib import pyplot as plt
 from scipy.spatial import distance
-from clusters_retriever import *
-import cluster_profiler as profile
-import map_plot_parameters as plotpar
-# import cluster_profiler as profile
+
+from cluster import Simulation, Cluster
+import memory
+
 """
 GLOBAL VARS
 """
@@ -23,67 +23,60 @@ def dynamical_index(cluster):
     return distance.euclidean(cop, com)/r500
 
 def thermal_index(cluster):
-    plot_groups = 'FoF'
     part_type = '0'
 
-    mass = cluster.particle_masses(part_type)
-    coordinates = cluster.particle_coordinates(part_type)
-    velocities = cluster.particle_velocity(part_type)
     group_number = cluster.group_number_part(part_type)
     subgroup_number = cluster.subgroup_number_part(part_type)
-    temperatures = cluster.particle_temperature(part_type)
-    tot_rest_frame = cluster.cluster_average_velocity(velocities)
 
-
-
-    h = cluster.file_hubble_param()
-    redshift = cluster.redshift
+    mass = cluster.particle_masses(part_type)
+    coordinate = cluster.particle_coordinates(part_type)
+    velocity = cluster.particle_velocity(part_type)
+    temperature = cluster.particle_temperature(part_type)
     r500 = cluster.group_r500()
 
     # Retrieve coordinates & velocities
     group_CoP = cluster.group_centre_of_potential()
-    x = coordinates[:, 0] - group_CoP[0]
-    y = coordinates[:, 1] - group_CoP[1]
-    z = coordinates[:, 2] - group_CoP[2]
-    vx = velocities[:, 0] - tot_rest_frame[0]
-    vy = velocities[:, 1] - tot_rest_frame[1]
-    vz = velocities[:, 2] - tot_rest_frame[2]
+    group_ZMF = cluster.group_zero_momentum_frame()
+
+    coordinate = np.subtract(coordinate, group_CoP)
+    velocity = np.subtract(velocity, group_ZMF)
+
+    # Convert to comoving coords and SI units
+
+
+
+
+    # x = coordinates[:, 0] - group_CoP[0]
+    # y = coordinates[:, 1] - group_CoP[1]
+    # z = coordinates[:, 2] - group_CoP[2]
+    # vx = velocities[:, 0] - tot_rest_frame[0]
+    # vy = velocities[:, 1] - tot_rest_frame[1]
+    # vz = velocities[:, 2] - tot_rest_frame[2]
 
     # Rescale to comoving coordinates
-    x = profile.comoving_length(x, h, redshift)
-    y = profile.comoving_length(y, h, redshift)
-    z = profile.comoving_length(z, h, redshift)
-    r500 = profile.comoving_length(r500, h, redshift)
-    vx = profile.comoving_velocity(vx, h, redshift)
-    vy = profile.comoving_velocity(vy, h, redshift)
-    vz = profile.comoving_velocity(vz, h, redshift)
-    vx = profile.velocity_units(vx, unit_system='SI')
-    vy = profile.velocity_units(vy, unit_system='SI')
-    vz = profile.velocity_units(vz, unit_system='SI')
-    mass = profile.comoving_mass(mass, h, redshift)
-    mass = profile.mass_units(mass, unit_system='SI')
+    # x = profile.comoving_length(x, h, redshift)
+    # y = profile.comoving_length(y, h, redshift)
+    # z = profile.comoving_length(z, h, redshift)
+    # r500 = profile.comoving_length(r500, h, redshift)
+    # vx = profile.comoving_velocity(vx, h, redshift)
+    # vy = profile.comoving_velocity(vy, h, redshift)
+    # vz = profile.comoving_velocity(vz, h, redshift)
+    # vx = profile.velocity_units(vx, unit_system='SI')
+    # vy = profile.velocity_units(vy, unit_system='SI')
+    # vz = profile.velocity_units(vz, unit_system='SI')
+    # mass = profile.comoving_mass(mass, h, redshift)
+    # mass = profile.mass_units(mass, unit_system='SI')
 
     # Compute radial distance
-    r = np.sqrt(x ** 2 + y ** 2 + z ** 2)
+    r = np.linalg.norm(coordinate, axis = 1)
 
     # Select particles within 5*r200
-    if plot_groups == 'FoF':
-        index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number < 5000) & (subgroup_number > -1))[0]
-    elif plot_groups == 'subgroups':
-        index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number > 0))[0]
-    else:
-        print("[ERROR] The (sub)groups you are trying to plot are not defined.")
-        exit(1)
+    index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number < 5000) & (subgroup_number > -1))[0]
 
-    free_memory(['x', 'y', 'z'], invert=False)
-    mass = mass[index]
-    temperatures = temperatures[index]
-    vx, vy, vz = vx[index], vy[index], vz[index]
 
-    KE = 0.5 * mass * (vx**2 + vy**2 + vz**2)
-    TE = 1.5 * k_B * temperatures * mass * 0.88 / (1.6735575e-27)
-    thermdyn = np.sum(KE)/np.sum(TE)
-    free_memory([thermdyn], invert=True)
+
+    thermdyn = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
+    memory.free_memory(['thermdyn'], invert=True)
     return thermdyn
 
 def gen_data():
@@ -175,9 +168,9 @@ def plot_data(data):
 
 
 
-if __name__ == "__main__":
-    merg_indices = read_data('merg_indices.hdf5')
-    plot_data(merg_indices)
+# if __name__ == "__main__":
+    # merg_indices = read_data('merg_indices.hdf5')
+    # plot_data(merg_indices)
 
 
 

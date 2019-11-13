@@ -37,18 +37,8 @@ def main():
     # ceagle = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
     cluster = Cluster(clusterID = 0, redshift = 0.101)
+    print(cluster.subgroup_number_part('0'))
 
-    cop = cluster.group_centre_of_potential()
-    print('cop\t', cop)
-
-    # com = cluster.group_centre_of_mass()
-    print('z\t', cluster.file_redshift())
-    #
-    # zmf = cluster.group_zero_momentum_frame()
-    # print('zero mom frame\t', zmf)
-
-    r500 = cluster.group_r500()
-    print('r500\t', r500)
 
 
 if __name__ == "__main__":

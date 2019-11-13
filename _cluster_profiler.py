@@ -48,16 +48,6 @@ class Mixin:
         free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
         return zero_momentum, sum_of_masses
 
-    @staticmethod
-    def kinetic_energy(mass, vel):
-        ke = 0.5 * mass * np.sum([vel[i] ** 2 for i in range(0, 3)])
-        return np.sum(ke)
-
-    @staticmethod
-    def thermal_energy(mass, temperature):
-        k_B = 1.38064852e-23
-        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575e-27)
-        return np.sum(te)
 
     def group_centre_of_mass(self, out_allPartTypes=False):
         """
@@ -115,4 +105,169 @@ class Mixin:
         else:
             return self.zero_momentum_frame(Mtot_PartTypes, ZMF_PartTypes)
 
+    @staticmethod
+    def kinetic_energy(mass, vel):
+        ke = 0.5 * mass * np.linalg.norm(vel)**2
+        return np.sum(ke)
 
+    @staticmethod
+    def thermal_energy(mass, temperature):
+        k_B = 1.38064852e-23
+        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575e-27)
+        return np.sum(te)
+
+    #####################################################
+    #													#
+    #				COMOVING UNITS      				#
+    # 									 				#
+    #####################################################
+
+
+    def comoving_density(self, density):
+        """
+        Rescales the density from the comoving coordinates to the physical coordinates
+        """
+        hubble_par = self.file_hubble_param()
+        redshift = self.file_redshift()
+        scale_factor = 1 / (redshift + 1)
+        return np.multiply(density,  hubble_par ** 2 * scale_factor ** -3)
+
+    def comoving_length(self, coord):
+        """
+        Rescales the density from the comoving length to the physical length
+        """
+        hubble_par = self.file_hubble_param()
+        redshift = self.file_redshift()
+        scale_factor = 1 / (redshift + 1)
+        return np.multiply(coord, scale_factor / hubble_par)
+
+    def comoving_velocity(self, vel):
+        """
+        Rescales the density from the comoving velocity to the physical velocity
+        """
+        redshift = self.file_redshift()
+        scale_factor = 1 / (redshift + 1)
+        return np.multiply(vel, np.sqrt(scale_factor))
+
+    def comoving_mass(self, mass):
+        """
+        Rescales the density from the comoving mass to the physical mass
+        """
+        hubble_par = self.file_hubble_param()
+        return np.divide(mass, hubble_par)
+
+    def comoving_momentum(self, mom):
+        """
+        Rescales the momentum from the comoving to the physical
+        """
+        hubble_par = self.file_hubble_param()
+        redshift = self.file_redshift()
+        scale_factor = 1 / (redshift + 1)
+        return np.multiply(mom, np.sqrt(scale_factor) / hubble_par)
+
+
+    #####################################################
+    #													#
+    #			    UNITS CONEVRSION     				#
+    # 									 				#
+    #####################################################
+
+    @staticmethod
+    def density_units(density, unit_system='SI'):
+        """
+        CREATED: 12.02.2019
+        LAST MODIFIED: 12.02.2019
+
+        INPUTS: density np.array
+
+                metric system used: 'SI' or 'cgs' or astronomical 'astro'
+        """
+        if unit_system == 'SI':
+            # kg*m^-3
+            conv_factor = 6.769911178294543 * 10 ** -28
+        elif unit_system == 'cgs':
+            # g*cm^-3
+            conv_factor = 6.769911178294543 * 10 ** -31
+        elif unit_system == 'astro':
+            # solar masses / (parsec)^3
+            conv_factor = 6.769911178294543 * np.power(3.086, 3) / 1.9891 * 10 ** -10
+        elif unit_system == 'nHcgs':
+            conv_factor = 6.769911178294543 * 10 ** -31 / (1.674 * 10 ** -24)
+        else:
+            raise("[ERROR] Trying to convert SPH density to an unknown metric system.")
+
+        return np.multiply(density, conv_factor)
+
+    @staticmethod
+    def velocity_units(velocity, unit_system='SI'):
+        """
+        CREATED: 14.02.2019
+        LAST MODIFIED: 14.02.2019
+
+        INPUTS: velocity np.array
+
+                metric system used: 'SI' or 'cgs' or astronomical 'astro'
+        """
+        if unit_system == 'SI':
+            # m/s
+            conv_factor =  10 ** 3
+        elif unit_system == 'cgs':
+            # cm/s
+            conv_factor =  10 ** 5
+        elif unit_system == 'astro':
+            # km/s
+            conv_factor =  1
+        else:
+            raise("[ERROR] Trying to convert velocity to an unknown metric system.")
+
+        return np.multiply(velocity, conv_factor)
+
+
+
+    @staticmethod
+    def mass_units(mass, unit_system='SI'):
+        """
+        CREATED: 14.02.2019
+        LAST MODIFIED: 14.02.2019
+
+        INPUTS: mass np.array
+
+                metric system used: 'SI' or 'cgs' or astronomical 'astro'
+        """
+        if unit_system == 'SI':
+            # m/s
+            conv_factor = 1.9891 * 10 ** 40
+        elif unit_system == 'cgs':
+            # cm/s
+            conv_factor = 1.9891 * 10 ** 43
+        elif unit_system == 'astro':
+            # km/s
+            conv_factor = 10 ** 10
+        else:
+            raise("[ERROR] Trying to convert mass to an unknown metric system.")
+
+        return np.multiply(mass, conv_factor)
+
+    @staticmethod
+    def momentum_units(momentum, unit_system='SI'):
+        """
+        CREATED: 07.03.2019
+        LAST MODIFIED: 07.03.2019
+
+        INPUTS: momentum np.array
+
+                metric system used: 'SI' or 'cgs' or astronomical 'astro'
+        """
+        if unit_system == 'SI':
+            # m/s
+            conv_factor = 1.9891 * 10 ** 43
+        elif unit_system == 'cgs':
+            # cm/s
+            conv_factor = 1.9891 * 10 ** 48
+        elif unit_system == 'astro':
+            # km/s
+            conv_factor = 10 ** 10
+        else:
+            raise("[ERROR] Trying to convert mass to an unknown metric system.")
+
+        return np.multiply(momentum, conv_factor)
