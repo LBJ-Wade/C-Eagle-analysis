@@ -29,7 +29,7 @@ def dynamical_index(cluster):
     :return: the dynamical merging index
     """
     cop = cluster.group_centre_of_potential()
-    com = cluster.group_centre_of_mass()
+    com, _ = cluster.group_centre_of_mass()     # Remember that it returns the tuple ([com array], total_mass)
     r500 = cluster.group_r500()
     print(cop, com, r500)
     assert cop.__len__() == 3, 'Centre of Potential does not have the right coordinates.'
