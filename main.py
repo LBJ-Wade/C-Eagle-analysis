@@ -33,11 +33,14 @@ def time_func(function):
 def main():
 
     from cluster import Cluster
+    from mergers import dynamical_index, thermal_index
 
     # ceagle = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
     cluster = Cluster(clusterID = 0, redshift = 0.101)
-    print(cluster.subgroup_number_part('0'))
+    print('\nCluster ID:\t')
+    print('dynamical_index\t', dynamical_index(cluster))
+    print('thermal_index\t', thermal_index(cluster))
 
 
 

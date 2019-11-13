@@ -13,7 +13,6 @@ GLOBAL VARS
 ceagle = Simulation()
 # z_catalogue = ceagle.get_redshiftAllowed(dtype=float)
 __pathSave__ = ceagle.pathSave + '/merger_index/'
-k_B = 1.38064852e-23
 
 
 def dynamical_index(cluster):
@@ -24,9 +23,6 @@ def dynamical_index(cluster):
 
 def thermal_index(cluster):
     part_type = '0'
-
-    group_number = cluster.group_number_part(part_type)
-    subgroup_number = cluster.subgroup_number_part(part_type)
 
     mass = cluster.particle_masses(part_type)
     coordinate = cluster.particle_coordinates(part_type)
@@ -42,39 +38,24 @@ def thermal_index(cluster):
     velocity = np.subtract(velocity, group_ZMF)
 
     # Convert to comoving coords and SI units
+    mass = cluster.comoving_mass(mass)
+    r500 = cluster.comoving_length(r500)
+    coordinate = cluster.comoving_length(coordinate)
+    velocity = cluster.comoving_velocity(velocity)
 
-
-
-
-    # x = coordinates[:, 0] - group_CoP[0]
-    # y = coordinates[:, 1] - group_CoP[1]
-    # z = coordinates[:, 2] - group_CoP[2]
-    # vx = velocities[:, 0] - tot_rest_frame[0]
-    # vy = velocities[:, 1] - tot_rest_frame[1]
-    # vz = velocities[:, 2] - tot_rest_frame[2]
-
-    # Rescale to comoving coordinates
-    # x = profile.comoving_length(x, h, redshift)
-    # y = profile.comoving_length(y, h, redshift)
-    # z = profile.comoving_length(z, h, redshift)
-    # r500 = profile.comoving_length(r500, h, redshift)
-    # vx = profile.comoving_velocity(vx, h, redshift)
-    # vy = profile.comoving_velocity(vy, h, redshift)
-    # vz = profile.comoving_velocity(vz, h, redshift)
-    # vx = profile.velocity_units(vx, unit_system='SI')
-    # vy = profile.velocity_units(vy, unit_system='SI')
-    # vz = profile.velocity_units(vz, unit_system='SI')
-    # mass = profile.comoving_mass(mass, h, redshift)
-    # mass = profile.mass_units(mass, unit_system='SI')
+    mass = cluster.mass_units(mass)
+    velocity = cluster.velocity_units(velocity)
 
     # Compute radial distance
     r = np.linalg.norm(coordinate, axis = 1)
 
-    # Select particles within 5*r200
-    index = np.where((r < 5 * r500) & (group_number > -1) & (subgroup_number < 5000) & (subgroup_number > -1))[0]
+    # Select particles within r500
+    index = np.where(r < r500)[0]
+    mass = mass[index]
+    velocity = velocity[index]
+    temperature = temperature[index]
 
-
-
+    # Compute the thermodynamic index as KE/TE
     thermdyn = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
     memory.free_memory(['thermdyn'], invert=True)
     return thermdyn
