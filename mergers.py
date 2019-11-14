@@ -31,9 +31,10 @@ def dynamical_index(cluster):
     cop = cluster.group_centre_of_potential()
     com, _ = cluster.group_centre_of_mass()     # Remember that it returns the tuple ([com array], total_mass)
     r500 = cluster.group_r500()
-    assert cop.__len__() == 3, 'Centre of Potential does not have the right coordinates.'
-    assert com.__len__() == 3, 'Centre of Mass does not have the right coordinates.'
+    assert cop.__len__() == 3, 'Centre of Potential does not have 3 components.'
+    assert com.__len__() == 3, 'Centre of Mass does not have 3 components.'
     displacement = np.linalg.norm(np.subtract(cop, com))
+    assert displacement < r500, "dynamical_index > 1. Unusual for clusters"
     return displacement/r500
 
 def thermal_index(cluster):
@@ -73,6 +74,7 @@ def thermal_index(cluster):
     # Compute the thermodynamic index as KE/TE
     thermdyn = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
     memory.free_memory(['thermdyn'], invert=True)
+    assert thermdyn > 1, "thermal_index > 1. Unusual for clusters"
     return thermdyn
 
 def gen_data():

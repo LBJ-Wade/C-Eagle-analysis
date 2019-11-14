@@ -427,6 +427,7 @@ class Mixin:
             h5file.close()
             pos = np.concatenate((pos, sub_pos), axis=0)
             free_memory(['pos'], invert=True)
+            assert pos.__len__() > 0, "Array is empty."
         return pos
 
     @data_subject(subject="particledata")
@@ -442,6 +443,7 @@ class Mixin:
             h5file.close()
             part_vel = np.concatenate((part_vel, sub_vel), axis=0)
             free_memory(['part_vel'], invert=True)
+            assert part_vel.__len__() > 0, "Array is empty."
         return part_vel
 
     @data_subject(subject="particledata")
@@ -461,6 +463,7 @@ class Mixin:
                 part_mass = np.concatenate((part_mass, sub_m), axis=0)
                 free_memory(['part_mass'], invert=True)
 
+        assert part_mass.__len__() > 0, "Array is empty."
         return part_mass
 
     @data_subject(subject="particledata")
@@ -477,6 +480,8 @@ class Mixin:
             h5file.close()
             temperature = np.concatenate((temperature, sub_T), axis=0)
             free_memory(['temperature'], invert=True)
+
+        assert temperature.__len__() > 0, "Array is empty."
         return temperature
 
     @data_subject(subject="particledata")
@@ -492,6 +497,8 @@ class Mixin:
             h5file.close()
             densitySPH = np.concatenate((densitySPH, sub_den), axis=0)
             free_memory(['densitySPH'], invert=True)
+
+        assert densitySPH.__len__() > 0, "Array is empty."
         return densitySPH
 
     @data_subject(subject="particledata")
