@@ -71,7 +71,8 @@ class Mixin:
             r = np.linalg.norm(coords, axis=1)
             index = np.where(r < r500)[0]
             mass = mass[index]
-            coords = mass[index]
+            coords = coords[index]
+            free_memory(['mass', 'coords'], invert=True)
 
             # Compute CoM for each particle type
             centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
@@ -100,8 +101,21 @@ class Mixin:
         Mtot_PartTypes = np.zeros(0, dtype=np.float)
 
         for part_type in ['0', '1', '4', '5']:
+
+            # Import data
             mass = self.particle_masses(part_type)
             vel = self.particle_velocity(part_type)
+            coords = self.particle_coordinates(part_type)
+
+            # Filter local distribution of matter (r<R500)
+            r500 = self.group_r500()
+            r = np.linalg.norm(coords, axis=1)
+            index = np.where(r < r500)[0]
+            mass = mass[index]
+            vel = vel[index]
+            free_memory(['mass', 'vel'], invert=True)
+
+            # Compute *local* ZMF for each particle type
             zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)
             ZMF_PartTypes = np.append(ZMF_PartTypes, [zero_momentum], axis=0)
             Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
@@ -124,7 +138,7 @@ class Mixin:
         return np.sum(te)
 
     # @staticmethod
-    # def ang_momentum(mass, vel, coords, rot_axis):
+    # def ang_momentum(mass, vel, coords, origin):
     #     r = func(coords, rot_axis)
     #     angmom_part = np.outer(r, np.multiply(mass, vel))
     #     return np.sum(angmom_part)
