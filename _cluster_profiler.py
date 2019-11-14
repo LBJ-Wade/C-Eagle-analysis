@@ -77,11 +77,12 @@ class Mixin:
 
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
-            r = np.linalg.norm(coords, axis=1)
+            group_CoP = self.group_centre_of_potential()
+            r = np.linalg.norm(np.subtract(coords, group_CoP), axis=1)
             index = np.where((r < r500) & (group_num > 1))[0]
             mass = mass[index]
             coords = coords[index]
-            # assert mass.__len__() > 0, "Array is empty - check filtering."
+            assert mass.__len__() > 0, "Array is empty - check filtering."
             assert coords.__len__() > 0, "Array is empty - check filtering."
 
             # Compute CoM for each particle type
@@ -119,7 +120,8 @@ class Mixin:
 
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
-            r = np.linalg.norm(coords, axis=1)
+            group_CoP = self.group_centre_of_potential()
+            r = np.linalg.norm(np.subtract(coords, group_CoP), axis=1)
             index = np.where((r < r500) & (group_num > 1))[0]
             mass = mass[index]
             vel = vel[index]
