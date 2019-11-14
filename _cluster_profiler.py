@@ -78,10 +78,9 @@ class Mixin:
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
             r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num > 0))[0]
+            index = np.where((r < r500) & (group_num == 1))[0]
             mass = mass[index]
             coords = coords[index]
-            free_memory(['mass', 'coords'], invert=True)
 
             # Compute CoM for each particle type
             centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
@@ -120,10 +119,9 @@ class Mixin:
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
             r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num > 0))[0]
+            index = np.where((r < r500) & (group_num == 1))[0]
             mass = mass[index]
             vel = vel[index]
-            free_memory(['mass', 'vel'], invert=True)
 
             # Compute *local* ZMF for each particle type
             zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)
