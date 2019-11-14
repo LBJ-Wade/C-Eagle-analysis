@@ -112,8 +112,8 @@ class Mixin:
 
     @staticmethod
     def thermal_energy(mass, temperature):
-        k_B = 1.38064852 * np.power(10, -23)
-        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27))
+        k_B = 1.38064852 * np.power(10, -23.)
+        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27.))
         return np.sum(te)
 
     # @staticmethod
@@ -196,9 +196,9 @@ class Mixin:
             conv_factor = 6.769911178294543 * 10 ** -31
         elif unit_system == 'astro':
             # solar masses / (parsec)^3
-            conv_factor = 6.769911178294543 * np.power(3.086, 3) / 1.9891 * 10 ** -10
+            conv_factor = 6.769911178294543 * np.power(3.086, 3.) / 1.9891 * 10 ** -10
         elif unit_system == 'nHcgs':
-            conv_factor = 6.769911178294543 * 10 ** -31 / (1.674 * 10 ** -24)
+            conv_factor = 6.769911178294543 * 10 ** -31 / (1.674 * 10 ** -24.)
         else:
             raise("[ERROR] Trying to convert SPH density to an unknown metric system.")
 
