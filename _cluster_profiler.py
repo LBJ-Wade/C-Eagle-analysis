@@ -107,14 +107,20 @@ class Mixin:
 
     @staticmethod
     def kinetic_energy(mass, vel):
-        ke = 0.5 * mass * np.linalg.norm(vel)**2
+        ke = 0.5 * mass * np.linalg.norm(vel, axis = 1)**2
         return np.sum(ke)
 
     @staticmethod
     def thermal_energy(mass, temperature):
-        k_B = 1.38064852e-23
-        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575e-27)
+        k_B = 1.38064852 * np.power(10, -23)
+        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27))
         return np.sum(te)
+
+    # @staticmethod
+    # def ang_momentum(mass, vel, coords, rot_axis):
+    #     r = func(coords, rot_axis)
+    #     angmom_part = np.outer(r, np.multiply(mass, vel))
+    #     return np.sum(angmom_part)
 
     #####################################################
     #													#
