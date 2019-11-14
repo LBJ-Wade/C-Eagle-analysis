@@ -40,7 +40,8 @@ def main():
     print('\nCluster ID:\tdynamical_index')
 
     cluster = Cluster(clusterID = 0, redshift = 0.101)
-    print(cluster.clusterID, '\t\t', dynamical_index(cluster))
+    print(cluster.particle_masses('0'))
+    #print(cluster.clusterID, '\t\t', dynamical_index(cluster))
 
 
 

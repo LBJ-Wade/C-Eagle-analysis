@@ -398,13 +398,27 @@ class Mixin:
             sub_gn = hd5set[...]
             h5file.close()
             group_number = np.concatenate((group_number, sub_gn), axis=0)
+            assert group_number.__len__() > 0, "Array is empty."
         return group_number
 
     @data_subject(subject="particledata")
     def subgroup_number_part(self, part_type, *args, **kwargs):
+        _warning_ = """
+        +---------------------------------------------------------------------+
+        |                               WARNING                               |
+        +---------------------------------------------------------------------+
+        The following method
+        
+        cluster.Cluster.subgroup_number_part(self, part_type, *args, **kwargs)
+        
+        is fully implemented in the _cluster_retriever mainframe, but the
+        particle data array only contains overflown values. The results are 
+        therefore unusable for any purposes. Please, use a different method for 
+        isolating a specific subgroup number.    
+        +---------------------------------------------------------------------+
         """
-        RETURNS: np.array
-        """
+        raise ValueError(_warning_)
+
         sub_group_number = np.zeros(0, dtype=np.int)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')

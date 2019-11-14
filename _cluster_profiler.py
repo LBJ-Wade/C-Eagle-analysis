@@ -73,11 +73,12 @@ class Mixin:
             # Import data
             mass = self.particle_masses(part_type)
             coords = self.particle_coordinates(part_type)
+            group_num = self.group_number_part(part_type)
 
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
             r = np.linalg.norm(coords, axis=1)
-            index = np.where(r < r500)[0]
+            index = np.where((r < r500) & (group_num > 0))[0]
             mass = mass[index]
             coords = coords[index]
             free_memory(['mass', 'coords'], invert=True)
@@ -114,11 +115,12 @@ class Mixin:
             mass = self.particle_masses(part_type)
             vel = self.particle_velocity(part_type)
             coords = self.particle_coordinates(part_type)
+            group_num = self.group_number_part(part_type)
 
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
             r = np.linalg.norm(coords, axis=1)
-            index = np.where(r < r500)[0]
+            index = np.where((r < r500) & (group_num > 0))[0]
             mass = mass[index]
             vel = vel[index]
             free_memory(['mass', 'vel'], invert=True)
