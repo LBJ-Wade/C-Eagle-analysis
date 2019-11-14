@@ -81,7 +81,7 @@ class Mixin:
             index = np.where((r < r500) & (group_num > 1))[0]
             mass = mass[index]
             coords = coords[index]
-            assert mass.__len__() > 0, "Array is empty - check filtering.."
+            # assert mass.__len__() > 0, "Array is empty - check filtering."
             assert coords.__len__() > 0, "Array is empty - check filtering."
 
             # Compute CoM for each particle type
