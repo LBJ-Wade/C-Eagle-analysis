@@ -78,7 +78,7 @@ class Mixin:
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
             r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num == 1))[0]
+            index = np.where((r < r500) & (group_num > 1))[0]
             mass = mass[index]
             coords = coords[index]
 
@@ -86,7 +86,6 @@ class Mixin:
             centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
             CoM_PartTypes = np.append(CoM_PartTypes, [centre_of_mass], axis=0)
             Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
-            free_memory(['CoM_PartTypes', 'Mtot_PartTypes'], invert=True)
 
         if out_allPartTypes:
             return CoM_PartTypes, Mtot_PartTypes
@@ -119,7 +118,7 @@ class Mixin:
             # Filter local distribution of matter (r<R500)
             r500 = self.group_r500()
             r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num == 1))[0]
+            index = np.where((r < r500) & (group_num > 1))[0]
             mass = mass[index]
             vel = vel[index]
 
@@ -127,7 +126,6 @@ class Mixin:
             zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)
             ZMF_PartTypes = np.append(ZMF_PartTypes, [zero_momentum], axis=0)
             Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
-            free_memory(['ZMF_PartTypes', 'Mtot_PartTypes'], invert=True)
 
         if out_allPartTypes:
             return ZMF_PartTypes, Mtot_PartTypes
