@@ -28,6 +28,9 @@ class Mixin:
         RETURNS: type = np.array of 3 doubles
         ACCESS DATA: e.g. group_CoM[0] for getting the x value
         """
+        assert mass.__len__() > 0, "Mass array is empty."
+        assert mass.__len__() == coords.__len__(), "Mass and coords arrays do not have same size."
+
         sum_of_masses = np.sum(mass)
         centre_of_mass = np.average(coords, axis=0, weights=np.divide(mass, sum_of_masses))
         free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
@@ -39,6 +42,9 @@ class Mixin:
         AIM: reads the FoF group central of mass from the path and file given
         RETURNS: type = np.array of 3 doubles
         """
+        assert mass.__len__() > 0, "Mass array is empty."
+        assert mass.__len__() == vel.__len__(), "Mass and vel arrays do not have same size."
+
         sum_of_masses = np.sum(mass)
         zero_momentum = np.average(vel, axis=0, weights=np.divide(mass, sum_of_masses))
         free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
