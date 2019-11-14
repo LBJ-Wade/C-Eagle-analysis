@@ -29,9 +29,7 @@ class Mixin:
         ACCESS DATA: e.g. group_CoM[0] for getting the x value
         """
         sum_of_masses = np.sum(mass)
-        centre_of_mass = np.array([np.sum(mass * coords[:, 0]) / sum_of_masses,
-                                   np.sum(mass * coords[:, 1]) / sum_of_masses,
-                                   np.sum(mass * coords[:, 2]) / sum_of_masses])
+        centre_of_mass = np.average(coords, axis=0, weights=np.divide(mass, sum_of_masses))
         free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
         return centre_of_mass, sum_of_masses
 
@@ -42,9 +40,7 @@ class Mixin:
         RETURNS: type = np.array of 3 doubles
         """
         sum_of_masses = np.sum(mass)
-        zero_momentum = np.array([np.sum(mass * vel[:, 0]) / sum_of_masses,
-                                  np.sum(mass * vel[:, 1]) / sum_of_masses,
-                                  np.sum(mass * vel[:, 2]) / sum_of_masses])
+        zero_momentum = np.average(vel, axis=0, weights=np.divide(mass, sum_of_masses))
         free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
         return zero_momentum, sum_of_masses
 
@@ -65,8 +61,19 @@ class Mixin:
         Mtot_PartTypes = np.zeros(0, dtype=np.float)
 
         for part_type in ['0', '1', '4', '5']:
+
+            # Import data
             mass = self.particle_masses(part_type)
             coords = self.particle_coordinates(part_type)
+
+            # Filter local distribution of matter (r<R500)
+            r500 = self.group_r500()
+            r = np.linalg.norm(coords, axis=1)
+            index = np.where(r < r500)[0]
+            mass = mass[index]
+            coords = mass[index]
+
+            # Compute CoM for each particle type
             centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
             CoM_PartTypes = np.append(CoM_PartTypes, [centre_of_mass], axis=0)
             Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
