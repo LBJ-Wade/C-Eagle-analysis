@@ -80,7 +80,7 @@ class Mixin:
             group_CoP = self.group_centre_of_potential()
             coords = np.subtract(coords, group_CoP)
             r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num == 0))[0]
+            index = np.where((r < r500) & (group_num == 1))[0]
             mass = mass[index]
             coords = coords[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
@@ -125,7 +125,7 @@ class Mixin:
             group_CoP = self.group_centre_of_potential()
             coords = np.subtract(coords, group_CoP)
             r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num == 0))[0]
+            index = np.where((r < r500) & (group_num == 1))[0]
             mass = mass[index]
             vel = vel[index]
             assert mass.__len__() > 0, "Array is empty - check filtering.."
