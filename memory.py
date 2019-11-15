@@ -25,3 +25,7 @@ def free_memory(var_list, invert=False):
         for name in dir():
             if name in var_list and not name.startswith('_'):
                 del globals()[name]
+
+
+def delegate_independent_nodes():
+    pass

@@ -74,7 +74,7 @@ def thermal_index(cluster):
     # Compute the thermodynamic index as KE/TE
     thermdyn = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
     memory.free_memory(['thermdyn'], invert=True)
-    assert thermdyn > 1, "thermal_index > 1. Unusual for clusters"
+    assert thermdyn < 1, "thermal_index > 1. Unusual for clusters"
     return thermdyn
 
 def gen_data():

@@ -41,9 +41,9 @@ def main():
     for i in [0]:
         cluster = Cluster(clusterID = i, redshift = 0.101)
         print('clusterID: ', cluster.clusterID)
-        print('group_centre_of_potential: ', cluster.group_centre_of_potential())
-        print('group_centre_of_mass: ', cluster.group_centre_of_mass())
-        print('dynamical_index: ', dynamical_index(cluster))
+        # print('group_centre_of_potential: ', cluster.group_centre_of_potential())
+        # print('group_centre_of_mass: ', cluster.group_centre_of_mass())
+        # print('dynamical_index: ', dynamical_index(cluster))
         print('thermal_index: ', thermal_index(cluster))
 
 
