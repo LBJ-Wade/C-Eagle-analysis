@@ -83,7 +83,7 @@ class Mixin:
             coords = coords[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
             assert coords.__len__() > 0, "Array is empty - check filtering."
-            print('Computing CoM ==> PartType {} ok!'.format(part_type))
+            # print('Computing CoM ==> PartType {} ok!'.format(part_type))
 
             # Compute CoM for each particle type
             centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
@@ -125,7 +125,7 @@ class Mixin:
             vel = vel[index]
             assert mass.__len__() > 0, "Array is empty - check filtering.."
             assert vel.__len__() > 0, "Array is empty - check filtering."
-            print('Computing ZMF ==> PartType {} ok!'.format(part_type))
+            # print('Computing ZMF ==> PartType {} ok!'.format(part_type))
 
             # Compute *local* ZMF for each particle type
             zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)

@@ -34,8 +34,9 @@ def dynamical_index(cluster):
     assert cop.__len__() == 3, 'Centre of Potential does not have 3 components.'
     assert com.__len__() == 3, 'Centre of Mass does not have 3 components.'
     displacement = np.linalg.norm(np.subtract(cop, com))
-    assert displacement < r500, "dynamical_index > 1. Unusual for clusters"
-    return displacement/r500
+    dynamic_index = displacement/r500
+    assert dynamic_index < 1, "dynamical_index > 1. Unusual for clusters"
+    return dynamic_index
 
 def thermal_index(cluster):
     part_type = '0'
@@ -44,6 +45,7 @@ def thermal_index(cluster):
     coordinate = cluster.particle_coordinates(part_type)
     velocity = cluster.particle_velocity(part_type)
     temperature = cluster.particle_temperature(part_type)
+    group_num = self.group_number_part(part_type)
     r500 = cluster.group_r500()
 
     # Retrieve coordinates & velocities
@@ -65,17 +67,17 @@ def thermal_index(cluster):
     # Compute radial distance
     r = np.linalg.norm(coordinate, axis = 1)
 
-    # Select particles within r500
-    index = np.where(r < r500)[0]
+    # Select particles within r500 {Definition of Barnes et al. (2017)}
+    index = np.where((r < r500) & (group_num == 1))[0]
     mass = mass[index]
     velocity = velocity[index]
     temperature = temperature[index]
 
     # Compute the thermodynamic index as KE/TE
-    thermdyn = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
-    memory.free_memory(['thermdyn'], invert=True)
-    assert thermdyn < 1, "thermal_index > 1. Unusual for clusters"
-    return thermdyn
+    thermodynamic_index = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
+    memory.free_memory(['thermodynamic_index'], invert=True)
+    assert thermodynamic_index < 1, "thermodynamic_index > 1. Unusual for clusters"
+    return thermodynamic_index
 
 def gen_data():
     """
