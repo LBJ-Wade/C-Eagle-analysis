@@ -35,7 +35,7 @@ def dynamical_index(cluster):
     assert com.__len__() == 3, 'Centre of Mass does not have 3 components.'
     displacement = np.linalg.norm(np.subtract(cop, com))
     dynamic_index = displacement/r500
-    assert dynamic_index < 1, "dynamical_index > 1. Unusual for clusters"
+    # assert dynamic_index < 1, "dynamical_index > 1. Unusual for clusters"
     return dynamic_index
 
 def thermal_index(cluster):
@@ -76,7 +76,7 @@ def thermal_index(cluster):
     # Compute the thermodynamic index as KE/TE
     thermodynamic_index = cluster.kinetic_energy(mass, velocity) / cluster.thermal_energy(mass, temperature)
     memory.free_memory(['thermodynamic_index'], invert=True)
-    assert thermodynamic_index < 1, "thermodynamic_index > 1. Unusual for clusters"
+    # assert thermodynamic_index < 1, "thermodynamic_index > 1. Unusual for clusters"
     return thermodynamic_index
 
 def gen_data():
