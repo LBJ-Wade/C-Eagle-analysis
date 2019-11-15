@@ -42,7 +42,7 @@ def main():
         cluster = Cluster(clusterID = i, redshift = 0.101)
         print('clusterID: ', cluster.clusterID)
         print('CoP: ', cluster.group_centre_of_potential())
-        print('gnpart: ', cluster.group_number_part('0')[cluster.group_number_part('0') == 0])
+        print('gnpart: ', cluster.group_number_part('0')[cluster.group_number_part('0') == 1])
         print('group_centre_of_mass: ', cluster.group_centre_of_mass())
 
 
