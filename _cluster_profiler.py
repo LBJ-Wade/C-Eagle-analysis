@@ -85,6 +85,7 @@ class Mixin:
             coords = coords[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
             assert coords.__len__() > 0, "Array is empty - check filtering."
+            print('PartType {} ok!'.format(part_type))
 
             # Compute CoM for each particle type
             centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
