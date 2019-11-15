@@ -80,7 +80,7 @@ class Mixin:
             group_CoP = self.group_centre_of_potential()
             coords = np.subtract(coords, group_CoP)
             r = np.linalg.norm(coords, axis=1)
-            print(r)
+            print(r[r<1])
             index = np.where((r < r500) & (group_num > 1))[0]
             mass = mass[index]
             coords = coords[index]
