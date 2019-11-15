@@ -75,17 +75,15 @@ class Mixin:
             coords = self.particle_coordinates(part_type)
             group_num = self.group_number_part(part_type)
 
-            # Filter local distribution of matter (r<R500)
-            r500 = self.group_r500()
-            group_CoP = self.group_centre_of_potential()
-            coords = np.subtract(coords, group_CoP)
-            r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num == 1))[0]
+            # Filter the particles belonging to the
+            # GroupNumber FOF == 1, which by definition is centred in the
+            # Centre of Potential and is disconnected from other FoF groups.
+            index = np.where(group_num == 1)[0]
             mass = mass[index]
             coords = coords[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
             assert coords.__len__() > 0, "Array is empty - check filtering."
-            print('PartType {} ok!'.format(part_type))
+            print('Computing CoM ==> PartType {} ok!'.format(part_type))
 
             # Compute CoM for each particle type
             centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
@@ -117,19 +115,17 @@ class Mixin:
             # Import data
             mass = self.particle_masses(part_type)
             vel = self.particle_velocity(part_type)
-            coords = self.particle_coordinates(part_type)
             group_num = self.group_number_part(part_type)
 
-            # Filter local distribution of matter (r<R500)
-            r500 = self.group_r500()
-            group_CoP = self.group_centre_of_potential()
-            coords = np.subtract(coords, group_CoP)
-            r = np.linalg.norm(coords, axis=1)
-            index = np.where((r < r500) & (group_num == 1))[0]
+            # Filter the particles belonging to the
+            # GroupNumber FOF == 1, which by definition is centred in the
+            # Centre of Potential and is disconnected from other FoF groups.
+            index = np.where(group_num == 1)[0]
             mass = mass[index]
             vel = vel[index]
             assert mass.__len__() > 0, "Array is empty - check filtering.."
             assert vel.__len__() > 0, "Array is empty - check filtering."
+            print('Computing ZMF ==> PartType {} ok!'.format(part_type))
 
             # Compute *local* ZMF for each particle type
             zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)
