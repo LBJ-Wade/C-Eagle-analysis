@@ -26,7 +26,7 @@ wdens = np.where(density == np.max(density))
 coordinates = ad[("PartType0","Coordinates")]
 center = coordinates[wdens][0]
 print ('center = ',center)
-new_box_size = ds.quan(250,'code_length')
+new_box_size = ds.quan(150,'code_length')
 
 left_edge = center - new_box_size/2
 right_edge = center + new_box_size/2
