@@ -83,7 +83,7 @@ class Map():
 
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
-        cmap =      [plt.get_cmap('seismic'), plt.get_cmap('seismic'), plt.get_cmap('seismic_r')]
+        cmap =      [plt.get_cmap('Greens'), plt.get_cmap('Greens'), plt.get_cmap('Greens')]
         xlabel =    [r'$x\mathrm{/arcmin}$', r'$y\mathrm{/arcmin}$', r'$x\mathrm{/arcmin}$']
         ylabel =    [r'$y\mathrm{/arcmin}$', r'$z\mathrm{/arcmin}$', r'$z\mathrm{/arcmin}$']
         thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
