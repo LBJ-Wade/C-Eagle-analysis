@@ -2,7 +2,6 @@ import clusters_retriever as extract
 import map_plot_parameters as plotpar
 import cluster_profiler as profile
 import map_synthetizer as mapgen
-import kernel_convolver as kernconv
 import distance_cosmology as cosmo
 
 import numpy as np

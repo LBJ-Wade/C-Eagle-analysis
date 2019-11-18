@@ -23,15 +23,28 @@ from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 class Simulation():
 
-    def __init__(self):
-        self.simulation = 'C-EAGLE'
-        self.computer = 'cosma.dur.ac.uk'
-        self.pathData = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
-        self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
-        self.totalClusters = 30
-        self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
-        self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
-        self.redshiftAllowed = zcat.group_data()['z_value']
+    def __init__(self, simulation_name = 'CELR-eagle'):
+        if simulation_name == 'C-EAGLE':
+            self.simulation = 'C-EAGLE'
+            self.computer = 'cosma.dur.ac.uk'
+            self.pathData = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
+            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
+            self.cluster_prefix = 'CE_'
+            self.totalClusters = 30
+            self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
+            self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            self.redshiftAllowed = zcat.group_data()['z_value']
+
+        if simulation_name == 'CELR-eagle':
+            self.simulation = 'CELR-eagle'
+            self.computer = 'cosma.dur.ac.uk'
+            self.pathData = '/cosma5/data/dp004/dc-pear3/data/eagle'
+            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
+            self.cluster_prefix = 'halo_'
+            self.totalClusters = 45
+            self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
+            self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            self.redshiftAllowed = zcat.group_data()['z_value']
 
     def set_pathData(self, newPath: str):
         self.pathData = newPath
@@ -103,7 +116,7 @@ class Cluster(Simulation,
         """
         # os.chdir(sys.path[0])	# Set working directory as the directory of this file.
         master_directory = self.pathData
-        cluster_ID = 'CE_' + halo_Num(self.clusterID)
+        cluster_ID = self.cluster_prefix + halo_Num(self.clusterID)
         data_dir = 'data'
         return os.path.join(master_directory, cluster_ID, data_dir)
 
