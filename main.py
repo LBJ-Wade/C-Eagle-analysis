@@ -51,9 +51,10 @@ def main():
     print('\tthermal_index: ', thermal_index(cluster))
     print('\n')
 
-    CoM = cluster.group_centre_of_potential()
+    CoM, _ = cluster.group_centre_of_potential()
     coords = cluster.particle_coordinates('0')
     coords = np.subtract(coords, CoM)
+
 
     r500 = cluster.group_r500()
     particles_map = Map()
@@ -61,7 +62,8 @@ def main():
                                   weights = cluster.particle_masses('0'),
                                   plot_limit = 5*r500,
                                   nbins = 100,
-                                  circle_pars = (0, 0, r500))
+                                  circle_pars = (0, 0, r500),
+                                  special_markers = CoM)
     plt.show()
 
 

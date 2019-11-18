@@ -70,9 +70,14 @@ class Map():
         axes.add_artist(Circle((x, y), radius = r, **kwargs))
 
 
-    def xyz_projections(self, *args, xyzdata = None, weights = None,
-                            plot_limit = None, nbins = None,
-                            circle_pars = None, **kwargs):
+    def xyz_projections(self, *args,
+                            xyzdata = None,
+                            weights = None,
+                            plot_limit = None,
+                            nbins = None,
+                            circle_pars = None,
+                            special_markers = None,
+                            **kwargs):
         """
 
         :param args:
@@ -97,12 +102,21 @@ class Map():
             if i == 0:
                 x_Data = xyzdata[:, 0]
                 y_Data = xyzdata[:, 1]
+
+                x_specialMarkers = special_markers[:, 0]
+                y_specialMarkers = special_markers[:, 1]
             elif i == 1:
                 x_Data = xyzdata[:, 1]
                 y_Data = xyzdata[:, 2]
+
+                x_specialMarkers = special_markers[:, 1]
+                y_specialMarkers = special_markers[:, 2]
             elif i == 2:
                 x_Data = xyzdata[:, 0]
                 y_Data = xyzdata[:, 2]
+
+                x_specialMarkers = special_markers[:, 0]
+                y_specialMarkers = special_markers[:, 2]
 
 
             x_bins = np.linspace(-plot_limit, plot_limit, nbins)
@@ -116,6 +130,9 @@ class Map():
             # Render elements in plots
             axes[i].set_aspect('equal')
             Map.plot_circle(axes[i], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
+
+            axes[i].scatter(x_specialMarkers, y_specialMarkers, , color='red', linestyle='--',
+                            label=r'$R_{200}$')
 
             axes[i].set_xlim(-plot_limit, plot_limit)
             axes[i].set_ylim(-plot_limit, plot_limit)
