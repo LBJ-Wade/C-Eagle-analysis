@@ -1,20 +1,24 @@
 import yt
-from cluster import Cluster
+import numpy as np
+import yt.units as units
+import pylabfrom cluster import Cluster
 
 cluster = Cluster(clusterID = 4, redshift = 0.101)
+fname = cluster.partdata_filePaths()[0] # dataset to load
+print(fname)
 
-unit_base = {
-    'length': (1.0, 'kpc'),
-    'velocity': (1.0, 'km/s'),
-    'mass': (1.0, 'Msun')
-}
+unit_base = {'UnitLength_in_cm': 3.08568e+21,
+             'UnitMass_in_g': 1.989e+43,
+             'UnitVelocity_in_cm_per_s': 100000}
 
-fn = cluster.partdata_filePaths()[0] # dataset to load
-print(fn)
+bbox_lim = 1e5  # kpc
 
-ds = yt.load(fn, unit_base=unit_base) # load data
-p = yt.SlicePlot(ds, "x", "density")
+bbox = [[-bbox_lim, bbox_lim],
+        [-bbox_lim, bbox_lim],
+        [-bbox_lim, bbox_lim]]
 
-# Draw a velocity vector every 16 pixels.
-p.annotate_velocity(factor = 16)
-p.save("%s_3x2" % ds)
+ds = yt.load(fname, unit_base=unit_base, bounding_box=bbox)
+ds.index
+ad = ds.all_data()
+px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'))
+px.show()
