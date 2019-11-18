@@ -12,7 +12,7 @@ unit_base = {'UnitLength_in_cm': 3.08568e+21,
              'UnitMass_in_g': 1.989e+43,
              'UnitVelocity_in_cm_per_s': 100000}
 
-bbox_lim = 1  # kpc
+bbox_lim = 1e5  # kpc
 
 bbox = [[-bbox_lim, bbox_lim],
         [-bbox_lim, bbox_lim],
