@@ -21,5 +21,21 @@ bbox = [[-bbox_lim, bbox_lim],
 ds = yt.load(fname, unit_base=unit_base, bounding_box=bbox)
 ds.index
 ad = ds.all_data()
-px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'))
+density = ad[("PartType0","density")]
+wdens = np.where(density == np.max(density))
+coordinates = ad[("PartType0","Coordinates")]
+center = coordinates[wdens][0]
+print ('center = ',center)
+new_box_size = ds.quan(250,'code_length')
+
+left_edge = center - new_box_size/2
+right_edge = center + new_box_size/2
+
+print (new_box_size.in_units('Mpc'))
+print (left_edge.in_units('Mpc'))
+print (right_edge.in_units('Mpc'))
+ad2= ds.region(center=center, left_edge=left_edge, right_edge=right_edge)
+px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'), center=center, width=new_box_size)
+
+
 px.save('kjkjh')
