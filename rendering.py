@@ -132,9 +132,8 @@ class Map():
             axes[i].set_aspect('equal')
             Map.plot_circle(axes[i], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
 
-            axes[i].scatter(x_specialMarkers, y_specialMarkers, color='red', linestyle='--',
-                            label='Special markers')
-            axes[i].annotate(special_markers_labels, x_specialMarkers, y_specialMarkers)
+            axes[i].scatter(x_specialMarkers, y_specialMarkers, color='red', linestyle='--')
+            axes[i].annotate(np.asarray(special_markers_labels), x_specialMarkers, y_specialMarkers, size = 15)
 
             axes[i].set_xlim(-plot_limit, plot_limit)
             axes[i].set_ylim(-plot_limit, plot_limit)
