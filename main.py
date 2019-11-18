@@ -49,7 +49,7 @@ def main():
     y = cluster.particle_coordinates('0')[:,1]
     z = cluster.particle_coordinates('0')[:,2]
     from matplotlib import pyplot as plt
-    plt.scatter(x,y, ',')
+    plt.scatter(x,y, marker=',', edgecolors='k')
     plt.show()
 
 
