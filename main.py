@@ -63,7 +63,7 @@ def main():
                                   plot_limit = 5*r500,
                                   nbins = 100,
                                   circle_pars = (0, 0, r500),
-                                  special_markers = CoP)
+                                  special_markers = [CoP])
     plt.show()
 
 
