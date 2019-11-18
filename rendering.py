@@ -77,6 +77,7 @@ class Map():
                             nbins = None,
                             circle_pars = None,
                             special_markers = None,
+                            special_markers_labels = None,
                             **kwargs):
         """
 
@@ -133,6 +134,7 @@ class Map():
 
             axes[i].scatter(x_specialMarkers, y_specialMarkers, color='red', linestyle='--',
                             label='Special markers')
+            axes[i].annotate(x_specialMarkers, y_specialMarkers, special_markers_labels)
 
             axes[i].set_xlim(-plot_limit, plot_limit)
             axes[i].set_ylim(-plot_limit, plot_limit)

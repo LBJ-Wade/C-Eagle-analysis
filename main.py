@@ -58,7 +58,7 @@ def main():
 
     special_markers = np.vstack((CoP, CoM))
     special_markers = np.subtract(special_markers, CoP)
-    print(special_markers)
+    special_markers_labels = ['CoP', 'CoM']
 
     r500 = cluster.group_r500()
     particles_map = Map()
@@ -67,7 +67,8 @@ def main():
                                   plot_limit = 5*r500,
                                   nbins = 100,
                                   circle_pars = (0, 0, r500),
-                                  special_markers = special_markers)
+                                  special_markers = special_markers,
+                                  special_markers_labels = special_markers_labels)
     plt.show()
 
 
