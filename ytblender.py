@@ -38,6 +38,8 @@ def YT_plot_gas_density(cluster):
     print (right_edge.in_units('Mpc'))
     # ad2= ds.region(center=center, left_edge=left_edge, right_edge=right_edge)
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'), center=center, width=new_box_size)
+    # Draw a velocity vector every 16 pixels.
+    px.annotate_velocity(factor=16)
 
 
     px.save('{}'.format(cluster.clusterID))
@@ -94,4 +96,4 @@ def YT_plot_metal_density(cluster):
 
 
 cluster = Cluster(clusterID = 4, redshift = 0.101)
-YT_plot_metal_density(cluster)
+YT_plot_gas_density(cluster)
