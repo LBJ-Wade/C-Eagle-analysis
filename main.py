@@ -60,7 +60,7 @@ def main():
     particles_map.xyz_projections(xyzdata = coords,
                                   weights = cluster.particle_masses('0'),
                                   plot_limit = 5*r500,
-                                  nbins = 150,
+                                  nbins = 100,
                                   circle_pars = (0, 0, r500))
     plt.show()
 
