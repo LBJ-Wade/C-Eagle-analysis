@@ -1,7 +1,8 @@
 import yt
 import numpy as np
 import yt.units as units
-import pylabfrom cluster import Cluster
+import pylab
+from cluster import Cluster
 
 cluster = Cluster(clusterID = 4, redshift = 0.101)
 fname = cluster.partdata_filePaths()[0] # dataset to load
