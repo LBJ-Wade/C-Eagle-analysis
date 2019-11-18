@@ -52,10 +52,11 @@ def main():
     print('\n')
 
     CoP = cluster.group_centre_of_potential()
+    CoM, _ = cluster.group_centre_of_mass(out_allPartTypes = False)
     coords = cluster.particle_coordinates('0')
     coords = np.subtract(coords, CoP)
 
-    special_markers = np.vstack((CoP, CoP))
+    special_markers = np.vstack((CoP, CoM))
     special_markers = np.subtract(special_markers, CoP)
     print(special_markers)
 
