@@ -55,6 +55,7 @@ def main():
     coords = cluster.particle_coordinates('0')
     coords = np.subtract(coords, CoP)
 
+    special_markers = [CoP, CoP]
 
     r500 = cluster.group_r500()
     particles_map = Map()
@@ -63,7 +64,7 @@ def main():
                                   plot_limit = 5*r500,
                                   nbins = 100,
                                   circle_pars = (0, 0, r500),
-                                  special_markers = [CoP])
+                                  special_markers = special_markers)
     plt.show()
 
 
