@@ -45,7 +45,7 @@ def thermal_index(cluster):
     coordinate = cluster.particle_coordinates(part_type)
     velocity = cluster.particle_velocity(part_type)
     temperature = cluster.particle_temperature(part_type)
-    group_num = self.group_number_part(part_type)
+    group_num = cluster.group_number_part(part_type)
     r500 = cluster.group_r500()
 
     # Retrieve coordinates & velocities
