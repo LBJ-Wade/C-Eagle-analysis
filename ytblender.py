@@ -1,7 +1,7 @@
 import yt
 from cluster import Cluster
 
-cluster = Cluster(clusterID = 0, redshift = 0.101)
+cluster = Cluster(clusterID = 4, redshift = 0.101)
 fn = cluster.partdata_filePaths()[0] # dataset to load
 
 ds = yt.load(fn) # load data
