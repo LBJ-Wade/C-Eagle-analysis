@@ -22,4 +22,4 @@ ds = yt.load(fname, unit_base=unit_base, bounding_box=bbox)
 ds.index
 ad = ds.all_data()
 px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'))
-px.show()
+px.save('kjkjh')
