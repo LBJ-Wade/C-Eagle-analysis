@@ -5,6 +5,7 @@ import pylab
 from cluster import Cluster
 
 cluster = Cluster(clusterID = 4, redshift = 0.101)
+r200 = cluster.group_r200()
 fname = cluster.partdata_filePaths()[0] # dataset to load
 print(fname)
 
@@ -26,7 +27,7 @@ wdens = np.where(density == np.max(density))
 coordinates = ad[("PartType0","Coordinates")]
 center = coordinates[wdens][0]
 print ('center = ',center)
-new_box_size = ds.quan(5,'code_length')
+new_box_size = ds.quan(3*r200,'code_length')
 
 left_edge = center - new_box_size/2
 right_edge = center + new_box_size/2
