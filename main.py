@@ -33,6 +33,7 @@ def time_func(function):
 def main():
 
     from cluster import Cluster
+    from rendering import Map
     from mergers import dynamical_index, thermal_index
 
     # ceagle = Simulation()
@@ -45,12 +46,10 @@ def main():
     print('\tthermal_index: ', thermal_index(cluster))
     print('\n')
 
-    x = cluster.particle_coordinates('0')[:,0]
-    y = cluster.particle_coordinates('0')[:,1]
-    z = cluster.particle_coordinates('0')[:,2]
-    from matplotlib import pyplot as plt
-    plt.scatter(x,y, marker=',')
-    plt.show()
+    r200 = cluster.group_r200()
+    particles_map = Map()
+    particles_map.xyz_projections(xyzdata = cluster.particle_coordinates('0'), weights = None,
+                            plot_limit = 5*r200, nbins = 50)
 
 
 if __name__ == "__main__":

@@ -74,7 +74,7 @@ class Map():
         """
 
         :param args:
-        :param xyzdata:
+        :param xyzdata: (numpy 2D array)
         :param weights:
         :param kwargs:
         :return:
@@ -95,21 +95,19 @@ class Map():
             if i == 0:
                 x_Data = xyzdata[:, 0]
                 y_Data = xyzdata[:, 1]
-                weight = weights[:, 0]
             elif i == 1:
-                x_Data = xyzdata[:, 0]
-                y_Data = xyzdata[:, 1]
-                weight = weights[:, 0]
+                x_Data = xyzdata[:, 1]
+                y_Data = xyzdata[:, 2]
             elif i == 2:
                 x_Data = xyzdata[:, 0]
-                y_Data = xyzdata[:, 1]
-                weight = weights[:, 0]
+                y_Data = xyzdata[:, 2]
+
 
             x_bins = np.linspace(-plot_limit, plot_limit, nbins)
             y_bins = np.linspace(-plot_limit, plot_limit, nbins)
             Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
             # line of sight momentum weights
-            count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weight)
+            count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
             img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i])
 
