@@ -91,8 +91,8 @@ class Map():
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
         cmap =      [plt.get_cmap('Greens'), plt.get_cmap('Greens'), plt.get_cmap('Greens')]
-        xlabel =    [r'$x\mathrm{/arcmin}$', r'$y\mathrm{/arcmin}$', r'$x\mathrm{/arcmin}$']
-        ylabel =    [r'$y\mathrm{/arcmin}$', r'$z\mathrm{/arcmin}$', r'$z\mathrm{/arcmin}$']
+        xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
+        ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
         thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
         cbarlabel = [r'$\sum_{i} m_i v_{z, i}\ [\mathrm{M_\odot\ km\ s^{-1}}]$',
                      r'$\sum_{i} m_i v_{x, i}\ [\mathrm{M_\odot\ km\ s^{-1}}]$',
@@ -130,6 +130,8 @@ class Map():
 
             # Render elements in plots
             axes[i].set_aspect('equal')
+
+            # Plot circles
             Map.plot_circle(axes[i], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
 
 

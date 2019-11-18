@@ -55,15 +55,21 @@ def main():
     CoM, _ = cluster.group_centre_of_mass(out_allPartTypes = False)
     coords = cluster.particle_coordinates('0')
     coords = np.subtract(coords, CoP)
+    coords = cluster.comoving_length(coords)
 
     special_markers = np.vstack((CoP, CoM))
     special_markers = np.subtract(special_markers, CoP)
     special_markers_labels = [r'CoP', r'CoM']
 
     r500 = cluster.group_r500()
+    r500 = cluster.comoving_length(r500)
+
+    mass = cluster.particle_masses('0')
+    mass = cluster.comoving_mass(mass)
+
     particles_map = Map()
     particles_map.xyz_projections(xyzdata = coords,
-                                  weights = cluster.particle_masses('0'),
+                                  weights = mass,
                                   plot_limit = 5*r500,
                                   nbins = 100,
                                   circle_pars = (0, 0, r500),
