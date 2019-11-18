@@ -56,6 +56,7 @@ def main():
     coords = np.subtract(coords, CoP)
 
     special_markers = np.vstack((CoP, CoP))
+    special_markers = np.subtract(special_markers, CoP)
     print(special_markers)
 
     r500 = cluster.group_r500()
