@@ -79,7 +79,7 @@ class Mixin:
             # Filter the particles belonging to the
             # GroupNumber FOF == 1, which by definition is centred in the
             # Centre of Potential and is disconnected from other FoF groups.
-            radial_dist = np.linalg.norm(coords, axis = 1)
+            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis = 1)
             index = np.where((group_num == 1) & (radial_dist < 1.5*r200))[0]
             mass = mass[index]
             coords = coords[index]
