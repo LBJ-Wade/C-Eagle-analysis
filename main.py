@@ -61,7 +61,7 @@ def main():
     special_markers = np.subtract(special_markers, CoP)
     special_markers_labels = [r'CoP', r'CoM']
 
-    r500 = cluster.group_r500()
+    r500 = cluster.group_r200()
     r500 = cluster.comoving_length(r500)
 
     mass = cluster.particle_masses('0')
