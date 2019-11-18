@@ -49,8 +49,10 @@ def main():
 
     r200 = cluster.group_r200()
     particles_map = Map()
-    particles_map.xyz_projections(xyzdata = cluster.particle_coordinates('0'), weights = None,
-                            plot_limit = 5*r200, nbins = 50)
+    particles_map.xyz_projections(xyzdata = cluster.particle_coordinates('0'),
+                                  weights = cluster.particle_masses('0'),
+                                  plot_limit = 5*r200,
+                                  nbins = 50)
     plt.show()
 
 
