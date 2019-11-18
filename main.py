@@ -39,7 +39,7 @@ def main():
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
 
-    cluster = Cluster(clusterID = 0, redshift = 0.101)
+    cluster = Cluster(clusterID = 5, redshift = 0.101)
     print('clusterID: ', cluster.clusterID)
     print('\tdynamical_index: ', dynamical_index(cluster))
     print('\tthermal_index: ', thermal_index(cluster))
@@ -49,7 +49,7 @@ def main():
     y = cluster.particle_coordinates('0')[:,1]
     z = cluster.particle_coordinates('0')[:,2]
     from matplotlib import pyplot as plt
-    plt.scatter(x,y, marker=',', edgecolors='k')
+    plt.scatter(x,y, marker=',')
     plt.show()
 
 
