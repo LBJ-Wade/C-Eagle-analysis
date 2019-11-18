@@ -36,7 +36,7 @@ def YT_plot_gas_density(cluster):
     print (new_box_size.in_units('Mpc'))
     print (left_edge.in_units('Mpc'))
     print (right_edge.in_units('Mpc'))
-    ad2= ds.region(center=center, left_edge=left_edge, right_edge=right_edge)
+    # ad2= ds.region(center=center, left_edge=left_edge, right_edge=right_edge)
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'), center=center, width=new_box_size)
 
 
