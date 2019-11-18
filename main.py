@@ -38,12 +38,19 @@ def main():
     # ceagle = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
-    for i in range(0, 30):
-        cluster = Cluster(clusterID = i, redshift = 0.101)
-        print('clusterID: ', cluster.clusterID)
-        print('\tdynamical_index: ', dynamical_index(cluster))
-        print('\tthermal_index: ', thermal_index(cluster))
-        print('\n')
+
+    cluster = Cluster(clusterID = 0, redshift = 0.101)
+    print('clusterID: ', cluster.clusterID)
+    print('\tdynamical_index: ', dynamical_index(cluster))
+    print('\tthermal_index: ', thermal_index(cluster))
+    print('\n')
+
+    x = cluster.particle_coordinates('0')[:,0]
+    y = cluster.particle_coordinates('0')[:,1]
+    x = cluster.particle_coordinates('0')[:,2]
+    from matplotlib import pyplot as plt
+    plt.scatter(x,y)
+    plt.show()
 
 
 if __name__ == "__main__":
