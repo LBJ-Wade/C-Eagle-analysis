@@ -45,7 +45,7 @@ def main():
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
 
-    cluster = Cluster(clusterID = 5, redshift = 0.101)
+    cluster = Cluster(clusterID = 4, redshift = 0.101)
     print('clusterID: ', cluster.clusterID)
     print('\tdynamical_index: ', dynamical_index(cluster))
     print('\tthermal_index: ', thermal_index(cluster))
