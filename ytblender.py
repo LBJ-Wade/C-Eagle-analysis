@@ -8,12 +8,7 @@ from cluster import Cluster
 
 cluster = Cluster(clusterID = 0, redshift = 0.101)
 
-@cluster.data_subject(subject="particledata")
-def return_filePath(cluster, **kwargs):
-    return kwargs['file_list_sorted'][0]
-
-
-fn = return_filePath() # dataset to load
+fn = cluster.partdata_filePaths()[0] # dataset to load
 orient = 'horizontal'
 
 ds = yt.load(fn) # load data

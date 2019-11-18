@@ -110,6 +110,14 @@ class Mixin:
     #													#
     #####################################################
     @data_subject(subject="groups")
+    def groups_filePaths(self, **kwargs):
+        return kwargs['file_list_sorted']
+
+    @data_subject(subject="particledata")
+    def partdata_filePaths(self, **kwargs):
+        return kwargs['file_list_sorted']
+
+    @data_subject(subject="groups")
     def group_centre_of_potential(self, *args, **kwargs):
         """
         AIM: reads the FoF group central of potential from the path and file given
