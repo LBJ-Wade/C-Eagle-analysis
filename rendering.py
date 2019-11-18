@@ -16,6 +16,7 @@ import matplotlib as mpl
 import numpy as np
 import scipy as sp
 from matplotlib.patches import Circle
+import matplotlib.colors as colors
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
 #################################
@@ -109,7 +110,8 @@ class Map():
             Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
             count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
-            img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i])
+            norm = colors.LogNorm(vmin=10 ** -4, vmax=10 ** 3)
+            img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i], norm= norm)
 
             # Render elements in plots
             axes[i].set_aspect('equal')

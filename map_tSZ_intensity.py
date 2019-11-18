@@ -144,7 +144,7 @@ def map_tSZ_intensity(num_halo, redshift, simulation_type, nbins = 100, rfov = 2
 
         # norm = mapgen.MidpointNormalize(vmin=tSZmap.min(), vmax=tSZmap.max(), midpoint=0)
         import matplotlib.colors as colors
-        norm=colors.LogNorm(vmin=10**-10, vmax = 10**-3)
+        c
         # norm = colors.PowerNorm(gamma=0.2)
         img = axes[i].pcolor(Cx, Cy, tSZmap, cmap=cmap[i], norm= norm)
 
