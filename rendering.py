@@ -70,7 +70,8 @@ class Map():
 
 
     def xyz_projections(self, *args, xyzdata = None, weights = None,
-                            plot_limit = None, nbins = None, **kwargs):
+                            plot_limit = None, nbins = None,
+                            circle_pars = None, **kwargs):
         """
 
         :param args:
@@ -106,14 +107,13 @@ class Map():
             x_bins = np.linspace(-plot_limit, plot_limit, nbins)
             y_bins = np.linspace(-plot_limit, plot_limit, nbins)
             Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
-            # line of sight momentum weights
             count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
             img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i])
 
             # Render elements in plots
             axes[i].set_aspect('equal')
-            Map.plot_circle(axes[i], 0, 0, 1, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
+            Map.plot_circle(axes[i], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
 
             axes[i].set_xlim(-plot_limit, plot_limit)
             axes[i].set_ylim(-plot_limit, plot_limit)
