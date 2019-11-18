@@ -72,7 +72,7 @@ def main():
                                   weights = mass,
                                   plot_limit = 5*r500,
                                   nbins = 100,
-                                  circle_pars = (0, 0, r500),
+                                  circle_pars = (0, 0, 1.5*r500),
                                   special_markers = special_markers,
                                   special_markers_labels = special_markers_labels)
     plt.show()
