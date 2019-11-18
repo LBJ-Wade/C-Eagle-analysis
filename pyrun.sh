@@ -13,7 +13,7 @@ echo -e "\e[1m\e[91mRunning main program..."
 echo -e "-------------------------------------------------------------------\e[0m"
 
 #python3 -u ./main.py > ./main.log &
-mpiexec -n 32 python3 ytblender.py
+python3 ytblender.py
 #python3 ./main.py
 
 echo -e "\e[5m\e[1m\e[91mEnd of session.\e[0m"
