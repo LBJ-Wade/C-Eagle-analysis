@@ -58,17 +58,17 @@ plots = [dens_axes[0].imshow(slc_dens, origin='lower', norm=LogNorm()),
          vels_axes[0].imshow(slc_vel, origin='lower', norm=LogNorm()),
          vels_axes[1].imshow(proj_vel, origin='lower', norm=LogNorm())]
 
-plots[0].set_clim((1.0e-27,1.0e-25))
+# plots[0].set_clim((1.0e-27,1.0e-25))
 plots[0].set_cmap("bds_highcontrast")
-plots[1].set_clim((1.0e-27,1.0e-25))
+# plots[1].set_clim((1.0e-27,1.0e-25))
 plots[1].set_cmap("bds_highcontrast")
-plots[2].set_clim((1.0e7,1.0e8))
+# plots[2].set_clim((1.0e7,1.0e8))
 plots[2].set_cmap("hot")
-plots[3].set_clim((1.0e7,1.0e8))
+# plots[3].set_clim((1.0e7,1.0e8))
 plots[3].set_cmap("hot")
-plots[4].set_clim((1e6, 1e8))
+# plots[4].set_clim((1e6, 1e8))
 plots[4].set_cmap("gist_rainbow")
-plots[5].set_clim((1e6, 1e8))
+# plots[5].set_clim((1e6, 1e8))
 plots[5].set_cmap("gist_rainbow")
 
 titles=[r'$\mathrm{Density}\ (\mathrm{g\ cm^{-3}})$',
