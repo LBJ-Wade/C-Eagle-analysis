@@ -47,9 +47,9 @@ def main():
 
     x = cluster.particle_coordinates('0')[:,0]
     y = cluster.particle_coordinates('0')[:,1]
-    x = cluster.particle_coordinates('0')[:,2]
+    z = cluster.particle_coordinates('0')[:,2]
     from matplotlib import pyplot as plt
-    plt.scatter(x,y)
+    plt.scatter(x,y, ',')
     plt.show()
 
 
