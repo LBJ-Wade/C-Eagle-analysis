@@ -55,7 +55,7 @@ def main():
     coords = cluster.particle_coordinates('0')
     coords = np.subtract(coords, CoP)
 
-    special_markers = [CoP, CoP]
+    special_markers = np.vstack((CoP, CoP))
     print(special_markers)
 
     r500 = cluster.group_r500()
