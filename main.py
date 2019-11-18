@@ -41,14 +41,9 @@ def main():
     for i in range(0, 30):
         cluster = Cluster(clusterID = i, redshift = 0.101)
         print('clusterID: ', cluster.clusterID)
-
-    for i in range(0, 30):
-        cluster = Cluster(clusterID=i, redshift=0.101)
-        print('dynamical_index: ', dynamical_index(cluster))
-
-    for i in range(0, 30):
-        cluster = Cluster(clusterID=i, redshift=0.101)
-        print('thermal_index: ', thermal_index(cluster))
+        print('\tdynamical_index: ', dynamical_index(cluster))
+        print('\tthermal_index: ', thermal_index(cluster))
+        print('\n')
 
 
 if __name__ == "__main__":
