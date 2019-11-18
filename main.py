@@ -35,6 +35,7 @@ def main():
     from cluster import Cluster
     from rendering import Map
     from mergers import dynamical_index, thermal_index
+    from matplotlib import pyplot as plt
 
     # ceagle = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
@@ -50,6 +51,7 @@ def main():
     particles_map = Map()
     particles_map.xyz_projections(xyzdata = cluster.particle_coordinates('0'), weights = None,
                             plot_limit = 5*r200, nbins = 50)
+    plt.show()
 
 
 if __name__ == "__main__":
