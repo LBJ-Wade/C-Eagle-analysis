@@ -111,10 +111,9 @@ class Map():
             # line of sight momentum weights
             count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weight)
 
-            img = axes[i].pcolor(Cx, Cy, kSZmap, cmap=cmap[i], norm=norm)
+            img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i])
 
             # Render elements in plots
-            axes[i].set_title(r'$\mathrm{MACSIS\ halo\ } %3d \qquad z = %8.3f$' % (num_halo, redshift), pad=94)
             axes[i].set_aspect('equal')
             Map.plot_circle(axes[i], 0, 0, 1, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
 
