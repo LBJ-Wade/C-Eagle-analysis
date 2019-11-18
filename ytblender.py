@@ -9,7 +9,8 @@ unit_base = {
     'mass': (1.0, 'Msun')
 }
 
-fn = cluster.partdata_filePaths()[1] # dataset to load
+fn = cluster.partdata_filePaths()[0] # dataset to load
+print(fn)
 
 ds = yt.load(fn, unit_base=unit_base) # load data
 p = yt.SlicePlot(ds, "x", "density")
