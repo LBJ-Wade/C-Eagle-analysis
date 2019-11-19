@@ -93,7 +93,7 @@ CoP = cluster.group_centre_of_potential()
 special_markers = [CoP]
 
 # Create array of test values for the sphere-filter
-r_filters = np.linspace(0.01*r500, 3*r200, 10)
+r_filters = np.linspace(r500, 3*r200, 20)
 for r_filter in r_filters:
     CoM, _ = group_centre_of_mass(cluster,
                                   out_allPartTypes = False,
@@ -102,28 +102,24 @@ for r_filter in r_filters:
 
 # Recentre to the CoP and plot
 special_markers = np.subtract(special_markers, CoP)
+special_markers = cluster.comoving_length(special_markers)
 special_markers_labels = ['']*len(special_markers)
 
-CoM_map = Map()
-CoM_map.xyz_projections(xyzdata = None,
-                          weights = None,
-                          plot_limit = 1.2*r200,
-                          nbins = None,
-                          circle_pars = (0, 0, r500),
-                          special_markers = special_markers,
-                          special_markers_labels = special_markers_labels,
-                          s=0.1)
 
-# Plot
+
+# Plot gas mass field
 coords = cluster.particle_coordinates('0')
 coords = np.subtract(coords, CoP)
 coords = cluster.comoving_length(coords)
 mass = cluster.particle_masses('0')
+mass = cluster.comoving_mass(mass)
+
+CoM_map = Map()
 CoM_map.xyz_projections(xyzdata = coords,
                           weights = mass,
                           plot_limit = 1.2*r200,
                           nbins = 100,
-                          circle_pars = (0, 0, 0),
-                          special_markers = [[0.,0.,0.], [0.,0.,0.]],
-                          special_markers_labels = ['']*2)
+                          circle_pars = (0, 0, r500),
+                          special_markers = special_markers,
+                          special_markers_labels = special_markers_labels)
 plt.show()
