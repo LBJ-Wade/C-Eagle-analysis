@@ -37,7 +37,7 @@ class Mixin:
     def angular_momentum(mass, velocity, position):
         """Defined as L = m(r CROSS v)"""
         rxv = np.cross(position, velocity)
-        l = np.multiply(mass, rxv, axis = 1)
+        l = mass * rxv
         return np.sum(l)
 
     @staticmethod
