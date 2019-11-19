@@ -81,44 +81,93 @@ def group_centre_of_mass(cluster, out_allPartTypes=False, filter_radius = None):
         return cluster.centre_of_mass(Mtot_PartTypes, CoM_PartTypes)
 
 
+def _TEST_group_centre_of_mass(cluster):
+
+    # Define key sizes within the cluster
+    r500 = cluster.comoving_length(cluster.group_r500())
+    r200 = cluster.comoving_length(cluster.group_r200())
+
+    # Centre the system on the CoP
+    CoP = cluster.group_centre_of_potential()
+    special_markers = [CoP]
+
+    # Create array of test values for the sphere-filter
+    r_filters = np.linspace(r500, 3*r200, 20)
+
+    for r_filter in r_filters:
+        CoM, _ = group_centre_of_mass(cluster, out_allPartTypes = False, filter_radius = r_filter)
+        special_markers.append(CoM)
+
+    # Recentre to the CoP and plot
+    special_markers = np.subtract(special_markers, CoP)
+    special_markers = cluster.comoving_length(special_markers)
+    special_markers_labels = ['']*len(special_markers)
+
+    # Plot gas mass field
+    coords = cluster.particle_coordinates('0')
+    coords = np.subtract(coords, CoP)
+    coords = cluster.comoving_length(coords)
+    mass = cluster.particle_masses('0')
+    mass = cluster.comoving_mass(mass)
+    mass = cluster.mass_units(mass, unit_system='astro')
+
+    CoM_map = Map()
+    CoM_map.xyz_projections(xyzdata = coords,
+                              weights = mass,
+                              plot_limit = 2*r200,
+                              nbins = 50,
+                              circle_pars = (0, 0, r500),
+                              special_markers = special_markers,
+                              special_markers_labels = special_markers_labels)
+
+    plt.show()
+
+
+def dynamical_index(cop, com, r_filter):
+    """
+    The dynamical merging index is defined according to the displacement
+    between the centre of mass and the centre of potential of the cluster.
+
+    [SCOPE VARIABLE]
+    cop == (Centre of Potential)
+    com == (Centre of Mass)
+    r500 == (radius of the R_500 sphere)
+    displacement == (Euclidean distance between cop and mop)
+
+    :param cluster: cluster.Cluster class
+    :return: the dynamical merging index
+    """
+    assert cop.__len__() == 3, 'Centre of Potential does not have 3 components.'
+    assert com.__len__() == 3, 'Centre of Mass does not have 3 components.'
+    displacement = np.linalg.norm(np.subtract(cop, com))
+    dynamic_index = displacement/r_filter
+    # assert dynamic_index < 1, "dynamical_index > 1. Unusual for clusters"
+    return dynamic_index
+
+
+def _TEST_dynamical_merging_index(cluster):
+    r500 = cluster.group_r500()
+    r200 = cluster.group_r200()
+    CoP = cluster.group_centre_of_potential()
+    CoM_array = []
+    dyn_index = []
+
+    # Create array of test values for the sphere-filter
+    r_filters = np.linspace(r500, 3 * r200, 20)
+
+    for r_filter in r_filters:
+        CoM, _ = group_centre_of_mass(cluster, out_allPartTypes=False, filter_radius=r_filter)
+        CoM_array.append(CoM)
+        dyn_index.append(dynamical_index(CoP, CoM, r_filter))
+
+    plt.scatter(r_filters, dyn_index)
+    plt.xlabel(r'$r_{\mathrm{Spherical~Filter}} \qquad [h^{-1} \mathrm{Mpc}]$')
+    plt.ylabel(r'$\frac{|\mathbf{r}_{CoP} - \mathbf{r}_{CoM}(r < r_{\mathrm{Spherical~Filter}})|}{r_{\mathrm{Spherical~Filter}}}$')
+    plt.title(r'$\mathrm{Dynamical~merging~index}$')
+    plt.show()
+
+
+
 # Create cluster object
-cluster = Cluster(clusterID = 4, redshift = 0.101)
-
-# Define key sizes within the cluster
-r500 = cluster.group_r500()
-r200 = cluster.group_r200()
-
-# Centre the system on the CoP
-CoP = cluster.group_centre_of_potential()
-special_markers = [CoP]
-
-# Create array of test values for the sphere-filter
-r_filters = np.linspace(r500, 3*r200, 20)
-
-for r_filter in r_filters:
-    CoM, _ = group_centre_of_mass(cluster, out_allPartTypes = False, filter_radius = r_filter)
-    special_markers.append(CoM)
-
-# Recentre to the CoP and plot
-special_markers = np.subtract(special_markers, CoP)
-special_markers = cluster.comoving_length(special_markers)
-special_markers_labels = ['']*len(special_markers)
-
-# Plot gas mass field
-coords = cluster.particle_coordinates('0')
-coords = np.subtract(coords, CoP)
-coords = cluster.comoving_length(coords)
-mass = cluster.particle_masses('0')
-mass = cluster.comoving_mass(mass)
-mass = cluster.mass_units(mass, unit_system='astro')
-
-CoM_map = Map()
-CoM_map.xyz_projections(xyzdata = coords,
-                          weights = mass,
-                          plot_limit = 2*r200,
-                          nbins = 50,
-                          circle_pars = (0, 0, r500),
-                          special_markers = special_markers,
-                          special_markers_labels = special_markers_labels)
-
-plt.show()
+cluster = Cluster(clusterID=4, redshift=0.101)
+_TEST_dynamical_merging_index(cluster)
