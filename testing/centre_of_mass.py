@@ -124,6 +124,6 @@ CoM_map.xyz_projections(xyzdata = coords,
                           plot_limit = 1.2*r200,
                           nbins = 100,
                           circle_pars = (0, 0, 0),
-                          special_markers = [],
-                          special_markers_labels = [])
+                          special_markers = [[0,0,0]],
+                          special_markers_labels = [''])
 plt.show()
