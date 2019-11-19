@@ -153,7 +153,7 @@ def _TEST_dynamical_merging_index(cluster):
     dyn_index = []
 
     # Create array of test values for the sphere-filter
-    r_filters = np.linspace(r500, 3 * r200, 20)
+    r_filters = np.linspace(r500, 3 * r200, 40)
 
     for r_filter in r_filters:
         CoM, _ = group_centre_of_mass(cluster, out_allPartTypes=False, filter_radius=r_filter)
@@ -161,9 +161,19 @@ def _TEST_dynamical_merging_index(cluster):
         dyn_index.append(dynamical_index(CoP, CoM, r_filter))
 
     plt.scatter(r_filters, dyn_index)
-    plt.xlabel(r'$r_{\mathrm{Spherical~Filter}} \qquad [h^{-1} \mathrm{Mpc}]$')
-    plt.ylabel(r'$\frac{|\mathbf{r}_{CoP} - \mathbf{r}_{CoM}(r < r_{\mathrm{Spherical~Filter}})|}{r_{\mathrm{Spherical~Filter}}}$')
+    plt.xlabel(r'$r_{\mathrm{spherical~filter}} \qquad [h^{-1} \mathrm{Mpc}]$')
+    plt.ylabel(r'$\frac{|\mathbf{r}_{CoP} - \mathbf{r}_{CoM}(r < r_{\mathrm{spherical~filter}})|}{r_{\mathrm{'
+               r'Spherical~Filter}}}$')
     plt.title(r'$\mathrm{Dynamical~merging~index}$')
+
+    # Plot radial distances
+    xcoords = [r500, r200]
+    colors = ['r', 'k']
+    labels = [r'$R_{500}$', r'$R_{200}$']
+    for xc, label, c in zip(xcoords, labels, colors):
+        plt.axvline(x=xc, label=label, c=c)
+
+    plt.legend()
     plt.show()
 
 
