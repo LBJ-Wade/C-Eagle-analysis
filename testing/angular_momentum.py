@@ -10,6 +10,7 @@ This file is part of the 'testing' package.
 
 import numpy as np
 from matplotlib import pyplot as plt
+import pandas as pd
 
 import sys
 import os.path
@@ -46,6 +47,11 @@ def angular_momentum_PartType_alignment_matrix(cluster):
 
     return alignment_matrix
 
+def matrix_to_dataframe(matrix):
+    df = pd.DataFrame(matrix)
+    df.columns = ["Gas", "Dark matter", "Stars", "Black holes"]
+    df.index = ["Gas", "Dark matter", "Stars", "Black holes"]
+    print(df)
 cluster = Cluster(clusterID=4, redshift=0.101)
 m = angular_momentum_PartType_alignment_matrix(cluster)
-print(m)
+matrix_to_dataframe(m)
