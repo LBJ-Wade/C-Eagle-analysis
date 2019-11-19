@@ -137,7 +137,7 @@ class Map():
                 Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
                 count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
-                norm = colors.LogNorm(vmin=10**7, vmax=np.max(count))
+                norm = colors.LogNorm(vmin=10**9, vmax=np.max(count))
                 img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i], norm= norm)
 
             # Render elements in plots
