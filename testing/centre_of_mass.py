@@ -120,5 +120,5 @@ CoM_map.xyz_projections(xyzdata = coords,
                           circle_pars = (0, 0, r500),
                           special_markers = special_markers,
                           special_markers_labels = special_markers_labels)
-plt.title('r_filters = np.linspace(r500, 3*r200, 20)')
+plt.title(r'$\mathrm{r_filters = np.linspace(r500, 3*r200, 20)}$')
 plt.show()
