@@ -27,7 +27,7 @@ strategies.
 """
 
 import numpy as np
-from cluster import Cluster
+from ..cluster import Cluster
 
 def group_centre_of_mass(cluster, out_allPartTypes=False):
     """
