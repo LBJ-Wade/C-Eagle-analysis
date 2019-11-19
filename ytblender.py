@@ -8,6 +8,7 @@ def YT_plot_gas_density(cluster):
 
     r200 = cluster.group_r200()
     fname = cluster.partdata_filePaths()[0] # dataset to load
+    CoP = cluster.group_centre_of_potential()
     print(fname)
 
     unit_base = {'UnitLength_in_cm': 3.08568e+21,
@@ -26,9 +27,9 @@ def YT_plot_gas_density(cluster):
     density = ad[("PartType0","density")]
     wdens = np.where(density == np.max(density))
     coordinates = ad[("PartType0","Coordinates")]
-    center = coordinates[wdens][0]
+    center = CoP
     print ('center = ',center)
-    new_box_size = ds.quan(10*r200,'code_length')
+    new_box_size = ds.quan(10*r200,'Mpc')
 
     left_edge = center - new_box_size/2
     right_edge = center + new_box_size/2
@@ -40,9 +41,11 @@ def YT_plot_gas_density(cluster):
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'), center=center, width=new_box_size)
     px.save('cluster_{}'.format(cluster.clusterID))
 
+    px = yt.ProjectionPlot(ds, 'x', ('gas', 'velocity'), center=center, width=new_box_size)
+    px.save('cluster_{}'.format(cluster.clusterID))
+
     # Draw a velocity vector every 16 pixels.
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'temperature'), center=center, width=new_box_size)
-    px.annotate_velocity(factor=16)
     px.save('cluster_{}'.format(cluster.clusterID))
 
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'metallicity'), center=center, width=new_box_size)
@@ -52,6 +55,7 @@ def YT_plot_gas_density(cluster):
 def YT_multislice(cluster):
     r200 = cluster.group_r200()
     fname = cluster.partdata_filePaths()[0]  # dataset to load
+    CoP = cluster.group_centre_of_potential()
     print(fname)
 
     unit_base = {'UnitLength_in_cm': 3.08568e+21,
