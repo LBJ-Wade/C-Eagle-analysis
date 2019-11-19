@@ -94,6 +94,18 @@ def YT_plot_metal_density(cluster):
                       ('deposit', 'PartType0_smoothed_metal_density'),
                       center=center, width=box_size, data_source=box).save('{}'.format(cluster.clusterID))
 
+def YT_multislice(cluster):
+
+
+    r200 = cluster.group_r200()
+    fname = cluster.partdata_filePaths()[0]  # dataset to load
+    print(fname)
+
+    ds = yt.load(fname)
+
+    # Create density slices of several fields along the x axis
+    yt.SlicePlot(ds, 'x', ['density', 'temperature', 'pressure'],
+                 width=(5*r200, 'Mpc')).save()
 
 cluster = Cluster(clusterID = 4, redshift = 0.101)
-YT_plot_gas_density(cluster)
+YT_multislice(cluster)
