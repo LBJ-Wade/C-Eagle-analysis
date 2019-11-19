@@ -77,7 +77,7 @@ class Map():
         curved_text = CurvedText(
             x=curve[0],
             y=curve[1],
-            text=r'R_{500}',  # 'this this is a very, very long text',
+            text=r'$R_{500}$',  # 'this this is a very, very long text',
             va='bottom',
             axes=axes,  ##calls ax.add_artist in __init__
         )
