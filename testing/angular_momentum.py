@@ -36,10 +36,13 @@ def angular_momentum_PartType_alignment_matrix(cluster):
     ang_momenta, sum_of_masses = cluster.group_angular_momentum(out_allPartTypes=True)
 
     # Compute the alignment matrix
-    alignment_matrix = np.zeros((len(ang_momenta), len(ang_momenta)), dtype=np.float)
+    alignment_matrix = np.zeros((len(ang_momenta), len(ang_momenta)), dtype=float)
     for i in range(len(ang_momenta)):
         for j in range(len(ang_momenta)):
-            alignment_matrix[i][j] = angle_between_vectors(ang_momenta[i], ang_momenta[j])
+            if i == j:
+                alignment_matrix[i][j] = 0.
+            else:
+                alignment_matrix[i][j] = angle_between_vectors(ang_momenta[i], ang_momenta[j])
 
     return alignment_matrix
 
