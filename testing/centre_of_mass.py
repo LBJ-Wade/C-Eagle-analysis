@@ -93,7 +93,7 @@ CoP = cluster.group_centre_of_potential()
 special_markers = [CoP]
 
 # Create array of test values for the sphere-filter
-r_filters = np.linspace(0.01*r500, 2*r200, 100)
+r_filters = np.linspace(0.01*r500, 3*r200, 10)
 for r_filter in r_filters:
     CoM, _ = group_centre_of_mass(cluster,
                                   out_allPartTypes = False,
@@ -112,5 +112,5 @@ CoM_map.xyz_projections(xyzdata = None,
                           circle_pars = (0, 0, r500),
                           special_markers = special_markers,
                           special_markers_labels = special_markers_labels,
-                          s=1)
+                          s=0.1)
 plt.show()
