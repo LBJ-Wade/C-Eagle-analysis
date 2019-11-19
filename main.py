@@ -44,12 +44,13 @@ def main():
     # ceagle = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
+    angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)
 
     cluster = Cluster(clusterID = 4, redshift = 0.101)
     print('clusterID: ', cluster.clusterID)
     print('\tdynamical_index: ', dynamical_index(cluster))
     print('\tthermal_index: ', thermal_index(cluster))
-    print('\tangular momentum:', cluster.group_angular_momentum())
+    print('\tangular momentum:', angmom)
     print('\n')
 
 
