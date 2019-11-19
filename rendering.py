@@ -70,8 +70,8 @@ class Map():
         axes.add_artist(Circle((x, y), radius = r, **kwargs))
 
         # Add text around it
-        curve = [-np.cos(np.linspace(0, 2 * np.pi, 200)),
-                  np.sin(np.linspace(0, 2 * np.pi, 200))]
+        curve = [-r * np.cos(np.linspace(0, 2 * np.pi, 200)),
+                  r * np.sin(np.linspace(0, 2 * np.pi, 200))]
 
 
         curved_text = CurvedText(
