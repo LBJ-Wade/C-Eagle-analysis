@@ -37,8 +37,9 @@ class Mixin:
     def angular_momentum(mass, velocity, position):
         """Defined as L = m(r CROSS v)"""
         rxv = np.cross(position, velocity)
-        l = mass * rxv
-        return np.sum(l)
+        assert (type(rxv) == np.ndarray) and (type(mass) == np.ndarray)
+        ang_mom = rxv * mass[:, None]
+        return np.add(ang_mom)
 
     @staticmethod
     def centre_of_mass(mass, coords):
