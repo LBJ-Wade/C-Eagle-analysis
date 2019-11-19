@@ -73,11 +73,11 @@ class Map():
         curve = [-np.cos(np.linspace(0, 2 * np.pi, 200)),
                   np.sin(np.linspace(0, 2 * np.pi, 200))]
 
-        text = r'R_{500}'
+
         curved_text = CurvedText(
             x=curve[0],
             y=curve[1],
-            text=text,  # 'this this is a very, very long text',
+            text=r'R_{500}',  # 'this this is a very, very long text',
             va='bottom',
             axes=axes,  ##calls ax.add_artist in __init__
         )
