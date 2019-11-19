@@ -21,9 +21,28 @@ import map_plot_parameters as plotpar
 plotpar.set_defaults_plot()
 
 
+def angle_between_vectors(v1, v2):
+    # v1 is your firsr vector
+    # v2 is your second vector
+    angle = np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
+    # Return the result in degrees
+    return angle*180/np.pi
+
+
 def angular_momentum_PartType_alignment_matrix(cluster):
+
+
+    # Compute the angular momentum of all high res particle types
     ang_momenta, sum_of_masses = cluster.group_angular_momentum(out_allPartTypes=True)
 
+    # Compute the alignment matrix
+    alignment_matrix = np.zeros((len(ang_momenta), len(ang_momenta)), dtype=np.float)
+    for i in range(len(ang_momenta)):
+        for j in range(len(ang_momenta)):
+            alignment_matrix[i][j] = angle_between_vectors(ang_momenta[i], ang_momenta[j])
+
+    return alignment_matrix
 
 cluster = Cluster(clusterID=4, redshift=0.101)
-angular_momentum_PartType_alignment_matrix(cluster)
+m = angular_momentum_PartType_alignment_matrix(cluster)
+print(m)
