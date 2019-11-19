@@ -51,31 +51,31 @@ def main():
     print('\tthermal_index: ', thermal_index(cluster))
     print('\n')
 
-    CoP = cluster.group_centre_of_potential()
-    CoM, _ = cluster.group_centre_of_mass(out_allPartTypes = False)
-    coords = cluster.particle_coordinates('0')
-    coords = np.subtract(coords, CoP)
-    coords = cluster.comoving_length(coords)
-
-    special_markers = np.vstack((CoP, CoM))
-    special_markers = np.subtract(special_markers, CoP)
-    special_markers_labels = [r'CoP', r'CoM']
-
-    r500 = cluster.group_r200()
-    r500 = cluster.comoving_length(r500)
-
-    mass = cluster.particle_masses('0')
-    mass = cluster.comoving_mass(mass)
-
-    particles_map = Map()
-    particles_map.xyz_projections(xyzdata = coords,
-                                  weights = mass,
-                                  plot_limit = 5*r500,
-                                  nbins = 100,
-                                  circle_pars = (0, 0, 1.5*r500),
-                                  special_markers = special_markers,
-                                  special_markers_labels = special_markers_labels)
-    plt.show()
+    # CoP = cluster.group_centre_of_potential()
+    # CoM, _ = cluster.group_centre_of_mass(out_allPartTypes = False)
+    # coords = cluster.particle_coordinates('0')
+    # coords = np.subtract(coords, CoP)
+    # coords = cluster.comoving_length(coords)
+    #
+    # special_markers = np.vstack((CoP, CoM))
+    # special_markers = np.subtract(special_markers, CoP)
+    # special_markers_labels = [r'CoP', r'CoM']
+    #
+    # r500 = cluster.group_r200()
+    # r500 = cluster.comoving_length(r500)
+    #
+    # mass = cluster.particle_masses('0')
+    # mass = cluster.comoving_mass(mass)
+    #
+    # particles_map = Map()
+    # particles_map.xyz_projections(xyzdata = coords,
+    #                               weights = mass,
+    #                               plot_limit = 5*r500,
+    #                               nbins = 100,
+    #                               circle_pars = (0, 0, 1.5*r500),
+    #                               special_markers = special_markers,
+    #                               special_markers_labels = special_markers_labels)
+    # plt.show()
 
 
 if __name__ == "__main__":

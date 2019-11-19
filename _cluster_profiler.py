@@ -74,13 +74,13 @@ class Mixin:
             mass = self.particle_masses(part_type)
             coords = self.particle_coordinates(part_type)
             group_num = self.group_number_part(part_type)
-            r200 = self.group_r200()
+            r500 = self.group_r500()
 
             # Filter the particles belonging to the
             # GroupNumber FOF == 1, which by definition is centred in the
             # Centre of Potential and is disconnected from other FoF groups.
             radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis = 1)
-            index = np.where((group_num == 1) & (radial_dist < 1.5*r200))[0]
+            index = np.where((group_num == 1) & (radial_dist < r500))[0]
             mass = mass[index]
             coords = coords[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."

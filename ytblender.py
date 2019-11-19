@@ -41,9 +41,6 @@ def YT_plot_gas_density(cluster):
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'), center=center, width=new_box_size)
     px.save('cluster_{}'.format(cluster.clusterID))
 
-    px = yt.ProjectionPlot(ds, 'x', ('gas', 'velocity'), center=center, width=new_box_size)
-    px.save('cluster_{}'.format(cluster.clusterID))
-
     # Draw a velocity vector every 16 pixels.
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'temperature'), center=center, width=new_box_size)
     px.save('cluster_{}'.format(cluster.clusterID))

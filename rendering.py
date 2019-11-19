@@ -154,4 +154,4 @@ class Map():
             cbar.set_label(cbarlabel[i], labelpad=-70)
             # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
             cax2.xaxis.set_ticks_position("top")
-            print("run completed:", i)
+            print("[MAP PANEL]\t==> completed:", i)
