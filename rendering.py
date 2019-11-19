@@ -103,9 +103,9 @@ class Map():
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
         thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
-        cbarlabel = [r'$\sum_{i} m_i v_{z, i}\ [\mathrm{M_\odot\ km\ s^{-1}}]$',
-                     r'$\sum_{i} m_i v_{x, i}\ [\mathrm{M_\odot\ km\ s^{-1}}]$',
-                     r'$\sum_{i} m_i v_{y, i}\ [\mathrm{M_\odot\ km\ s^{-1}}]$']
+        cbarlabel = [r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$',
+                     r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$',
+                     r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$']
 
         for i in [0, 1, 2]:
             # Handle data
@@ -137,7 +137,7 @@ class Map():
                 Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
                 count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
-                norm = colors.LogNorm(vmin=10 ** -3, vmax=10 ** 3)
+                norm = colors.LogNorm(vmin=np.min(count), vmax=np.max(count))
                 img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i], norm= norm)
 
             # Render elements in plots
