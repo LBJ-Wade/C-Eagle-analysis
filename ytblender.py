@@ -27,7 +27,7 @@ def YT_plot_gas_density(cluster):
     density = ad[("PartType0","density")]
     wdens = np.where(density == np.max(density))
     coordinates = ad[("PartType0","Coordinates")]
-    center = CoP
+    center = coordinates[wdens][0]
     print ('center = ',center)
     new_box_size = ds.quan(10*r200,'Mpc')
 
