@@ -39,7 +39,7 @@ class Mixin:
         rxv = np.cross(position, velocity)
         assert (type(rxv) == np.ndarray) and (type(mass) == np.ndarray)
         ang_mom = rxv * mass[:, None]
-        return np.add(ang_mom)
+        return np.sum(ang_mom, axis = 0)
 
     @staticmethod
     def centre_of_mass(mass, coords):
@@ -206,7 +206,7 @@ class Mixin:
         if out_allPartTypes:
             return angular_momentum_PartTypes, Mtot_PartTypes
         else:
-            return np.add(angular_momentum_PartTypes), np.sum(Mtot_PartTypes)
+            return np.sum(angular_momentum_PartTypes, axis = 0), np.sum(Mtot_PartTypes)
 
 
 
