@@ -113,4 +113,17 @@ CoM_map.xyz_projections(xyzdata = None,
                           special_markers = special_markers,
                           special_markers_labels = special_markers_labels,
                           s=0.1)
+
+# Plot
+coords = cluster.particle_coordinates('0')
+coords = np.subtract(coords, CoP)
+coords = cluster.comoving_length(coords)
+mass = cluster.particle_masses('0')
+CoM_map.xyz_projections(xyzdata = coords,
+                          weights = mass,
+                          plot_limit = 1.2*r200,
+                          nbins = 100,
+                          circle_pars = (0, 0, 0),
+                          special_markers = [],
+                          special_markers_labels = [])
 plt.show()
