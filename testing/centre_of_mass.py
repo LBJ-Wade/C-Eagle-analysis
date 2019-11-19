@@ -29,7 +29,9 @@ strategies.
 import numpy as np
 
 import sys
-sys.path.append("..") # Adds higher directory to python modules path.
+import os.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
 from cluster import Cluster
 
 def group_centre_of_mass(cluster, out_allPartTypes=False):
