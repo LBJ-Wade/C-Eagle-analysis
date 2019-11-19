@@ -27,14 +27,18 @@ strategies.
 """
 
 import numpy as np
+from matplotlib import pyplot as plt
 
 import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from cluster import Cluster
+from rendering import Map
+import map_plot_parameters as plotpar
+plotpar.set_defaults_plot()
 
-def group_centre_of_mass(cluster, out_allPartTypes=False):
+def group_centre_of_mass(cluster, out_allPartTypes=False, filter_radius = None):
     """
     out_allPartTypes = (bool)
         if True outputs the centre of mass and sum of masses of each
@@ -54,13 +58,12 @@ def group_centre_of_mass(cluster, out_allPartTypes=False):
         mass = cluster.particle_masses(part_type)
         coords = cluster.particle_coordinates(part_type)
         group_num = cluster.group_number_part(part_type)
-        r500 = cluster.group_r500()
 
         # Filter the particles belonging to the
         # GroupNumber FOF == 1, which by definition is centred in the
         # Centre of Potential and is disconnected from other FoF groups.
         radial_dist = np.linalg.norm(np.subtract(coords, cluster.group_centre_of_potential()), axis=1)
-        index = np.where((group_num == 1) & (radial_dist < r500))[0]
+        index = np.where((group_num == 1) & (radial_dist < filter_radius))[0]
         mass = mass[index]
         coords = coords[index]
         assert mass.__len__() > 0, "Array is empty - check filtering."
@@ -79,6 +82,24 @@ def group_centre_of_mass(cluster, out_allPartTypes=False):
 
 
 cluster = Cluster(clusterID = 4, redshift = 0.101)
-CoM, _ = group_centre_of_mass(cluster, out_allPartTypes=False)
-print(CoM)
 
+r500 = cluster.group_r500()
+r200 = cluster.group_r200()
+CoP = cluster.group_centre_of_potential()
+CoM, _ = group_centre_of_mass(cluster,
+                              out_allPartTypes = False,
+                              filter_radius = r500)
+
+special_markers = np.vstack((CoP, CoM))
+special_markers = np.subtract(special_markers, CoP)
+special_markers_labels = [r'CoP', r'CoM']
+
+CoM_map = Map()
+CoM_map.xyz_projections(xyzdata = None,
+                          weights = None,
+                          plot_limit = 5*r200,
+                          nbins = None,
+                          circle_pars = (0, 0, r500),
+                          special_markers = special_markers,
+                          special_markers_labels = special_markers_labels)
+plt.show()
