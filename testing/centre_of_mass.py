@@ -115,8 +115,8 @@ mass = cluster.mass_units(mass, unit_system='astro')
 CoM_map = Map()
 CoM_map.xyz_projections(xyzdata = coords,
                           weights = mass,
-                          plot_limit = 1.2*r200,
-                          nbins = 100,
+                          plot_limit = 2*r200,
+                          nbins = 50,
                           circle_pars = (0, 0, r500),
                           special_markers = special_markers,
                           special_markers_labels = special_markers_labels)
