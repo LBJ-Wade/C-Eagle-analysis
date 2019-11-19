@@ -21,6 +21,25 @@ from memory import *
 
 class Mixin:
 
+
+    @staticmethod
+    def kinetic_energy(mass, vel):
+        ke = 0.5 * mass * np.linalg.norm(vel, axis = 1)**2
+        return np.sum(ke)
+
+    @staticmethod
+    def thermal_energy(mass, temperature):
+        k_B = 1.38064852 * np.power(10, -23.)
+        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27.))
+        return np.sum(te)
+
+    @staticmethod
+    def angular_momentum(mass, velocity, position):
+        """Defined as L = m(r CROSS v)"""
+        rxv = np.cross(position, velocity)
+        l = np.multiply(mass, rxv)
+        return np.sum(l)
+
     @staticmethod
     def centre_of_mass(mass, coords):
         """
@@ -117,12 +136,15 @@ class Mixin:
             # Import data
             mass = self.particle_masses(part_type)
             vel = self.particle_velocity(part_type)
+            coords = self.particle_coordinates(part_type)
             group_num = self.group_number_part(part_type)
+            r500 = self.group_r500()
 
             # Filter the particles belonging to the
             # GroupNumber FOF == 1, which by definition is centred in the
             # Centre of Potential and is disconnected from other FoF groups.
-            index = np.where(group_num == 1)[0]
+            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis=1)
+            index = np.where((group_num == 1) & (radial_dist < r500))[0]
             mass = mass[index]
             vel = vel[index]
             assert mass.__len__() > 0, "Array is empty - check filtering.."
@@ -139,22 +161,53 @@ class Mixin:
         else:
             return self.zero_momentum_frame(Mtot_PartTypes, ZMF_PartTypes)
 
-    @staticmethod
-    def kinetic_energy(mass, vel):
-        ke = 0.5 * mass * np.linalg.norm(vel, axis = 1)**2
-        return np.sum(ke)
+    def group_angular_momentum(self, out_allPartTypes=False):
+        """
+        out_allPartTypes = (bool)
+            if True outputs the zero_momentum_frame and sum of masses of each
+            partType separately in arrays
 
-    @staticmethod
-    def thermal_energy(mass, temperature):
-        k_B = 1.38064852 * np.power(10, -23.)
-        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27.))
-        return np.sum(te)
+            if False outputs the overall zero_momentum_frame and sum of masses
+            of the whole cluster.
 
-    # @staticmethod
-    # def ang_momentum(mass, vel, coords, origin):
-    #     r = func(coords, rot_axis)
-    #     angmom_part = np.outer(r, np.multiply(mass, vel))
-    #     return np.sum(angmom_part)
+        Returns the zero_momentum_frame of the cluster for a ALL particle types,
+        except for lowres_DM (2, 3).
+        """
+        angular_momentum_PartTypes = np.zeros((0, 3), dtype=np.float)
+        Mtot_PartTypes = np.zeros(0, dtype=np.float)
+
+        for part_type in ['0', '1', '4', '5']:
+            # Import data
+            mass = self.particle_masses(part_type)
+            vel = self.particle_velocity(part_type)
+            coords = self.particle_coordinates(part_type)
+            group_num = self.group_number_part(part_type)
+            r500 = self.group_r500()
+
+            # Filter the particles belonging to the
+            # GroupNumber FOF == 1, which by definition is centred in the
+            # Centre of Potential and is disconnected from other FoF groups.
+            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis=1)
+            index = np.where((group_num == 1) & (radial_dist < r500))[0]
+            mass = mass[index]
+            coords = coords[index]
+            vel = vel[index]
+            assert mass.__len__() > 0, "Array is empty - check filtering.."
+            assert vel.__len__() > 0, "Array is empty - check filtering."
+            assert coords.__len__() > 0, "Array is empty - check filtering."
+            # print('Computing angular_momentum ==> PartType {} ok!'.format(part_type))
+
+            # Compute *local* angular momentum for each particle type
+            zero_ang_momentum, sum_of_masses = self.angular_momentum(mass, vel, coords)
+            angular_momentum_PartTypes = np.append(angular_momentum_PartTypes, [zero_ang_momentum], axis=0)
+            Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
+
+        if out_allPartTypes:
+            return angular_momentum_PartTypes, Mtot_PartTypes
+        else:
+            return np.add(angular_momentum_PartTypes), np.sum(Mtot_PartTypes)
+
+
 
     #####################################################
     #													#

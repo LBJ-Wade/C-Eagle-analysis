@@ -163,7 +163,7 @@ def _TEST_dynamical_merging_index(cluster):
     plt.scatter(r_filters, dyn_index)
     plt.xlabel(r'$r_{\mathrm{spherical~filter}} \qquad [h^{-1} \mathrm{Mpc}]$')
     plt.ylabel(r'$\frac{|\mathbf{r}_{CoP} - \mathbf{r}_{CoM}(r < r_{\mathrm{spherical~filter}})|}{r_{\mathrm{'
-               r'Spherical~Filter}}}$')
+               r'spherical~filter}}}$')
     plt.title(r'$\mathrm{Dynamical~merging~index}$')
 
     # Plot radial distances
