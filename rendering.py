@@ -87,6 +87,10 @@ class Map():
         :param kwargs:
         :return:
         """
+        data_are_parsed = xyzdata is not None or \
+                          weights is not None or \
+                          nbins is not None
+        
 
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
@@ -101,32 +105,35 @@ class Map():
         for i in [0, 1, 2]:
             # Handle data
             if i == 0:
-                x_Data = xyzdata[:, 0]
-                y_Data = xyzdata[:, 1]
+                if data_are_parsed:
+                    x_Data = xyzdata[:, 0]
+                    y_Data = xyzdata[:, 1]
 
                 x_specialMarkers = special_markers[:, 0]
                 y_specialMarkers = special_markers[:, 1]
             elif i == 1:
-                x_Data = xyzdata[:, 1]
-                y_Data = xyzdata[:, 2]
+                if data_are_parsed:
+                    x_Data = xyzdata[:, 1]
+                    y_Data = xyzdata[:, 2]
 
                 x_specialMarkers = special_markers[:, 1]
                 y_specialMarkers = special_markers[:, 2]
             elif i == 2:
-                x_Data = xyzdata[:, 0]
-                y_Data = xyzdata[:, 2]
+                if data_are_parsed:
+                    x_Data = xyzdata[:, 0]
+                    y_Data = xyzdata[:, 2]
 
                 x_specialMarkers = special_markers[:, 0]
                 y_specialMarkers = special_markers[:, 2]
 
+            if data_are_parsed:
+                x_bins = np.linspace(-plot_limit, plot_limit, nbins)
+                y_bins = np.linspace(-plot_limit, plot_limit, nbins)
+                Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
+                count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
-            x_bins = np.linspace(-plot_limit, plot_limit, nbins)
-            y_bins = np.linspace(-plot_limit, plot_limit, nbins)
-            Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
-            count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
-
-            norm = colors.LogNorm(vmin=10 ** -3, vmax=10 ** 3)
-            img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i], norm= norm)
+                norm = colors.LogNorm(vmin=10 ** -3, vmax=10 ** 3)
+                img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i], norm= norm)
 
             # Render elements in plots
             axes[i].set_aspect('equal')
@@ -144,14 +151,16 @@ class Map():
             axes[i].set_ylim(-plot_limit, plot_limit)
             axes[i].set_xlabel(xlabel[i])
             axes[i].set_ylabel(ylabel[i])
-            axes[i].annotate(thirdAX[i], (0.03, 0.03), textcoords='axes fraction', size=15)
-            # if title:
-            #    axes[i].set_title(r'$\mathrm{MACSIS\ halo\ } %3d \qquad z = %8.3f$' % (num_halo, redshift))
-            # Colorbar adjustments
-            ax2_divider = make_axes_locatable(axes[i])
-            cax2 = ax2_divider.append_axes("top", size="5%", pad="2%")
-            cbar = plt.colorbar(img, cax=cax2, orientation='horizontal')
-            cbar.set_label(cbarlabel[i], labelpad=-70)
-            # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
-            cax2.xaxis.set_ticks_position("top")
+            
+            if data_are_parsed:
+                axes[i].annotate(thirdAX[i], (0.03, 0.03), textcoords='axes fraction', size=15)
+                # if title:
+                #    axes[i].set_title(r'$\mathrm{MACSIS\ halo\ } %3d \qquad z = %8.3f$' % (num_halo, redshift))
+                # Colorbar adjustments
+                ax2_divider = make_axes_locatable(axes[i])
+                cax2 = ax2_divider.append_axes("top", size="5%", pad="2%")
+                cbar = plt.colorbar(img, cax=cax2, orientation='horizontal')
+                cbar.set_label(cbarlabel[i], labelpad=-70)
+                # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
+                cax2.xaxis.set_ticks_position("top")
             print("[MAP PANEL]\t==> completed:", i)
