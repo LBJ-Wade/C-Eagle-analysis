@@ -137,7 +137,7 @@ class Map():
                 Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
                 count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
-                norm = colors.LogNorm(vmin=10**-3, vmax=np.max(count))
+                norm = colors.LogNorm(vmin=10**7, vmax=np.max(count))
                 img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i], norm= norm)
 
             # Render elements in plots
@@ -145,7 +145,6 @@ class Map():
 
             # Plot circles
             Map.plot_circle(axes[i], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
-
 
             # Plot the special markers
             for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
@@ -157,9 +156,7 @@ class Map():
             axes[i].set_xlabel(xlabel[i])
             axes[i].set_ylabel(ylabel[i])
             axes[i].annotate(thirdAX[i], (0.03, 0.03), textcoords='axes fraction', size=15)
-                # if title:
-                #    axes[i].set_title(r'$\mathrm{MACSIS\ halo\ } %3d \qquad z = %8.3f$' % (num_halo, redshift))
-                # Colorbar adjustments
+
             if data_are_parsed:
                 ax2_divider = make_axes_locatable(axes[i])
                 cax2 = ax2_divider.append_axes("top", size="5%", pad="2%")
