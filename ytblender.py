@@ -71,6 +71,5 @@ def YT_multislice(cluster):
     yt.SlicePlot(ds, 'z', [('gas', 'density'), ('gas', 'temperature')],
                  width=(15*r200, 'Mpc'), center=center).save()
 
-sim = Simulation(simulation_name='C-EAGLE')
 cluster = Cluster(clusterID = 4, redshift = 0.101)
-YT_multislice(cluster)
+YT_plot_gas_density(cluster)

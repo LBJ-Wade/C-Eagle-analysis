@@ -23,7 +23,7 @@ from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 class Simulation():
 
-    def __init__(self, simulation_name = 'CELR-eagle'):
+    def __init__(self, simulation_name = 'C-EAGLE'):
         if simulation_name == 'C-EAGLE':
             self.simulation = 'C-EAGLE'
             self.computer = 'cosma.dur.ac.uk'
