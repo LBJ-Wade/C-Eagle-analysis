@@ -99,7 +99,7 @@ class Map():
 
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
-        cmap =      [plt.get_cmap('Greens'), plt.get_cmap('Greens'), plt.get_cmap('Greens')]
+        cmap =      [plt.get_cmap('Greens_r'), plt.get_cmap('Greens_r'), plt.get_cmap('Greens_r')]
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
         thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
