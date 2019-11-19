@@ -2,7 +2,7 @@ import yt
 import numpy as np
 import yt.units as units
 import pylab
-from cluster import Cluster
+from cluster import Simulation, Cluster
 
 def YT_plot_gas_density(cluster):
 
@@ -61,25 +61,16 @@ def YT_multislice(cluster):
             [-bbox_lim, bbox_lim]]
 
     ds = yt.load(fname, unit_base=unit_base, bounding_box=bbox)
-    ds.index
     ad = ds.all_data()
     density = ad[("PartType0", "density")]
     wdens = np.where(density == np.max(density))
     coordinates = ad[("PartType0", "Coordinates")]
     center = coordinates[wdens][0]
-    print('center = ', center)
-    new_box_size = ds.quan(10 * r200, 'code_length')
-
-    left_edge = center - new_box_size / 2
-    right_edge = center + new_box_size / 2
-
-    print(new_box_size.in_units('Mpc'))
-    print(left_edge.in_units('Mpc'))
-    print(right_edge.in_units('Mpc'))
 
     # Create density slices of several fields along the x axis
     yt.SlicePlot(ds, 'z', [('gas', 'density'), ('gas', 'temperature')],
-                 width=(5*r200, 'Mpc'), center=center).save()
+                 width=(15*r200, 'Mpc'), center=center).save()
 
+sim = Simulation(simulation_name='C-EAGLE')
 cluster = Cluster(clusterID = 4, redshift = 0.101)
 YT_multislice(cluster)
