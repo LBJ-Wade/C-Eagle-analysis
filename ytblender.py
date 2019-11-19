@@ -78,7 +78,7 @@ def YT_multislice(cluster):
     print(right_edge.in_units('Mpc'))
 
     # Create density slices of several fields along the x axis
-    yt.SlicePlot(ds, 'z', [('gas', 'density'), ('gas', 'temperature'), ('gas', 'pressure')],
+    yt.SlicePlot(ds, 'z', [('gas', 'density'), ('gas', 'temperature'), ('gas', 'velocity')],
                  width=(5*r200, 'Mpc'), center=center).save()
 
 cluster = Cluster(clusterID = 4, redshift = 0.101)
