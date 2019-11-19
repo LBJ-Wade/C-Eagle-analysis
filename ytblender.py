@@ -38,11 +38,15 @@ def YT_plot_gas_density(cluster):
     print (right_edge.in_units('Mpc'))
     # ad2= ds.region(center=center, left_edge=left_edge, right_edge=right_edge)
     px = yt.ProjectionPlot(ds, 'x', ('gas', 'density'), center=center, width=new_box_size)
+    px.save('cluster_{}'.format(cluster.clusterID))
+
     # Draw a velocity vector every 16 pixels.
+    px = yt.ProjectionPlot(ds, 'x', ('gas', 'temperature'), center=center, width=new_box_size)
     px.annotate_velocity(factor=16)
+    px.save('cluster_{}'.format(cluster.clusterID))
 
-
-    px.save('{}'.format(cluster.clusterID))
+    px = yt.ProjectionPlot(ds, 'x', ('gas', 'metallicity'), center=center, width=new_box_size)
+    px.save('cluster_{}'.format(cluster.clusterID))
 
 
 def YT_multislice(cluster):
