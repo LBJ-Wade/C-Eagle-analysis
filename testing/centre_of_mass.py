@@ -81,25 +81,36 @@ def group_centre_of_mass(cluster, out_allPartTypes=False, filter_radius = None):
         return cluster.centre_of_mass(Mtot_PartTypes, CoM_PartTypes)
 
 
+# Create cluster object
 cluster = Cluster(clusterID = 4, redshift = 0.101)
 
+# Define key sizes within the cluster
 r500 = cluster.group_r500()
 r200 = cluster.group_r200()
-CoP = cluster.group_centre_of_potential()
-CoM, _ = group_centre_of_mass(cluster,
-                              out_allPartTypes = False,
-                              filter_radius = r500)
 
-special_markers = np.vstack((CoP, CoM))
+# Centre the system on the CoP
+CoP = cluster.group_centre_of_potential()
+special_markers = [CoP]
+
+# Create array of test values for the sphere-filter
+r_filters = np.linspace(0.01*r500, 2*r200, 100)
+for r_filter in r_filters:
+    CoM, _ = group_centre_of_mass(cluster,
+                                  out_allPartTypes = False,
+                                  filter_radius = r_filter)
+    special_markers.append(CoM)
+
+# Recentre to the CoP and plot
 special_markers = np.subtract(special_markers, CoP)
-special_markers_labels = [r'CoP', r'CoM']
+special_markers_labels = ['']*len(special_markers)
 
 CoM_map = Map()
 CoM_map.xyz_projections(xyzdata = None,
                           weights = None,
-                          plot_limit = 5*r200,
+                          plot_limit = 1.2*r200,
                           nbins = None,
                           circle_pars = (0, 0, r500),
                           special_markers = special_markers,
-                          special_markers_labels = special_markers_labels)
+                          special_markers_labels = special_markers_labels,
+                          s=1)
 plt.show()
