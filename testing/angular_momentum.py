@@ -52,8 +52,8 @@ def matrix_to_dataframe(matrix):
     print(df)
 
 def alignment_DM_to_gas(matrix): return matrix[0][1]
-def alignment_DM_to_stars(matrix): return matrix[0][2]
-def alignment_stars_to_gas(matrix): return matrix[1][2]
+def alignment_DM_to_stars(matrix): return matrix[1][2]
+def alignment_stars_to_gas(matrix): return matrix[0][2]
 
 
 cluster = Cluster(clusterID=4, redshift=0.101)
