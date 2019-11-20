@@ -34,8 +34,9 @@ class Mixin:
         te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27.))
         return np.sum(te)
 
-    @numba.guvectorize([numba.int64(numba.int64[:], numba.int64[:]),
-                        numba.int32(numba.int32[:], numba.int32[:])],
+    @numba.guvectorize(['numba.int64(numba.int64[:], numba.int64[:])',
+                        'numba.int32(numba.int32[:], numba.int32[:])',
+                        ],
                        '(n),(n)->()', nopython=True, target='parallel')
     @staticmethod
     def angular_momentum(mass, velocity, position):
