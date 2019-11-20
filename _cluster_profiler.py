@@ -32,6 +32,7 @@ class Mixin:
         te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27.))
         return np.sum(te)
 
+    @staticmethod
     def angular_momentum(mass, velocity, position):
         """Defined as L = m(r CROSS v)"""
         rxv = np.cross(position, velocity)
