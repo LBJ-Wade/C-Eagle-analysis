@@ -16,8 +16,6 @@ They working principle is based on OOP class inheritance.
 
 from cluster import *
 from memory import *
-import numba
-
 
 
 class Mixin:
@@ -34,19 +32,12 @@ class Mixin:
         te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27.))
         return np.sum(te)
 
-    @numba.guvectorize(
-                        ["f8[:], f8[:, :], f8[:, :], f8[:]"],
-                        "(vectorize_rows), (vectorize_cols, vectorize_rows), (vectorize_cols, vectorize_rows) -> ()",
-                        nopython=False,
-                        target="parallel"
-                        )
-    def angular_momentum(mass, velocity, position, total_angular_momentum):
+    def angular_momentum(mass, velocity, position):
         """Defined as L = m(r CROSS v)"""
-        vectorize_cols, vectorize_rows = position.size
         rxv = np.cross(position, velocity)
         assert (type(rxv) == np.ndarray) and (type(mass) == np.ndarray)
         ang_mom = rxv * mass[:, None]
-        total_angular_momentum = np.sum(ang_mom, axis = 0), np.sum(mass)
+        return np.sum(ang_mom, axis = 0), np.sum(mass)
 
     @staticmethod
     def centre_of_mass(mass, coords):
