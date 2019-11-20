@@ -37,7 +37,7 @@ class Mixin:
     @numba.guvectorize(
                         ["f8[:], f8[:, :], f8[:, :], f8[:]"],
                         "(vectorize_rows), (vectorize_cols, vectorize_rows), (vectorize_cols, vectorize_rows) -> ()",
-                        nopython=True,
+                        nopython=False,
                         target="parallel"
                         )
     def angular_momentum(mass, velocity, position, total_angular_momentum):
