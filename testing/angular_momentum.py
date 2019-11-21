@@ -101,7 +101,9 @@ def plot_angularmomentum_vectors(vectors,
     """
 
     if axes is None:
-        fig, axes = plt.subplots()
+        fig = plt.figure()
+        axes = fig.gca(projection='3d')
+        axes.set_aspect("equal")
 
     if plot_unitSphere:
         # draw sphere
