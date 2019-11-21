@@ -160,8 +160,8 @@ vectors = [[0, 1, 3],
            [0, 5, 18]]
 plot_angularmomentum_vectors(vectors,
                                  axes = None,
-                                 plot_unitSphere = True,
+                                 plot_unitSphere = False,
                                  normalise_length = True,
-                                 make_all_unitary = False
+                                 make_all_unitary = True
                                  )
 plt.show()
