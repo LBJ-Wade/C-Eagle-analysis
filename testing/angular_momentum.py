@@ -148,8 +148,6 @@ def plot_angularmomentum_vectors(vectors,
             axes.add_artist(a)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
 
-        axes.legend(loc='best')
-
     axes.set_xlabel(r'$x$')
     axes.set_ylabel(r'$y$')
     axes.set_zlabel(r'$z$')
@@ -164,4 +162,5 @@ plot_angularmomentum_vectors(vectors,
                                  normalise_length = True,
                                  make_all_unitary = True
                                  )
+plt.legend(loc='best')
 plt.show()
