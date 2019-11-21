@@ -48,7 +48,14 @@ def main():
     sim = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
-    ID = dyn_idx = th_idx = angmmo = dm2stars = dm2gas = stars2gas = []
+    ID = []
+    dyn_idx = []
+    th_idx = []
+    angmmo = []
+    dm2stars = []
+    dm2gas = []
+    stars2gas = []
+
 
     for i in range(0, 30):
 
@@ -73,7 +80,7 @@ def main():
         dm2gas.append(alignment_DM_to_stars(m))
         stars2gas.append(alignment_stars_to_gas(m))
 
-    print(ID, dm2gas)
+    plt.scatter(ID, dm2gas, marker='.', c='k')
     plt.show()
 
 
