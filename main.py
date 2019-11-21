@@ -53,7 +53,7 @@ def main():
     for i in range(0, 30):
 
         cluster = Cluster(clusterID = i, redshift = 0.101)
-        angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)
+        angmom, masses = cluster.group_angular_momentum(out_allPartTypes=False)
         m = angular_momentum_PartType_alignment_matrix(cluster)
 
         print('clusterID: ', cluster.clusterID)
