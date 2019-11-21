@@ -9,12 +9,11 @@ This file is part of the 'testing' package.
 """
 
 import numpy as np
-from matplotlib import pyplot as plt
 import pandas as pd
-from mpl_toolkits.mplot3d import Axes3D
-from matplotlib.patches import FancyArrowPatch
-from mpl_toolkits.mplot3d import proj3d
 from itertools import cycle
+from matplotlib import pyplot as plt
+from mpl_toolkits.mplot3d import proj3d
+from matplotlib.patches import FancyArrowPatch
 
 
 import sys
@@ -76,6 +75,8 @@ class Arrow3D(FancyArrowPatch):
         xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
         self.set_positions((xs[0], ys[0]), (xs[1], ys[1]))
         FancyArrowPatch.draw(self, renderer)
+
+
 
 def plot_angularmomentum_vectors(vectors,
                                  axes = None,
@@ -143,13 +144,15 @@ def plot_angularmomentum_vectors(vectors,
         for vector, magnitude, label in zip(vectors, vectors_magnitudes, legend_labels):
             if make_all_unitary:
                 vector = np.divide(vector, magnitude)
-
+            arrow_color = next(cycol)
             a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20,
-                        lw=1, arrowstyle="-|>", color = next(cycol), label = label)
+                        lw=1, arrowstyle="-|>", color = arrow_color)
+            axes.scatter([], [], c=arrow_color, marker=r"$\rightarrow$", s = 20, label = label )
             axes.add_artist(a)
+
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
 
-        plt.legend()
+        axes.legend()
 
     axes.set_xlabel(r'$x$')
     axes.set_ylabel(r'$y$')
