@@ -142,7 +142,10 @@ def plot_angularmomentum_vectors(vectors,
 
         # Automate colors and labels
         cycol = cycle('bgrcmk')
-        legend_labels = [r'$\mathrm{PartType~%s}$' % index for index in range(0, len(vectors_magnitudes))]
+        legend_labels = [r'$\mathrm{Gas}$',
+                         r'$\mathrm{Highres DM}$',
+                         r'$\mathrm{Stars}$',
+                         r'$\mathrm{Black holes}$']
 
         for vector, magnitude, label in zip(vectors, vectors_magnitudes, legend_labels):
             if make_all_unitary:
