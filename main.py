@@ -57,13 +57,13 @@ def main():
         m = angular_momentum_PartType_alignment_matrix(cluster)
 
         print('clusterID: ', cluster.clusterID)
-        print('\tdynamical_index: ', dynamical_index(cluster))
-        print('\tthermal_index: ', thermal_index(cluster))
-        print('\tangular momentum:', angmom)
-        print('alignment_DM_to_gas\t', alignment_DM_to_gas(m))
-        print('alignment_DM_to_stars\t', alignment_DM_to_stars(m))
-        print('alignment_stars_to_gas\t', alignment_stars_to_gas(m))
-        print('\n')
+        # print('\tdynamical_index: ', dynamical_index(cluster))
+        # print('\tthermal_index: ', thermal_index(cluster))
+        # print('\tangular momentum:', angmom)
+        # print('alignment_DM_to_gas\t', alignment_DM_to_gas(m))
+        # print('alignment_DM_to_stars\t', alignment_DM_to_stars(m))
+        # print('alignment_stars_to_gas\t', alignment_stars_to_gas(m))
+        # print('\n')
 
         ID.append(i)
         dyn_idx.append(dynamical_index(cluster))
@@ -73,7 +73,7 @@ def main():
         dm2gas.append(alignment_DM_to_stars(m))
         stars2gas.append(alignment_stars_to_gas(m))
 
-    plt.plot(np.array(ID), np.array(dm2gas))
+    print(np.array(ID), np.array(dm2gas))
     plt.show()
 
 
