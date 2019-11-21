@@ -151,6 +151,7 @@ def plot_angularmomentum_vectors(vectors,
     axes.set_xlabel(r'$x$')
     axes.set_ylabel(r'$y$')
     axes.set_zlabel(r'$z$')
+    axes.legend()
 
 vectors = [[0, 1, 3],
            [0, 10, 13],
@@ -162,5 +163,4 @@ plot_angularmomentum_vectors(vectors,
                                  normalise_length = True,
                                  make_all_unitary = True
                                  )
-plt.legend(loc='best')
 plt.show()
