@@ -75,7 +75,7 @@ def create_dataset(simulation,
 
 # create_file('C-EAGLE')
 # create_file('CELR-eagle')
-def print_structure(hdf5_file, out_attributes = False):
+def print_structure(hdf5_file, out_attributes = False, short_form = True):
     pass
 
 

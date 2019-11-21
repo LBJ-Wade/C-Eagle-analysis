@@ -35,11 +35,13 @@ def main():
     from cluster import Cluster, Simulation
     from rendering import Map
     from mergers import dynamical_index, thermal_index
-    from matplotlib import pyplot as plt
-    import numpy as np
     import map_plot_parameters as plotpar
     from testing.angular_momentum import angular_momentum_PartType_alignment_matrix, alignment_DM_to_gas, \
         alignment_DM_to_stars, alignment_stars_to_gas
+
+    from matplotlib import pyplot as plt
+    import numpy as np
+
 
     plotpar.set_defaults_plot()
 
@@ -51,7 +53,7 @@ def main():
     for i in range(0, 30):
 
         cluster = Cluster(clusterID = i, redshift = 0.101)
-        angmom, masses = cluster.group_angular_momentum(out_allPartTypes=False)
+        angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)
         m = angular_momentum_PartType_alignment_matrix(cluster)
 
         print('clusterID: ', cluster.clusterID)
@@ -71,8 +73,7 @@ def main():
         dm2gas.append(alignment_DM_to_stars(m))
         stars2gas.append(alignment_stars_to_gas(m))
 
-    plotvars = (ID, dm2gas)
-    plt.scatter(*plotvars)
+    plt.scatter(ID, dm2gas)
     plt.show()
 
 
