@@ -129,6 +129,9 @@ def plot_angularmomentum_vectors(vectors,
         a = Arrow3D([0, vectors[0]], [0, vectors[1]], [0, vectors[2]], mutation_scale=20,
                     lw=1, arrowstyle="-|>", color="k")
         axes.add_artist(a)
+        axes.set_xlim([-np.max(vectors), np.max(vectors)])
+        axes.set_ylim([-np.max(vectors), np.max(vectors)])
+        axes.set_zlim([-np.max(vectors), np.max(vectors)])
 
     else:
         # If there's more than 1 vector, then the np.array will be 2D
@@ -144,13 +147,22 @@ def plot_angularmomentum_vectors(vectors,
         for vector, magnitude, label in zip(vectors, vectors_magnitudes, legend_labels):
             if make_all_unitary:
                 vector = np.divide(vector, magnitude)
+
             arrow_color = next(cycol)
             a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20,
                         lw=1, arrowstyle="-|>", color = arrow_color)
             axes.scatter([], [], c=arrow_color, marker=r"$\longrightarrow$", s = 70, label = label )
             axes.add_artist(a)
-
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
+
+        if make_all_unitary:
+            axes.set_xlim([-1.5, 1.5])
+            axes.set_ylim([-1.5, 1.5])
+            axes.set_zlim([-1.5, 1.5])
+        else:
+            axes.set_xlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
+            axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
+            axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
 
         axes.legend(loc="best", markerscale=3)
 
@@ -167,6 +179,6 @@ plot_angularmomentum_vectors(angmom,
                                  axes = None,
                                  plot_unitSphere = False,
                                  normalise_length = False,
-                                 make_all_unitary = True
+                                 make_all_unitary = True,
                                  )
 plt.show()
