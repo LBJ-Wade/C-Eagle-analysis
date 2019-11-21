@@ -99,6 +99,8 @@ def plot_angularmomentum_vectors(vectors,
                     Default = False. Normalises each vector by its magnitude, making them all unitary.
     :return: No returns
     """
+    if type(vectors) is not np.ndarray:
+        vectors = np.array(vectors)
 
     if axes is None:
         fig = plt.figure()
