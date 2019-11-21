@@ -48,7 +48,7 @@ def main():
 
     ID = dyn_idx = th_idx = angmmo = dm2stars = dm2gas = stars2gas = []
 
-    for i in sim.clusterIDAllowed:
+    for i in range(0, 30):
 
         cluster = Cluster(clusterID = i, redshift = 0.101)
         angmom, masses = cluster.group_angular_momentum(out_allPartTypes=False)
