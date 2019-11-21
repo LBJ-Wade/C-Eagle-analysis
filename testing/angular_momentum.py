@@ -117,7 +117,7 @@ def plot_angularmomentum_vectors(vectors,
         axes.plot_wireframe(x, y, z, color="lime", alpha = 0.2)
 
     # draw a point at origin
-    axes.scatter([0], [0], [0], color="g", s=100)
+    axes.scatter([0], [0], [0], color="k", s=100)
 
     # Manipulate vectors
     if vectors.ndim == 1:
@@ -159,14 +159,14 @@ def plot_angularmomentum_vectors(vectors,
     axes.set_zlabel(r'$z$')
 
 
-vectors = [[0, 1, 3],
-           [0, 10, 13],
-           [0, 18, 3],
-           [0, 5, 18]]
-plot_angularmomentum_vectors(vectors,
+cluster = Cluster(clusterID = 15, redshift = 0.101)
+angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)
+m = angular_momentum_PartType_alignment_matrix(cluster)
+print(m)
+plot_angularmomentum_vectors(angmom,
                                  axes = None,
                                  plot_unitSphere = False,
                                  normalise_length = True,
-                                 make_all_unitary = True
+                                 make_all_unitary = False
                                  )
 plt.show()
