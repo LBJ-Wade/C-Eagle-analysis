@@ -73,7 +73,7 @@ def main():
         dm2gas.append(alignment_DM_to_stars(m))
         stars2gas.append(alignment_stars_to_gas(m))
 
-    plt.scatter(np.array(ID), np.array(dm2gas))
+    plt.plot(np.array(ID), np.array(dm2gas))
     plt.show()
 
 
