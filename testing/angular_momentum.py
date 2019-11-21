@@ -166,7 +166,7 @@ print(m)
 plot_angularmomentum_vectors(angmom,
                                  axes = None,
                                  plot_unitSphere = False,
-                                 normalise_length = True,
+                                 normalise_length = False,
                                  make_all_unitary = True
                                  )
 plt.show()
