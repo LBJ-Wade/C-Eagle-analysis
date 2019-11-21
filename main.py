@@ -38,7 +38,8 @@ def main():
     from matplotlib import pyplot as plt
     import numpy as np
     import map_plot_parameters as plotpar
-    from testing.angular_momentum import *
+    from testing.angular_momentum import angular_momentum_PartType_alignment_matrix, alignment_DM_to_gas, \
+        alignment_DM_to_stars, alignment_stars_to_gas
 
     plotpar.set_defaults_plot()
 
