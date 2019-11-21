@@ -147,7 +147,7 @@ def plot_angularmomentum_vectors(vectors,
             arrow_color = next(cycol)
             a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20,
                         lw=1, arrowstyle="-|>", color = arrow_color)
-            axes.scatter([], [], c=arrow_color, marker=r"$\rightarrow$", s = 20, label = label )
+            axes.scatter([], [], c=arrow_color, marker=r"$\longrightarrow$", s = 70, label = label )
             axes.add_artist(a)
 
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
