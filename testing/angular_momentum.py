@@ -113,7 +113,7 @@ def plot_angularmomentum_vectors(vectors,
         x = np.cos(u)*np.sin(v)
         y = np.sin(u)*np.sin(v)
         z = np.cos(v)
-        axes.plot_wireframe(x, y, z, color="grey", alpha = 0.4)
+        axes.plot_wireframe(x, y, z, color="lime", alpha = 0.2)
 
     # draw a point at origin
     axes.scatter([0], [0], [0], color="g", s=100)
@@ -121,6 +121,7 @@ def plot_angularmomentum_vectors(vectors,
     # Manipulate vectors
     if vectors.ndim == 1:
         # If there's only one vector, then the np.array will be 1D
+        print('[ PLOT 3D VECTOR ]\t==>\tOnly one vector detected.')
         if normalise_length or make_all_unitary:
             vectors = np.divide(vectors, np.linalg.norm(vectors))
 
@@ -148,10 +149,12 @@ def plot_angularmomentum_vectors(vectors,
             axes.add_artist(a)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
 
+        plt.legend()
+
     axes.set_xlabel(r'$x$')
     axes.set_ylabel(r'$y$')
     axes.set_zlabel(r'$z$')
-    axes.legend()
+
 
 vectors = [[0, 1, 3],
            [0, 10, 13],
