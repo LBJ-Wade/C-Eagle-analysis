@@ -139,7 +139,7 @@ def plot_angularmomentum_vectors(vectors,
 
         # Automate colors and labels
         cycol = cycle('bgrcmk')
-        legend_labels = [r'$\mathrm{vector~%s}$' % index for index in range(0, len(vectors_magnitudes))]
+        legend_labels = [r'$\mathrm{PartType~%s}$' % index for index in range(0, len(vectors_magnitudes))]
 
         for vector, magnitude, label in zip(vectors, vectors_magnitudes, legend_labels):
             if make_all_unitary:
@@ -167,6 +167,6 @@ plot_angularmomentum_vectors(angmom,
                                  axes = None,
                                  plot_unitSphere = False,
                                  normalise_length = True,
-                                 make_all_unitary = False
+                                 make_all_unitary = True
                                  )
 plt.show()
