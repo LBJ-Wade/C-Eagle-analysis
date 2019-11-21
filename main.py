@@ -65,7 +65,7 @@ def main():
         print('alignment_stars_to_gas\t', alignment_stars_to_gas(m))
         print('\n')
 
-        ID.append(cluster.clusterID)
+        ID.append(i)
         dyn_idx.append(dynamical_index(cluster))
         th_idx.append(thermal_index(cluster))
         angmmo.append(angmom)
@@ -73,7 +73,7 @@ def main():
         dm2gas.append(alignment_DM_to_stars(m))
         stars2gas.append(alignment_stars_to_gas(m))
 
-    plt.scatter(ID, dm2gas)
+    plt.scatter(np.array(ID), np.array(dm2gas))
     plt.show()
 
 
