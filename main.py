@@ -32,27 +32,47 @@ def time_func(function):
 @time_func
 def main():
 
-    from cluster import Cluster
+    from cluster import Cluster, Simulation
     from rendering import Map
     from mergers import dynamical_index, thermal_index
     from matplotlib import pyplot as plt
     import numpy as np
     import map_plot_parameters as plotpar
+    from testing.angular_momentum import *
 
     plotpar.set_defaults_plot()
 
-    # ceagle = Simulation()
+    sim = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
+    ID = dyn_idx = th_idx = angmmo = dm2stars = dm2gas = stars2gas = []
 
-    cluster = Cluster(clusterID = 4, redshift = 0.101)
-    angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)
+    for i in sim.clusterIDAllowed:
 
-    print('clusterID: ', cluster.clusterID)
-    print('\tdynamical_index: ', dynamical_index(cluster))
-    print('\tthermal_index: ', thermal_index(cluster))
-    print('\tangular momentum:', angmom)
-    print('\n')
+        cluster = Cluster(clusterID = i, redshift = 0.101)
+        angmom, masses = cluster.group_angular_momentum(out_allPartTypes=False)
+        m = angular_momentum_PartType_alignment_matrix(cluster)
+
+        print('clusterID: ', cluster.clusterID)
+        print('\tdynamical_index: ', dynamical_index(cluster))
+        print('\tthermal_index: ', thermal_index(cluster))
+        print('\tangular momentum:', angmom)
+        print('alignment_DM_to_gas\t', alignment_DM_to_gas(m))
+        print('alignment_DM_to_stars\t', alignment_DM_to_stars(m))
+        print('alignment_stars_to_gas\t', alignment_stars_to_gas(m))
+        print('\n')
+
+        ID.append(cluster.clusterID)
+        dyn_idx.append(dynamical_index(cluster))
+        th_idx.append(thermal_index(cluster))
+        angmmo.append(angmom)
+        dm2stars.append(alignment_DM_to_gas(m))
+        dm2gas.append(alignment_DM_to_stars(m))
+        stars2gas.append(alignment_stars_to_gas(m))
+
+    plotvars = (ID, dm2gas)
+    plt.scatter(*plotvars)
+    plt.show()
 
 
 if __name__ == "__main__":

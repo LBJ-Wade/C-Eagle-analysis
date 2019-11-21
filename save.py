@@ -73,5 +73,9 @@ def create_dataset(simulation,
         if attributes is not None:
             dataset.attrs['Description'] = attributes
 
-create_file('C-EAGLE')
-create_file('CELR-eagle')
+# create_file('C-EAGLE')
+# create_file('CELR-eagle')
+def print_structure(hdf5_file, out_attributes = False):
+    pass
+
+

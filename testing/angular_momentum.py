@@ -56,10 +56,3 @@ def alignment_DM_to_stars(matrix): return matrix[1][2]
 def alignment_stars_to_gas(matrix): return matrix[0][2]
 
 
-cluster = Cluster(clusterID=4, redshift=0.101)
-m = angular_momentum_PartType_alignment_matrix(cluster)
-
-print('alignment_DM_to_gas\t', alignment_DM_to_gas(m))
-print('alignment_DM_to_stars\t', alignment_DM_to_stars(m))
-print('alignment_stars_to_gas\t', alignment_stars_to_gas(m))
-matrix_to_dataframe(m)
