@@ -43,11 +43,15 @@ def create_file(simulation):
             folder_name = simulation.cluster_prefix + halo_Num(halo_num)
             halo_folder = file.create_group(folder_name)
             for redshift in simulation.redshiftAllowed:
-                halo_folder.create_group(redshift)
+                redshift_folder = halo_folder.create_group(redshift)
+                redshift_folder.create_group('FOF')
+                redshift_folder.create_group('Particles')
+                redshift_folder.create_group('Subgroups')
 
 
 def create_dataset(simulation,
                    cluster,
+                   subfolder = None,
                    dataset_name = None,
                    input_data = None,
                    attributes = None,
@@ -67,15 +71,17 @@ def create_dataset(simulation,
     fileCompletePath = simulation.pathSave + '/' + simulation.simulation + '__processed_data.hdf5'
     with h5py.File(fileCompletePath, "r+") as file:
         subfolder_name = simulation.cluster_prefix + str(cluster.clusterID) + '/' + redshift_num2str(cluster.redshift)
-        file_halo_redshift = file[subfolder_name]
+        file_halo_redshift = file[subfolder_name + '/' + subfolder]
         if dataset_name is not None and input_data is not None:
             dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
         if attributes is not None:
             dataset.attrs['Description'] = attributes
 
-# create_file('C-EAGLE')
-# create_file('CELR-eagle')
+create_file('C-EAGLE')
+create_file('CELR-eagle')
 def print_structure(hdf5_file, out_attributes = False, short_form = True):
     pass
+
+
 
 
