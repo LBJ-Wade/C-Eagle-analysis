@@ -174,14 +174,15 @@ def plot_angularmomentum_vectors(vectors,
     axes.set_zlabel(r'$z$')
 
 
-cluster = Cluster(clusterID = 15, redshift = 0.101)
-angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)
-m = angular_momentum_PartType_alignment_matrix(cluster)
-print(m)
-plot_angularmomentum_vectors(angmom,
-                                 axes = None,
-                                 plot_unitSphere = False,
-                                 normalise_length = False,
-                                 make_all_unitary = True,
-                                 )
-plt.show()
+if __name__ == "__main__":
+    cluster = Cluster(clusterID = 15, redshift = 0.101)
+    angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)
+    m = angular_momentum_PartType_alignment_matrix(cluster)
+    print(m)
+    plot_angularmomentum_vectors(angmom,
+                                     axes = None,
+                                     plot_unitSphere = False,
+                                     normalise_length = False,
+                                     make_all_unitary = False,
+                                     )
+    plt.show()
