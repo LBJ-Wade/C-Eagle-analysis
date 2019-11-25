@@ -233,7 +233,7 @@ class Mixin:
             for r >  R500 the np.linspace is in function of R200
         :return: (np.ndarray)
             The array with 100 different apertures, ranging from 0.001 R500 to 5*R200
-            NOTE: the apertures are returned in the COMOVING frame.
+            NOTE: the apertures are returned in the PHYSICAL frame.
         """
         r500 = self.group_r500()
         r200 = self.group_r200()
@@ -243,7 +243,11 @@ class Mixin:
         # Delete overlapping point at r = R500
         r200_list = np.delete(r200_list, 0)
 
-        return np.hstack((r500_list, r200_list))
+        # Convert from comoving into physical frame
+        apertures = self.comoving_length(np.hstack((r500_list, r200_list)))
+        print('[ FoF APERTURES ]\t==>\tConverted into physical coordinates. (Units: Mpc)')
+
+        return apertures
 
 
 

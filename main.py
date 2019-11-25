@@ -35,22 +35,18 @@ def main():
     from cluster import Cluster, Simulation
     import map_plot_parameters as plotpar
     from testing.angular_momentum import angular_momentum_PartType_alignment_matrix
+    from save import fof_output as fof
 
-    plotpar.set_defaults_plot()
-
-    sim = Simulation()
+    # plotpar.set_defaults_plot()
+    #
+    # sim = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
+    fof.push_FOFapertures('CELR-eagle')
 
-    for i in range(0, 1):
 
-        cluster = Cluster(clusterID = i, redshift = 0.101)
-        # angmom, masses = cluster.group_angular_momentum(out_allPartTypes=False)
-        # m = angular_momentum_PartType_alignment_matrix(cluster)
 
-        print('clusterID: ', cluster.clusterID)
 
-        print(cluster.generate_apertures())
 
 
 if __name__ == "__main__":
