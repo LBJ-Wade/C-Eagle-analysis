@@ -18,7 +18,7 @@ import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-import cluster
+from cluster import Simulation, Cluster
 from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 
@@ -30,13 +30,13 @@ def push_FOFapertures(simulation):
     :param simulation: (cluster.Simulation) object
     :return:
     """
-    simulation_obj = cluster.Simulation(simulation_name=simulation)
+    simulation_obj = Simulation(simulation_name=simulation)
 
     for halo_num in simulation_obj.clusterIDAllowed:
 
         for redshift in simulation_obj.redshiftAllowed:
 
-            cluster_obj = cluster.Cluster(clusterID = int(halo_num), redshift = redshift_str2num(redshift))
+            cluster_obj = Cluster(clusterID = int(halo_num), redshift = redshift_str2num(redshift))
             print('[ FOF SAVE ]\t==>\t Apertures on cluster {} @ z = {}'.format(halo_num, redshift))
             save.create_dataset(simulation,
                                cluster_obj,
