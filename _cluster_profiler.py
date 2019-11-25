@@ -93,7 +93,6 @@ class Mixin:
             mass = self.particle_masses(part_type)
             coords = self.particle_coordinates(part_type)
             group_num = self.group_number_part(part_type)
-            r500 = self.group_r500()
 
             # Filter the particles belonging to the
             # GroupNumber FOF == 1, which by definition is centred in the
@@ -300,6 +299,15 @@ class Mixin:
         redshift = self.file_redshift()
         scale_factor = 1 / (redshift + 1)
         return np.multiply(mom, np.sqrt(scale_factor) / hubble_par)
+
+    def comoving_ang_momentum(self, angmom):
+        """
+        Rescales the momentum from the comoving to the physical
+        """
+        hubble_par = self.file_hubble_param()
+        redshift = self.file_redshift()
+        scale_factor = 1 / (redshift + 1)
+        return np.multiply(angmom, np.sqrt(scale_factor**3) / np.power(hubble_par, 2.))
 
 
     #####################################################
