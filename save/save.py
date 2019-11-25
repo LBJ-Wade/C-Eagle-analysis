@@ -18,7 +18,7 @@ import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-import cluster
+from cluster import Simulation, Cluster
 from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 def create_file(simulation):
@@ -51,13 +51,13 @@ def create_file(simulation):
         create_file('CELR-eagle')
 
     """
-    simulation = cluster.Simulation(simulation_name = simulation)
-    fileCompletePath = simulation.pathSave + '/' + simulation.simulation + '__processed_data.hdf5'
+    simulation_obj = Simulation(simulation_name = simulation)
+    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '__processed_data.hdf5'
     with h5py.File(fileCompletePath, "w") as file:
-        for halo_num in simulation.clusterIDAllowed:
-            folder_name = simulation.cluster_prefix + halo_Num(halo_num)
+        for halo_num in simulation_obj.clusterIDAllowed:
+            folder_name = simulation_obj.cluster_prefix + halo_Num(halo_num)
             halo_folder = file.create_group(folder_name)
-            for redshift in simulation.redshiftAllowed:
+            for redshift in simulation_obj.redshiftAllowed:
                 redshift_folder = halo_folder.create_group(redshift)
                 redshift_folder.create_group('FOF')
                 redshift_folder.create_group('Particles')
@@ -82,10 +82,10 @@ def create_dataset(simulation,
     :return:
     """
 
-    simulation = cluster.Simulation(simulation_name=simulation)
-    fileCompletePath = simulation.pathSave + '/' + simulation.simulation + '__processed_data.hdf5'
+    simulation_obj = Simulation(simulation_name=simulation)
+    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '__processed_data.hdf5'
     with h5py.File(fileCompletePath, "r+") as file:
-        subfolder_name = simulation.cluster_prefix + str(cluster.clusterID) + '/' + redshift_num2str(cluster.redshift)
+        subfolder_name = simulation_obj.cluster_prefix + str(cluster.clusterID) + '/' + redshift_num2str(cluster.redshift)
         file_halo_redshift = file[subfolder_name + '/' + subfolder]
         if dataset_name is not None and input_data is not None:
             dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
