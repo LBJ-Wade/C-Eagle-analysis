@@ -236,7 +236,7 @@ class Mixin:
         """
         r500 = self.group_r500()
         r200 = self.group_r200()
-        r500_list = np.logspace(np.log10(0.001 * r500), np.log10(r500), 50)
+        r500_list = np.logspace(np.log10(0.01 * r500), np.log10(r500), 50)
         r200_list = np.logspace(np.log10(r500), np.log10(5 * r200), 51)
 
         # Delete overlapping point at r = R500
