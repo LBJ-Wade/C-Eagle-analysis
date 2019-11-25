@@ -1,15 +1,14 @@
 import clusters_retriever as extract
 import map_plot_parameters as plotpar
 import cluster_profiler as profile
-import map_synthetizer as mapgen
+from obsolete import map_synthetizer as mapgen
 
 import numpy as np
 import matplotlib as mpl
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
-from os import makedirs, chdir
+from os import makedirs
 from os.path import exists
-import matplotlib.ticker as ticker
 
 
 def phase_diagram_master(axes, redshift, nbins = 400, max_halo=10, selection = 'all', bg='w'):

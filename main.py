@@ -33,55 +33,24 @@ def time_func(function):
 def main():
 
     from cluster import Cluster, Simulation
-    from rendering import Map
-    from mergers import dynamical_index, thermal_index
     import map_plot_parameters as plotpar
-    from testing.angular_momentum import angular_momentum_PartType_alignment_matrix, alignment_DM_to_gas, \
-        alignment_DM_to_stars, alignment_stars_to_gas
-
-    from matplotlib import pyplot as plt
-    import numpy as np
-
+    from testing.angular_momentum import angular_momentum_PartType_alignment_matrix
 
     plotpar.set_defaults_plot()
 
     sim = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
-    ID = []
-    dyn_idx = []
-    th_idx = []
-    angmmo = []
-    dm2stars = []
-    dm2gas = []
-    stars2gas = []
 
-
-    for i in range(0, 30):
+    for i in range(0, 1):
 
         cluster = Cluster(clusterID = i, redshift = 0.101)
-        angmom, masses = cluster.group_angular_momentum(out_allPartTypes=False)
-        m = angular_momentum_PartType_alignment_matrix(cluster)
+        # angmom, masses = cluster.group_angular_momentum(out_allPartTypes=False)
+        # m = angular_momentum_PartType_alignment_matrix(cluster)
 
         print('clusterID: ', cluster.clusterID)
-        # print('\tdynamical_index: ', dynamical_index(cluster))
-        # print('\tthermal_index: ', thermal_index(cluster))
-        # print('\tangular momentum:', angmom)
-        # print('alignment_DM_to_gas\t', alignment_DM_to_gas(m))
-        # print('alignment_DM_to_stars\t', alignment_DM_to_stars(m))
-        # print('alignment_stars_to_gas\t', alignment_stars_to_gas(m))
-        # print('\n')
 
-        ID.append(i)
-        dyn_idx.append(dynamical_index(cluster))
-        th_idx.append(thermal_index(cluster))
-        angmmo.append(angmom)
-        dm2stars.append(alignment_DM_to_gas(m))
-        dm2gas.append(alignment_DM_to_stars(m))
-        stars2gas.append(alignment_stars_to_gas(m))
-
-    plt.scatter(ID, dm2gas, marker='.', c='k')
-    plt.show()
+        print(cluster.generate_apertures())
 
 
 if __name__ == "__main__":

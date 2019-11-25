@@ -225,6 +225,28 @@ class Mixin:
             return np.sum(angular_momentum_PartTypes, axis = 0), np.sum(Mtot_PartTypes)
 
 
+    def generate_apertures(self):
+        """
+        Generate an array of apertures for calculating global properties of the clusters.
+        The apertures use both R500 and R200 units:
+            for r <= R500 the np.linspace is in function of R500
+            for r >  R500 the np.linspace is in function of R200
+        :return: (np.ndarray)
+            The array with 100 different apertures, ranging from 0.001 R500 to 5*R200
+            NOTE: the apertures are returned in the COMOVING frame.
+        """
+        r500 = self.group_r500()
+        r200 = self.group_r200()
+        r500_list = np.logspace(np.log10(0.001 * r500), np.log10(r500), 50)
+        r200_list = np.logspace(np.log10(r500), np.log10(5 * r200), 51)
+
+        # Delete overlapping point at r = R500
+        r200_list = np.delete(r200_list, 0)
+
+        return np.hstack((r500_list, r200_list))
+
+
+
 
     #####################################################
     #													#

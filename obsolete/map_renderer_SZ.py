@@ -1,6 +1,6 @@
 import clusters_retriever as extract
 import cluster_profiler as profile
-import map_synthetizer as mapgen
+from obsolete import map_synthetizer as mapgen
 import kernel_convolver as kernconv
 import distance_cosmology as cosmo
 

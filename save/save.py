@@ -13,6 +13,11 @@ or MB and it is possible to transfer it locally for further analysis.
 """
 
 import h5py
+
+import sys
+import os.path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
 import cluster
 from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
@@ -38,6 +43,12 @@ def create_file(simulation):
     .          .       .
     .          .       .
     .          .       .
+
+    EXAMPLE IMPLEMENTATION
+    ----------------------
+    if __main__ == "__main__":
+        create_file('C-EAGLE')
+        create_file('CELR-eagle')
 
     """
     simulation = cluster.Simulation(simulation_name = simulation)
@@ -80,11 +91,3 @@ def create_dataset(simulation,
             dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
         if attributes is not None:
             dataset.attrs['Description'] = attributes
-
-create_file('C-EAGLE')
-create_file('CELR-eagle')
-
-
-
-
-

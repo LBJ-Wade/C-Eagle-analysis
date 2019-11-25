@@ -1,9 +1,8 @@
-import numpy as np
 import map_plot_parameters as plotpar
-import map_renderer_SZ as rendersz
+from obsolete import map_renderer_SZ as rendersz
 
 import matplotlib.pyplot as plt
-from os import makedirs, chdir
+from os import makedirs
 from os.path import exists
 
 # Turn off FutureWarnings

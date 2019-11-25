@@ -1,16 +1,15 @@
 import clusters_retriever as extract
 import map_plot_parameters as plotpar
 import cluster_profiler as profile
-import map_synthetizer as mapgen
+from obsolete import map_synthetizer as mapgen, plot_metadata as meta
 import distance_cosmology as cosmo
 
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
-from astropy.convolution import Gaussian2DKernel
 from astropy.convolution import convolve
-from os import makedirs, chdir
+from os import makedirs
 from os.path import exists
 #from mpi4py.futures import MPIPoolExecutor
 
@@ -143,7 +142,6 @@ def map_tSZ_intensity(num_halo, redshift, simulation_type, nbins = 100, rfov = 2
         tSZmap = convolve(tSZ, kernel)
 
         # norm = mapgen.MidpointNormalize(vmin=tSZmap.min(), vmax=tSZmap.max(), midpoint=0)
-        import matplotlib.colors as colors
         c
         # norm = colors.PowerNorm(gamma=0.2)
         img = axes[i].pcolor(Cx, Cy, tSZmap, cmap=cmap[i], norm= norm)
@@ -183,7 +181,6 @@ def map_tSZ_intensity(num_halo, redshift, simulation_type, nbins = 100, rfov = 2
         plt.savefig(dir_name + '//' + save_name + '.pdf')
 
         # Generate metadata.txt
-        import plot_metadata as meta 
         args = (num_halo, simulation_type, redshift, angular_distance, min_gn, min_sgn, min_T, max_r, weight_function,  nbins, rfov, kernel_Type, fwhm, r200, r200/Mpc_to_arcmin)
         meta.metadata_file(args, dir_name + '//' + save_name)
 

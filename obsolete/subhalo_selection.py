@@ -7,11 +7,11 @@ import matplotlib.colors as colors
 import matplotlib.patches as patches
 
 import map_plot_parameters as plotpar
-import map_synthetizer as mapgen
+from obsolete import map_synthetizer as mapgen
 import gas_fractions_gridSpec_calculator as data
 
 from os.path import exists
-from os import makedirs, chdir
+from os import makedirs
 from itertools import count
 from matplotlib.ticker import NullFormatter
 from matplotlib.colorbar import Colorbar

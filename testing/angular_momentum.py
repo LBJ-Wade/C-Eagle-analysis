@@ -34,7 +34,7 @@ def angle_between_vectors(v1, v2):
     return angle*180/np.pi
 
 
-def angular_momentum_PartType_alignment_matrix(cluster, specific_angular_momentum = False):
+def angular_momentum_PartType_alignment_matrix(cluster, specific_angular_momentum = False, aperture_radius = None):
     """
     angular_momentum_PartType_alignment_matrix() takes the angular momenta of each particle type
     in the cluster and computes the respective angles between each of them, in the form of a matrix.
@@ -48,7 +48,7 @@ def angular_momentum_PartType_alignment_matrix(cluster, specific_angular_momentu
         between particle types.
     """
     # Compute the angular momentum of all high res particle types
-    ang_momenta, sum_of_masses = cluster.group_angular_momentum(out_allPartTypes=True)
+    ang_momenta, sum_of_masses = cluster.group_angular_momentum(out_allPartTypes=True, aperture_radius = aperture_radius)
 
     # The specific angular momentum is given by j = J/M
     if specific_angular_momentum:

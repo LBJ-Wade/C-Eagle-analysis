@@ -1,7 +1,7 @@
 import clusters_retriever as extract
 import map_plot_parameters as plotpar
 import cluster_profiler as profile
-import map_synthetizer as mapgen
+from obsolete import map_synthetizer as mapgen
 import kernel_convolver as kernconv
 # import cosmolopy !!! USELESS 50 YEARS OLD PACKAGE
 
@@ -11,7 +11,6 @@ from astropy.cosmology import FlatLambdaCDM
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
-from astropy.convolution import Gaussian2DKernel
 from astropy.convolution import convolve
 #from mpi4py.futures import MPIPoolExecutor
 

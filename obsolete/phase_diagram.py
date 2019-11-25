@@ -1,12 +1,12 @@
 import clusters_retriever as extract
 import map_plot_parameters as plotpar
 import cluster_profiler as profile
-import map_synthetizer as mapgen
+from obsolete import map_synthetizer as mapgen
 
 import numpy as np
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
-from os import makedirs, chdir
+from os import makedirs
 from os.path import exists
 
 
