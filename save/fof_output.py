@@ -36,7 +36,7 @@ def push_FOFapertures(simulation):
 
         for redshift in simulation_obj.redshiftAllowed:
 
-            cluster_obj = cluster.Cluster(clusterID = halo_num, redshift = redshift_str2num(redshift))
+            cluster_obj = cluster.Cluster(clusterID = int(halo_num), redshift = redshift_str2num(redshift))
             print('[ FOF SAVE ]\t==>\t Apertures on cluster {} @ z = {}'.format(halo_num, redshift))
             save.create_dataset(simulation,
                                cluster_obj,
