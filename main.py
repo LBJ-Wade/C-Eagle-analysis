@@ -44,7 +44,7 @@ def main():
     # from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 
-    fof.push_FOFapertures('C-EAGLE')
+    fof.push_FOFapertures('CELR-eagle')
 
 
 
