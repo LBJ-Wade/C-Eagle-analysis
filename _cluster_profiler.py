@@ -72,7 +72,7 @@ class Mixin:
         return zero_momentum, sum_of_masses
 
 
-    def group_centre_of_mass(self, out_allPartTypes=False):
+    def group_centre_of_mass(self, out_allPartTypes=False, aperture_radius = None):
         """
         out_allPartTypes = (bool)
             if True outputs the centre of mass and sum of masses of each
@@ -99,7 +99,12 @@ class Mixin:
             # GroupNumber FOF == 1, which by definition is centred in the
             # Centre of Potential and is disconnected from other FoF groups.
             radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis = 1)
-            index = np.where((group_num == 1) & (radial_dist < r500))[0]
+
+            if aperture_radius is None:
+                aperture_radius = self.group_r500()
+                print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+            index = np.where((group_num == 1) & (radial_dist < aperture_radius))[0]
             mass = mass[index]
             coords = coords[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
@@ -116,7 +121,7 @@ class Mixin:
         else:
             return self.centre_of_mass(Mtot_PartTypes, CoM_PartTypes)
 
-    def group_zero_momentum_frame(self, out_allPartTypes=False):
+    def group_zero_momentum_frame(self, out_allPartTypes=False, aperture_radius = None):
         """
         out_allPartTypes = (bool)
             if True outputs the zero_momentum_frame and sum of masses of each
@@ -138,13 +143,17 @@ class Mixin:
             vel = self.particle_velocity(part_type)
             coords = self.particle_coordinates(part_type)
             group_num = self.group_number_part(part_type)
-            r500 = self.group_r500()
 
             # Filter the particles belonging to the
             # GroupNumber FOF == 1, which by definition is centred in the
             # Centre of Potential and is disconnected from other FoF groups.
             radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis=1)
-            index = np.where((group_num == 1) & (radial_dist < r500))[0]
+
+            if aperture_radius is None:
+                aperture_radius = self.group_r500()
+                print('[ ZERO MOMENTUM ]\t==>\tAperture radius set to default R500 true.')
+
+            index = np.where((group_num == 1) & (radial_dist < aperture_radius))[0]
             mass = mass[index]
             vel = vel[index]
             assert mass.__len__() > 0, "Array is empty - check filtering.."
@@ -161,7 +170,7 @@ class Mixin:
         else:
             return self.zero_momentum_frame(Mtot_PartTypes, ZMF_PartTypes)
 
-    def group_angular_momentum(self, out_allPartTypes=False):
+    def group_angular_momentum(self, out_allPartTypes=False, aperture_radius = None):
         """
         out_allPartTypes = (bool)
             if True outputs the zero_momentum_frame and sum of masses of each
@@ -182,7 +191,7 @@ class Mixin:
             vel = self.particle_velocity(part_type)
             coords = self.particle_coordinates(part_type)
             group_num = self.group_number_part(part_type)
-            r500 = self.group_r500()
+
 
             # Filter the particles belonging to the
             # GroupNumber FOF == 1, which by definition is centred in the
@@ -191,7 +200,12 @@ class Mixin:
             # cluster occurs about the CoM.
             CoM_coords, _ = self.group_centre_of_mass()
             radial_dist = np.linalg.norm(np.subtract(coords, CoM_coords), axis=1)
-            index = np.where((group_num == 1) & (radial_dist < r500))[0]
+
+            if aperture_radius is None:
+                aperture_radius = self.group_r500()
+                print('[ ANG MOMENTUM ]\t==>\tAperture radius set to default R500 true.')
+
+            index = np.where((group_num == 1) & (radial_dist < aperture_radius))[0]
             mass = mass[index]
             coords = coords[index]
             vel = vel[index]

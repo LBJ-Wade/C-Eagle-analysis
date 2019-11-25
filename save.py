@@ -4,7 +4,11 @@ FILE:   save.py
 AUTHOR: Edo Altamura
 DATE:   20-11-2019
 ------------------------------------------------------------------
-
+In order to make the data post-processing more manageable, instead
+of calculating quantities from the simulations every time, just
+compute them once and store them in a hdf5 file.
+This process of data reduction level condenses data down to a few KB
+or MB and it is possible to transfer it locally for further analysis.
 -------------------------------------------------------------------
 """
 
@@ -79,8 +83,7 @@ def create_dataset(simulation,
 
 create_file('C-EAGLE')
 create_file('CELR-eagle')
-def print_structure(hdf5_file, out_attributes = False, short_form = True):
-    pass
+
 
 
 

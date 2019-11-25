@@ -34,9 +34,25 @@ def angle_between_vectors(v1, v2):
     return angle*180/np.pi
 
 
-def angular_momentum_PartType_alignment_matrix(cluster):
+def angular_momentum_PartType_alignment_matrix(cluster, specific_angular_momentum = False):
+    """
+    angular_momentum_PartType_alignment_matrix() takes the angular momenta of each particle type
+    in the cluster and computes the respective angles between each of them, in the form of a matrix.
+
+    :param cluster: (cluster.Cluster)
+    :param specific_angular_momentum: (bool)
+        Rescales the angular momentum vector with each particle type's total mass, yielding
+        the specific angular momentum for each component
+    :return: (numpy.ndarray)
+        Returns the alignment 2D matrix with entries corresponding to the angles in degrees
+        between particle types.
+    """
     # Compute the angular momentum of all high res particle types
     ang_momenta, sum_of_masses = cluster.group_angular_momentum(out_allPartTypes=True)
+
+    # The specific angular momentum is given by j = J/M
+    if specific_angular_momentum:
+        ang_momenta = np.divide(ang_momenta, sum_of_masses.reshape((len(ang_momenta), 1)))
 
     # Compute the alignment matrix
     alignment_matrix = np.zeros((len(ang_momenta), len(ang_momenta)), dtype=float)
@@ -55,13 +71,13 @@ def matrix_to_dataframe(matrix):
     df.index = ["Gas", "Dark matter", "Stars", "Black holes"]
     print(df)
 
-def alignment_DM_to_gas(matrix): return matrix[0][1]
-def alignment_DM_to_stars(matrix): return matrix[1][2]
+def alignment_DM_to_gas(matrix):    return matrix[0][1]
+def alignment_DM_to_stars(matrix):  return matrix[1][2]
 def alignment_stars_to_gas(matrix): return matrix[0][2]
 
 
 ###############################################################
-#           PLOT METHODS AND CLASSES
+#           PLOT METHODS AND CLASSES                          #
 ###############################################################
 
 class Arrow3D(FancyArrowPatch):

@@ -14,7 +14,7 @@ ceagle = Simulation()
 __pathSave__ = ceagle.pathSave + '/merger_index/'
 
 
-def dynamical_index(cluster):
+def dynamical_index(cluster, aperture_radius = None):
     """
     The dynamical merging index is defined according to the displacement
     between the centre of mass and the centre of potential of the cluster.
@@ -29,16 +29,21 @@ def dynamical_index(cluster):
     :return: the dynamical merging index
     """
     cop = cluster.group_centre_of_potential()
-    com, _ = cluster.group_centre_of_mass()     # Remember that it returns the tuple ([com array], total_mass)
-    r500 = cluster.group_r500()
+    com, _ = cluster.group_centre_of_mass(aperture_radius = aperture_radius)     # Remember that it returns the tuple ([com array],
+    # total_mass)
+
+    if aperture_radius is None:
+        aperture_radius = cluster.group_r500()
+        print('[ DYN MERGING IDX ]\t==>\tAperture radius set to default R500 true.')
+
     assert cop.__len__() == 3, 'Centre of Potential does not have 3 components.'
     assert com.__len__() == 3, 'Centre of Mass does not have 3 components.'
     displacement = np.linalg.norm(np.subtract(cop, com))
-    dynamic_index = displacement/r500
+    dynamic_index = displacement/aperture_radius
     # assert dynamic_index < 1, "dynamical_index > 1. Unusual for clusters"
     return dynamic_index
 
-def thermal_index(cluster):
+def thermal_index(cluster, aperture_radius = None):
     part_type = '0'
 
     mass = cluster.particle_masses(part_type)
@@ -67,8 +72,12 @@ def thermal_index(cluster):
     # Compute radial distance
     r = np.linalg.norm(coordinate, axis = 1)
 
+    if aperture_radius is None:
+        aperture_radius = r500
+        print('[ THERM MERGING IDX ]\t==>\tAperture radius set to default R500 true.')
+
     # Select particles within r500 {Definition of Barnes et al. (2017)}
-    index = np.where((r < r500) & (group_num == 1))[0]
+    index = np.where((r < aperture_radius) & (group_num == 1))[0]
     mass = mass[index]
     velocity = velocity[index]
     temperature = temperature[index]
