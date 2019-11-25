@@ -85,7 +85,8 @@ def create_dataset(simulation,
     simulation_obj = Simulation(simulation_name=simulation)
     fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '__processed_data.hdf5'
     with h5py.File(fileCompletePath, "r+") as file:
-        subfolder_name = simulation_obj.cluster_prefix + str(cluster.clusterID) + '/' + redshift_num2str(cluster.redshift)
+        subfolder_name = simulation_obj.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
+            cluster.redshift)
         file_halo_redshift = file[subfolder_name + '/' + subfolder]
         if dataset_name is not None and input_data is not None:
             dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
