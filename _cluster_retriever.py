@@ -41,7 +41,7 @@ def redshift_num2str(z: float):
     E.g. float z = 2.16 ---> str z = 'z002p160'.
     """
     integer_z, decimal_z = str(z).split('.')
-    return 'z' + integer_z.ljust(3, '0') + 'p' + decimal_z.rjust(3, '0')
+    return 'z' + integer_z.rjust(3, '0') + 'p' + decimal_z.rjust(3, '0')
 
 
 
