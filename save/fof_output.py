@@ -12,7 +12,7 @@ or MB and it is possible to transfer it locally for further analysis.
 -------------------------------------------------------------------
 """
 
-import save
+from save import save
 
 import sys
 import os.path
