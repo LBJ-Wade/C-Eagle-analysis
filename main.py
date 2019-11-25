@@ -39,10 +39,14 @@ def main():
 
     # plotpar.set_defaults_plot()
     #
-    # sim = Simulation()
-    # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
+    sim = Simulation()
+    z_catalogue = sim.get_redshiftAllowed(dtype = str)
+    from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
-    fof.push_FOFapertures('C-EAGLE')
+    print(z_catalogue)
+    print(redshift_num2str(redshift_str2num(z_catalogue)))
+
+    # fof.push_FOFapertures('C-EAGLE')
 
 
 
