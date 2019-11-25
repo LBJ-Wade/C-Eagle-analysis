@@ -42,7 +42,7 @@ def main():
     # sim = Simulation()
     # z_catalogue = ceagle.get_redshiftAllowed(dtype = float)
 
-    fof.push_FOFapertures('CELR-eagle')
+    fof.push_FOFapertures('C-EAGLE')
 
 
 
