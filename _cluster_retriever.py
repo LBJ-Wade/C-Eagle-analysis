@@ -72,7 +72,13 @@ class Mixin:
 
                 redshift_str = redshift_num2str(round(self.redshift, 3))
                 redshift_i = self.redshiftAllowed.index(redshift_str)
+
+                # In the case of CELR, the first redshift is corrupted, so need to advance the z-catalogue index
+                if Simulation.simulation == 'CELR-eagle':
+                    redshift_i += 1
+
                 redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
+
                 sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + redshift_str
                 file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
                 file_list = os.listdir(file_dir)
