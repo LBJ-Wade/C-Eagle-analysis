@@ -36,6 +36,7 @@ def main():
     import map_plot_parameters as plotpar
     from testing.angular_momentum import angular_momentum_PartType_alignment_matrix
     from save import fof_output as fof
+    from save import save
 
     # plotpar.set_defaults_plot()
     #
@@ -43,7 +44,7 @@ def main():
     # z_catalogue = sim.get_redshiftAllowed(dtype = str)
     # from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
-
+    save.create_file('CELR-eagle')
     fof.push_FOFapertures('CELR-eagle')
     fof.push_FOFcentre_of_mass('CELR-eagle')
     fof.push_FOFangular_momentum('CELR-eagle')
