@@ -102,7 +102,7 @@ class Mixin:
             if aperture_radius is None:
                 aperture_radius = self.group_r500()
                 print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
-            print(elf.centralFOF_groupNumber)
+            print(self.centralFOF_groupNumber)
             index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
             mass = mass[index]
             coords = coords[index]
