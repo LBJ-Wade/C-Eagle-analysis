@@ -239,7 +239,8 @@ class Mixin:
             apertures = np.logspace(np.log10(0.5 * r2500), np.log10(5 * r200), 20)
         else:
             apertures = -1
-            raise(ValueError)
+            print(ValueError)
+            print('Issue encountered at ', self.clusterID, self.redshift)
 
         # Convert from comoving into physical frame
         apertures = self.comoving_length(apertures)
