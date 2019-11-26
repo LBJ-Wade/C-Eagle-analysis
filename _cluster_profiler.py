@@ -103,7 +103,7 @@ class Mixin:
                 aperture_radius = self.group_r500()
                 print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
 
-            index = np.where((group_num == 1) & (radial_dist < aperture_radius))[0]
+            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
             mass = mass[index]
             coords = coords[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
@@ -152,7 +152,7 @@ class Mixin:
                 aperture_radius = self.group_r500()
                 print('[ ZERO MOMENTUM ]\t==>\tAperture radius set to default R500 true.')
 
-            index = np.where((group_num == 1) & (radial_dist < aperture_radius))[0]
+            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
             mass = mass[index]
             vel = vel[index]
             assert mass.__len__() > 0, "Array is empty - check filtering.."
@@ -204,7 +204,7 @@ class Mixin:
                 aperture_radius = self.group_r500()
                 print('[ ANG MOMENTUM ]\t==>\tAperture radius set to default R500 true.')
 
-            index = np.where((group_num == 1) & (radial_dist < aperture_radius))[0]
+            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
             mass = mass[index]
             coords = coords[index]
             vel = vel[index]

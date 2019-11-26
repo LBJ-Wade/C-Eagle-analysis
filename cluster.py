@@ -34,6 +34,7 @@ class Simulation():
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
             self.redshiftAllowed = zcat.group_data()['z_value']
+            self.centralFOF_groupNumber = 1
 
         if simulation_name == 'CELR-eagle':
             self.simulation = 'CELR-eagle'
@@ -45,6 +46,7 @@ class Simulation():
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
             self.redshiftAllowed = zcat.group_data()['z_value'][1:] # Delete the first redshift: data are corrupted
+            self.centralFOF_groupNumber = 0
 
     def set_pathData(self, newPath: str):
         self.pathData = newPath
