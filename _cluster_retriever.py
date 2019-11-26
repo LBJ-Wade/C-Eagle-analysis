@@ -167,6 +167,20 @@ class Mixin:
         return r500c
 
     @data_subject(subject="groups")
+    def group_r2500(self, *args, **kwargs):
+        """
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/FOF/Group_R_Crit2500"]
+        temp = h5dset[...]
+        h5file.close()
+        r2500c = temp[0]
+        free_memory(['r2500c'], invert=True)
+        return r2500c
+
+    @data_subject(subject="groups")
     def group_mass(self, *args, **kwargs):
         """
         AIM: reads the FoF virial radius from the path and file given
@@ -207,6 +221,20 @@ class Mixin:
         m500 = temp[0]
         free_memory(['m500'], invert=True)
         return m500
+
+    @data_subject(subject="groups")
+    def group_M2500(self, *args, **kwargs):
+        """
+        AIM: reads the FoF virial radius from the path and file given
+        RETURNS: type = double
+        """
+        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
+        h5dset = h5file["/FOF/Group_M_Crit2500"]
+        temp = h5dset[...]
+        h5file.close()
+        m2500 = temp[0]
+        free_memory(['m2500'], invert=True)
+        return m2500
 
     @data_subject(subject="groups")
     def NumOfSubhalos(self, *args, central_FOF=None, **kwargs):

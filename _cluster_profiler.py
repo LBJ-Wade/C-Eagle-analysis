@@ -227,24 +227,19 @@ class Mixin:
     def generate_apertures(self):
         """
         Generate an array of apertures for calculating global properties of the clusters.
-        The apertures use both R500 and R200 units:
-            for r <= R500 the np.linspace is in function of R500
-            for r >  R500 the np.linspace is in function of R200
+        The apertures use both R2500 and R200 units:
+
         :return: (np.ndarray)
-            The array with 100 different apertures, ranging from 0.001 R500 to 5*R200
+            The array with 100 different apertures, ranging from 0.5 R2500 to 5*R200
             NOTE: the apertures are returned in the PHYSICAL frame.
         """
-        r500 = self.group_r500()
+        r2500 = self.group_r2500()
         r200 = self.group_r200()
-        r500_list = np.logspace(np.log10(0.01 * r500), np.log10(r500), 50)
-        r200_list = np.logspace(np.log10(r500), np.log10(5 * r200), 51)
-
-        # Delete overlapping point at r = R500
-        r200_list = np.delete(r200_list, 0)
+        apertures = np.logspace(np.log10(0.5 * r2500), np.log10(5 * r200), 20)
 
         # Convert from comoving into physical frame
-        apertures = self.comoving_length(np.hstack((r500_list, r200_list)))
-        print('[ FoF APERTURES ]\t==>\tConverted into physical coordinates. (Units: Mpc)')
+        apertures = self.comoving_length(apertures)
+        # print('[ FoF APERTURES ]\t==>\tConverted into physical coordinates. (Units: Mpc)')
 
         return apertures
 
