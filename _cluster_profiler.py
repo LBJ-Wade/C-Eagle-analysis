@@ -235,11 +235,14 @@ class Mixin:
         """
         r2500 = self.group_r2500()
         r200 = self.group_r200()
-        apertures = np.logspace(np.log10(0.5 * r2500), np.log10(5 * r200), 20)
+        if r2500 > 0. and r200 > 0.:
+            apertures = np.logspace(np.log10(0.5 * r2500), np.log10(5 * r200), 20)
+        else:
+            apertures = -1
+            raise(ValueError)
 
         # Convert from comoving into physical frame
         apertures = self.comoving_length(apertures)
-        # print('[ FoF APERTURES ]\t==>\tConverted into physical coordinates. (Units: Mpc)')
 
         return apertures
 
