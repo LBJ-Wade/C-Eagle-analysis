@@ -73,9 +73,9 @@ class Mixin:
                 redshift_str = redshift_num2str(round(self.redshift, 3))
                 redshift_i = self.redshiftAllowed.index(redshift_str)
 
-                # In the case of CELR, the first redshift is corrupted, so need to advance the z-catalogue index
+                # In the case of CELR, the first 3 redshifts are corrupted, so need to advance the z-catalogue index
                 if self.simulation == 'CELR-eagle':
-                    redshift_i += 1
+                    redshift_i += 3
 
                 redshift_index = zcat.group_data()['z_IDNumber'][redshift_i]
 
