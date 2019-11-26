@@ -224,7 +224,7 @@ class Mixin:
             return np.sum(angular_momentum_PartTypes, axis = 0), np.sum(Mtot_PartTypes)
 
 
-    def generate_apertures(self):
+    def generate_apertures(self, comoving = False):
         """
         Generate an array of apertures for calculating global properties of the clusters.
         The apertures use both R2500 and R200 units:
@@ -243,7 +243,8 @@ class Mixin:
             print('Issue encountered at ', self.clusterID, self.redshift)
 
         # Convert from comoving into physical frame
-        apertures = self.comoving_length(apertures)
+        if not comoving:
+            apertures = self.comoving_length(apertures)
 
         return apertures
 

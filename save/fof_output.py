@@ -70,7 +70,7 @@ def push_FOFcentre_of_mass(simulation):
 
             CoM = np.zeros((0, 3), dtype=np.float)
 
-            for r in cluster_obj.generate_apertures():
+            for r in cluster_obj.generate_apertures(comoving = True):
                 CoM_aperture = cluster_obj.group_centre_of_mass(
                     out_allPartTypes=False, aperture_radius=r)
                 CoM = np.concatenate((CoM, CoM_aperture), axis=0)
