@@ -45,7 +45,7 @@ def main():
     # from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
     # save.create_file('CELR-eagle')
-    fof.push_FOFapertures('CELR-eagle')
+    # fof.push_FOFapertures('CELR-eagle')
     fof.push_FOFcentre_of_mass('CELR-eagle')
     fof.push_FOFangular_momentum('CELR-eagle')
 
