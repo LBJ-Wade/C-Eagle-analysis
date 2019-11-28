@@ -39,20 +39,19 @@ def push_FOFapertures(simulation):
 
             cluster_obj = Cluster(clusterID = int(halo_num), redshift = redshift_str2num(redshift))
             print('[ FOF SAVE ]\t==>\t Apertures on cluster {} @ z = {}'.format(halo_num, redshift))
-            print(cluster_obj.generate_apertures())
-            #save.create_dataset(simulation,
-                               # cluster_obj,
-                               # subfolder = __HDF5_SUBFOLDER__,
-                               # dataset_name = 'Apertures',
-                               # input_data = cluster_obj.generate_apertures(),
-                               # attributes = """Global properties of the FoF group are determined using particles
-                               # data, filtering particles within a specific radius from the Centre of Potential. Such
-                               # radius is defined as "aperture radius" and in this code is given by the method
-                               # cluster.Cluster.generate_apertures() in physical coordinates.
-                               #
-                               # Units: Mpc
-                               # """,
-                               #  )
+            save.create_dataset(simulation,
+                               cluster_obj,
+                               subfolder = __HDF5_SUBFOLDER__,
+                               dataset_name = 'Apertures',
+                               input_data = cluster_obj.generate_apertures(),
+                               attributes = """Global properties of the FoF group are determined using particles
+                               data, filtering particles within a specific radius from the Centre of Potential. Such
+                               radius is defined as "aperture radius" and in this code is given by the method
+                               cluster.Cluster.generate_apertures() in physical coordinates.
+
+                               Units: Mpc
+                               """,
+                                )
 
 
 def push_FOFcentre_of_mass(simulation):
@@ -86,8 +85,8 @@ def push_FOFcentre_of_mass(simulation):
                                 attributes="""The Centre of Mass (CoM) is calculated for each aperture listed in the 
                                 "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
-                               Units: h^-1 Mpc 
-                               """,
+                                Units: h^-1 Mpc 
+                                """,
                                 )
 
 
@@ -125,6 +124,6 @@ def push_FOFangular_momentum(simulation):
                                 attributes="""The total angular momentum is calculated for each aperture listed in the 
                                 "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
-                               Units: 10^10 M_sun * 10^3 km/s * Mpc
-                               """,
+                                Units: 10^10 M_sun * 10^3 km/s * Mpc
+                                """,
                                 )
