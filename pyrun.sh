@@ -12,7 +12,7 @@ date
 echo -e "\e[1m\e[91mRunning main program...\e[0m"
 echo -e "+-----------------------------------------------------------------------------------------+"
 
-#python3 -u ./main.py > ./main.log &
-python3 ./main.py
+python3 -u ./main.py > ./main.log &
+#python3 ./main.py
 
 echo -e "\e[5m\e[1m\e[91mEnd of session.\e[0m"
