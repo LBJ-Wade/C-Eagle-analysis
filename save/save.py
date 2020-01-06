@@ -52,7 +52,7 @@ def create_file(simulation):
 
     """
     simulation_obj = Simulation(simulation_name = simulation)
-    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '__processed_data.hdf5'
+    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output.hdf5'
     with h5py.File(fileCompletePath, "w") as file:
         for halo_num in simulation_obj.clusterIDAllowed:
             folder_name = simulation_obj.cluster_prefix + halo_Num(halo_num)
@@ -83,7 +83,7 @@ def create_dataset(simulation,
     """
 
     simulation_obj = Simulation(simulation_name=simulation)
-    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '__processed_data.hdf5'
+    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output.hdf5'
     with h5py.File(fileCompletePath, "r+") as file:
         subfolder_name = simulation_obj.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
             cluster.redshift)

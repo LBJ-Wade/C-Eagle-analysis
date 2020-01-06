@@ -75,17 +75,17 @@ def main():
 
 
 
-    sim = Simulation()
-    z_catalogue = sim.get_redshiftAllowed(dtype = str)
-    from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
+    # sim = Simulation()
+    # z_catalogue = sim.get_redshiftAllowed(dtype = str)
+    # from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
+    #
+    # halo = Cluster(clusterID = 3, redshift = 0.)
+    # angle_off = angular_momentum_PartType_alignment_matrix(halo)
+    # print(angle_off)
 
-    halo = Cluster(clusterID = 3, redshift = 0.)
-    angle_off = angular_momentum_PartType_alignment_matrix(halo)
-    print(angle_off)
-
-    # save.create_file('CELR-eagle')
-    # fof.push_FOFapertures('CELR-eagle')
-    # fof.push_FOFcentre_of_mass('CELR-eagle')
+    save.create_file('CELR-eagle')
+    fof.push_FOFapertures('CELR-eagle')
+    fof.push_FOFcentre_of_mass('CELR-eagle')
     # fof.push_FOFangular_momentum('CELR-eagle')
 
 
