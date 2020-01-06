@@ -46,7 +46,7 @@ class Simulation():
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
             self.redshiftAllowed = zcat.group_data()['z_value'][7:] # Delete the first 5 redshifts: data are corrupted
-            self.centralFOF_groupNumber = 0
+            self.centralFOF_groupNumber = 1
 
     def set_pathData(self, newPath: str):
         self.pathData = newPath
