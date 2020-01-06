@@ -185,6 +185,8 @@ class Mixin:
         angular_momentum_PartTypes = np.zeros((0, 3), dtype=np.float)
         Mtot_PartTypes = np.zeros(0, dtype=np.float)
 
+        CoM_coords, _ = self.group_centre_of_mass()
+
         for part_type in ['0', '1', '4', '5']:
             # Import data
             mass = self.particle_masses(part_type)
@@ -198,7 +200,6 @@ class Mixin:
             # Centre of Mass and is disconnected from other FoF groups.
             # NOTE: the CoM is only present here since the rotation of the
             # cluster occurs about the CoM.
-            CoM_coords, _ = self.group_centre_of_mass()
             radial_dist = np.linalg.norm(np.subtract(coords, CoM_coords), axis=1)
 
             if aperture_radius is None:
