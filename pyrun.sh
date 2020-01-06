@@ -9,8 +9,8 @@ git pull
 date
 
 # Run main program
-echo -e "\e[1m\e[91mRunning main program..."
-echo -e "+-----------------------------------------------------------------------------------------+\e[0m"
+echo -e "\e[1m\e[91mRunning main program...\e[0m"
+echo -e "+-----------------------------------------------------------------------------------------+"
 
 #python3 -u ./main.py > ./main.log &
 python3 ./main.py
