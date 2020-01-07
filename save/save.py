@@ -94,6 +94,9 @@ def create_dataset(simulation,
                 del file[subfolder_name + '/' + subfolder + '/' + dataset_name]
                 print('[  SAVE  ] ===> Deleting old dataset: {}'.format(dataset_name))
 
+            except:
+                pass
+
             finally:
                 print('[  SAVE  ] ===> Creating new dataset: {}'.format(dataset_name))
                 dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
