@@ -71,7 +71,7 @@ def push_FOFcentre_of_mass(simulation):
             CoM = np.zeros((0, 3), dtype=np.float)
 
             for r in cluster_obj.generate_apertures(comoving = True):
-                CoM_aperture = cluster_obj.group_centre_of_mass(
+                CoM_aperture, _ = cluster_obj.group_centre_of_mass(
                     out_allPartTypes=False, aperture_radius=r)
                 print(CoM.shape)
                 print(CoM_aperture.shape)
@@ -109,7 +109,7 @@ def push_FOFangular_momentum(simulation):
             CoM = np.zeros((0, 3), dtype=np.float)
 
             for r in cluster_obj.generate_apertures():
-                CoM_aperture = cluster_obj.group_angular_momentum(out_allPartTypes=False, aperture_radius=r)
+                CoM_aperture, _ = cluster_obj.group_angular_momentum(out_allPartTypes=False, aperture_radius=r)
 
                 # Convert into physical frame from comoving
                 CoM_aperture = cluster_obj.comoving_ang_momentum(CoM_aperture)
