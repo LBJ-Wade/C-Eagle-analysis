@@ -83,10 +83,10 @@ def main():
     # angle_off = angular_momentum_PartType_alignment_matrix(halo)
     # print(angle_off)
 
-    save.create_file('CELR-eagle')
-    fof.push_FOFapertures('CELR-eagle')
+    # save.create_file('CELR-eagle')
+    # fof.push_FOFapertures('CELR-eagle')
     fof.push_FOFcentre_of_mass('CELR-eagle')
-    # fof.push_FOFangular_momentum('CELR-eagle')
+    fof.push_FOFangular_momentum('CELR-eagle')
 
 
 
