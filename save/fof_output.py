@@ -73,8 +73,7 @@ def push_FOFcentre_of_mass(simulation):
             for r in cluster_obj.generate_apertures(comoving = True):
                 CoM_aperture, _ = cluster_obj.group_centre_of_mass(
                     out_allPartTypes=False, aperture_radius=r)
-                print(CoM.shape)
-                print(CoM_aperture.shape)
+
                 CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
 
             assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
