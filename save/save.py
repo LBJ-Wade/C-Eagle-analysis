@@ -88,7 +88,15 @@ def create_dataset(simulation,
         subfolder_name = simulation_obj.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
             cluster.redshift)
         file_halo_redshift = file[subfolder_name + '/' + subfolder]
+
         if dataset_name is not None and input_data is not None:
-            dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
+            try:
+                del file[subfolder_name + '/' + subfolder + '/' + dataset_name]
+                print('[  SAVE  ] ===> Deleting old dataset: {}'.format(dataset_name))
+
+            finally:
+                print('[  SAVE  ] ===> Creating new dataset: {}'.format(dataset_name))
+                dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
+
         if attributes is not None:
             dataset.attrs['Description'] = attributes
