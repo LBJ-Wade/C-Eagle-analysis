@@ -21,6 +21,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 
 from cluster import Simulation, Cluster
 from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
+from testing import angular_momentum
 
 
 __HDF5_SUBFOLDER__ = 'FOF'
@@ -126,5 +127,56 @@ def push_FOFangular_momentum(simulation):
                                 "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
                                 Units: 10^10 M_sun * 10^3 km/s * Mpc
+                                """,
+                                )
+
+
+def push_FOFangmom_alignment_matrix(simulation):
+    """
+    Saves the angular momentum alignment matrix data into the catalogues.
+    :param simulation: (cluster.Simulation) object
+    :return: None
+    """
+    simulation_obj = Simulation(simulation_name=simulation)
+
+    for halo_num in simulation_obj.clusterIDAllowed:
+
+        for redshift in simulation_obj.redshiftAllowed:
+            cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
+            print('[ FOF SAVE ]\t==>\t AngMom align matrix on cluster {} @ z = {}'.format(halo_num, redshift))
+
+            align_matrix = np.zeros((0, 6), dtype=np.float)
+
+            for r in cluster_obj.generate_apertures():
+                m = angular_momentum.angular_momentum_PartType_alignment_matrix(cluster_obj,
+                                                                                                    specific_angular_momentum=False,
+                                                               aperture_radius=r)
+
+                # Contract alignment matrix into 1D vector
+                align_matrix_aperture = np.array([m[1][0], m[2][0], m[2][1], m[3][0], m[3][1], m[3][2]])
+
+                align_matrix = np.concatenate((align_matrix, [align_matrix_aperture]), axis=0)
+
+            assert align_matrix.__len__() == cluster_obj.generate_apertures().__len__()
+
+
+            save.create_dataset(simulation,
+                                cluster_obj,
+                                subfolder=__HDF5_SUBFOLDER__,
+                                dataset_name='Group_Angular_Momentum_Alignment_Matrix',
+                                input_data=align_matrix,
+                                attributes="""The alignment matrix elements are calculated for each aperture listed in 
+                                the 
+                                "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+
+                                Units: degrees
+                                
+                                Element reference:
+                                0 = DM to gas
+                                1 = Stars to gas
+                                2 = Stars to DM
+                                3 = BH to gas
+                                4 = BH to DM
+                                5 = BH to stars
                                 """,
                                 )
