@@ -85,7 +85,7 @@ def main():
 
     # save.create_file('CELR-eagle')
     # fof.push_FOFapertures('CELR-eagle')
-    fof.push_FOFcentre_of_mass('CELR-eagle')
+    # fof.push_FOFcentre_of_mass('CELR-eagle')
     fof.push_FOFangular_momentum('CELR-eagle')
     fof.push_FOFangmom_alignment_matrix('CELR-eagle')
 
@@ -102,24 +102,3 @@ if __name__ == "__main__":
     else:
         print(__FILE__)
         main()
-
-#TODO
-"""
-  File "./main.py", line 103, in <module>
-    main()
-  File "./main.py", line 54, in new_func
-    function_result = function(*args, **kwargs)
-  File "./main.py", line 88, in main
-    fof.push_FOFcentre_of_mass('CELR-eagle')
-  File "/cosma/home/dp004/dc-alta2/C-Eagle-analysis/save/fof_output.py", line 90, in push_FOFcentre_of_mass
-  File "/cosma/home/dp004/dc-alta2/C-Eagle-analysis/save/save.py", line 92, in create_dataset
-    dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
-  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/h5py-2.10.0-py3.6-linux-x86_64.egg/h5py/_hl/group.py", line 139, in create_dataset
-    self[name] = dset
-  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/h5py-2.10.0-py3.6-linux-x86_64.egg/h5py/_hl/group.py", line 373, in __setitem__
-    h5o.link(obj.id, self.id, name, lcpl=lcpl, lapl=self._lapl)
-  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
-  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
-  File "h5py/h5o.pyx", line 202, in h5py.h5o.link
-RuntimeError: Unable to create link (name already exists)
-"""
