@@ -185,7 +185,7 @@ class Mixin:
         angular_momentum_PartTypes = np.zeros((0, 3), dtype=np.float)
         Mtot_PartTypes = np.zeros(0, dtype=np.float)
 
-        CoM_coords, _ = self.group_centre_of_mass()
+        CoM_coords, _ = self.group_centre_of_mass(out_allPartTypes=False, aperture_radius = aperture_radius)
 
         for part_type in ['0', '1', '4', '5']:
             # Import data
