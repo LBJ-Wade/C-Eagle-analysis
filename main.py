@@ -86,8 +86,9 @@ def main():
     # save.create_file('CELR-eagle')
     # fof.push_FOFapertures('CELR-eagle')
     # fof.push_FOFcentre_of_mass('CELR-eagle')
-    fof.push_FOFangular_momentum('CELR-eagle')
-    fof.push_FOFangmom_alignment_matrix('CELR-eagle')
+    fof.push_FOFangular_momentum_n_masse('CELR-eagle')
+    # fof.push_FOFangmom_alignment_matrix('CELR-eagle')
+    fof.push_FOFmerging_indices('CELR-eagle')
 
 
 
