@@ -291,11 +291,10 @@ def push_FOFtest_MPI(simulation):
     """
     sim = Simulation(simulation_name=simulation)
 
+    process = 0
+    for halo_num, redshift in itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed):
 
-    for process, halo_num, redshift in itertools.izip(itertools.count(0), itertools.product(sim.clusterIDAllowed,
-                                                                             sim.redshiftAllowed)):
-
-        print(halo_num, redshift)
+        print(process, halo_num, redshift)
 
         # Allocate jobs to MPI interface
         if halo_num % size != rank:
@@ -306,3 +305,5 @@ def push_FOFtest_MPI(simulation):
 
         for r in cluster_obj.generate_apertures():
             pass
+
+        process += 1
