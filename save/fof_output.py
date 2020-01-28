@@ -145,7 +145,7 @@ def push_FOFcentre_of_mass(*args, **kwargs):
                         )
 
 @make_parallel_MPI
-def push_FOFangular_momentum_n_masse(*args, **kwargs):
+def push_FOFangular_momentum_n_mass(*args, **kwargs):
     """
     Saves the angular momentum data into the catalogues.
     :param simulation: (cluster.Simulation) object

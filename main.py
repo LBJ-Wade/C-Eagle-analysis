@@ -64,16 +64,24 @@ def time_func(function):
 @time_func
 def main():
 
-    from cluster import Cluster, Simulation
-    import map_plot_parameters as plotpar
-    from testing.angular_momentum import angular_momentum_PartType_alignment_matrix
     from save import fof_output as fof
+
+    _SIM_NAME_ = 'CELR-eagle'
+
+    # save.create_file('CELR-eagle')
+    fof.MPI_decorator_test(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    fof.push_FOFapertures(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    fof.push_FOFcentre_of_mass(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    fof.push_FOFangular_momentum_n_mass(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    fof.push_FOFangmom_alignment_matrix(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    fof.push_FOFmerging_indices(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+
+    import map_plot_parameters as plotpar
+    from cluster import Cluster, Simulation
+    from testing.angular_momentum import angular_momentum_PartType_alignment_matrix
     from save import save
 
-    plotpar.set_defaults_plot()
-
-
-
+    # plotpar.set_defaults_plot()
 
     # sim = Simulation()
     # z_catalogue = sim.get_redshiftAllowed(dtype = str)
@@ -82,16 +90,6 @@ def main():
     # halo = Cluster(clusterID = 3, redshift = 0.)
     # angle_off = angular_momentum_PartType_alignment_matrix(halo)
     # print(angle_off)
-
-    # save.create_file('CELR-eagle')
-    # fof.push_FOFaperturessimulation_name = 'CELR-eagle', out_allPartTypes = False
-    # fof.push_FOFcentre_of_masssimulation_name = 'CELR-eagle', out_allPartTypes = False
-    # fof.push_FOFangular_momentum_n_massesimulation_name = 'CELR-eagle', out_allPartTypes = False
-    # fof.push_FOFangmom_alignment_matrixsimulation_name = 'CELR-eagle', out_allPartTypes = False
-    # fof.push_FOFmerging_indicessimulation_name = 'CELR-eagle', out_allPartTypes = False
-
-    fof.MPI_decorator_test(simulation_name = 'CELR-eagle', out_allPartTypes = False)
-
 
 
 if __name__ == "__main__":
