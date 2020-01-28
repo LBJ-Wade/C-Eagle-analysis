@@ -32,6 +32,66 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
+
+#####################################################
+#													#
+#				D E C O R A T O R S  				#
+# 									 				#
+#####################################################
+
+def make_parallel_MPI(**decorator_kwargs):
+    """
+    This decorator adds functionality to the processing routing for the whole
+    simulation. It creates a list of processes to initialise, each taking a
+    halo at a redshifts. It then allocates dynamically each process to a idle
+    CPU in a recursive way using the modulus function. Ae each iteration it
+    executes the function to be wrapped with *args and **kwargs.
+
+    :param decorator_kwargs: simulation_name = (str)
+    :param decorator_kwargs: out_allPartTypes = (bool)
+    :return: decorated function with predefined **kwargs
+
+    The **Kwargs are dynamically allocated to the external methods.
+    """
+    def wrapper(function):
+        def decorated_function(*args, **kwargs):
+
+            # Transfer function state into the **kwargs
+            # These **kwargs are accessible to the decorated class methods
+            kwargs['out_allPartTypes'] = decorator_kwargs['out_allPartTypes']
+            kwargs['simulation_name'] = decorator_kwargs['simulation_name']
+            sim = Simulation(simulation_name=kwargs['simulation_name'])
+
+            process = 0
+            process_iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+
+            for halo_num, redshift in process_iterator:
+
+                # Allocate CPUs
+                if process % size == rank:
+
+                    cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
+                    print('CPU ({}/{}) is processing halo {} @ z = {} ------ process ID: {}'.format(rank, size,
+                                                                                                    cluster_obj.clusterID,
+                                                                                                    cluster_obj.redshift,
+                                                                                                    process))
+                    # Each CPU loops over all apertures - this avoids concurrence in file reading
+                    # The loop over apertures is defined explicitly in the wrapped function.
+                    kwargs['cluster'] =cluster_obj
+                    function(*args, **kwargs)
+
+                process += 1
+
+            return
+        return decorated_function
+    return wrapper
+
+def MPI_decorator_test(simulation):
+    @make_parallel_MPI(simulation_name = simulation, out_allPartTypes = False)
+    def aperture_wrapper(*args, **kwargs):
+        for r in kwargs['cluster'].generate_apertures(comoving=True)[:2]:
+            print(r)
+
 def push_FOFapertures(simulation):
     """
 
@@ -283,28 +343,4 @@ def push_FOFmerging_indices(simulation):
                                 )
 
 
-def push_FOFtest_MPI(simulation):
-    """
-    Saves the angular momentum alignment matrix data into the catalogues.
-    :param simulation: (cluster.Simulation) object
-    :return: None
-    """
-    sim = Simulation(simulation_name=simulation)
 
-    process = 0
-    process_iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
-
-    for halo_num, redshift in process_iterator:
-
-        if process % size == rank:
-
-            cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-
-            print('Processor ({}/{}) is processing halo ({} @z = {}) ------ process ID: {}'.format(rank, size,
-                                                                                       cluster_obj.clusterID,
-                                                                          cluster_obj.redshift, process))
-
-            # for r in cluster_obj.generate_apertures():
-            #     pass
-
-        process += 1
