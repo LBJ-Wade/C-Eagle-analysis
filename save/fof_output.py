@@ -56,10 +56,15 @@ def make_parallel_MPI(function):
 
     def wrapper(*args, **kwargs):
 
+        # Checks that the essential paremeters are there
         assert not kwargs['out_allPartTypes'] is None
         assert not kwargs['simulation_name'] is None
-        sim = Simulation(simulation_name=kwargs['simulation_name'])
 
+        # Generate a simulation object and oush it to **kwargs
+        sim = Simulation(simulation_name=kwargs['simulation_name'])
+        kwargs['simulation'] = sim
+
+        # Set-up the MPI allocation schedule
         process = 0
         process_iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
 
@@ -80,265 +85,220 @@ def make_parallel_MPI(function):
 
             process += 1
 
-
     return wrapper
-
 
 
 @make_parallel_MPI
 def MPI_decorator_test(*args, **kwargs):
-    for r in kwargs['cluster'].generate_apertures(comoving=True)[:2]:
-        print(r)
+    pass
 
-def push_FOFapertures(simulation):
-    """
+@make_parallel_MPI
+def push_FOFapertures(*args, **kwargs):
 
-    :param simulation: (cluster.Simulation) object
-    :return:
-    """
-    simulation_obj = Simulation(simulation_name=simulation)
+    cluster_obj = kwargs['cluster']
+    print('[ FOF SAVE ]\t==>\t Apertures on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
+    save.create_dataset(kwargs['simulation'],
+                       cluster_obj,
+                       subfolder = __HDF5_SUBFOLDER__,
+                       dataset_name = 'Apertures',
+                       input_data = cluster_obj.generate_apertures(),
+                       attributes = """Global properties of the FoF group are determined using particles
+                       data, filtering particles within a specific radius from the Centre of Potential. Such
+                       radius is defined as "aperture radius" and in this code is given by the method
+                       cluster.Cluster.generate_apertures() in physical coordinates.
+    
+                       Units: Mpc
+                       """,
+                        )
 
-    for halo_num in simulation_obj.clusterIDAllowed:
-
-        # Allocate jobs to MPI interface
-        if halo_num % size != rank:
-            continue
-
-        for redshift in simulation_obj.redshiftAllowed:
-
-            cluster_obj = Cluster(clusterID = int(halo_num), redshift = redshift_str2num(redshift))
-            print('[ FOF SAVE ]\t==>\t Apertures on cluster {} @ z = {}'.format(halo_num, redshift))
-            save.create_dataset(simulation,
-                               cluster_obj,
-                               subfolder = __HDF5_SUBFOLDER__,
-                               dataset_name = 'Apertures',
-                               input_data = cluster_obj.generate_apertures(),
-                               attributes = """Global properties of the FoF group are determined using particles
-                               data, filtering particles within a specific radius from the Centre of Potential. Such
-                               radius is defined as "aperture radius" and in this code is given by the method
-                               cluster.Cluster.generate_apertures() in physical coordinates.
-
-                               Units: Mpc
-                               """,
-                                )
-
-
-def push_FOFcentre_of_mass(simulation):
+@make_parallel_MPI
+def push_FOFcentre_of_mass(*args, **kwargs):
     """
     Saves the CoM data into the catalogues.
     :param simulation: (cluster.Simulation) object
     :return: None
     """
-    simulation_obj = Simulation(simulation_name=simulation)
 
-    for halo_num in simulation_obj.clusterIDAllowed:
+    cluster_obj = kwargs['cluster']
+    print('[ FOF SAVE ]\t==>\t CoM on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
 
-        # Allocate jobs to MPI interface
-        if halo_num % size != rank:
-            continue
+    CoM = np.zeros((0, 3), dtype=np.float)
 
-        for redshift in simulation_obj.redshiftAllowed:
-            cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-            print('[ FOF SAVE ]\t==>\t CoM on cluster {} @ z = {}'.format(halo_num, redshift))
+    # Loop over apertures
+    for r in cluster_obj.generate_apertures(comoving=True):
 
-            CoM = np.zeros((0, 3), dtype=np.float)
+        CoM_aperture, _ = cluster_obj.group_centre_of_mass(aperture_radius = r, **kwargs)
+        CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
 
-            for r in cluster_obj.generate_apertures(comoving = True):
-                CoM_aperture, _ = cluster_obj.group_centre_of_mass(
-                    out_allPartTypes=False, aperture_radius=r)
+    assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
 
-                CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
+    save.create_dataset(kwargs['simulation'],
+                        cluster_obj,
+                        subfolder=__HDF5_SUBFOLDER__,
+                        dataset_name='Group_Centre_of_Mass',
+                        input_data= CoM,
+                        attributes="""The Centre of Mass (CoM) is calculated for each aperture listed in the 
+                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
-            assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
+                        Units: h^-1 Mpc 
+                        """,
+                        )
 
-            save.create_dataset(simulation,
-                                cluster_obj,
-                                subfolder=__HDF5_SUBFOLDER__,
-                                dataset_name='Group_Centre_of_Mass',
-                                input_data= CoM,
-                                attributes="""The Centre of Mass (CoM) is calculated for each aperture listed in the 
-                                "Aperture dataset". PartTypes included: 0, 1, 4, 5.
-
-                                Units: h^-1 Mpc 
-                                """,
-                                )
-
-
-def push_FOFangular_momentum_n_masse(simulation):
+@make_parallel_MPI
+def push_FOFangular_momentum_n_masse(*args, **kwargs):
     """
     Saves the angular momentum data into the catalogues.
     :param simulation: (cluster.Simulation) object
     :return: None
     """
-    simulation_obj = Simulation(simulation_name=simulation)
+    cluster_obj = kwargs['cluster']
 
-    for halo_num in simulation_obj.clusterIDAllowed:
+    print('[ FOF SAVE ]\t==>\t CoM on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
 
-        # Allocate jobs to MPI interface
-        if halo_num % size != rank:
-            continue
+    CoM = np.zeros((0, 3), dtype=np.float)
+    mass = np.zeros(0, dtype=np.float)
 
-        for redshift in simulation_obj.redshiftAllowed:
-            cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-            print('[ FOF SAVE ]\t==>\t CoM on cluster {} @ z = {}'.format(halo_num, redshift))
+    # Loop over apertures
+    for r in cluster_obj.generate_apertures():
 
-            CoM = np.zeros((0, 3), dtype=np.float)
-            mass = np.zeros(0, dtype=np.float)
+        CoM_aperture, mass_aperture = cluster_obj.group_angular_momentum(aperture_radius = r, **kwargs)
 
-            for r in cluster_obj.generate_apertures():
-                CoM_aperture, mass_aperture = cluster_obj.group_angular_momentum(out_allPartTypes=False,
-                                                                               aperture_radius=r)
+        # Convert into physical frame from comoving
+        CoM_aperture = cluster_obj.comoving_ang_momentum(CoM_aperture)
+        CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
 
-                # Convert into physical frame from comoving
-                CoM_aperture = cluster_obj.comoving_ang_momentum(CoM_aperture)
-                CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
+        # Convert into physical frame from comoving
+        mass_aperture = cluster_obj.comoving_mass(mass_aperture)
+        mass = np.concatenate((mass, [mass_aperture]), axis=0)
 
-                # Convert into physical frame from comoving
-                mass_aperture = cluster_obj.comoving_mass(mass_aperture)
-                mass = np.concatenate((mass, [mass_aperture]), axis=0)
+    assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
+    assert mass.__len__() == cluster_obj.generate_apertures().__len__()
 
-            assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
-            assert mass.__len__() == cluster_obj.generate_apertures().__len__()
+    save.create_dataset(kwargs['simulation'],
+                        cluster_obj,
+                        subfolder=__HDF5_SUBFOLDER__,
+                        dataset_name='Group_Angular_Momentum',
+                        input_data=CoM,
+                        attributes="""The total angular momentum is calculated for each aperture listed in the 
+                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
+                        Units: 10^10 M_sun * 10^3 km/s * Mpc
+                        """,
+                        )
 
-            save.create_dataset(simulation,
-                                cluster_obj,
-                                subfolder=__HDF5_SUBFOLDER__,
-                                dataset_name='Group_Angular_Momentum',
-                                input_data=CoM,
-                                attributes="""The total angular momentum is calculated for each aperture listed in the 
-                                "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+    save.create_dataset(kwargs['simulation'],
+                        cluster_obj,
+                        subfolder=__HDF5_SUBFOLDER__,
+                        dataset_name='TotalMass',
+                        input_data=mass,
+                        attributes="""The total mass is calculated for each aperture listed in the 
+                                    "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
-                                Units: 10^10 M_sun * 10^3 km/s * Mpc
-                                """,
-                                )
+                                    Units: 10^10 M_sun
+                                    """,
+                        )
 
-            save.create_dataset(simulation,
-                                cluster_obj,
-                                subfolder=__HDF5_SUBFOLDER__,
-                                dataset_name='TotalMass',
-                                input_data=mass,
-                                attributes="""The total mass is calculated for each aperture listed in the 
-                                            "Aperture dataset". PartTypes included: 0, 1, 4, 5.
-
-                                            Units: 10^10 M_sun
-                                            """,
-                                )
-
-
-def push_FOFangmom_alignment_matrix(simulation):
+@make_parallel_MPI
+def push_FOFangmom_alignment_matrix(*args, **kwargs):
     """
     Saves the angular momentum alignment matrix data into the catalogues.
     :param simulation: (cluster.Simulation) object
     :return: None
     """
-    simulation_obj = Simulation(simulation_name=simulation)
+    cluster_obj = kwargs['cluster']
 
-    for halo_num in simulation_obj.clusterIDAllowed:
+    print('[ FOF SAVE ]\t==>\t AngMom align matrix on cluster {} @ z = {}'.format(cluster_obj.clusterID,
+                                                                            cluster_obj.redshift))
 
-        # Allocate jobs to MPI interface
-        if halo_num % size != rank:
-            continue
+    align_matrix = np.zeros((0, 6), dtype=np.float)
 
-        for redshift in simulation_obj.redshiftAllowed:
-            cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-            print('[ FOF SAVE ]\t==>\t AngMom align matrix on cluster {} @ z = {}'.format(halo_num, redshift))
+    # Loop over apertures
+    for r in cluster_obj.generate_apertures():
+        m = angular_momentum.angular_momentum_PartType_alignment_matrix(cluster_obj,
+                                                                        specific_angular_momentum=False,
+                                                                        aperture_radius=r)
 
-            align_matrix = np.zeros((0, 6), dtype=np.float)
+        # Contract alignment matrix into 1D vector
+        align_matrix_aperture = np.array([m[1][0], m[2][0], m[2][1], m[3][0], m[3][1], m[3][2]])
+        align_matrix = np.concatenate((align_matrix, [align_matrix_aperture]), axis=0)
 
-            for r in cluster_obj.generate_apertures():
-                m = angular_momentum.angular_momentum_PartType_alignment_matrix(cluster_obj,
-                                                                                                    specific_angular_momentum=False,
-                                                               aperture_radius=r)
-
-                # Contract alignment matrix into 1D vector
-                align_matrix_aperture = np.array([m[1][0], m[2][0], m[2][1], m[3][0], m[3][1], m[3][2]])
-
-                align_matrix = np.concatenate((align_matrix, [align_matrix_aperture]), axis=0)
-
-            assert align_matrix.__len__() == cluster_obj.generate_apertures().__len__()
+    assert align_matrix.__len__() == cluster_obj.generate_apertures().__len__()
 
 
-            save.create_dataset(simulation,
-                                cluster_obj,
-                                subfolder=__HDF5_SUBFOLDER__,
-                                dataset_name='Group_Angular_Momentum_Alignment_Matrix',
-                                input_data=align_matrix,
-                                attributes="""The alignment matrix elements are calculated for each aperture listed in 
-                                the 
-                                "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+    save.create_dataset(kwargs['simulation'],
+                        cluster_obj,
+                        subfolder=__HDF5_SUBFOLDER__,
+                        dataset_name='Group_Angular_Momentum_Alignment_Matrix',
+                        input_data=align_matrix,
+                        attributes="""The alignment matrix elements are calculated for each aperture listed in 
+                        the 
+                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
-                                Units: degrees
-                                
-                                Element reference:
-                                0 = DM to gas
-                                1 = Stars to gas
-                                2 = Stars to DM
-                                3 = BH to gas
-                                4 = BH to DM
-                                5 = BH to stars
-                                """,
-                                )
+                        Units: degrees
+                        
+                        Element reference:
+                        0 = DM to gas
+                        1 = Stars to gas
+                        2 = Stars to DM
+                        3 = BH to gas
+                        4 = BH to DM
+                        5 = BH to stars
+                        """,
+                        )
 
-
-def push_FOFmerging_indices(simulation):
+@make_parallel_MPI
+def push_FOFmerging_indices(*args, **kwargs):
     """
     Saves the angular momentum alignment matrix data into the catalogues.
     :param simulation: (cluster.Simulation) object
     :return: None
     """
-    simulation_obj = Simulation(simulation_name=simulation)
+    cluster_obj = kwargs['cluster']
 
-    for halo_num in simulation_obj.clusterIDAllowed:
+    print('[ FOF SAVE ]\t==>\t Merging indices on cluster {} @ z = {}'.format(cluster_obj.clusterID,
+                                                                                  cluster_obj.redshift))
 
-        # Allocate jobs to MPI interface
-        if halo_num % size != rank:
-            continue
+    dynamical_idx = np.zeros(0, dtype=np.float)
+    thermal_idx = np.zeros(0, dtype=np.float)
 
-        for redshift in simulation_obj.redshiftAllowed:
-            cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-            print('[ FOF SAVE ]\t==>\t Merging indices on cluster {} @ z = {}'.format(halo_num, redshift))
+    # Loop over apertures
+    for r in cluster_obj.generate_apertures():
+        dyn_aperture = mergers.dynamical_index(cluster_obj, aperture_radius=r)
+        therm_aperture = mergers.thermal_index(cluster_obj, aperture_radius=r)
 
-            dynamical_idx = np.zeros(0, dtype=np.float)
-            thermal_idx = np.zeros(0, dtype=np.float)
+        dynamical_idx = np.concatenate((dynamical_idx, [dyn_aperture]), axis=0)
+        thermal_idx = np.concatenate((thermal_idx, [therm_aperture]), axis=0)
 
-            for r in cluster_obj.generate_apertures():
-                dyn_aperture = mergers.dynamical_index(cluster_obj, aperture_radius=r)
-                therm_aperture = mergers.thermal_index(cluster_obj, aperture_radius=r)
+    assert dynamical_idx.__len__() == cluster_obj.generate_apertures().__len__()
+    assert thermal_idx.__len__() == cluster_obj.generate_apertures().__len__()
 
-                dynamical_idx = np.concatenate((dynamical_idx, [dyn_aperture]), axis=0)
-                thermal_idx = np.concatenate((thermal_idx, [therm_aperture]), axis=0)
+    save.create_dataset(kwargs['simulation'],
+                        cluster_obj,
+                        subfolder=__HDF5_SUBFOLDER__,
+                        dataset_name='Dynamical_Merging_Index',
+                        input_data=dynamical_idx,
+                        attributes="""The dynamical merging indices calculated for each aperture listed in 
+                        the 
+                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
-            assert dynamical_idx.__len__() == cluster_obj.generate_apertures().__len__()
-            assert thermal_idx.__len__() == cluster_obj.generate_apertures().__len__()
+                        Units: Dimensionless
 
-            save.create_dataset(simulation,
-                                cluster_obj,
-                                subfolder=__HDF5_SUBFOLDER__,
-                                dataset_name='Dynamical_Merging_Index',
-                                input_data=dynamical_idx,
-                                attributes="""The dynamical merging indices calculated for each aperture listed in 
-                                the 
-                                "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+                        """,
+                        )
 
-                                Units: Dimensionless
+    save.create_dataset(kwargs['simulation'],
+                        cluster_obj,
+                        subfolder=__HDF5_SUBFOLDER__,
+                        dataset_name='Thermal_Merging_Index',
+                        input_data=thermal_idx,
+                        attributes="""The thermal merging indices calculated for each aperture listed in 
+                                    the 
+                                    "Aperture dataset". PartTypes included: 0, 1, 4, 5.
 
-                                """,
-                                )
+                                    Units: Dimensionless
 
-            save.create_dataset(simulation,
-                                cluster_obj,
-                                subfolder=__HDF5_SUBFOLDER__,
-                                dataset_name='Thermal_Merging_Index',
-                                input_data=thermal_idx,
-                                attributes="""The thermal merging indices calculated for each aperture listed in 
-                                            the 
-                                            "Aperture dataset". PartTypes included: 0, 1, 4, 5.
-
-                                            Units: Dimensionless
-
-                                            """,
-                                )
+                                    """,
+                        )
 
 
 
