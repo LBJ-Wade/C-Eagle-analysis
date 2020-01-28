@@ -23,7 +23,7 @@ echo -e "+----------------------------------------------------------------------
 #mpiexec -n 4 python3 -u ./main.py > ./main.log &
 
 # Run python in parallel MPI online
-mpiexec -n 4 python3 ./main.py
+mpiexec -n 20 python3 ./main.py
 
 # Run python on single core online
 #python3 ./main.py

@@ -75,7 +75,7 @@ def make_parallel_MPI(function):
                                                                                                 process))
                 # Each CPU loops over all apertures - this avoids concurrence in file reading
                 # The loop over apertures is defined explicitly in the wrapped function.
-                kwargs['cluster'] =cluster_obj
+                kwargs['cluster'] = cluster_obj
                 function(*args, **kwargs)
 
             process += 1
