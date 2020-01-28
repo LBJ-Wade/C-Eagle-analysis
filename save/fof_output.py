@@ -28,9 +28,9 @@ from testing import mergers
 
 
 __HDF5_SUBFOLDER__ = 'FOF'
-
-rank = MPI.COMM_WORLD.Get_rank()
-size = MPI.COMM_WORLD.Get_size()
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 
 def push_FOFapertures(simulation):
     """
@@ -292,18 +292,18 @@ def push_FOFtest_MPI(simulation):
     sim = Simulation(simulation_name=simulation)
 
     process = 0
-    for halo_num, redshift in itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed):
+    process_iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
 
-        print(process, halo_num, redshift)
+    for halo_num, redshift in process_iterator:
 
-        # Allocate jobs to MPI interface
-        if halo_num % size != rank:
-            continue
+        if process % size == rank:
 
-        cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
+            cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
 
+            print('Processor ({}/{}) is processing halo ({} @ {})'.format(rank, size, cluster_obj.clusterID,
+                                                                          cluster_obj.redshift))
 
-        for r in cluster_obj.generate_apertures():
-            pass
+            # for r in cluster_obj.generate_apertures():
+            #     pass
 
         process += 1
