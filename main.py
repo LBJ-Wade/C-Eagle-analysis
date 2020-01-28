@@ -103,5 +103,5 @@ if __name__ == "__main__":
         cProfile.run('main()')
 
     else:
-        print(__FILE__)
+        # print(__FILE__)
         main()
