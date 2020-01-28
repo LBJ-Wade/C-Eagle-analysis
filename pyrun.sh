@@ -15,16 +15,15 @@ git pull
 date
 
 # Run main program
-#n = "$(nproc)"
-n = "$(2)"
-echo -e "\e[1m\e[91mRunning main program on "${n}"...\e[0m"
+
+echo -e "\e[1m\e[91mRunning main program...\e[0m"
 echo -e "+-----------------------------------------------------------------------------------------+"
 
 # Run python in parallel MPI and in background
-#mpiexec -n "${n}" python3 -u ./main.py > ./main.log &
+#mpiexec -n 4 python3 -u ./main.py > ./main.log &
 
 # Run python in parallel MPI online
-mpiexec -n "${n}" python3 ./main.py
+mpiexec -n 4 python3 ./main.py
 
 # Run python on single core online
 #python3 ./main.py
