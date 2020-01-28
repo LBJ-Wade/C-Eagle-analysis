@@ -289,12 +289,14 @@ def push_FOFtest_MPI(simulation):
     :param simulation: (cluster.Simulation) object
     :return: None
     """
-    simulation_obj = Simulation(simulation_name=simulation)
+    sim = Simulation(simulation_name=simulation)
 
 
-    for halo_num, redshift in itertools.product(simulation_obj.clusterIDAllowed, simulation_obj.redshiftAllowed):
+    for process, halo_num, redshift in itertools.izip(itertools.count(0), itertools.product(sim.clusterIDAllowed,
+                                                                             sim.redshiftAllowed)):
 
         print(halo_num, redshift)
+
         # Allocate jobs to MPI interface
         if halo_num % size != rank:
             continue
