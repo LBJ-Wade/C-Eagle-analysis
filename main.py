@@ -84,11 +84,11 @@ def main():
     # print(angle_off)
 
     # save.create_file('CELR-eagle')
-    # fof.push_FOFapertures('CELR-eagle')
-    # fof.push_FOFcentre_of_mass('CELR-eagle')
-    # fof.push_FOFangular_momentum_n_masse('CELR-eagle')
-    # fof.push_FOFangmom_alignment_matrix('CELR-eagle')
-    # fof.push_FOFmerging_indices('CELR-eagle')
+    # fof.push_FOFaperturessimulation_name = 'CELR-eagle', out_allPartTypes = False
+    # fof.push_FOFcentre_of_masssimulation_name = 'CELR-eagle', out_allPartTypes = False
+    # fof.push_FOFangular_momentum_n_massesimulation_name = 'CELR-eagle', out_allPartTypes = False
+    # fof.push_FOFangmom_alignment_matrixsimulation_name = 'CELR-eagle', out_allPartTypes = False
+    # fof.push_FOFmerging_indicessimulation_name = 'CELR-eagle', out_allPartTypes = False
 
     fof.MPI_decorator_test(simulation_name = 'CELR-eagle', out_allPartTypes = False)
 
