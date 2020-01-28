@@ -90,7 +90,7 @@ def main():
     # fof.push_FOFangmom_alignment_matrix('CELR-eagle')
     # fof.push_FOFmerging_indices('CELR-eagle')
 
-    fof.MPI_decorator_test('CELR-eagle')
+    fof.MPI_decorator_test(simulation_name = 'CELR-eagle', out_allPartTypes = False)
 
 
 
