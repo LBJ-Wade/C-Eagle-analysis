@@ -8,7 +8,7 @@
 #SBATCH -A dp004                                               # e.g. dp004
 #SBATCH --exclusive
 #SBATCH -t 72:00:00
-#SBATCH --mail-type=CELR_stage1-END                            # notifications for job done & fail
+#SBATCH --mail-type=END                            # notifications for job done & fail
 #SBATCH --mail-user=<edoardo.altamura@manchester.ac.uk>        #PLEASE PUT YOUR EMAIL ADDRESS HERE (without the <>)
 
 module purge
