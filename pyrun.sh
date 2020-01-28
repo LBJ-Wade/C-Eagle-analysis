@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Load python 3 in the module packages
 echo -e "\e[91mLoading python3...\e[0m"
 module unload python/2.7.15
