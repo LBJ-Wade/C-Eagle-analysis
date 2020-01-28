@@ -300,7 +300,7 @@ def push_FOFtest_MPI(simulation):
 
             cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
 
-            print('Processor ({}/{}) is processing halo ({} @ {}) ------ process ID: {}'.format(rank, size,
+            print('Processor ({}/{}) is processing halo ({} @z = {}) ------ process ID: {}'.format(rank, size,
                                                                                        cluster_obj.clusterID,
                                                                           cluster_obj.redshift, process))
 
