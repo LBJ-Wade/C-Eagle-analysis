@@ -300,8 +300,9 @@ def push_FOFtest_MPI(simulation):
 
             cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
 
-            print('Processor ({}/{}) is processing halo ({} @ {})'.format(rank, size, cluster_obj.clusterID,
-                                                                          cluster_obj.redshift))
+            print('Processor ({}/{}) is processing halo ({} @ {}) ------ process ID: {}'.format(rank, size,
+                                                                                       cluster_obj.clusterID,
+                                                                          cluster_obj.redshift, process))
 
             # for r in cluster_obj.generate_apertures():
             #     pass
