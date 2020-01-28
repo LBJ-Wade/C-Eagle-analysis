@@ -15,6 +15,7 @@ or MB and it is possible to transfer it locally for further analysis.
 from save import save
 
 from mpi4py import MPI
+import itertools
 import numpy as np
 import sys
 import os.path
@@ -280,3 +281,26 @@ def push_FOFmerging_indices(simulation):
 
                                             """,
                                 )
+
+
+def push_FOFtest_MPI(simulation):
+    """
+    Saves the angular momentum alignment matrix data into the catalogues.
+    :param simulation: (cluster.Simulation) object
+    :return: None
+    """
+    simulation_obj = Simulation(simulation_name=simulation)
+
+
+    for halo_num, redshift in itertools.product(simulation_obj.clusterIDAllowed, simulation_obj.redshiftAllowed):
+
+        print(halo_num, redshift)
+        # Allocate jobs to MPI interface
+        if halo_num % size != rank:
+            continue
+
+        cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
+
+
+        for r in cluster_obj.generate_apertures():
+            pass
