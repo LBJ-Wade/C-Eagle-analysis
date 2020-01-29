@@ -16,10 +16,10 @@ module purge
 module unload python/2.7.15
 module load python/3.6.5
 
-module load intel_comp
-module load intel_mpi
+module load intel_comp/2019
+module load openmpi
 module load hdf5
 
 
 # Run the program
-mpirun -np $SLURM_NTASKS python3 /cosma/home/dp004/dc-alta2/C-Eagle-analysis/main.py
+mpiexec -n $SLURM_NTASKS python3 /cosma/home/dp004/dc-alta2/C-Eagle-analysis/main.py
