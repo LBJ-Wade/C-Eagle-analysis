@@ -66,6 +66,7 @@ def create_file(simulation):
 
 def create_dataset(simulation,
                    cluster,
+                   file,
                    subfolder = None,
                    dataset_name = None,
                    input_data = None,
@@ -82,23 +83,23 @@ def create_dataset(simulation,
     :return:
     """
 
-    fileCompletePath = simulation.pathSave + '/' + simulation.simulation + '_output.hdf5'
-    with h5py.File(fileCompletePath, "r+") as file:
-        subfolder_name = simulation.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
-            cluster.redshift)
-        file_halo_redshift = file[subfolder_name + '/' + subfolder]
+    # fileCompletePath = simulation.pathSave + '/' + simulation.simulation + '_output.hdf5'
+    # with h5py.File(fileCompletePath, "r+") as file:
+    subfolder_name = simulation.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
+        cluster.redshift)
+    file_halo_redshift = file[subfolder_name + '/' + subfolder]
 
-        if dataset_name is not None and input_data is not None:
-            try:
-                del file[subfolder_name + '/' + subfolder + '/' + dataset_name]
-                print('[  SAVE  ] ===> Deleting old dataset: {}'.format(dataset_name))
+    if dataset_name is not None and input_data is not None:
+        try:
+            del file[subfolder_name + '/' + subfolder + '/' + dataset_name]
+            print('[  SAVE  ] ===> Deleting old dataset: {}'.format(dataset_name))
 
-            except:
-                pass
+        except:
+            pass
 
-            finally:
-                print('[  SAVE  ] ===> Creating new dataset: {}'.format(dataset_name))
-                dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
+        finally:
+            print('[  SAVE  ] ===> Creating new dataset: {}'.format(dataset_name))
+            dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
 
-        if attributes is not None:
-            dataset.attrs['Description'] = attributes
+    if attributes is not None:
+        dataset.attrs['Description'] = attributes
