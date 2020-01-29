@@ -73,8 +73,8 @@ def create_dataset(simulation,
                    **kwargs):
     """
     Append dataset to the specific cluster at specific redshift.
-    :param simulation:
-    :param cluster:
+    :param simulation: (Simulation object)
+    :param cluster: (Cluster object)
     :param dataset_name:
     :param input_data:
     :param attributes:
@@ -82,10 +82,9 @@ def create_dataset(simulation,
     :return:
     """
 
-    simulation_obj = Simulation(simulation_name=simulation)
-    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output.hdf5'
+    fileCompletePath = simulation.pathSave + '/' + simulation.simulation + '_output.hdf5'
     with h5py.File(fileCompletePath, "r+") as file:
-        subfolder_name = simulation_obj.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
+        subfolder_name = simulation.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
             cluster.redshift)
         file_halo_redshift = file[subfolder_name + '/' + subfolder]
 
