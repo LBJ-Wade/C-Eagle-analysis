@@ -16,7 +16,7 @@ module purge
 module unload python/2.7.15
 module load python/3.6.5
 
-module load intel_comp/2019
+module load intel_comp/2018
 module load openmpi
 
 # Run the program
