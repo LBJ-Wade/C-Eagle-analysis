@@ -18,6 +18,7 @@ module load python/3.6.5
 
 module load intel_comp/2018
 module load openmpi
+module load hdf5
 
 # Run the program
 mpiexec -n $SLURM_NTASKS python3 ./main.py
