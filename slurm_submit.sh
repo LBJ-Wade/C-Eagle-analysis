@@ -4,7 +4,7 @@
 #SBATCH -J CELR_stage1                                         # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
-#SBATCH -p cosma-analyse                                       # or some other partition, e.g. cosma, cosma6, etc.
+#SBATCH -p cosma6                                              # or some other partition, e.g. cosma, cosma6, etc.
 #SBATCH -A dp004                                               # e.g. dp004
 #SBATCH --exclusive
 #SBATCH -t 72:00:00
