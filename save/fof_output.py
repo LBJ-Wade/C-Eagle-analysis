@@ -70,28 +70,23 @@ def make_parallel_MPI(function):
         process = 0
         process_iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
 
-        fileCompletePath = sim.pathSave + '/' + sim.simulation + '_output.hdf5'
+        for halo_num, redshift in process_iterator:
 
-        with h5py.File(fileCompletePath, "r+") as file:
+            if process % size == rank:
 
-            kwargs['h5file'] = file
+                cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
+                file_name = sim.cluster_prefix + halo_num + redshift
+                fileCompletePath = sim.pathSave + '/' + sim.simulation + '_output/collective_output/' + file_name + '.hdf5'
 
-            for halo_num, redshift in process_iterator:
+                kwargs['cluster'] = cluster_obj
+                kwargs['fileCompletePath'] = fileCompletePath
 
-                # Allocate CPUs
-                if process % size == rank:
+                print('CPU ({}/{}) is processing halo {} @ z = {} ------ process ID: {}'.format(rank, size, cluster_obj.clusterID, cluster_obj.redshift, process))
+                # Each CPU loops over all apertures - this avoids concurrence in file reading
+                # The loop over apertures is defined explicitly in the wrapped function.
+                function(*args, **kwargs)
 
-                    cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-                    print('CPU ({}/{}) is processing halo {} @ z = {} ------ process ID: {}'.format(rank, size,
-                                                                                                    cluster_obj.clusterID,
-                                                                                                    cluster_obj.redshift,
-                                                                                                    process))
-                    # Each CPU loops over all apertures - this avoids concurrence in file reading
-                    # The loop over apertures is defined explicitly in the wrapped function.
-                    kwargs['cluster'] = cluster_obj
-                    function(*args, **kwargs)
-
-                process += 1
+            process += 1
 
     return wrapper
 
@@ -105,9 +100,7 @@ def push_FOFapertures(*args, **kwargs):
 
     cluster_obj = kwargs['cluster']
     print('[ FOF SAVE ]\t==>\t Apertures on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
-    save.create_dataset(kwargs['simulation'],
-                       cluster_obj,
-                       kwargs['h5file'],
+    save.create_dataset(kwargs['fileCompletePath'],
                        subfolder = __HDF5_SUBFOLDER__,
                        dataset_name = 'Apertures',
                        input_data = cluster_obj.generate_apertures(),
@@ -141,9 +134,7 @@ def push_FOFcentre_of_mass(*args, **kwargs):
 
     assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
 
-    save.create_dataset(kwargs['simulation'],
-                        cluster_obj,
-                        kwargs['h5file'],
+    save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='Group_Centre_of_Mass',
                         input_data= CoM,
@@ -184,9 +175,7 @@ def push_FOFangular_momentum_n_mass(*args, **kwargs):
     assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
     assert mass.__len__() == cluster_obj.generate_apertures().__len__()
 
-    save.create_dataset(kwargs['simulation'],
-                        cluster_obj,
-                        kwargs['h5file'],
+    save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='Group_Angular_Momentum',
                         input_data=CoM,
@@ -197,9 +186,7 @@ def push_FOFangular_momentum_n_mass(*args, **kwargs):
                         """,
                         )
 
-    save.create_dataset(kwargs['simulation'],
-                        cluster_obj,
-                        kwargs['h5file'],
+    save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='TotalMass',
                         input_data=mass,
@@ -219,16 +206,13 @@ def push_FOFangmom_alignment_matrix(*args, **kwargs):
     """
     cluster_obj = kwargs['cluster']
 
-    print('[ FOF SAVE ]\t==>\t AngMom align matrix on cluster {} @ z = {}'.format(cluster_obj.clusterID,
-                                                                            cluster_obj.redshift))
+    print('[ FOF SAVE ]\t==>\t AngMom align matrix on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
 
     align_matrix = np.zeros((0, 6), dtype=np.float)
 
     # Loop over apertures
     for r in cluster_obj.generate_apertures():
-        m = angular_momentum.angular_momentum_PartType_alignment_matrix(cluster_obj,
-                                                                        specific_angular_momentum=False,
-                                                                        aperture_radius=r)
+        m = angular_momentum.angular_momentum_PartType_alignment_matrix(cluster_obj, specific_angular_momentum=False, aperture_radius=r)
 
         # Contract alignment matrix into 1D vector
         align_matrix_aperture = np.array([m[1][0], m[2][0], m[2][1], m[3][0], m[3][1], m[3][2]])
@@ -237,9 +221,7 @@ def push_FOFangmom_alignment_matrix(*args, **kwargs):
     assert align_matrix.__len__() == cluster_obj.generate_apertures().__len__()
 
 
-    save.create_dataset(kwargs['simulation'],
-                        cluster_obj,
-                        kwargs['h5file'],
+    save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='Group_Angular_Momentum_Alignment_Matrix',
                         input_data=align_matrix,
@@ -268,8 +250,7 @@ def push_FOFmerging_indices(*args, **kwargs):
     """
     cluster_obj = kwargs['cluster']
 
-    print('[ FOF SAVE ]\t==>\t Merging indices on cluster {} @ z = {}'.format(cluster_obj.clusterID,
-                                                                                  cluster_obj.redshift))
+    print('[ FOF SAVE ]\t==>\t Merging indices on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
 
     dynamical_idx = np.zeros(0, dtype=np.float)
     thermal_idx = np.zeros(0, dtype=np.float)
@@ -285,9 +266,7 @@ def push_FOFmerging_indices(*args, **kwargs):
     assert dynamical_idx.__len__() == cluster_obj.generate_apertures().__len__()
     assert thermal_idx.__len__() == cluster_obj.generate_apertures().__len__()
 
-    save.create_dataset(kwargs['simulation'],
-                        cluster_obj,
-                        kwargs['h5file'],
+    save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='Dynamical_Merging_Index',
                         input_data=dynamical_idx,
@@ -300,9 +279,7 @@ def push_FOFmerging_indices(*args, **kwargs):
                         """,
                         )
 
-    save.create_dataset(kwargs['simulation'],
-                        cluster_obj,
-                        kwargs['h5file'],
+    save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='Thermal_Merging_Index',
                         input_data=thermal_idx,

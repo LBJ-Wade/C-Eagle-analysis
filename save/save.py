@@ -16,12 +16,14 @@ import h5py
 
 import sys
 import os.path
+import itertools
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from cluster import Simulation, Cluster
 from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
-def create_file(simulation):
+def create_files_set(simulation_name = None):
     """
     Create a hdf5 file to store simulation data.
     :param simulation: (string) Name of the simulation
@@ -51,27 +53,30 @@ def create_file(simulation):
         create_file('CELR-eagle')
 
     """
-    simulation_obj = Simulation(simulation_name = simulation)
-    fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output.hdf5'
-    with h5py.File(fileCompletePath, "w") as file:
-        for halo_num in simulation_obj.clusterIDAllowed:
-            folder_name = simulation_obj.cluster_prefix + halo_Num(halo_num)
-            halo_folder = file.create_group(folder_name)
-            for redshift in simulation_obj.redshiftAllowed:
-                redshift_folder = halo_folder.create_group(redshift)
-                redshift_folder.create_group('FOF')
-                redshift_folder.create_group('Particles')
-                redshift_folder.create_group('Subgroups')
+    simulation_obj = Simulation(simulation_name = simulation_name)
+    process_iterator = itertools.product(simulation_obj.clusterIDAllowed, simulation_obj.redshiftAllowed)
+
+    for halo_num, redshift in process_iterator:
+
+        file_name = simulation_obj.cluster_prefix + halo_num + redshift
+        fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output/collective_output/' + file_name + '.hdf5'
+
+        with h5py.File(fileCompletePath, "w") as file:
+
+            # folder_name = simulation_obj.cluster_prefix + halo_Num(halo_num)
+            # halo_folder = file.create_group(folder_name)            #
+            # redshift_folder = halo_folder.create_group(redshift)
+
+            file.create_group('FOF')
+            file.create_group('Particles')
+            file.create_group('Subgroups')
 
 
-def create_dataset(simulation,
-                   cluster,
-                   file,
+def create_dataset(fileCompletePath,
                    subfolder = None,
                    dataset_name = None,
                    input_data = None,
-                   attributes = None,
-                   **kwargs):
+                   attributes = None):
     """
     Append dataset to the specific cluster at specific redshift.
     :param simulation: (Simulation object)
@@ -79,27 +84,24 @@ def create_dataset(simulation,
     :param dataset_name:
     :param input_data:
     :param attributes:
-    :param kwargs:
     :return:
     """
 
-    # fileCompletePath = simulation.pathSave + '/' + simulation.simulation + '_output.hdf5'
-    # with h5py.File(fileCompletePath, "r+") as file:
-    subfolder_name = simulation.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(
-        cluster.redshift)
-    file_halo_redshift = file[subfolder_name + '/' + subfolder]
+    with h5py.File(fileCompletePath, "r+") as file:
+    # subfolder_name = simulation.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(cluster.redshift)
+        file_halo_redshift = file[subfolder]
 
-    if dataset_name is not None and input_data is not None:
-        try:
-            del file[subfolder_name + '/' + subfolder + '/' + dataset_name]
-            print('[  SAVE  ] ===> Deleting old dataset: {}'.format(dataset_name))
+        if dataset_name is not None and input_data is not None:
+            try:
+                del file[subfolder + '/' + dataset_name]
+                print('[  SAVE  ] ===> Deleting old dataset: {}'.format(dataset_name))
 
-        except:
-            pass
+            except:
+                pass
 
-        finally:
-            print('[  SAVE  ] ===> Creating new dataset: {}'.format(dataset_name))
-            dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
+            finally:
+                print('[  SAVE  ] ===> Creating new dataset: {}'.format(dataset_name))
+                dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
 
-    if attributes is not None:
-        dataset.attrs['Description'] = attributes
+        if attributes is not None:
+            dataset.attrs['Description'] = attributes
