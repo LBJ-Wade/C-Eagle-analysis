@@ -75,7 +75,7 @@ def make_parallel_MPI(function):
             if process % size == rank:
 
                 cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-                file_name = sim.cluster_prefix + halo_num + redshift
+                file_name = sim.cluster_prefix + halo_Num(halo_num) + redshift
                 fileCompletePath = sim.pathSave + '/' + sim.simulation + '_output/collective_output/' + file_name + '.hdf5'
 
                 kwargs['cluster'] = cluster_obj

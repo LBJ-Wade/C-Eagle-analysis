@@ -58,7 +58,7 @@ def create_files_set(simulation_name = None):
 
     for halo_num, redshift in process_iterator:
 
-        file_name = simulation_obj.cluster_prefix + halo_num + redshift
+        file_name = simulation_obj.cluster_prefix + halo_Num(halo_num) + redshift
         fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output/collective_output/' + file_name + '.hdf5'
 
         with h5py.File(fileCompletePath, "w") as file:
