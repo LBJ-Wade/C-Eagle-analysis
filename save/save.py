@@ -56,6 +56,15 @@ def create_files_set(simulation_name = None):
     simulation_obj = Simulation(simulation_name = simulation_name)
     process_iterator = itertools.product(simulation_obj.clusterIDAllowed, simulation_obj.redshiftAllowed)
 
+    if not os.path.exists(simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output'):
+        os.makedirs(simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output')
+        print('Making directory: ', simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output')
+
+    if not os.path.exists(simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output/collective_output'):
+        os.makedirs(simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output/collective_output')
+        print('Making directory: ', simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output/collective_output')
+
+
     for halo_num, redshift in process_iterator:
 
         file_name = simulation_obj.cluster_prefix + halo_Num(halo_num) + redshift
