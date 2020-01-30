@@ -109,7 +109,7 @@ def create_dataset(fileCompletePath,
                 pass
 
             finally:
-                print('[  SAVE  ] ===> Creating new dataset: {}'.format(dataset_name))
+                print('[  SAVE  ] ===> Creating new dataset: {} on file {}'.format(dataset_name, fileCompletePath))
                 dataset = file_halo_redshift.create_dataset(dataset_name, data = input_data)
 
         if attributes is not None:
