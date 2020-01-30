@@ -24,9 +24,9 @@ echo -e "+----------------------------------------------------------------------
 #mpiexec -n 4 python3 -u ./main.py > ./main.log &
 
 # Run python in parallel MPI online
-#mpiexec -n 30 python3 ./main.py
+mpiexec -n 5 python3 ./main.py
 
 # Run python on single core online
-python3 ./main.py
+#python3 ./main.py
 
 echo -e "\e[5m\e[1m\e[91mEnd of session.\e[0m"
