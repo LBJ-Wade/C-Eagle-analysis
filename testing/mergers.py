@@ -55,7 +55,7 @@ def thermal_index(cluster, aperture_radius = None):
 
     # Retrieve coordinates & velocities
     group_CoP = cluster.group_centre_of_potential()
-    group_ZMF, _ = cluster.group_zero_momentum_frame() # Returns tuple ([ZMF array], total_mass)
+    group_ZMF, _ = cluster.group_zero_momentum_frame(aperture_radius = aperture_radius) # Returns tuple ([ZMF array], total_mass)
 
     coordinate = np.subtract(coordinate, group_CoP)
     velocity = np.subtract(velocity, group_ZMF)
