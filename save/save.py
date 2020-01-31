@@ -80,6 +80,12 @@ def create_files_set(simulation_name = None):
             file.create_group('Particles')
             file.create_group('Subgroups')
 
+    # Check that all files have been correctly created: do not want the cosma system to block some of them
+    num_files_created = list(process_iterator).__len__()
+    num_files_in_directory = os.listdir(simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output/collective_output' ).__len__()
+    assert num_files_created == num_files_in_directory, 'Not all files have been created.'
+
+
 
 def create_dataset(fileCompletePath,
                    subfolder = None,
