@@ -35,6 +35,15 @@ import scipy as sp
 #							    #
 #################################
 
+class Colorscheme:
+    def __init__(self):
+        pass
+
+    def balanced(self):   return ['#E27D60', '#85DCB',  '#E8A87C', '#C38D9E', '#41B3A3']
+    def natural(self):    return ['#8D8741', '#659DBD', '#DAAD86', '#BC986A', '#FBEEC1']
+    def futuristic(self): return ['#2C3531', '#116466', '#D9B08C', '#FFCB9A', '#D1E8E2']
+
+
 class Map():
     def __init__(self, cluster = None):
         self.cluster = cluster
@@ -234,10 +243,11 @@ def plot_angularmomentum_vectors(vectors,
         axes.plot_wireframe(x, y, z, color="lime", alpha = 0.2)
 
         # Draw line of sight observer
+        LineOfSight_color = '#F13C20'
         LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0],
                     mutation_scale=20,
-                    lw=1, arrowstyle="-|>", color='r')
-        axes.scatter([], [], c='r', marker=r"$\longrightarrow$", s=70, label=r'Line of sight')
+                    lw=3, arrowstyle="-|>", color=LineOfSight_color)
+        axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70, label=r'Line of sight')
         axes.add_artist(LineOfSight)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
@@ -265,21 +275,19 @@ def plot_angularmomentum_vectors(vectors,
             # Normalise all vectors to the largest in magnitude
             vectors = np.divide(vectors, np.max(vectors_magnitudes))
 
-        # Automate colors and labels
-        cycol = cycle('bgrcmk')
+        colors = Colorscheme().natural()
         legend_labels = [r'$\mathrm{Gas}$',
                          r'$\mathrm{Highres DM}$',
                          r'$\mathrm{Stars}$',
                          r'$\mathrm{Black holes}$']
 
-        for vector, magnitude, label in zip(vectors, vectors_magnitudes, legend_labels):
+        for vector, magnitude, label, color in zip(vectors, vectors_magnitudes, legend_labels, colors):
             if make_all_unitary:
                 vector = np.divide(vector, magnitude)
 
-            arrow_color = next(cycol)
             a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20,
-                        lw=1, arrowstyle="-|>", color = arrow_color)
-            axes.scatter([], [], c=arrow_color, marker=r"$\longrightarrow$", s = 70, label = label )
+                        lw=1, arrowstyle="-|>", color = color)
+            axes.scatter([], [], c=color, marker=r"$\longrightarrow$", s = 70, label = label )
             axes.add_artist(a)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
 
