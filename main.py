@@ -71,8 +71,8 @@ def main():
 
     save.create_files_set(simulation_name=_SIM_NAME_)
     fof.MPI_decorator_test(simulation_name=_SIM_NAME_, out_allPartTypes=False)
-    fof.push_FOFapertures(simulation_name=_SIM_NAME_, out_allPartTypes=False)
-    fof.push_FOFcentre_of_mass(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    # fof.push_FOFapertures(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    # fof.push_FOFcentre_of_mass(simulation_name=_SIM_NAME_, out_allPartTypes=False)
     # fof.push_FOFangular_momentum_n_mass(simulation_name=_SIM_NAME_, out_allPartTypes=False)
     # fof.push_FOFangmom_alignment_matrix(simulation_name=_SIM_NAME_, out_allPartTypes=False)
     # fof.push_FOFmerging_indices(simulation_name=_SIM_NAME_, out_allPartTypes=False)
