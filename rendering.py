@@ -234,8 +234,7 @@ def plot_angularmomentum_vectors(vectors,
         axes.plot_wireframe(x, y, z, color="lime", alpha = 0.2)
 
         # Draw line of sight observer
-        observer_LineOfSight = [0, 1, 0]
-        LineOfSight = Arrow3D([0, observer_LineOfSight[0]], [2, observer_LineOfSight[1]], [0, observer_LineOfSight[2]],
+        LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0],
                     mutation_scale=20,
                     lw=1, arrowstyle="-|>", color='r')
         axes.scatter([], [], c='r', marker=r"$\longrightarrow$", s=70, label=r'Line of sight')
