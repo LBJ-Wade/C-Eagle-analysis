@@ -1,10 +1,10 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 352                                           # The number of cores you need...
+#SBATCH --ntasks 128                                           # The number of cores you need...
 #SBATCH -J CELR_red                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
-#SBATCH -p cosma                                               # or some other partition, e.g. cosma, cosma6, etc.
+#SBATCH -p cosma6                                              # or some other partition, e.g. cosma, cosma6, etc.
 #SBATCH -A dp004                                               # e.g. dp004
 #SBATCH --exclusive
 #SBATCH -t 72:00:00
