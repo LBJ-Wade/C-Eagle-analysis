@@ -229,10 +229,23 @@ def plot_angularmomentum_vectors(vectors,
     if type(vectors) is not np.ndarray:
         vectors = np.array(vectors)
 
+    colors = Colorscheme().natural()
+
     if axes is None:
         fig = plt.figure()
         axes = fig.gca(projection='3d')
         axes.set_aspect("equal")
+        # First remove fill
+        axes.xaxis.pane.fill = False
+        axes.yaxis.pane.fill = False
+        axes.zaxis.pane.fill = False
+
+        # Now set color to white (or whatever is "invisible")
+        axes.xaxis.pane.set_edgecolor(colors[-1])
+        axes.yaxis.pane.set_edgecolor(colors[-1])
+        axes.zaxis.pane.set_edgecolor(colors[-1])
+
+
 
     if plot_unitSphere:
         # draw sphere
@@ -240,7 +253,7 @@ def plot_angularmomentum_vectors(vectors,
         x = np.cos(u)*np.sin(v)
         y = np.sin(u)*np.sin(v)
         z = np.cos(v)
-        axes.plot_wireframe(x, y, z, color="lime", alpha = 0.2)
+        axes.plot_wireframe(x, y, z, color='#AFD275', alpha = 0.2)
 
         # Draw line of sight observer
         LineOfSight_color = '#F13C20'
@@ -275,7 +288,7 @@ def plot_angularmomentum_vectors(vectors,
             # Normalise all vectors to the largest in magnitude
             vectors = np.divide(vectors, np.max(vectors_magnitudes))
 
-        colors = Colorscheme().natural()
+
         legend_labels = [r'$\mathrm{Gas}$',
                          r'$\mathrm{Highres DM}$',
                          r'$\mathrm{Stars}$',
