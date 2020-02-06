@@ -292,12 +292,10 @@ def plot_angularmomentum_vectors(vectors,
 
 
 def derotate_field():
-    vector_a = [[0, 1, 2],
-                [1, 1, 2],
-                [2, 1, 2]]
-    plot_angularmomentum_vectors(vector_a,
+    vector_reference = [[0, 0, 1]]
+    plot_angularmomentum_vectors(vector_reference,
                                  axes=None,
-                                 plot_unitSphere=False,
+                                 plot_unitSphere=True,
                                  normalise_length=False,
                                  make_all_unitary=False,
                                  )
