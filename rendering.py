@@ -235,15 +235,22 @@ def plot_angularmomentum_vectors(vectors,
         fig = plt.figure()
         axes = fig.gca(projection='3d')
         axes.set_aspect("equal")
-        # First remove fill
-        axes.xaxis.pane.fill = False
-        axes.yaxis.pane.fill = False
-        axes.zaxis.pane.fill = False
 
-        # Now set color to white (or whatever is "invisible")
+        # Edit the pane layout
+        axes.grid(False)
+
+        axes.xaxis.pane.fill = colors[-1]
+        axes.yaxis.pane.fill = colors[-1]
+        axes.zaxis.pane.fill = colors[-1]
+
         axes.xaxis.pane.set_edgecolor(colors[-1])
         axes.yaxis.pane.set_edgecolor(colors[-1])
         axes.zaxis.pane.set_edgecolor(colors[-1])
+
+        axes.set_xlabel(r'$x$')
+        axes.set_ylabel(r'$y$')
+        axes.set_zlabel(r'$z$')
+
 
 
 
@@ -315,10 +322,7 @@ def plot_angularmomentum_vectors(vectors,
 
         axes.legend(loc="best", markerscale=3)
 
-    axes.set_xlabel(r'$x$')
-    axes.set_ylabel(r'$y$')
-    axes.set_zlabel(r'$z$')
-    axes.grid('off')
+
 
 
 def derotate_field():
