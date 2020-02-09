@@ -21,8 +21,8 @@ from matplotlib.patches import FancyArrowPatch
 import matplotlib.colors as colors
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
-import map_plot_parameters as plotpar
-plotpar.set_defaults_plot()
+# import map_plot_parameters as plotpar
+# plotpar.set_defaults_plot()
 
 import matplotlib as mpl
 import scipy as sp
