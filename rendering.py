@@ -263,7 +263,7 @@ def plot_angularmomentum_vectors(vectors,
         axes.plot_wireframe(x, y, z, color='#AFD275', alpha = 0.2)
 
         # Draw line of sight observer
-        LineOfSight_color = '#F13C20'
+        LineOfSight_color = '#EB3F11'
         LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0],
                     mutation_scale=20,
                     lw=3, arrowstyle="-|>", color=LineOfSight_color)
@@ -271,8 +271,17 @@ def plot_angularmomentum_vectors(vectors,
         axes.add_artist(LineOfSight)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
+        # Draw reference rotation vector
+        Reference_Ang_Momentum_color = '#E59813'
+        Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1],
+                              mutation_scale=20,
+                              lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
+        axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70, label=r'Reference angular momentum')
+        axes.add_artist(Reference_Ang_Momentum)
+        print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
+
     # draw a point at origin
-    axes.scatter([0], [0], [0], color="k", s=100)
+    axes.scatter([0], [0], [0], color="k", s=80)
 
     # Manipulate vectors
     if vectors.ndim == 1:
@@ -326,7 +335,7 @@ def plot_angularmomentum_vectors(vectors,
 
 
 def derotate_field():
-    vector_reference = [[0, 0, 1]]
+    vector_reference = [[0, 1, 1]]
     plot_angularmomentum_vectors(vector_reference,
                                  axes=None,
                                  plot_unitSphere=True,
