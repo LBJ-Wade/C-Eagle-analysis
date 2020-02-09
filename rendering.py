@@ -21,8 +21,10 @@ from matplotlib.patches import FancyArrowPatch
 import matplotlib.colors as colors
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
-# import map_plot_parameters as plotpar
-# plotpar.set_defaults_plot()
+import map_plot_parameters as plotpar
+plotpar.set_defaults_plot()
+plt.style.use('dark_background')
+
 
 import matplotlib as mpl
 import scipy as sp
@@ -264,18 +266,14 @@ def plot_angularmomentum_vectors(vectors,
 
         # Draw line of sight observer
         LineOfSight_color = '#EB3F11'
-        LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0],
-                    mutation_scale=20,
-                    lw=3, arrowstyle="-|>", color=LineOfSight_color)
+        LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0], mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
         axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70, label=r'Line of sight')
         axes.add_artist(LineOfSight)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
         # Draw reference rotation vector
         Reference_Ang_Momentum_color = '#E59813'
-        Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1],
-                              mutation_scale=20,
-                              lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
+        Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
         axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70, label=r'Reference angular momentum')
         axes.add_artist(Reference_Ang_Momentum)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
@@ -290,8 +288,7 @@ def plot_angularmomentum_vectors(vectors,
         if normalise_length or make_all_unitary:
             vectors = np.divide(vectors, np.linalg.norm(vectors))
 
-        a = Arrow3D([0, vectors[0]], [0, vectors[1]], [0, vectors[2]], mutation_scale=20,
-                    lw=1, arrowstyle="-|>", color="k")
+        a = Arrow3D([0, vectors[0]], [0, vectors[1]], [0, vectors[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color="k")
         axes.add_artist(a)
         axes.set_xlim([-np.max(vectors), np.max(vectors)])
         axes.set_ylim([-np.max(vectors), np.max(vectors)])
@@ -304,18 +301,17 @@ def plot_angularmomentum_vectors(vectors,
             # Normalise all vectors to the largest in magnitude
             vectors = np.divide(vectors, np.max(vectors_magnitudes))
 
-
         legend_labels = [r'$\mathrm{Gas}$',
                          r'$\mathrm{Highres DM}$',
                          r'$\mathrm{Stars}$',
                          r'$\mathrm{Black holes}$']
 
         for vector, magnitude, label, color in zip(vectors, vectors_magnitudes, legend_labels, colors):
+
             if make_all_unitary:
                 vector = np.divide(vector, magnitude)
 
-            a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20,
-                        lw=1, arrowstyle="-|>", color = color)
+            a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color = color)
             axes.scatter([], [], c=color, marker=r"$\longrightarrow$", s = 70, label = label )
             axes.add_artist(a)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
