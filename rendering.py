@@ -318,6 +318,7 @@ def plot_angularmomentum_vectors(vectors,
     axes.set_xlabel(r'$x$')
     axes.set_ylabel(r'$y$')
     axes.set_zlabel(r'$z$')
+    axes.grid('off')
 
 
 def derotate_field():
