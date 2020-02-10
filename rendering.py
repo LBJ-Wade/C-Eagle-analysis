@@ -229,7 +229,7 @@ def plot_angularmomentum_vectors(vectors,
     :return: No returns
     """
     if type(vectors) is not np.ndarray:
-        vectors = np.array(vectors)
+        vectors = np.asarray(vectors)
 
     colors = Colorscheme().natural()
 
