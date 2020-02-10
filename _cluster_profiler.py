@@ -268,7 +268,11 @@ class Mixin:
 
     @staticmethod
     def apply_rotation_matrix(rot_matrix, vectors):
-        assert rot_matrix.shape is (3,3)
+
+        vectors = np.asarray(vectors)
+        rot_matrix = np.asarray(rot_matrix)
+
+        assert rot_matrix.shape == (3,3)
         assert vectors.__len__() > 0
         return rot_matrix.dot(vectors)
 
