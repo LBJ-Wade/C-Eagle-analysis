@@ -356,7 +356,7 @@ def derotate_field():
                      r'$\mathrm{Stars}$',
                      r'$\mathrm{Black holes}$']
 
-    plot_angularmomentum_vectors([vector_reference, vector_to_rotate, rotated_vector],
+    plot_angularmomentum_vectors(np.vstack((vector_reference, vector_to_rotate, rotated_vector)),
                                  labels = None,
                                  axes=None,
                                  plot_unitSphere=True,
