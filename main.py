@@ -96,11 +96,22 @@ def main():
 if __name__ == "__main__":
 
     import datetime
+    import argparse
 
-    if __PROFILE__:
-        import cProfile
-        cProfile.run('main()')
+    my_parser = argparse.ArgumentParser()
+    my_parser.add_argument('-p',
+                           '--profile',
+                           action='store_true',
+                           help='Triggers the cProfile for the main() function.')
+    args = my_parser.parse_args()
 
-    else:
-        # print(__FILE__)
-        main()
+    print(vars(args)[0])
+
+
+    # if vars(args)[0]:
+    #     import cProfile
+    #     cProfile.run('main()')
+    #
+    # else:
+    #     # print(__FILE__)
+    #     main()

@@ -338,7 +338,13 @@ legend_labels = [r'$\mathrm{Gas}$',
 
 def derotate_field():
     vector_reference = [0, 1, 1]
+    legend_labels = [r'$\mathrm{Gas}$',
+                     r'$\mathrm{Highres DM}$',
+                     r'$\mathrm{Stars}$',
+                     r'$\mathrm{Black holes}$']
+
     plot_angularmomentum_vectors(vector_reference,
+                                 labels = legend_labels,
                                  axes=None,
                                  plot_unitSphere=True,
                                  normalise_length=False,

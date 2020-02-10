@@ -42,10 +42,10 @@ class Simulation():
             self.pathData = '/cosma5/data/dp004/dc-pear3/data/eagle'
             self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
             self.cluster_prefix = 'halo_'
-            self.totalClusters = 45
+            self.totalClusters = 4
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
-            self.redshiftAllowed = zcat.group_data()['z_value'][15:] # Delete the first 5 redshifts: data are corrupted
+            self.redshiftAllowed = zcat.group_data()['z_value'][-3:] # Delete the first 5 redshifts: data are corrupted
             self.centralFOF_groupNumber = 1
 
     def set_pathData(self, newPath: str):
@@ -60,6 +60,10 @@ class Simulation():
             return self.redshiftAllowed
         if dtype == float:
             return [redshift_str2num(z) for z in self.redshiftAllowed]
+
+    def info(self):
+        for attr in dir(self):
+            print("obj.%s = %r" % (attr, getattr(self, attr)))
 
 
 #################################
