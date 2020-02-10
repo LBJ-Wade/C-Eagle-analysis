@@ -339,7 +339,7 @@ legend_labels = [r'$\mathrm{Gas}$',
 def derotate_field():
     import cluster
 
-    cluster = cluster.Cluster(clusterID=0, redshift=0)
+    cluster = cluster.Cluster(clusterID=0, redshift=0.)
 
     vector_reference = [0, 0, 1]
     vector_to_rotate = [0, 1, 1]
