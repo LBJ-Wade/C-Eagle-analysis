@@ -353,7 +353,7 @@ def derotate_field():
 
 
     plot_angularmomentum_vectors(np.vstack((vector_to_rotate, rotated_vector)),
-                                 labels = legend_labels,
+                                 labels = None,
                                  axes=None,
                                  plot_unitSphere=True,
                                  normalise_length=False,
