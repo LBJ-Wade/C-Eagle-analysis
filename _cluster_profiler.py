@@ -250,8 +250,99 @@ class Mixin:
 
         return apertures
 
+    @staticmethod
+    def rotation_matrix_from_vectors(vec1, vec2):
+        """
+        Find the rotation matrix that aligns vec1 to vec2
+        :param vec1: A 3d "source" vector
+        :param vec2: A 3d "destination" vector
+        :return mat: A transform matrix (3x3) which when applied to vec1, aligns it with vec2.
+        """
+        a, b = (vec1 / np.linalg.norm(vec1)).reshape(3), (vec2 / np.linalg.norm(vec2)).reshape(3)
+        v = np.cross(a, b)
+        c = np.dot(a, b)
+        s = np.linalg.norm(v)
+        kmat = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
+        rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * ((1 - c) / (s ** 2))
+        return rotation_matrix
 
+    @staticmethod
+    def apply_rotation_matrix(rot_matrix, vectors):
+        assert rot_matrix.shape is (3,3)
+        assert vectors.__len__() > 0
+        return rot_matrix.dot(vectors)
 
+    @staticmethod
+    def _apply_rotation_matrix(rot_matrix, vectors, inverse=False):
+        """Apply this rotation to a set of vectors.
+        If the original frame rotates to the final frame by this rotation, then
+        its application to a vector can be seen in two ways:
+            - As a projection of vector components expressed in the final frame
+              to the original frame.
+            - As the physical rotation of a vector being glued to the original
+              frame as it rotates. In this case the vector components are
+              expressed in the original frame before and after the rotation.
+        In terms of rotation matricies, this application is the same as
+        ``self.as_matrix().dot(vectors)``.
+        Parameters
+        ----------
+        vectors : array_like, shape (3,) or (N, 3)
+            Each `vectors[i]` represents a vector in 3D space. A single vector
+            can either be specified with shape `(3, )` or `(1, 3)`. The number
+            of rotations and number of vectors given must follow standard numpy
+            broadcasting rules: either one of them equals unity or they both
+            equal each other.
+        inverse : boolean, optional
+            If True then the inverse of the rotation(s) is applied to the input
+            vectors. Default is False.
+        Returns
+        -------
+        rotated_vectors : ndarray, shape (3,) or (N, 3)
+            Result of applying rotation on input vectors.
+            Shape depends on the following cases:
+                - If object contains a single rotation (as opposed to a stack
+                  with a single rotation) and a single vector is specified with
+                  shape ``(3,)``, then `rotated_vectors` has shape ``(3,)``.
+                - In all other cases, `rotated_vectors` has shape ``(N, 3)``,
+                  where ``N`` is either the number of rotations or vectors.
+
+        """
+
+        vectors = np.asarray(vectors)
+        rot_matrix = np.asarray(rot_matrix)
+
+        if vectors.ndim > 2 or vectors.shape[-1] != 3:
+            raise ValueError("Expected input of shape (3,) or (P, 3), "
+                             "got {}.".format(vectors.shape))
+
+        single_vector = False
+        if vectors.shape == (3,):
+            single_vector = True
+            vectors = vectors[None, :]
+
+        single_rot = False
+        if rot_matrix.shape == (3,3):
+            rot_matrix = rot_matrix.reshape((1, 3, 3))
+            single_rot = True
+
+        n_vectors = vectors.shape[0]
+        n_rotations = len(rot_matrix)
+
+        if n_vectors != 1 and n_rotations != 1 and n_vectors != n_rotations:
+            raise ValueError("Expected equal numbers of rotations and vectors "
+                             ", or a single rotation, or a single vector, got "
+                             "{} rotations and {} vectors.".format(
+                             n_rotations, n_vectors))
+
+        if inverse:
+            result = np.einsum('ikj,ik->ij', rot_matrix, vectors)
+        else:
+            result = np.einsum('ijk,ik->ij', rot_matrix, vectors)
+
+        if single_rot and single_vector:
+            return result[0]
+        else:
+            return result
 
     #####################################################
     #													#
