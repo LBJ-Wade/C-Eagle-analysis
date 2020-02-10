@@ -105,7 +105,7 @@ if __name__ == "__main__":
                            help='Triggers the cProfile for the main() function.')
     args = my_parser.parse_args()
 
-    print(vars(args)[0])
+    print(vars(args))
 
 
     # if vars(args)[0]:
