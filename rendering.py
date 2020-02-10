@@ -351,13 +351,13 @@ def derotate_field():
     rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
     print(np.vstack((vector_reference, vector_to_rotate, rotated_vector)))
 
-    legend_labels = [r'\mathrm{$vector_reference}$',
-                     r'\mathrm{$vector_to_rotate_1}$',
-                     r'\mathrm{$vector_to_rotate_2}$',
-                     r'\mathrm{$vector_to_rotate_3}$',
-                     r'\mathrm{$rotated_vector_1}$',
-                     r'\mathrm{$rotated_vector_2}$',
-                     r'\mathrm{$rotated_vector_3}$']
+    legend_labels = ['vector_reference',
+                     'vector_to_rotate_1',
+                     'vector_to_rotate_2',
+                     'vector_to_rotate_3',
+                     'rotated_vector_1',
+                     'rotated_vector_2',
+                     'rotated_vector_3']
 
     print(len(np.vstack((vector_reference, vector_to_rotate, rotated_vector))) == len(legend_labels))
 
