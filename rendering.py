@@ -349,7 +349,7 @@ def derotate_field():
     rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate[0], vector_reference); print(rotation)
 
     rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
-
+    print(np.vstack((vector_reference, vector_to_rotate, rotated_vector)))
 
     legend_labels = [r'vector_reference',
                      r'vector_to_rotate_1',
