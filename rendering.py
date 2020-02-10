@@ -272,11 +272,11 @@ def plot_angularmomentum_vectors(vectors,
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
         # Draw reference rotation vector
-        # Reference_Ang_Momentum_color = '#E59813'
-        # Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
-        # axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70, label=r'Reference angular momentum')
-        # axes.add_artist(Reference_Ang_Momentum)
-        # print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
+        Reference_Ang_Momentum_color = '#E59813'
+        Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
+        axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70, label=r'Reference angular momentum')
+        axes.add_artist(Reference_Ang_Momentum)
+        print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
 
 
 
@@ -349,10 +349,10 @@ def derotate_field():
     rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
     rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
 
-    legend_labels = [r'vector_reference', r'vector_to_rotate_1', r'rotated_vector_1']
+    legend_labels = [r'vector_to_rotate_1', r'rotated_vector_1']
 
 
-    plot_angularmomentum_vectors(np.vstack((vector_reference, vector_to_rotate, rotated_vector)),
+    plot_angularmomentum_vectors(np.vstack((vector_to_rotate, rotated_vector)),
                                  labels = legend_labels,
                                  axes=None,
                                  plot_unitSphere=True,
