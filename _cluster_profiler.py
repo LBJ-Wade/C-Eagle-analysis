@@ -267,7 +267,31 @@ class Mixin:
         return rotation_matrix
 
     @staticmethod
-    def apply_rotation_matrix(rot_matrix, vectors):
+    def _TEST_apply_rotation_matrix(rot_matrix, vectors):
+        """Apply this rotation to a set of vectors.
+        This function is a self-made test method for comparison with the `scipy`
+        method implemented below.
+
+        :param rot_matrix: array_like, shape (3,3) or (N, 3, 3)
+            Each matrix represents a rotation in 3D space of the corresponding
+            vector.
+
+        :param vectors: array_like, shape (3,) or (N, 3)
+            Each `vectors[i]` represents a vector in 3D space. A single vector
+            can either be specified with shape `(3, )` or `(1, 3)`. The number
+            of rotations and number of vectors given must follow standard numpy
+            broadcasting rules: either one of them equals unity or they both
+            equal each other.
+
+        :return rotated_vectors : ndarray, shape (3,) or (N, 3)
+            Result of applying rotation on input vectors.
+            Shape depends on the following cases:
+                - If object contains a single rotation (as opposed to a stack
+                  with a single rotation) and a single vector is specified with
+                  shape ``(3,)``, then `rotated_vectors` has shape ``(3,)``.
+                - In all other cases, `rotated_vectors` has shape ``(N, 3)``,
+                  where ``N`` is either the number of rotations or vectors.
+        """
 
         vectors = np.asarray(vectors)
         rot_matrix = np.asarray(rot_matrix)
@@ -277,7 +301,7 @@ class Mixin:
         return rot_matrix.dot(vectors)
 
     @staticmethod
-    def _apply_rotation_matrix(rot_matrix, vectors, inverse=False):
+    def apply_rotation_matrix(rot_matrix, vectors, inverse=False):
         """Apply this rotation to a set of vectors.
         If the original frame rotates to the final frame by this rotation, then
         its application to a vector can be seen in two ways:
@@ -288,6 +312,7 @@ class Mixin:
               expressed in the original frame before and after the rotation.
         In terms of rotation matricies, this application is the same as
         ``self.as_matrix().dot(vectors)``.
+
         Parameters
         ----------
         vectors : array_like, shape (3,) or (N, 3)
@@ -299,6 +324,7 @@ class Mixin:
         inverse : boolean, optional
             If True then the inverse of the rotation(s) is applied to the input
             vectors. Default is False.
+
         Returns
         -------
         rotated_vectors : ndarray, shape (3,) or (N, 3)
