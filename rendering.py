@@ -346,7 +346,7 @@ def derotate_field():
     vector_reference = [0, 0, 1]
     vector_to_rotate = [[0, 1, 1], [0, 1, 1], [0, 1, 1]]
     # rotation = cluster.rotation_matrix_from_vectors(vector_reference, vector_to_rotate); print(rotation)
-    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
+    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate[0], vector_reference); print(rotation)
 
     rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
 
