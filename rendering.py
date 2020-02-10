@@ -255,7 +255,6 @@ def plot_angularmomentum_vectors(vectors,
 
         # draw a point at origin
         axes.scatter([0], [0], [0], color="k", s=80)
-        axes.legend(loc="best", markerscale=3)
 
     if plot_unitSphere:
         # draw sphere
@@ -322,6 +321,8 @@ def plot_angularmomentum_vectors(vectors,
             axes.set_xlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
             axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
             axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
+
+    axes.legend(loc="best", markerscale=3)
 
 
 
