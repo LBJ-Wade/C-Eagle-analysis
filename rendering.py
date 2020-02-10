@@ -337,15 +337,17 @@ legend_labels = [r'$\mathrm{Gas}$',
 
 
 def derotate_field():
-    import _cluster_profiler
+    import cluster
+
+    cluster = cluster.Cluster(clusterID=15, redshift=0.101)
 
     vector_reference = [0, 0, 1]
     vector_to_rotate = [0, 1, 1]
-    rotation = _cluster_profiler.rotation_matrix_from_vectors(vector_reference, vector_to_rotate); print(rotation)
-    rotation = _cluster_profiler.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
+    rotation = cluster.rotation_matrix_from_vectors(vector_reference, vector_to_rotate); print(rotation)
+    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
 
-    rotated_vector = _cluster_profiler.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
-    rotated_vector = _cluster_profiler._apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
+    rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
+    rotated_vector = cluster._apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
 
 
     rotated_vector = rotation.apply(vector_to_rotate)
