@@ -23,7 +23,6 @@ from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
 import map_plot_parameters as plotpar
 plotpar.set_defaults_plot()
-plt.style.use('dark_background')
 
 
 import matplotlib as mpl
@@ -207,6 +206,7 @@ class Arrow3D(FancyArrowPatch):
 
 
 def plot_angularmomentum_vectors(vectors,
+                                 labels = None,
                                  axes = None,
                                  plot_unitSphere = False,
                                  normalise_length = True,
@@ -253,8 +253,9 @@ def plot_angularmomentum_vectors(vectors,
         axes.set_ylabel(r'$y$')
         axes.set_zlabel(r'$z$')
 
-
-
+        # draw a point at origin
+        axes.scatter([0], [0], [0], color="k", s=80)
+        axes.legend(loc="best", markerscale=3)
 
     if plot_unitSphere:
         # draw sphere
@@ -278,8 +279,7 @@ def plot_angularmomentum_vectors(vectors,
         axes.add_artist(Reference_Ang_Momentum)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
 
-    # draw a point at origin
-    axes.scatter([0], [0], [0], color="k", s=80)
+
 
     # Manipulate vectors
     if vectors.ndim == 1:
@@ -297,16 +297,14 @@ def plot_angularmomentum_vectors(vectors,
     else:
         # If there's more than 1 vector, then the np.array will be 2D
         vectors_magnitudes = np.linalg.norm(vectors, axis = 1)
+
         if normalise_length:
-            # Normalise all vectors to the largest in magnitude
             vectors = np.divide(vectors, np.max(vectors_magnitudes))
 
-        legend_labels = [r'$\mathrm{Gas}$',
-                         r'$\mathrm{Highres DM}$',
-                         r'$\mathrm{Stars}$',
-                         r'$\mathrm{Black holes}$']
+        if labels is not None:
+            assert labels.__len__() == vectors_magnitudes.__len__()
 
-        for vector, magnitude, label, color in zip(vectors, vectors_magnitudes, legend_labels, colors):
+        for vector, magnitude, label, color in zip(vectors, vectors_magnitudes, labels, colors):
 
             if make_all_unitary:
                 vector = np.divide(vector, magnitude)
@@ -314,7 +312,7 @@ def plot_angularmomentum_vectors(vectors,
             a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color = color)
             axes.scatter([], [], c=color, marker=r"$\longrightarrow$", s = 70, label = label )
             axes.add_artist(a)
-            print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(legend_labels.index(label)))
+            print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(labels.index(label)))
 
         if make_all_unitary:
             axes.set_xlim([-1.5, 1.5])
@@ -325,9 +323,16 @@ def plot_angularmomentum_vectors(vectors,
             axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
             axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
 
-        axes.legend(loc="best", markerscale=3)
 
 
+
+
+"""
+legend_labels = [r'$\mathrm{Gas}$',
+                         r'$\mathrm{Highres DM}$',
+                         r'$\mathrm{Stars}$',
+                         r'$\mathrm{Black holes}$']
+"""
 
 
 def derotate_field():
