@@ -300,10 +300,10 @@ def plot_angularmomentum_vectors(vectors,
         if normalise_length:
             vectors = np.divide(vectors, np.max(vectors_magnitudes))
 
-        if labels is not None:
-            assert labels.__len__() == vectors_magnitudes.__len__()
-        else:
-            labels = ['']*vectors_magnitudes.__len__()
+        if labels is None:
+            labels = [''] * vectors_magnitudes.__len__()
+
+        assert labels.__len__() == vectors_magnitudes.__len__()
 
         for vector, magnitude, label, color in zip(vectors, vectors_magnitudes, labels, colors):
 
@@ -344,15 +344,12 @@ def derotate_field():
     cluster = cluster.Cluster(clusterID=0, redshift=0.)
 
     vector_reference = [0, 0, 1]
-    vector_to_rotate =  [1, 1, 1]
-    # rotation = cluster.rotation_matrix_from_vectors(vector_reference, vector_to_rotate); print(rotation)
-    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
+    vector_to_rotate = [1, 1, 1]
 
+    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
     rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
 
-    legend_labels = ['vector_reference',
-                     'vector_to_rotate_1',
-                     'rotated_vector_1']
+    legend_labels = [r'vector_reference', r'vector_to_rotate_1', r'rotated_vector_1']
 
 
     plot_angularmomentum_vectors(np.vstack((vector_reference, vector_to_rotate, rotated_vector)),
