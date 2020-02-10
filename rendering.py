@@ -359,6 +359,8 @@ def derotate_field():
                      r'\mathrm{$rotated_vector_2}$',
                      r'\mathrm{$rotated_vector_3}$']
 
+    print(len(np.vstack((vector_reference, vector_to_rotate, rotated_vector))) == len(legend_labels))
+
     plot_angularmomentum_vectors(np.vstack((vector_reference, vector_to_rotate, rotated_vector)),
                                  labels = legend_labels,
                                  axes=None,
