@@ -337,7 +337,7 @@ legend_labels = [r'$\mathrm{Gas}$',
 
 
 def derotate_field():
-    import scipy
+    import scipy.spatial.transform
 
     vector_reference = [0, 0, 1]
     vector_to_rotate = [0, 1, 1]
