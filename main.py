@@ -105,13 +105,11 @@ if __name__ == "__main__":
                            help='Triggers the cProfile for the main() function.')
     args = my_parser.parse_args()
 
-    print(vars(args)['profile'])
 
+    if vars(args)['profile']:
+        import cProfile
+        cProfile.run('main()')
 
-    # if vars(args)[0]:
-    #     import cProfile
-    #     cProfile.run('main()')
-    #
-    # else:
-    #     # print(__FILE__)
-    #     main()
+    else:
+        # print(__FILE__)
+        main()

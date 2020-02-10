@@ -337,14 +337,19 @@ legend_labels = [r'$\mathrm{Gas}$',
 
 
 def derotate_field():
-    vector_reference = [0, 1, 1]
+    import scipy
+
+    vector_reference = [0, 0, 1]
+    vector_to_rotate = [0, 1, 1]
+    rotation = scipy.spatial.transform.Rotation.match_vectors(vector_reference, vector_to_rotate)
+    rotated_vector = rotation.apply(vector_to_rotate)
     legend_labels = [r'$\mathrm{Gas}$',
                      r'$\mathrm{Highres DM}$',
                      r'$\mathrm{Stars}$',
                      r'$\mathrm{Black holes}$']
 
-    plot_angularmomentum_vectors(vector_reference,
-                                 labels = legend_labels,
+    plot_angularmomentum_vectors([vector_reference, vector_to_rotate, rotated_vector],
+                                 labels = None,
                                  axes=None,
                                  plot_unitSphere=True,
                                  normalise_length=False,
