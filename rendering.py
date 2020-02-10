@@ -344,19 +344,15 @@ def derotate_field():
     cluster = cluster.Cluster(clusterID=0, redshift=0.)
 
     vector_reference = [0, 0, 1]
-    vector_to_rotate = [[0, 1, 1], [1, 1, 1], [0, 3, 1]]
+    vector_to_rotate =  [1, 1, 1]
     # rotation = cluster.rotation_matrix_from_vectors(vector_reference, vector_to_rotate); print(rotation)
-    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate[0], vector_reference); print(rotation)
+    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
 
     rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
 
     legend_labels = ['vector_reference',
                      'vector_to_rotate_1',
-                     'vector_to_rotate_2',
-                     'vector_to_rotate_3',
-                     'rotated_vector_1',
-                     'rotated_vector_2',
-                     'rotated_vector_3']
+                     'rotated_vector_1']
 
 
     plot_angularmomentum_vectors(np.vstack((vector_reference, vector_to_rotate, rotated_vector)),
