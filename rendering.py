@@ -110,16 +110,16 @@ class Map():
         special_markers_pars = np.asarray(special_markers_pars)
         special_markers_labels = np.asarray(special_markers_labels)
 
-        if circle_pars.shape == (4,):
+        if circle_pars is not None and circle_pars.shape == (4,):
             circle_pars = circle_pars.reshape((1, 4))
 
-        if circle_labels.shape == ():
+        if circle_labels is not None and circle_labels.shape == ():
             circle_labels = circle_labels.reshape((1))
 
-        if special_markers_pars.shape == (3,):
+        if special_markers_pars is not None and special_markers_pars.shape == (3,):
             special_markers_pars = special_markers_pars.reshape((1, 3))
 
-        if special_markers_labels.shape == ():
+        if special_markers_labels is not None and special_markers_labels.shape == ():
             special_markers_labels = special_markers_labels.reshape((1))
 
         if circle_labels is not None:
@@ -186,12 +186,14 @@ class Map():
             # Plot the special markers
             for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
                 axes[pane_iterator].scatter(x, y, color='red', linestyle='--')
-                axes[pane_iterator].annotate(txt, (x, y), size=15)
+                if special_markers_labels is not None:
+                    axes[pane_iterator].annotate(txt, (x, y), size=15)
 
             # Plot the circles
             for x, y, r, txt in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3], circle_labels):
                 axes[pane_iterator].add_artist(Circle((x, y), radius=r, color='black', fill=False, linestyle='--', label=txt))
-                axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
+                if circle_labels is not None:
+                    axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
 
             print("[MAP PANEL]\t==> completed:", pane_iterator)
 
