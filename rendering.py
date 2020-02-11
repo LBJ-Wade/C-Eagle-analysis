@@ -105,20 +105,28 @@ class Map():
                           weights is not None or \
                           nbins   is not None
 
-        special_markers_pars = np.asarray(special_markers_pars)
-        if special_markers_pars.shape == (3,):
-            special_markers_pars.reshape((1, 3))
-
         circle_pars = np.asarray(circle_pars)
+        circle_labels = np.asarray(circle_labels)
+        special_markers_pars = np.asarray(special_markers_pars)
+        special_markers_labels = np.asarray(special_markers_labels)
+
         if circle_pars.shape == (4,):
-            circle_pars.reshape((1, 4))
+            circle_pars = circle_pars.reshape((1, 4))
+
+        if circle_labels.shape == ():
+            circle_labels = circle_labels.reshape((1))
+
+        if special_markers_pars.shape == (3,):
+            special_markers_pars = special_markers_pars.reshape((1, 3))
+
+        if special_markers_labels.shape == ():
+            special_markers_labels = special_markers_labels.reshape((1))
 
         if circle_labels is not None:
             assert len(circle_labels) == len(circle_pars), ("Expected equal numbers of circle labels and circle "
                                                             "parameters, "
                                                             "got {} circle labels and {} circle parameters.".format(
                                                             len(circle_labels), len(circle_pars)))
-
 
         if special_markers_labels is not None:
             assert len(special_markers_labels) == len(special_markers_pars), ("Expected equal numbers of "
