@@ -111,7 +111,7 @@ class Map():
         special_markers_pars_OK = True if special_markers_pars is not None else False
         special_markers_labels_OK = True if special_markers_labels is not None else False
 
-        data_are_parsed = xyzdata_OK and nbins_OK
+        data_are_parsed = xyzdata_OK and nbins_OK and plot_limit_OK
 
         circle_pars = np.asarray(circle_pars)
         circle_labels = np.asarray(circle_labels)
@@ -164,18 +164,8 @@ class Map():
             axes[pane_iterator].set_ylabel(ylabel[pane_iterator])
             axes[pane_iterator].annotate(thirdAX[pane_iterator], (0.03, 0.03), textcoords='axes fraction', size=15)
 
-            x_specialMarkers = special_markers_pars[:, axes_pane_indices[0]]
-            y_specialMarkers = special_markers_pars[:, axes_pane_indices[1]]
-
-            x_circleCentres = circle_pars[:, axes_pane_indices[0]]
-            y_circleCentres = circle_pars[:, axes_pane_indices[1]]
-
-            if plot_limit_OK:
-                axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
-                axes[pane_iterator].set_ylim(-plot_limit, plot_limit)
-            else:
-                axes[pane_iterator].set_xlim(auto = True)
-                axes[pane_iterator].set_ylim(auto = True)
+            axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
+            axes[pane_iterator].set_ylim(-plot_limit, plot_limit)
 
             if data_are_parsed:
                 x_Data = xyzdata[:, axes_pane_indices[0]]
@@ -198,6 +188,10 @@ class Map():
 
             # Plot the special markers
             if special_markers_pars_OK:
+
+                x_specialMarkers = special_markers_pars[:, axes_pane_indices[0]]
+                y_specialMarkers = special_markers_pars[:, axes_pane_indices[1]]
+
                 for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
                     axes[pane_iterator].scatter(x, y, color='red', linestyle='--')
                     if special_markers_labels_OK:
@@ -205,6 +199,10 @@ class Map():
 
             # Plot the circles
             if circle_pars_OK:
+
+                x_circleCentres = circle_pars[:, axes_pane_indices[0]]
+                y_circleCentres = circle_pars[:, axes_pane_indices[1]]
+
                 for x, y, r, txt in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3], circle_labels):
                     axes[pane_iterator].add_artist(Circle((x, y), radius=r, color='black', fill=False, linestyle='--', label=txt))
                     if circle_labels_OK:
