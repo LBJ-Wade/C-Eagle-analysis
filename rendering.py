@@ -113,7 +113,7 @@ class Map():
         """
         data_are_parsed = xyzdata is not None or \
                           weights is not None or \
-                          nbins is not None
+                          nbins   is not None
 
 
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
@@ -337,32 +337,46 @@ legend_labels = [r'$\mathrm{Gas}$',
                          r'$\mathrm{Black holes}$']
 """
 
+class TestSuite(Map):
 
-def derotate_field():
-    import cluster
+    def __init__(self):
+        print('Using TestSuite mode.')
 
-    cluster = cluster.Cluster(clusterID=0, redshift=0.)
+    def _TEST_derotate_field(self):
+        import cluster
 
-    vector_reference = [0, 0, 1]
-    vector_to_rotate = [1, 1, 1]
+        cluster = cluster.Cluster(clusterID=0, redshift=0.)
 
-    rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
-    rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
+        vector_reference = [0, 0, 1]
+        vector_to_rotate = [1, 1, 1]
 
-    legend_labels = [r'vector_to_rotate_1', r'rotated_vector_1']
+        rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
+        rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
+
+        legend_labels = [r'vector_to_rotate_1', r'rotated_vector_1']
 
 
-    plot_angularmomentum_vectors(np.vstack((vector_to_rotate, rotated_vector)),
-                                 labels = None,
-                                 axes=None,
-                                 plot_unitSphere=True,
-                                 normalise_length=False,
-                                 make_all_unitary=False,
-                                 )
+        plot_angularmomentum_vectors(np.vstack((vector_to_rotate, rotated_vector)),
+                                     labels = None,
+                                     axes=None,
+                                     plot_unitSphere=True,
+                                     normalise_length=False,
+                                     make_all_unitary=False,
+                                     )
+
+    def _TEST_velocity_map(self):
+        map = Map()
+        map.xyz_projections(xyzdata=None,
+                            weights=None,
+                            plot_limit=None,
+                            nbins=None,
+                            circle_pars=None,
+                            special_markers=None,
+                            special_markers_labels=None)
 
 
 
 if __name__ == "__main__":
-    derotate_field()
+    TestSuite()._TEST_velocity_map
     plt.show()
 

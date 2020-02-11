@@ -72,6 +72,51 @@ def alignment_DM_to_stars(matrix):  return matrix[1][2]
 def alignment_stars_to_gas(matrix): return matrix[0][2]
 
 
+def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_frame = False):
+    """ This method derotates the positions and velocity vectors of
+    particles from the Gadget-centric coordinate basis to a custom basis.
+
+    :parameter rotation_matrix : array_like, shape (3, 3)
+        The rotation matrix acts on the coordinates and velocty of
+        particles and rotates them to the newly defined coordinate basis.
+
+    :return particle_coordinates, particle_velocities: tuple
+        Returns the coordinates and velocities of the particle in the
+        cluster in the new coordinate basis.
+    """
+    if aperture_radius is None:
+        aperture_radius = cluster.group_r500()
+        print('[ DEROTATE ]\t==>\tAperture radius set to default R500 true.')
+
+    coords = cluster.particle_coordinates(align)
+    coords = np.subtract(coords, cluster.group_centre_of_mass(out_allPartTypes=False, aperture_radius = aperture_radius))
+    vel = cluster.particle_velocity(align)
+
+    if cluster_rest_frame:
+        vel = np.subtract(vel, cluster.group_zero_momentum_frame(out_allPartTypes=False, aperture_radius = aperture_radius))
+
+    coords = cluster.comoving_length(coords)
+    vel = cluster.comoving_velocity(vel)
+
+    ang_momenta, _ = cluster.group_angular_momentum(out_allPartTypes=True, aperture_radius=aperture_radius)
+
+    if align == 'gas' or align == 0:
+        ang_momentum = ang_momenta[0]
+    elif align == 'dark_matter' or align == 1:
+        ang_momentum = ang_momenta[1]
+    elif align == 'stars' or align == 4:
+        ang_momentum = ang_momenta[4]
+    elif align == 'black_holes' or align == 5:
+        ang_momentum = ang_momenta[5]
+
+    z_axis_unit_vector = [0,0,1]
+    rot_matrix = cluster.rotation_matrix_from_vectors(ang_momentum, z_axis_unit_vector)
+    coords = cluster.apply_rotation_matrix(rot_matrix, coords)
+    vel = cluster.apply_rotation_matrix(rot_matrix, vel)
+
+    return (coords, vel)
+
+
 
 
 

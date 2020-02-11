@@ -92,7 +92,7 @@ def make_parallel_MPI(function):
 
 
 @make_parallel_MPI
-def MPI_decorator_test(*args, **kwargs):
+def MPI_decorator_test():
     pass
 
 @make_parallel_MPI
@@ -110,8 +110,7 @@ def push_FOFapertures(*args, **kwargs):
                        cluster.Cluster.generate_apertures() in physical coordinates.
     
                        Units: Mpc
-                       """,
-                        )
+                       """)
 
 @make_parallel_MPI
 def push_FOFcentre_of_mass(*args, **kwargs):
@@ -139,11 +138,10 @@ def push_FOFcentre_of_mass(*args, **kwargs):
                         dataset_name='Group_Centre_of_Mass',
                         input_data= CoM,
                         attributes="""The Centre of Mass (CoM) is calculated for each aperture listed in the 
-                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+                        `Aperture dataset`. PartTypes included: 0, 1, 4, 5.
 
                         Units: h^-1 Mpc 
-                        """,
-                        )
+                        """)
 
 @make_parallel_MPI
 def push_FOFangular_momentum_n_mass(*args, **kwargs):
@@ -156,46 +154,44 @@ def push_FOFangular_momentum_n_mass(*args, **kwargs):
 
     print('[ FOF SAVE ]\t==>\t CoM on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
 
-    CoM = np.zeros((0, 3), dtype=np.float)
+    ang_momentum = np.zeros((0, 3), dtype=np.float)
     mass = np.zeros(0, dtype=np.float)
 
     # Loop over apertures
     for r in cluster_obj.generate_apertures():
 
-        CoM_aperture, mass_aperture = cluster_obj.group_angular_momentum(aperture_radius = r, out_allPartTypes = kwargs['out_allPartTypes'])
+        ang_momentum_aperture, mass_aperture = cluster_obj.group_angular_momentum(aperture_radius = r, out_allPartTypes = kwargs['out_allPartTypes'])
 
         # Convert into physical frame from comoving
-        CoM_aperture = cluster_obj.comoving_ang_momentum(CoM_aperture)
-        CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
+        ang_momentum_aperture = cluster_obj.comoving_ang_momentum(ang_momentum_aperture)
+        ang_momentum = np.concatenate((ang_momentum, [ang_momentum_aperture]), axis=0)
 
         # Convert into physical frame from comoving
         mass_aperture = cluster_obj.comoving_mass(mass_aperture)
         mass = np.concatenate((mass, [mass_aperture]), axis=0)
 
-    assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
+    assert ang_momentum.__len__() == cluster_obj.generate_apertures().__len__()
     assert mass.__len__() == cluster_obj.generate_apertures().__len__()
 
     save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='Group_Angular_Momentum',
-                        input_data=CoM,
+                        input_data=ang_momentum,
                         attributes="""The total angular momentum is calculated for each aperture listed in the 
-                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+                        `Aperture dataset`. PartTypes included: 0, 1, 4, 5.
 
                         Units: 10^10 M_sun * 10^3 km/s * Mpc
-                        """,
-                        )
+                        """)
 
     save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='TotalMass',
                         input_data=mass,
                         attributes="""The total mass is calculated for each aperture listed in the 
-                                    "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+                                    `Aperture dataset. PartTypes included: 0, 1, 4, 5.
 
                                     Units: 10^10 M_sun
-                                    """,
-                        )
+                                    """)
 
 @make_parallel_MPI
 def push_FOFangmom_alignment_matrix(*args, **kwargs):
@@ -227,7 +223,7 @@ def push_FOFangmom_alignment_matrix(*args, **kwargs):
                         input_data=align_matrix,
                         attributes="""The alignment matrix elements are calculated for each aperture listed in 
                         the 
-                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+                        `Aperture dataset`. PartTypes included: 0, 1, 4, 5.
 
                         Units: degrees
                         
@@ -238,8 +234,7 @@ def push_FOFangmom_alignment_matrix(*args, **kwargs):
                         3 = BH to gas
                         4 = BH to DM
                         5 = BH to stars
-                        """,
-                        )
+                        """)
 
 @make_parallel_MPI
 def push_FOFmerging_indices(*args, **kwargs):
@@ -271,26 +266,20 @@ def push_FOFmerging_indices(*args, **kwargs):
                         dataset_name='Dynamical_Merging_Index',
                         input_data=dynamical_idx,
                         attributes="""The dynamical merging indices calculated for each aperture listed in 
-                        the 
-                        "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+                        the `Aperture dataset`. PartTypes included: 0, 1, 4, 5.
 
                         Units: Dimensionless
-
-                        """,
-                        )
+                        """)
 
     save.create_dataset(kwargs['fileCompletePath'],
                         subfolder=__HDF5_SUBFOLDER__,
                         dataset_name='Thermal_Merging_Index',
                         input_data=thermal_idx,
                         attributes="""The thermal merging indices calculated for each aperture listed in 
-                                    the 
-                                    "Aperture dataset". PartTypes included: 0, 1, 4, 5.
+                                    the `Aperture dataset`. PartTypes included: 0, 1, 4, 5.
 
                                     Units: Dimensionless
-
-                                    """,
-                        )
+                                    """)
 
 
 
