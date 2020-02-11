@@ -374,7 +374,7 @@ class TestSuite(Map):
                              nbins=None,
                              circle_pars=[0,0,0,3],
                              circle_labels=None,
-                             special_markers=[0,0,0],
+                             special_markers_pars=[0,0,0],
                              special_markers_labels=None)
         plt.show()
 
