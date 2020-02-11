@@ -94,27 +94,33 @@ class Map():
 
 
 
-    def xyz_projections(self, *args,
-                            xyzdata = None,
-                            weights = None,
-                            plot_limit = None,
-                            nbins = None,
-                            circle_pars = None,
-                            special_markers = None,
-                            special_markers_labels = None,
-                            **kwargs):
+    def xyz_projections(self,
+                        xyzdata = None,
+                        weights = None,
+                        plot_limit = None,
+                        nbins = None,
+                        circle_pars = None,
+                        special_markers = None,
+                        special_markers_labels = None):
+
         """
 
-        :param args:
-        :param xyzdata: (numpy 2D array)
+        :param xyzdata:
         :param weights:
-        :param kwargs:
+        :param plot_limit:
+        :param nbins:
+        :param circle_pars:
+        :param special_markers:
+        :param special_markers_labels:
         :return:
         """
         data_are_parsed = xyzdata is not None or \
                           weights is not None or \
                           nbins   is not None
 
+        special_markers = np.asarray(special_markers)
+        if special_markers.shape == (3,):
+            special_markers.reshape((1, 3))
 
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
@@ -126,64 +132,50 @@ class Map():
                      r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$',
                      r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$']
 
-        for i in [0, 1, 2]:
-            # Handle data
-            if i == 0:
-                if data_are_parsed:
-                    x_Data = xyzdata[:, 0]
-                    y_Data = xyzdata[:, 1]
+        axes_panes =   {'xy' : [0, 1],
+                        'yz' : [1, 2],
+                        'xz' : [0, 2]}
 
-                x_specialMarkers = special_markers[:, 0]
-                y_specialMarkers = special_markers[:, 1]
-            elif i == 1:
-                if data_are_parsed:
-                    x_Data = xyzdata[:, 1]
-                    y_Data = xyzdata[:, 2]
+        for pane_iterator, (axes_pane_name, axes_pane_indices) in enumerate(zip(axes_panes.keys(), axes_panes.values())):
 
-                x_specialMarkers = special_markers[:, 1]
-                y_specialMarkers = special_markers[:, 2]
-            elif i == 2:
-                if data_are_parsed:
-                    x_Data = xyzdata[:, 0]
-                    y_Data = xyzdata[:, 2]
+            axes[pane_iterator].set_aspect('equal')
+            Map.plot_circle(axes[pane_iterator], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
 
-                x_specialMarkers = special_markers[:, 0]
-                y_specialMarkers = special_markers[:, 2]
+            axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
+            axes[pane_iterator].set_ylim(-plot_limit, plot_limit)
+
+            axes[pane_iterator].set_xlabel(xlabel[pane_iterator])
+            axes[pane_iterator].set_ylabel(ylabel[pane_iterator])
+            axes[pane_iterator].annotate(thirdAX[pane_iterator], (0.03, 0.03), textcoords='axes fraction', size=15)
+
+            x_specialMarkers = special_markers[:, axes_pane_indices[0]]
+            y_specialMarkers = special_markers[:, axes_pane_indices[1]]
 
             if data_are_parsed:
+                x_Data = xyzdata[:, axes_pane_indices[0]]
+                y_Data = xyzdata[:, axes_pane_indices[1]]
+
                 x_bins = np.linspace(-plot_limit, plot_limit, nbins)
                 y_bins = np.linspace(-plot_limit, plot_limit, nbins)
                 Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
                 count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
                 norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
-                img = axes[i].pcolor(Cx, Cy, count, cmap=cmap[i], norm= norm)
+                img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm= norm)
 
-            # Render elements in plots
-            axes[i].set_aspect('equal')
-
-            # Plot circles
-            Map.plot_circle(axes[i], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
+                ax2_divider = make_axes_locatable(axes[pane_iterator])
+                cax2 = ax2_divider.append_axes("top", size="5%", pad="2%")
+                cbar = plt.colorbar(img, cax=cax2, orientation='horizontal')
+                cbar.set_label(cbarlabel[pane_iterator], labelpad=-70)
+                # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
+                cax2.xaxis.set_ticks_position("top")
 
             # Plot the special markers
             for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
-                axes[i].scatter(x, y, color='red', linestyle='--')
-                axes[i].annotate(txt, (x, y), size = 15)
+                axes[pane_iterator].scatter(x, y, color='red', linestyle='--')
+                axes[pane_iterator].annotate(txt, (x, y), size=15)
 
-            axes[i].set_xlim(-plot_limit, plot_limit)
-            axes[i].set_ylim(-plot_limit, plot_limit)
-            axes[i].set_xlabel(xlabel[i])
-            axes[i].set_ylabel(ylabel[i])
-            axes[i].annotate(thirdAX[i], (0.03, 0.03), textcoords='axes fraction', size=15)
-
-            if data_are_parsed:
-                ax2_divider = make_axes_locatable(axes[i])
-                cax2 = ax2_divider.append_axes("top", size="5%", pad="2%")
-                cbar = plt.colorbar(img, cax=cax2, orientation='horizontal')
-                cbar.set_label(cbarlabel[i], labelpad=-70)
-                # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
-                cax2.xaxis.set_ticks_position("top")
-            print("[MAP PANEL]\t==> completed:", i)
+            print("[MAP PANEL]\t==> completed:", pane_iterator)
 
 
 
@@ -367,12 +359,12 @@ class TestSuite(Map):
     def _TEST_velocity_map(self):
 
         self.xyz_projections(xyzdata=None,
-                            weights=None,
-                            plot_limit=10,
-                            nbins=None,
-                            circle_pars=None,
-                            special_markers=[0,0,0],
-                            special_markers_labels=None)
+                             weights=None,
+                             plot_limit=10,
+                             nbins=None,
+                             circle_pars=None,
+                             special_markers=[0,0,0],
+                             special_markers_labels=None)
         plt.show()
 
 
