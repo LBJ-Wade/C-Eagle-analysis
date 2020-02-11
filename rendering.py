@@ -365,18 +365,19 @@ class TestSuite(Map):
                                      )
 
     def _TEST_velocity_map(self):
-        map = Map()
-        map.xyz_projections(xyzdata=None,
+
+        self.xyz_projections(xyzdata=None,
                             weights=None,
                             plot_limit=None,
                             nbins=None,
                             circle_pars=None,
                             special_markers=None,
                             special_markers_labels=None)
+        plt.show()
 
 
 
 if __name__ == "__main__":
     TestSuite()._TEST_velocity_map
-    plt.show()
+
 
