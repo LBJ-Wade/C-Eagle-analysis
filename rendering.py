@@ -435,6 +435,6 @@ class TestSuite(Map):
         plt.show()
 
 if __name__ == "__main__":
-    TestSuite()._TEST_velocity_map()
+    TestSuite()._TEST_CELR_velocity_field()
 
 
