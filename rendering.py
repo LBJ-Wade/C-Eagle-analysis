@@ -378,6 +378,6 @@ class TestSuite(Map):
 
 
 if __name__ == "__main__":
-    TestSuite()._TEST_velocity_map
+    TestSuite()._TEST_velocity_map()
 
 
