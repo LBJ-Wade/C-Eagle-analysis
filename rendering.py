@@ -94,14 +94,16 @@ class Map():
         :param weights:
         :param plot_limit:
         :param nbins:
+
         :param circle_pars: format is (N,4) shape np.ndarray
             [[x_centre, y_centre, z_centre, radius], [...], ...]
+
         :param special_markers: format is (N,3) shape np.ndarray
             [[x_marker, y_marker, z_marker], [...], ...]
-        :param special_markers_labels:
-        :return:
-        """
 
+        :param special_markers_labels:
+        :return: None
+        """
         xyzdata_OK = True if xyzdata is not None else False
         weights_OK = True if weights is not None else False
         plot_limit_OK = True if plot_limit is not None else False
@@ -113,6 +115,8 @@ class Map():
 
         data_are_parsed = xyzdata_OK and nbins_OK and plot_limit_OK
 
+        xyzdata = np.asarray(xyzdata)
+        weights = np.asarray(weights)
         circle_pars = np.asarray(circle_pars)
         circle_labels = np.asarray(circle_labels)
         special_markers_pars = np.asarray(special_markers_pars)
@@ -149,13 +153,14 @@ class Map():
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
         thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
+        third_axis_orientation_sign = [-1, -1, 1]
         cbarlabel = [r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$',
                      r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$',
                      r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$']
 
-        axes_panes =   {'xy' : [0, 1],
-                        'yz' : [1, 2],
-                        'xz' : [0, 2]}
+        axes_panes =   {'xy' : [0, 1, 2],
+                        'yz' : [1, 2, 0],
+                        'xz' : [0, 2, 1]}
 
         for pane_iterator, (axes_pane_name, axes_pane_indices) in enumerate(zip(axes_panes.keys(), axes_panes.values())):
 
@@ -170,6 +175,9 @@ class Map():
             if data_are_parsed:
                 x_Data = xyzdata[:, axes_pane_indices[0]]
                 y_Data = xyzdata[:, axes_pane_indices[1]]
+
+                if weights_OK and weights.ndim == 2:
+                    weights = weights[:, axes_pane_indices[2]] * third_axis_orientation_sign[pane_iterator]
 
                 x_bins = np.linspace(-plot_limit, plot_limit, nbins)
                 y_bins = np.linspace(-plot_limit, plot_limit, nbins)
@@ -208,7 +216,7 @@ class Map():
                     if circle_labels_OK:
                         axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
 
-            print("[MAP]\t==> Panel {} completed.".format(axes_pane_name))
+            print("[ MAP ]\t==> Panel {} completed.".format(axes_pane_name))
 
 
 
@@ -401,7 +409,30 @@ class TestSuite(Map):
                              special_markers_labels=[r'marker1', r'marker2'])
         plt.show()
 
+    def _TEST_CELR_velocity_field(self):
 
+        from cluster import Cluster, Simulation
+        from testing import angular_momentum
+
+        cluster = Cluster(clusterID = 3, redshift = 0.)
+        r200 = cluster.group_r200()
+        r200 = cluster.comoving_length(r200)
+        mass = cluster.particle_masses('gas')
+        mass = cluster.comoving_mass(mass)
+
+        coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = r200, cluster_rest_frame =
+        False)
+
+
+        self.xyz_projections(xyzdata=coords,
+                             weights= (vel*mass),
+                             plot_limit=10,
+                             nbins=100,
+                             circle_pars=[0, 0, 0, r200],
+                             circle_labels=[r'$R_{200}$'],
+                             special_markers_pars=[0, 0, 0],
+                             special_markers_labels=None)
+        plt.show()
 
 if __name__ == "__main__":
     TestSuite()._TEST_velocity_map()
