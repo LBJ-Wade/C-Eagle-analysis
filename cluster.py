@@ -87,12 +87,12 @@ class Cluster(Simulation,
               _cluster_retriever.Mixin,
               _cluster_profiler.Mixin):
 
-    def __init__(self, *args, clusterID: int = 0, redshift: float = 0.0, **kwargs):
+    def __init__(self, *args, clusterID: int = 0, redshift: str = 0.0, **kwargs):
         super().__init__()
 
         # Initialise and validate attributes
         self.set_clusterID(clusterID)
-        self.set_redshift(redshift)
+        self.redshift = redshift
 
         # Pass attributed into kwargs
         kwargs['clusterID'] = self.clusterID
@@ -115,16 +115,6 @@ class Cluster(Simulation,
             raise
         else:
             self.clusterID = clusterID
-
-    def set_redshift(self, redshift: float):
-        try:
-            assert (type(redshift) is float), 'redshift must be float.'
-            assert (redshift >= 0.0), 'Negative redshift.'
-            assert (redshift_num2str(redshift) in self.redshiftAllowed), 'Redshift not valid.'
-        except AssertionError:
-            raise
-        else:
-            self.redshift = round(redshift, 3)
 
     def path_from_cluster_name(self):
         """

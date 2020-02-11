@@ -70,16 +70,10 @@ class Mixin:
             @wraps(f)
             def decorated_function(self, *args, **kwargs):  # the decorated function
 
-                redshift_str = redshift_num2str(round(self.redshift, 3))
-                redshift_i = self.redshiftAllowed.index(redshift_str)
-
-                # In the case of CELR, the first 3 redshifts are corrupted, so need to advance the z-catalogue index
-                # if self.simulation == 'CELR-eagle':
-                #     redshift_i += 7
-
+                redshift_i = self.redshiftAllowed.index(self.redshift)
                 redshift_index = self.zcat['z_IDNumber'][redshift_i]
 
-                sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + redshift_str
+                sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + self.redshift
                 file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
                 file_list = os.listdir(file_dir)
 
