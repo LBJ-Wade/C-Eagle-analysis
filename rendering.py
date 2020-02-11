@@ -208,7 +208,7 @@ class Map():
                     if circle_labels_OK:
                         axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
 
-            print("[MAP PANEL]\t==> completed:", pane_iterator)
+            print("[MAP]\t==> Panel {} completed.".format(axes_pane_name))
 
 
 
@@ -395,10 +395,10 @@ class TestSuite(Map):
                              weights=None,
                              plot_limit=10,
                              nbins=None,
-                             circle_pars=None,
-                             circle_labels=None,
-                             special_markers_pars=None,
-                             special_markers_labels=None)
+                             circle_pars=[[0,0,0,1], [2,2,2,1]],
+                             circle_labels=[r'label1', r'label2'],
+                             special_markers_pars=[[0,0,0], [2,2,2]],
+                             special_markers_labels=[r'marker1', r'marker2'])
         plt.show()
 
 
