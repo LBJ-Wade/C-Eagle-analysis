@@ -101,34 +101,42 @@ class Map():
         :param special_markers_labels:
         :return:
         """
-        data_are_parsed = xyzdata is not None or \
-                          weights is not None or \
-                          nbins   is not None
+
+        xyzdata_OK = True if xyzdata is not None else False
+        weights_OK = True if weights is not None else False
+        plot_limit_OK = True if plot_limit is not None else False
+        nbins_OK = True if nbins is not None else False
+        circle_pars_OK = True if circle_pars is not None else False
+        circle_labels_OK = True if circle_labels is not None else False
+        special_markers_pars_OK = True if special_markers_pars is not None else False
+        special_markers_labels_OK = True if special_markers_labels is not None else False
+
+        data_are_parsed = xyzdata_OK and nbins_OK
 
         circle_pars = np.asarray(circle_pars)
         circle_labels = np.asarray(circle_labels)
         special_markers_pars = np.asarray(special_markers_pars)
         special_markers_labels = np.asarray(special_markers_labels)
 
-        if circle_pars is not None and circle_pars.shape == (4,):
+        if circle_pars_OK and circle_pars.shape == (4,):
             circle_pars = circle_pars.reshape((1, 4))
 
-        if circle_labels is not None and circle_labels.shape == ():
+        if circle_labels_OK and circle_labels.shape == ():
             circle_labels = circle_labels.reshape((1))
 
-        if special_markers_pars is not None and special_markers_pars.shape == (3,):
+        if special_markers_pars_OK and special_markers_pars.shape == (3,):
             special_markers_pars = special_markers_pars.reshape((1, 3))
 
-        if special_markers_labels is not None and special_markers_labels.shape == ():
+        if special_markers_labels_OK and special_markers_labels.shape == ():
             special_markers_labels = special_markers_labels.reshape((1))
 
-        if circle_labels is not None:
+        if circle_labels_OK:
             assert len(circle_labels) == len(circle_pars), ("Expected equal numbers of circle labels and circle "
                                                             "parameters, "
                                                             "got {} circle labels and {} circle parameters.".format(
                                                             len(circle_labels), len(circle_pars)))
 
-        if special_markers_labels is not None:
+        if special_markers_labels_OK:
             assert len(special_markers_labels) == len(special_markers_pars), ("Expected equal numbers of "
                                                                               "special_markers labels and "
                                                                               "special_markers parameters, "
@@ -152,8 +160,6 @@ class Map():
         for pane_iterator, (axes_pane_name, axes_pane_indices) in enumerate(zip(axes_panes.keys(), axes_panes.values())):
 
             axes[pane_iterator].set_aspect('equal')
-            axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
-            axes[pane_iterator].set_ylim(-plot_limit, plot_limit)
             axes[pane_iterator].set_xlabel(xlabel[pane_iterator])
             axes[pane_iterator].set_ylabel(ylabel[pane_iterator])
             axes[pane_iterator].annotate(thirdAX[pane_iterator], (0.03, 0.03), textcoords='axes fraction', size=15)
@@ -163,6 +169,13 @@ class Map():
 
             x_circleCentres = circle_pars[:, axes_pane_indices[0]]
             y_circleCentres = circle_pars[:, axes_pane_indices[1]]
+
+            if plot_limit_OK:
+                axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
+                axes[pane_iterator].set_ylim(-plot_limit, plot_limit)
+            else:
+                axes[pane_iterator].set_xlim(auto = True)
+                axes[pane_iterator].set_ylim(auto = True)
 
             if data_are_parsed:
                 x_Data = xyzdata[:, axes_pane_indices[0]]
@@ -184,16 +197,18 @@ class Map():
                 cax2.xaxis.set_ticks_position("top")
 
             # Plot the special markers
-            for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
-                axes[pane_iterator].scatter(x, y, color='red', linestyle='--')
-                if special_markers_labels is not None:
-                    axes[pane_iterator].annotate(txt, (x, y), size=15)
+            if special_markers_pars_OK:
+                for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
+                    axes[pane_iterator].scatter(x, y, color='red', linestyle='--')
+                    if special_markers_labels_OK:
+                        axes[pane_iterator].annotate(txt, (x, y), size=15)
 
             # Plot the circles
-            for x, y, r, txt in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3], circle_labels):
-                axes[pane_iterator].add_artist(Circle((x, y), radius=r, color='black', fill=False, linestyle='--', label=txt))
-                if circle_labels is not None:
-                    axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
+            if circle_pars_OK:
+                for x, y, r, txt in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3], circle_labels):
+                    axes[pane_iterator].add_artist(Circle((x, y), radius=r, color='black', fill=False, linestyle='--', label=txt))
+                    if circle_labels_OK:
+                        axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
 
             print("[MAP PANEL]\t==> completed:", pane_iterator)
 
