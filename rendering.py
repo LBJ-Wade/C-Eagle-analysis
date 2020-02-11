@@ -73,26 +73,6 @@ class Map():
         H, _, _ = np.histogram2d(x, y, bins=(x_bins, y_bins), weights=weights)
         return H.T
 
-    @staticmethod
-    def plot_circle(axes, x, y, r, **kwargs):
-        """
-        This static method is used to overplot circles on plots.
-        Used e.g. for marking r200 or r500.
-
-        :param axes: The mpl.axes class object the circle will be associated with.
-        :param x: The x-coord of the centre of the circle.
-        :param y: The y-coord of the centre of the circle.
-        :param r: The radius of the circle.
-        :param kwargs: Rendering options, including label and colour etc.
-        :return: None.
-        """
-        axes.add_artist(Circle((x, y), radius = r, **kwargs))
-        txt = r'$R_{500}$'
-        # Add text around it
-        axes.annotate(txt, (x, y + 1.1 * r), size=15)
-
-
-
 
     def xyz_projections(self,
                         xyzdata = None,
@@ -100,17 +80,24 @@ class Map():
                         plot_limit = None,
                         nbins = None,
                         circle_pars = None,
-                        special_markers = None,
+                        circle_labels = None,
+                        special_markers_pars = None,
                         special_markers_labels = None):
 
         """
+        Inside the function scope, the `x` and `y` refer to the vertical and horizontal axes in the plt.figure
+        object. E.g. :
+            - x_specialMarkers : the horizontal coordinate of the markers displayed in the panel
+            - y_specialMarkers : the vertical coordinate of the markers displayed in the panel
 
         :param xyzdata:
         :param weights:
         :param plot_limit:
         :param nbins:
-        :param circle_pars:
-        :param special_markers:
+        :param circle_pars: format is (N,4) shape np.ndarray
+            [[x_centre, y_centre, z_centre, radius], [...], ...]
+        :param special_markers: format is (N,3) shape np.ndarray
+            [[x_marker, y_marker, z_marker], [...], ...]
         :param special_markers_labels:
         :return:
         """
@@ -118,9 +105,27 @@ class Map():
                           weights is not None or \
                           nbins   is not None
 
-        special_markers = np.asarray(special_markers)
-        if special_markers.shape == (3,):
-            special_markers.reshape((1, 3))
+        special_markers_pars = np.asarray(special_markers_pars)
+        if special_markers_pars.shape == (3,):
+            special_markers_pars.reshape((1, 3))
+
+        circle_pars = np.asarray(circle_pars)
+        if circle_pars.shape == (4,):
+            circle_pars.reshape((1, 4))
+
+        if circle_labels is not None:
+            assert len(circle_labels) == len(circle_pars), ("Expected equal numbers of circle labels and circle "
+                                                            "parameters, "
+                                                            "got {} circle labels and {} circle parameters.".format(
+                                                            len(circle_labels), len(circle_pars)))
+
+
+        if special_markers_labels is not None:
+            assert len(special_markers_labels) == len(special_markers_pars), ("Expected equal numbers of "
+                                                                              "special_markers labels and "
+                                                                              "special_markers parameters, "
+                                                            "got {} special_markers labels and {} special_markers parameters.".format(
+                                                            len(special_markers_labels), len(special_markers_pars)))
 
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
@@ -139,17 +144,17 @@ class Map():
         for pane_iterator, (axes_pane_name, axes_pane_indices) in enumerate(zip(axes_panes.keys(), axes_panes.values())):
 
             axes[pane_iterator].set_aspect('equal')
-            Map.plot_circle(axes[pane_iterator], *circle_pars, color='black', fill=False, linestyle='--', label=r'$R_{200}$')
-
             axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
             axes[pane_iterator].set_ylim(-plot_limit, plot_limit)
-
             axes[pane_iterator].set_xlabel(xlabel[pane_iterator])
             axes[pane_iterator].set_ylabel(ylabel[pane_iterator])
             axes[pane_iterator].annotate(thirdAX[pane_iterator], (0.03, 0.03), textcoords='axes fraction', size=15)
 
-            x_specialMarkers = special_markers[:, axes_pane_indices[0]]
-            y_specialMarkers = special_markers[:, axes_pane_indices[1]]
+            x_specialMarkers = special_markers_pars[:, axes_pane_indices[0]]
+            y_specialMarkers = special_markers_pars[:, axes_pane_indices[1]]
+
+            x_circleCentres = circle_pars[:, axes_pane_indices[0]]
+            y_circleCentres = circle_pars[:, axes_pane_indices[1]]
 
             if data_are_parsed:
                 x_Data = xyzdata[:, axes_pane_indices[0]]
@@ -174,6 +179,11 @@ class Map():
             for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
                 axes[pane_iterator].scatter(x, y, color='red', linestyle='--')
                 axes[pane_iterator].annotate(txt, (x, y), size=15)
+
+            # Plot the circles
+            for x, y, r, txt in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3], circle_labels):
+                axes[pane_iterator].add_artist(Circle((x, y), radius=r, color='black', fill=False, linestyle='--', label=txt))
+                axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
 
             print("[MAP PANEL]\t==> completed:", pane_iterator)
 
@@ -362,7 +372,8 @@ class TestSuite(Map):
                              weights=None,
                              plot_limit=10,
                              nbins=None,
-                             circle_pars=None,
+                             circle_pars=[0,0,0,3],
+                             circle_labels=None,
                              special_markers=[0,0,0],
                              special_markers_labels=None)
         plt.show()
