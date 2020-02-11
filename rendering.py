@@ -382,9 +382,9 @@ class TestSuite(Map):
                              weights=None,
                              plot_limit=10,
                              nbins=None,
-                             circle_pars=[0,0,0,3],
+                             circle_pars=None,
                              circle_labels=None,
-                             special_markers_pars=[0,0,0],
+                             special_markers_pars=None,
                              special_markers_labels=None)
         plt.show()
 
