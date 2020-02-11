@@ -414,7 +414,7 @@ class TestSuite(Map):
         from cluster import Cluster, Simulation
         from testing import angular_momentum
 
-        cluster = Cluster(clusterID = 0, redshift = 1.993)
+        cluster = Cluster(clusterID = 0, redshift = 0.0)
         r200 = cluster.group_r200()
         r200 = cluster.comoving_length(r200)
         mass = cluster.particle_masses('gas')
