@@ -166,10 +166,11 @@ class Map():
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
         thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
+        line_of_sight = [r'$\uparrow \mathcal{O}$', r'$\rightarrow \mathcal{O}$', r'$\bigotimes \mathcal{O}$']
         third_axis_orientation_sign = [-1, -1, 1]
-        cbarlabel = [r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$',
-                     r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$',
-                     r'$\sum_{i} m_i\ [\mathrm{M_\odot}]$']
+        cbarlabel = [r'$\sum_{i} m_i v_{z, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
+                     r'$\sum_{i} m_i v_{x, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
+                     r'$\sum_{i} m_i v_{y, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$']
 
         axes_panes =   {'xy' : [0, 1, 2],
                         'yz' : [1, 2, 0],
@@ -181,6 +182,8 @@ class Map():
             axes[pane_iterator].set_xlabel(xlabel[pane_iterator])
             axes[pane_iterator].set_ylabel(ylabel[pane_iterator])
             axes[pane_iterator].annotate(thirdAX[pane_iterator], (0.03, 0.03), textcoords='axes fraction', size=15)
+            axes[pane_iterator].annotate(line_of_sight[pane_iterator], (0.03, 0.06), textcoords='axes fraction',
+                                         size=15)
 
             axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
             axes[pane_iterator].set_ylim(-plot_limit, plot_limit)
@@ -439,7 +442,7 @@ class TestSuite(Map):
         mass = cluster.comoving_mass(mass)
 
         coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = r200, cluster_rest_frame =
-        False)
+        True)
 
 
         self.xyz_projections(xyzdata=coords,
