@@ -165,9 +165,8 @@ class Map():
         cmap =      [plt.get_cmap('seismic'), plt.get_cmap('seismic'), plt.get_cmap('seismic_r')]
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
-        thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
-        line_of_sight = [r'$\uparrow \mathcal{O}$', r'$\rightarrow \mathcal{O}$', r'$\bigotimes \mathcal{O}$']
-        third_axis_orientation_sign = [-1, -1, 1]
+        thirdAX =   [r'$\bigodot z$', r'$\bigodot x$', r'$\bigotimes y$']
+        line_of_sight = [r'$\uparrow\ \mathcal{O}$', r'$\rightarrow \mathcal{O}$', r'$\bigotimes \mathcal{O}$']
         cbarlabel = [r'$\sum_{i} m_i v_{z, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
                      r'$\sum_{i} m_i v_{x, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
                      r'$\sum_{i} m_i v_{y, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$']
@@ -182,7 +181,7 @@ class Map():
             axes[pane_iterator].set_xlabel(xlabel[pane_iterator])
             axes[pane_iterator].set_ylabel(ylabel[pane_iterator])
             axes[pane_iterator].annotate(thirdAX[pane_iterator], (0.03, 0.03), textcoords='axes fraction', size=15)
-            axes[pane_iterator].annotate(line_of_sight[pane_iterator], (0.03, 0.06), textcoords='axes fraction',
+            axes[pane_iterator].annotate(line_of_sight[pane_iterator], (0.03, 0.1), textcoords='axes fraction',
                                          size=15)
 
             axes[pane_iterator].set_xlim(-plot_limit, plot_limit)
@@ -193,7 +192,7 @@ class Map():
                 y_Data = xyzdata[:, axes_pane_indices[1]]
 
                 if weights_OK and weights.ndim == 2:
-                    weights = weights[:, axes_pane_indices[2]] * third_axis_orientation_sign[pane_iterator]
+                    weights = weights[:, axes_pane_indices[2]]
 
                 x_bins = np.linspace(-plot_limit, plot_limit, nbins)
                 y_bins = np.linspace(-plot_limit, plot_limit, nbins)
@@ -449,10 +448,10 @@ class TestSuite(Map):
                              weights= (vel.T * mass).T,
                              plot_limit=2.5*r200,
                              nbins=200,
-                             circle_pars=[0, 0, 0, r200],
-                             circle_labels=[r'$R_{200}$'],
+                             circle_pars=[[0, 0, 0, r200], [0, 0, 0, 5*r200]],
+                             circle_labels=[r'$R_{200}$', r'$5\times R_{200}$'],
                              special_markers_pars=[0, 0, 0],
-                             special_markers_labels=None)
+                             special_markers_labels=r'CoM')
         plt.show()
 
 if __name__ == "__main__":
