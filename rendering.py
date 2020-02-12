@@ -201,7 +201,8 @@ class Map():
 
                 # norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
                 # norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
-                norm = colors.SymLogNorm(linthresh=100, linscale=0.6, vmin=-np.abs(count).max(), vmax=np.abs(count).max())
+                norm = colors.SymLogNorm(linthresh=1e-7, linscale=0.6, vmin=-np.abs(count).max(), vmax=np.abs(
+                    count).max())
                 img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm = norm)
 
                 ax2_divider = make_axes_locatable(axes[pane_iterator])
@@ -441,14 +442,19 @@ class TestSuite(Map):
         mass = cluster.particle_masses('gas')
         mass = cluster.comoving_mass(mass)
 
-        coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = r500, cluster_rest_frame =
-        True)
+        coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
 
+        from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
+        plot_limit = 1.5*r500
+        nbins = 100
+        bins = np.linspace(-plot_limit, plot_limit, nbins)
+        pixel_area = (bins[1] - bins[0])**2
+        kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (pixel_area * speed_of_light * hydrogen_mass * 1.16))
 
         self.xyz_projections(xyzdata=coords,
-                             weights= (vel.T * mass).T,
-                             plot_limit=1.5*r500,
-                             nbins=100,
+                             weights= kSZ,
+                             plot_limit=plot_limit,
+                             nbins=nbins,
                              circle_pars=[[0, 0, 0, r500], [0, 0, 0, 5*r500]],
                              circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
