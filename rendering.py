@@ -201,8 +201,7 @@ class Map():
 
                 # norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
                 # norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
-                norm = colors.SymLogNorm(linthresh=100, linscale=0.6, vmin=-np.abs(count).max(), vmax=np.abs(
-                    count).max())
+                norm = colors.SymLogNorm(linthresh=20, linscale=0.6, vmin=-np.abs(count).max(), vmax=np.abs(count).max())
                 img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm = norm)
 
                 ax2_divider = make_axes_locatable(axes[pane_iterator])
@@ -449,7 +448,7 @@ class TestSuite(Map):
         self.xyz_projections(xyzdata=coords,
                              weights= (vel.T * mass).T,
                              plot_limit=1.5*r500,
-                             nbins=100,
+                             nbins=200,
                              circle_pars=[[0, 0, 0, r500], [0, 0, 0, 5*r500]],
                              circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
