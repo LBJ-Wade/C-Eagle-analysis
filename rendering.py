@@ -509,6 +509,7 @@ class TestSuite(Map):
         plt.show()
 
 if __name__ == "__main__":
+    TestSuite()._TEST_CELR_velocity_field()
     TestSuite()._TEST_CELR_yrkSZ_field()
 
 
