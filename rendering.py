@@ -166,7 +166,7 @@ class Map():
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
         thirdAX =   [r'$\bigodot z$', r'$\bigodot x$', r'$\bigotimes y$']
-        line_of_sight = [r'$\uparrow\ \mathcal{O}$', r'$\rightarrow \mathcal{O}$', r'$\bigotimes \mathcal{O}$']
+        line_of_sight = [r'$\ \uparrow \mathcal{O}$', r'$\rightarrow \mathcal{O}$', r'$\bigotimes \mathcal{O}$']
         cbarlabel = [r'$\sum_{i} m_i v_{z, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
                      r'$\sum_{i} m_i v_{x, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
                      r'$\sum_{i} m_i v_{y, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$']
@@ -447,7 +447,7 @@ class TestSuite(Map):
         self.xyz_projections(xyzdata=coords,
                              weights= (vel.T * mass).T,
                              plot_limit=2.5*r200,
-                             nbins=200,
+                             nbins=50,
                              circle_pars=[[0, 0, 0, r200], [0, 0, 0, 5*r200]],
                              circle_labels=[r'$R_{200}$', r'$5\times R_{200}$'],
                              special_markers_pars=[0, 0, 0],
