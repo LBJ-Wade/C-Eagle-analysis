@@ -506,6 +506,8 @@ class TestSuite(Map):
                              special_markers_labels=r'CoM')
 
 if __name__ == "__main__":
+    from matplotlib import pyplot as plt
+    print('Startoffile')
     TestSuite()._TEST_derotate_field()
     plt.show()
 
