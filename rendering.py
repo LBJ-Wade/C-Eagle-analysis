@@ -446,8 +446,8 @@ class TestSuite(Map):
 
         self.xyz_projections(xyzdata=coords,
                              weights= (vel.T * mass).T,
-                             plot_limit=4*r500,
-                             nbins=50,
+                             plot_limit=1.5*r500,
+                             nbins=100,
                              circle_pars=[[0, 0, 0, r500], [0, 0, 0, 5*r500]],
                              circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
