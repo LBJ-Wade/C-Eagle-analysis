@@ -508,23 +508,6 @@ class TestSuite(Map):
                              special_markers_labels=r'CoM')
         plt.show()
 
-        coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True,
-                                                derotate_block=True)
-        kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (pixel_area * speed_of_light *
-                                                                             hydrogen_mass * 1.16))
-
-        self.xyz_projections(xyzdata=coords,
-                             weights=kSZ,
-                             weights_labels=[r'$y_{kSZ} / \mathrm{Mpc}^2$'] * 3,
-                             plot_limit=plot_limit,
-                             nbins=nbins,
-                             colorbar_type=('symlog', 1e-6),
-                             circle_pars=[[0, 0, 0, r500], [0, 0, 0, 5 * r500]],
-                             circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
-                             special_markers_pars=[0, 0, 0],
-                             special_markers_labels=r'CoM')
-        plt.show()
-
 if __name__ == "__main__":
     TestSuite()._TEST_CELR_yrkSZ_field()
 
