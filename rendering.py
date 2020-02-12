@@ -425,7 +425,7 @@ class TestSuite(Map):
 
 
         self.xyz_projections(xyzdata=coords,
-                             weights= (vel*mass),
+                             weights= (vel.T * mass).T,
                              plot_limit=10,
                              nbins=100,
                              circle_pars=[0, 0, 0, r200],
