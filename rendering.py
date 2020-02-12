@@ -466,7 +466,7 @@ class TestSuite(Map):
 
         self.xyz_projections(xyzdata=coords,
                              weights= momentum_lineOfSight,
-                             plot_limit=1.5*r500,
+                             plot_limit=3*r500,
                              weights_labels=cbarlabel,
                              nbins=100,
                              colorbar_type='midpointLinear',
@@ -490,7 +490,7 @@ class TestSuite(Map):
         coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
 
         from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
-        plot_limit = 1.5*r500
+        plot_limit = 3*r500
         nbins = 100
         bins = np.linspace(-plot_limit, plot_limit, nbins)
         pixel_area = (bins[1] - bins[0])**2
