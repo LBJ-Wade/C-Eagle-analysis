@@ -90,11 +90,11 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
         print('[ DEROTATE ]\t==>\tAperture radius set to default R500 true.')
 
     coords = cluster.particle_coordinates(align)
-    coords = np.subtract(coords, cluster.group_centre_of_mass(out_allPartTypes=False, aperture_radius = aperture_radius))
+    coords = np.subtract(coords, cluster.group_centre_of_mass(out_allPartTypes=False, aperture_radius = aperture_radius)[0])
     vel = cluster.particle_velocity(align)
 
     if cluster_rest_frame:
-        vel = np.subtract(vel, cluster.group_zero_momentum_frame(out_allPartTypes=False, aperture_radius = aperture_radius))
+        vel = np.subtract(vel, cluster.group_zero_momentum_frame(out_allPartTypes=False, aperture_radius = aperture_radius)[0])
 
     coords = cluster.comoving_length(coords)
     vel = cluster.comoving_velocity(vel)
@@ -104,13 +104,13 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
 
     ang_momenta, _ = cluster.group_angular_momentum(out_allPartTypes=True, aperture_radius=aperture_radius)
 
-    if align == 'gas' or align == 0:
+    if align == 'gas' or align == '0':
         ang_momentum = ang_momenta[0]
-    elif align == 'dark_matter' or align == 1:
+    elif align == 'dark_matter' or align == '1':
         ang_momentum = ang_momenta[1]
-    elif align == 'stars' or align == 4:
+    elif align == 'stars' or align == '4':
         ang_momentum = ang_momenta[4]
-    elif align == 'black_holes' or align == 5:
+    elif align == 'black_holes' or align == '5':
         ang_momentum = ang_momenta[5]
 
     z_axis_unit_vector = [0,0,1]

@@ -417,7 +417,7 @@ class TestSuite(Map):
         cluster = Cluster(simulation_name='CELR-eagle', clusterID = 0, redshift = 'z000p000')
         r200 = cluster.group_r200()
         r200 = cluster.comoving_length(r200)
-        mass = cluster.particle_masses('0')
+        mass = cluster.particle_masses('gas')
         mass = cluster.comoving_mass(mass)
 
         coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = r200, cluster_rest_frame =
