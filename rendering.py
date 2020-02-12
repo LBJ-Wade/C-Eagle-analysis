@@ -200,9 +200,11 @@ class Map():
                 x_specialMarkers = special_markers_pars[:, axes_pane_indices[0]]
                 y_specialMarkers = special_markers_pars[:, axes_pane_indices[1]]
 
-                for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
+                for x, y in zip(x_specialMarkers, y_specialMarkers):
                     axes[pane_iterator].scatter(x, y, color='red', linestyle='--')
-                    if special_markers_labels_OK:
+
+                if special_markers_labels_OK:
+                    for x, y, txt in zip(x_specialMarkers, y_specialMarkers, special_markers_labels):
                         axes[pane_iterator].annotate(txt, (x, y), size=15)
 
             # Plot the circles
@@ -211,9 +213,11 @@ class Map():
                 x_circleCentres = circle_pars[:, axes_pane_indices[0]]
                 y_circleCentres = circle_pars[:, axes_pane_indices[1]]
 
-                for x, y, r, txt in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3], circle_labels):
-                    axes[pane_iterator].add_artist(Circle((x, y), radius=r, color='black', fill=False, linestyle='--', label=txt))
-                    if circle_labels_OK:
+                for x, y, r in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3]):
+                    axes[pane_iterator].add_artist(Circle((x, y), radius=r, color='black', fill=False, linestyle='--'))
+
+                if circle_labels_OK:
+                    for x, y, r, txt in zip(x_circleCentres, y_circleCentres, circle_pars[:, 3], circle_labels):
                         axes[pane_iterator].annotate(txt, (x, y + 1.1 * r), size=15)
 
             print("[ MAP ]\t==> Panel {} completed.".format(axes_pane_name))
