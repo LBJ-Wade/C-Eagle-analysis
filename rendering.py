@@ -90,8 +90,10 @@ class Map():
     def xyz_projections(self,
                         xyzdata = None,
                         weights = None,
+                        weights_labels = None,
                         plot_limit = None,
                         nbins = None,
+                        colorbar_type = None,
                         circle_pars = None,
                         circle_labels = None,
                         special_markers_pars = None,
@@ -119,8 +121,10 @@ class Map():
         """
         xyzdata_OK = True if xyzdata is not None else False
         weights_OK = True if weights is not None else False
+        weights_labels_OK = True if weights_labels is not None else False
         plot_limit_OK = True if plot_limit is not None else False
         nbins_OK = True if nbins is not None else False
+        colorbar_type_OK = True if colorbar_type is not None else False
         circle_pars_OK = True if circle_pars is not None else False
         circle_labels_OK = True if circle_labels is not None else False
         special_markers_pars_OK = True if special_markers_pars is not None else False
@@ -160,16 +164,20 @@ class Map():
                                                             "got {} special_markers labels and {} special_markers parameters.".format(
                                                             len(special_markers_labels), len(special_markers_pars)))
 
+        if weights_labels_OK:
+            assert len(weights_labels) == 3, "Expected 3 labels for colorbars. If you wish to enter the same label " \
+                                             "for all of them, use `['my_colorbar_label']*3` in `weights_labels`."
+        else:
+            weights_labels = ['']*3
+
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
         cmap =      [plt.get_cmap('seismic'), plt.get_cmap('seismic'), plt.get_cmap('seismic_r')]
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
+
         thirdAX =   [r'$\bigodot z$', r'$\bigodot x$', r'$\bigotimes y$']
         line_of_sight = [r'$\ \uparrow \mathcal{O}$', r'$\rightarrow \mathcal{O}$', r'$\bigotimes \mathcal{O}$']
-        cbarlabel = [r'$\sum_{i} m_i v_{z, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
-                     r'$\sum_{i} m_i v_{x, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
-                     r'$\sum_{i} m_i v_{y, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$']
 
         axes_panes =   {'xy' : [0, 1, 2],
                         'yz' : [1, 2, 0],
@@ -199,16 +207,22 @@ class Map():
                 Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
                 count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
-                # norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
-                # norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
-                norm = colors.SymLogNorm(linthresh=1e-7, linscale=0.6, vmin=-np.abs(count).max(), vmax=np.abs(
-                    count).max())
+                assert colorbar_type_OK, "`colorbar_type` cannot be None."
+                if colorbar_type == 'log':
+                    norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
+                elif colorbar_type == 'midpointLinear':
+                    norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
+                elif colorbar_type[0] == 'symlog':
+                    norm = colors.SymLogNorm(linthresh=colorbar_type[1], linscale=0.5, vmin=-np.abs(count).max(), vmax=np.abs(count).max())
+                else:
+                    raise(ValueError("`colorbar_type` must be`log` or`midpointLinear` or `symlog`." ))
+
                 img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm = norm)
 
                 ax2_divider = make_axes_locatable(axes[pane_iterator])
                 cax2 = ax2_divider.append_axes("top", size="5%", pad="2%")
                 cbar = plt.colorbar(img, cax=cax2, orientation='horizontal')
-                cbar.set_label(cbarlabel[pane_iterator], labelpad=-70)
+                cbar.set_label(weights_labels[pane_iterator], labelpad=-70)
                 # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
                 cax2.xaxis.set_ticks_position("top")
 
@@ -431,7 +445,38 @@ class TestSuite(Map):
                              special_markers_labels=[r'marker1', r'marker2'])
         plt.show()
 
+
     def _TEST_CELR_velocity_field(self):
+
+        from cluster import Cluster, Simulation
+        from testing import angular_momentum
+
+        cluster = Cluster(simulation_name='CELR-eagle', clusterID = 0, redshift = 'z000p000')
+        r500 = cluster.group_r500()
+        r500 = cluster.comoving_length(r500)
+        mass = cluster.particle_masses('gas')
+        mass = cluster.comoving_mass(mass)
+
+        coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
+        momentum_lineOfSight = (vel.T * mass).T
+
+        cbarlabel = [r'$\sum_{i} m_i v_{z, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
+                     r'$\sum_{i} m_i v_{x, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$',
+                     r'$\sum_{i} m_i v_{y, i} / \sum_{i} m_i \ [\mathrm{km\ s^{-1}}]$']
+
+        self.xyz_projections(xyzdata=coords,
+                             weights= momentum_lineOfSight,
+                             plot_limit=1.5*r500,
+                             weights_labels=cbarlabel,
+                             nbins=100,
+                             colorbar_type='midpointLinear',
+                             circle_pars=[[0, 0, 0, r500], [0, 0, 0, 5*r500]],
+                             circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
+                             special_markers_pars=[0, 0, 0],
+                             special_markers_labels=r'CoM')
+        plt.show()
+
+    def _TEST_CELR_yrkSZ_field(self):
 
         from cluster import Cluster, Simulation
         from testing import angular_momentum
@@ -453,8 +498,10 @@ class TestSuite(Map):
 
         self.xyz_projections(xyzdata=coords,
                              weights= kSZ,
+                             weights_labels=[r'$y_{kSZ}$']*3,
                              plot_limit=plot_limit,
                              nbins=nbins,
+                             colorbar_type=('symlog', 1e-6),
                              circle_pars=[[0, 0, 0, r500], [0, 0, 0, 5*r500]],
                              circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
@@ -463,5 +510,6 @@ class TestSuite(Map):
 
 if __name__ == "__main__":
     TestSuite()._TEST_CELR_velocity_field()
+    TestSuite()._TEST_CELR_yrkSZ_field()
 
 
