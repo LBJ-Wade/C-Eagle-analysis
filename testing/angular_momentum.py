@@ -72,7 +72,7 @@ def alignment_DM_to_stars(matrix):  return matrix[1][2]
 def alignment_stars_to_gas(matrix): return matrix[0][2]
 
 
-def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_frame = False):
+def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_frame = False, derotate_block = False):
     """ This method derotates the positions and velocity vectors of
     particles from the Gadget-centric coordinate basis to a custom basis.
 
@@ -99,7 +99,7 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
     coords = cluster.comoving_length(coords)
     vel = cluster.comoving_velocity(vel)
 
-    if align == 'off':
+    if derotate_block:
         return coords, vel
 
     ang_momenta, _ = cluster.group_angular_momentum(out_allPartTypes=True, aperture_radius=aperture_radius)
