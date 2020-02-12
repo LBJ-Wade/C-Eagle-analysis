@@ -45,6 +45,19 @@ class Colorscheme:
     def futuristic(self): return ['#2C3531', '#116466', '#D9B08C', '#FFCB9A', '#D1E8E2']
 
 
+class MidpointNormalize(mpl.colors.Normalize):
+    def __init__(self, vmin, vmax, midpoint=0, clip=False):
+        self.midpoint = midpoint
+        mpl.colors.Normalize.__init__(self, vmin, vmax, clip)
+
+    def __call__(self, value, clip=None):
+        normalized_min = max(0, 1 / 2 * (1 - abs((self.midpoint - self.vmin) / (self.midpoint - self.vmax))))
+        normalized_max = min(1, 1 / 2 * (1 + abs((self.vmax - self.midpoint) / (self.midpoint - self.vmin))))
+        normalized_mid = 0.5
+        x, y = [self.vmin, self.midpoint, self.vmax], [normalized_min, normalized_mid, normalized_max]
+        return sp.ma.masked_array(sp.interp(value, x, y))
+
+
 class Map():
     def __init__(self, cluster = None):
         self.cluster = cluster
@@ -149,7 +162,7 @@ class Map():
 
         fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(20, 9))
 
-        cmap =      [plt.get_cmap('Greens_r'), plt.get_cmap('Greens_r'), plt.get_cmap('Greens_r')]
+        cmap =      [plt.get_cmap('seismic'), plt.get_cmap('seismic'), plt.get_cmap('seismic_r')]
         xlabel =    [r'$x\mathrm{/Mpc}$', r'$y\mathrm{/Mpc}$', r'$x\mathrm{/Mpc}$']
         ylabel =    [r'$y\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$', r'$z\mathrm{/Mpc}$']
         thirdAX =   [r'$\bigotimes z$', r'$\bigotimes x$', r'$\bigodot y$']
@@ -184,7 +197,8 @@ class Map():
                 Cx, Cy = Map.bins_meshify(x_Data, y_Data, x_bins, y_bins)
                 count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
-                norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
+                # norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
+                norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
                 img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm= norm)
 
                 ax2_divider = make_axes_locatable(axes[pane_iterator])
