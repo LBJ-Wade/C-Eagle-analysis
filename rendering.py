@@ -201,7 +201,7 @@ class Map():
 
                 # norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
                 # norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
-                norm = colors.SymLogNorm(linthresh=100, linscale=1, vmin=count.min(), vmax=count.max()),
+                norm = colors.SymLogNorm(linthresh=1, linscale=1, vmin=count.min(), vmax=count.max()),
                 img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm= norm)
 
                 ax2_divider = make_axes_locatable(axes[pane_iterator])
