@@ -435,21 +435,21 @@ class TestSuite(Map):
         from testing import angular_momentum
 
         cluster = Cluster(simulation_name='CELR-eagle', clusterID = 4, redshift = 'z000p000')
-        r200 = cluster.group_r200()
-        r200 = cluster.comoving_length(r200)
+        r500 = cluster.group_r500()
+        r500 = cluster.comoving_length(r500)
         mass = cluster.particle_masses('gas')
         mass = cluster.comoving_mass(mass)
 
-        coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = 5*r200, cluster_rest_frame =
+        coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = r500, cluster_rest_frame =
         True)
 
 
         self.xyz_projections(xyzdata=coords,
                              weights= (vel.T * mass).T,
-                             plot_limit=5*r200,
+                             plot_limit=4*r500,
                              nbins=50,
-                             circle_pars=[[0, 0, 0, r200], [0, 0, 0, 5*r200]],
-                             circle_labels=[r'$R_{200}$', r'$5\times R_{200}$'],
+                             circle_pars=[[0, 0, 0, r500], [0, 0, 0, 5*r500]],
+                             circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
                              special_markers_labels=r'CoM')
         plt.show()
