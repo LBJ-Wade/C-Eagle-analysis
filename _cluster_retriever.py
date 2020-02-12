@@ -47,7 +47,6 @@ def redshift_num2str(z: float):
 
 class Mixin:
 
-
     #####################################################
     #													#
     #				D E C O R A T O R S  				#
@@ -422,11 +421,16 @@ class Mixin:
             free_memory(['therm_energy'], invert=True)
         return therm_energy
 
+
+
     @data_subject(subject="particledata")
     def group_number_part(self, part_type, *args, **kwargs):
         """
         RETURNS: np.array
         """
+        if part_type.__len__() > 1:
+            part_type = self.particle_type_conversion[part_type]
+
         group_number = np.zeros(0, dtype=np.int)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -455,6 +459,9 @@ class Mixin:
         """
         raise ValueError(_warning_)
 
+        if part_type.__len__() > 1:
+            part_type = self.particle_type_conversion[part_type]
+
         sub_group_number = np.zeros(0, dtype=np.int)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -469,6 +476,9 @@ class Mixin:
         """
         RETURNS: 2D np.array
         """
+        if part_type.__len__() > 1:
+            part_type = self.particle_type_conversion[part_type]
+
         pos = np.zeros((0, 3), dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -485,6 +495,9 @@ class Mixin:
         """
         RETURNS: 2D np.array
         """
+        if part_type.__len__() > 1:
+            part_type = self.particle_type_conversion[part_type]
+
         part_vel = np.zeros((0, 3), dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -501,6 +514,9 @@ class Mixin:
         """
         RETURNS: 2D np.array
         """
+        if part_type.__len__() > 1:
+            part_type = self.particle_type_conversion[part_type]
+
         if part_type == '1':
             part_mass = np.ones(self.DM_NumPart_Total()) * self.DM_particleMass()
         else:
@@ -522,6 +538,7 @@ class Mixin:
         RETURNS: 1D np.array
         """
         # Check that we are extracting the temperature of gas particles
+
         temperature = np.zeros(0, dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')

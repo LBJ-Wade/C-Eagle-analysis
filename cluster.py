@@ -24,6 +24,12 @@ from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 class Simulation():
 
     def __init__(self, simulation_name = 'CELR-eagle'):
+
+        self.particle_type_conversion = {        'gas': '0',
+                                         'dark_matter': '1',
+                                               'stars': '4',
+                                         'black_holes': '5'}
+
         if simulation_name == 'C-EAGLE':
             self.simulation = 'C-EAGLE'
             self.computer = 'cosma.dur.ac.uk'
@@ -74,6 +80,7 @@ class Simulation():
     def info(self):
         for attr in dir(self):
             print("obj.%s = %r" % (attr, getattr(self, attr)))
+
 
 
 #################################
