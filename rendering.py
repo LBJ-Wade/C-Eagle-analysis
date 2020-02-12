@@ -200,9 +200,10 @@ class Map():
                 count = Map.bins_evaluate(x_Data, y_Data, x_bins, y_bins, weights=weights)
 
                 # norm = colors.LogNorm(vmin=10**8, vmax=np.max(count))
-                norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
-                # norm = colors.SymLogNorm(linthresh=0.01, linscale=0.01, vmin=count.min(), vmax=count.max()),
-                img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm= norm)
+                # norm = MidpointNormalize(vmin=count.min(), vmax=count.max(), midpoint=0)
+                norm = colors.SymLogNorm(linthresh=100, linscale=0.6, vmin=-np.abs(count).max(), vmax=np.abs(
+                    count).max())
+                img = axes[pane_iterator].pcolor(Cx, Cy, count, cmap=cmap[pane_iterator], norm = norm)
 
                 ax2_divider = make_axes_locatable(axes[pane_iterator])
                 cax2 = ax2_divider.append_axes("top", size="5%", pad="2%")
