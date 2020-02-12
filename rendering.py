@@ -398,7 +398,7 @@ class TestSuite(Map):
     def _TEST_derotate_field(self):
         import cluster
 
-        cluster = cluster.Cluster(clusterID=0, redshift=0.)
+        cluster = cluster.Cluster(clusterID=3, redshift=0.)
 
         vector_reference = [0, 0, 1]
         vector_to_rotate = [1, 1, 1]
@@ -434,19 +434,19 @@ class TestSuite(Map):
         from cluster import Cluster, Simulation
         from testing import angular_momentum
 
-        cluster = Cluster(simulation_name='CELR-eagle', clusterID = 0, redshift = 'z000p000')
+        cluster = Cluster(simulation_name='CELR-eagle', clusterID = 4, redshift = 'z000p000')
         r200 = cluster.group_r200()
         r200 = cluster.comoving_length(r200)
         mass = cluster.particle_masses('gas')
         mass = cluster.comoving_mass(mass)
 
-        coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = r200, cluster_rest_frame =
+        coords, vel = angular_momentum.derotate(cluster, align = 'gas', aperture_radius = 5*r200, cluster_rest_frame =
         True)
 
 
         self.xyz_projections(xyzdata=coords,
                              weights= (vel.T * mass).T,
-                             plot_limit=2.5*r200,
+                             plot_limit=5*r200,
                              nbins=50,
                              circle_pars=[[0, 0, 0, r200], [0, 0, 0, 5*r200]],
                              circle_labels=[r'$R_{200}$', r'$5\times R_{200}$'],
