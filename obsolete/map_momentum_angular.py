@@ -129,6 +129,7 @@ def map_kSZ_intensity(num_halo, redshift, simulation_type, nbins, rfov):
         kSZmap = convolve(count, kernel)
 
         norm = mapgen.MidpointNormalize(vmin=kSZmap.min(), vmax=kSZmap.max(), midpoint=0)
+
         img = axes[i].pcolor(Cx, Cy, kSZmap, cmap=cmap[i], norm= norm)
 
 
