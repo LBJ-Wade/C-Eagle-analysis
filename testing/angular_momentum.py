@@ -102,23 +102,24 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
     if derotate_block:
         return coords, vel
 
-    ang_momenta, _ = cluster.group_angular_momentum(out_allPartTypes=True, aperture_radius=aperture_radius)
+    else:
+        ang_momenta, _ = cluster.group_angular_momentum(out_allPartTypes=True, aperture_radius=aperture_radius)
 
-    if align == 'gas' or align == '0':
-        ang_momentum = ang_momenta[0]
-    elif align == 'dark_matter' or align == '1':
-        ang_momentum = ang_momenta[1]
-    elif align == 'stars' or align == '4':
-        ang_momentum = ang_momenta[4]
-    elif align == 'black_holes' or align == '5':
-        ang_momentum = ang_momenta[5]
+        if align == 'gas' or align == '0':
+            ang_momentum = ang_momenta[0]
+        elif align == 'dark_matter' or align == '1':
+            ang_momentum = ang_momenta[1]
+        elif align == 'stars' or align == '4':
+            ang_momentum = ang_momenta[4]
+        elif align == 'black_holes' or align == '5':
+            ang_momentum = ang_momenta[5]
 
-    z_axis_unit_vector = [0,0,1]
-    rot_matrix = cluster.rotation_matrix_from_vectors(ang_momentum, z_axis_unit_vector)
-    coords = cluster.apply_rotation_matrix(rot_matrix, coords)
-    vel = cluster.apply_rotation_matrix(rot_matrix, vel)
+        z_axis_unit_vector = [0,0,1]
+        rot_matrix = cluster.rotation_matrix_from_vectors(ang_momentum, z_axis_unit_vector)
+        coords = cluster.apply_rotation_matrix(rot_matrix, coords)
+        vel = cluster.apply_rotation_matrix(rot_matrix, vel)
 
-    return coords, vel
+        return coords, vel
 
 
 

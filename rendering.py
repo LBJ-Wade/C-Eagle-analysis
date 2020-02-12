@@ -412,24 +412,29 @@ class TestSuite(Map):
         print('Using TestSuite mode.')
 
     def _TEST_derotate_field(self):
-        import cluster
+        from cluster import Cluster
+        from testing import angular_momentum
 
-        cluster = cluster.Cluster(clusterID=3, redshift=0.)
+        cluster = Cluster(simulation_name='CELR-eagle', clusterID = 0, redshift = 'z000p000')
+        r500 = cluster.group_r500()
+        r500 = cluster.comoving_length(r500)
+        mass = cluster.particle_masses('gas')
+        mass = cluster.comoving_mass(mass)
 
-        vector_reference = [0, 0, 1]
-        vector_to_rotate = [1, 1, 1]
-
-        rotation = cluster.rotation_matrix_from_vectors(vector_to_rotate, vector_reference); print(rotation)
-        rotated_vector = cluster.apply_rotation_matrix(rotation, vector_to_rotate); print(rotated_vector)
-
-        legend_labels = [r'vector_to_rotate_1', r'rotated_vector_1']
+        coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True,
+                                                derotate_block=True)
+        angular_momentum_vector_GADGET, _ = cluster.angular_momentum(mass, vel, coords)
 
 
-        plot_angularmomentum_vectors(np.vstack((vector_to_rotate, rotated_vector)),
+        coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True,
+                                                derotate_block=False)
+        angular_momentum_vector_DEROT, _ = cluster.angular_momentum(mass, vel, coords)
+
+        plot_angularmomentum_vectors(np.vstack((angular_momentum_vector_GADGET, angular_momentum_vector_DEROT)),
                                      labels = None,
                                      axes=None,
                                      plot_unitSphere=True,
-                                     normalise_length=False,
+                                     normalise_length=True,
                                      make_all_unitary=False,
                                      )
 
@@ -443,8 +448,6 @@ class TestSuite(Map):
                              circle_labels=[r'label1', r'label2'],
                              special_markers_pars=[[0,0,0], [2,2,2]],
                              special_markers_labels=[r'marker1', r'marker2'])
-        plt.show()
-
 
     def _TEST_CELR_velocity_field(self):
 
@@ -474,7 +477,7 @@ class TestSuite(Map):
                              circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
                              special_markers_labels=r'CoM')
-        plt.show()
+
 
     def _TEST_CELR_yrkSZ_field(self):
 
@@ -506,10 +509,9 @@ class TestSuite(Map):
                              circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
                              special_markers_labels=r'CoM')
-        plt.show()
 
 if __name__ == "__main__":
-    TestSuite()._TEST_CELR_velocity_field()
-    TestSuite()._TEST_CELR_yrkSZ_field()
+    TestSuite()._TEST_derotate_field()
+    plt.show()
 
 
