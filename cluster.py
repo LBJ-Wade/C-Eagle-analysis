@@ -59,7 +59,7 @@ class Simulation():
                     ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
                      '025', '026', '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
-            self.centralFOF_groupNumber = 2
+            self.centralFOF_groupNumber = 1
 
         elif simulation_name == 'celr_e':
             self.simulation = 'CELR-eagle'
@@ -255,30 +255,5 @@ class Cluster(Simulation,
 
     def DM_NumPart_Total(self):
         return self.file_NumPart_Total()[1]
-
-
-    @staticmethod
-    def type_convert(part_type):
-        """
-        AIM: returns a string characteristic of the particle type selected
-        RETURNS: string of number 0<= n <= 5
-        """
-        if part_type == 'gas' or part_type == 0 or part_type == '0':
-            return '0'
-        elif part_type == 'highres_DM' or part_type == 1 or part_type == '1':
-            return '1'
-        elif part_type == 'lowres_DM' or part_type == 2 or part_type == '2':
-            return '2'
-        elif part_type == 'lowres_DM' or part_type == 3 or part_type == '3':
-            return '3'
-        elif part_type == 'stars' or part_type == 4 or part_type == '4':
-            return '4'
-        elif part_type == 'black_holes' or part_type == 5 or part_type == '5':
-            return '5'
-        else:
-            print("[ERROR] You entered the wrong particle type!")
-            exit(1)
-
-
 
 
