@@ -415,7 +415,7 @@ class TestSuite(Map):
         from cluster import Cluster
         from testing import angular_momentum
 
-        cluster = Cluster(simulation_name='CELR-eagle', clusterID = 0, redshift = 'z000p000')
+        cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
         mass = cluster.particle_masses('gas')
         mass = cluster.comoving_mass(mass)
 
@@ -426,11 +426,11 @@ class TestSuite(Map):
         angular_momentum_vector_DEROT, _ = cluster.angular_momentum(mass, vel, coords)
 
         plot_angularmomentum_vectors(np.vstack((angular_momentum_vector_GADGET, angular_momentum_vector_DEROT)),
-                                     labels = None,
+                                     labels = [r'angular_momentum_vector_GADGET', r'angular_momentum_vector_DEROT'],
                                      axes=None,
                                      plot_unitSphere=True,
-                                     normalise_length=True,
-                                     make_all_unitary=False,
+                                     normalise_length=False,
+                                     make_all_unitary=True,
                                      )
 
     def _TEST_velocity_map(self):
@@ -449,7 +449,7 @@ class TestSuite(Map):
         from cluster import Cluster, Simulation
         from testing import angular_momentum
 
-        cluster = Cluster(simulation_name='CELR-eagle', clusterID = 0, redshift = 'z000p000')
+        cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
         r500 = cluster.group_r500()
         r500 = cluster.comoving_length(r500)
         mass = cluster.particle_masses('gas')
@@ -479,7 +479,7 @@ class TestSuite(Map):
         from cluster import Cluster, Simulation
         from testing import angular_momentum
 
-        cluster = Cluster(simulation_name='CELR-eagle', clusterID = 0, redshift = 'z000p000')
+        cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
         r500 = cluster.group_r500()
         r500 = cluster.comoving_length(r500)
         mass = cluster.particle_masses('gas')
@@ -507,7 +507,6 @@ class TestSuite(Map):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    print('Startoffile')
     TestSuite()._TEST_derotate_field()
     plt.show()
 

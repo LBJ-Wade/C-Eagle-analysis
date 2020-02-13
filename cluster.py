@@ -23,18 +23,18 @@ from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 class Simulation():
 
-    def __init__(self, simulation_name = 'CELR-eagle'):
+    def __init__(self, simulation_name = 'celr_b'):
 
+        self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
         self.particle_type_conversion = {        'gas': '0',
                                          'dark_matter': '1',
                                                'stars': '4',
                                          'black_holes': '5'}
 
-        if simulation_name == 'C-EAGLE':
+        if simulation_name == 'ceagle':
             self.simulation = 'C-EAGLE'
             self.computer = 'cosma.dur.ac.uk'
             self.pathData = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
-            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
             self.cluster_prefix = 'CE_'
             self.totalClusters = 30
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
@@ -42,11 +42,10 @@ class Simulation():
             self.redshiftAllowed = zcat.group_data()['z_value']
             self.centralFOF_groupNumber = 1
 
-        if simulation_name == 'CELR-eagle':
-            self.simulation = 'CELR-eagle'
+        elif simulation_name == 'celr_b':
+            self.simulation = 'CELR-bahamas'
             self.computer = 'cosma.dur.ac.uk'
-            self.pathData = '/cosma5/data/dp004/dc-pear3/data/eagle'
-            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
+            self.pathData = '/cosma5/data/dp004/dc-pear3/data/bahamas'
             self.cluster_prefix = 'halo_'
             self.totalClusters = 45
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
@@ -59,8 +58,69 @@ class Simulation():
                 'z_IDNumber':
                     ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
                      '025', '026', '027', '028', '029']}
-            self.redshiftAllowed = self.zcat['z_value'] # Delete the first 5 redshifts: data are corrupted
+            self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
+
+        elif simulation_name == 'celr_e':
+            self.simulation = 'CELR-eagle'
+            self.computer = 'cosma.dur.ac.uk'
+            self.pathData = '/cosma5/data/dp004/dc-pear3/data/eagle'
+            self.cluster_prefix = 'halo_'
+            self.totalClusters = 45
+            self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
+            self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            self.zcat = {
+                'z_value':
+                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
+                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
+                     'z000p073', 'z000p036', 'z000p000'],
+                'z_IDNumber':
+                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
+                     '025', '026', '027', '028', '029']}
+            self.redshiftAllowed = self.zcat['z_value']
+            self.centralFOF_groupNumber = 1
+
+        elif simulation_name == 'macsis':
+            self.simulation = 'MACSIS'
+            self.computer = 'virgo_nas@mizar.jb.man.ac.ukk'
+            self.pathData = ''
+            self.cluster_prefix = 'halo_'
+            self.totalClusters = 45
+            self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
+            self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            self.zcat = {
+                'z_value':
+                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
+                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
+                     'z000p073', 'z000p036', 'z000p000'],
+                'z_IDNumber':
+                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
+                     '025', '026', '027', '028', '029']}
+            self.redshiftAllowed = self.zcat['z_value']
+            self.centralFOF_groupNumber = 1
+
+        elif simulation_name == 'bahamas':
+            self.simulation = 'BAHAMAS'
+            self.computer = 'virgo_nas@mizar.jb.man.ac.uk'
+            self.pathData = ''
+            self.cluster_prefix = 'halo_'
+            self.totalClusters = 45
+            self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
+            self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            self.zcat = {
+                'z_value':
+                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
+                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
+                     'z000p073', 'z000p036', 'z000p000'],
+                'z_IDNumber':
+                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
+                     '025', '026', '027', '028', '029']}
+            self.redshiftAllowed = self.zcat['z_value']
+            self.centralFOF_groupNumber = 1
+
+        else:
+            raise(ValueError("Simulation name error: expected [`ceagle` or, `celr_b` or, `celr_e` or, `macsis` "
+                             "or, `bahamas`], got {}.".format(simulation_name)))
 
 
 
