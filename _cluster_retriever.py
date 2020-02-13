@@ -74,9 +74,9 @@ class Mixin:
 
                 sbj_string = decorator_kwargs['subject'] + '_' + redshift_index
 
-                if self.simulation == 'celr_e' or self.simulation == 'ceagle':
+                if self.simulation_name == 'celr_e' or self.simulation_name == 'ceagle':
                     sbj_string = sbj_string + '_' + self.redshift
-                elif self.simulation == 'celr_b' or self.simulation == 'macsis':
+                elif self.simulation_name == 'celr_b' or self.simulation_name == 'macsis':
                     pass
 
                 file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
