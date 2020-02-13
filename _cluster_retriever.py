@@ -72,7 +72,11 @@ class Mixin:
                 redshift_i = self.redshiftAllowed.index(self.redshift)
                 redshift_index = self.zcat['z_IDNumber'][redshift_i]
 
-                sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + self.redshift
+                if self.simulation == 'celr_e' or self.simulation == 'ceagle':
+                    sbj_string = decorator_kwargs['subject'] + '_' + redshift_index + '_' + self.redshift
+                elif self.simulation == 'celr_b' or self.simulation == 'macsis':
+                    sbj_string = decorator_kwargs['subject'] + '_' + redshift_index
+
                 file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
                 file_list = os.listdir(file_dir)
 
