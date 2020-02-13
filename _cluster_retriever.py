@@ -33,6 +33,7 @@ def redshift_num2str(z: float):
     text, in a format compatible with the file names.
     E.g. float z = 2.16 ---> str z = 'z002p160'.
     """
+    z = round(z, 3)
     integer_z, decimal_z = str(z).split('.')
     return 'z' + integer_z.rjust(3, '0') + 'p' + decimal_z.rjust(3, '0')
 
