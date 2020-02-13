@@ -185,7 +185,7 @@ class Simulation():
         """
         Returns the halo number in format e.g. 00, 01, 02
         """
-        if self.simulation == 'macsis':
+        if self.simulation_name == 'macsis':
             return self.halo_num_catalogue_contiguous[n]
         else:
             if self.totalClusters > 1 and self.totalClusters < 10:
