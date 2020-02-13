@@ -21,7 +21,6 @@ import itertools
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from cluster import Simulation, Cluster
-from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
 
 def create_files_set(simulation_name = None):
     """
@@ -67,12 +66,12 @@ def create_files_set(simulation_name = None):
 
     for halo_num, redshift in process_iterator:
 
-        file_name = simulation_obj.cluster_prefix + halo_Num(halo_num) + redshift
+        file_name = simulation_obj.cluster_prefix + simulation_obj.halo_Num(halo_num) + redshift
         fileCompletePath = simulation_obj.pathSave + '/' + simulation_obj.simulation + '_output/collective_output/' + file_name + '.hdf5'
 
         with h5py.File(fileCompletePath, "w") as file:
 
-            # folder_name = simulation_obj.cluster_prefix + halo_Num(halo_num)
+            # folder_name = simulation_obj.cluster_prefix + simulation_obj.halo_Num(halo_num)
             # halo_folder = file.create_group(folder_name)            #
             # redshift_folder = halo_folder.create_group(redshift)
 
@@ -103,7 +102,8 @@ def create_dataset(fileCompletePath,
     """
 
     with h5py.File(fileCompletePath, "r+") as file:
-    # subfolder_name = simulation.cluster_prefix + halo_Num(cluster.clusterID) + '/' + redshift_num2str(cluster.redshift)
+    # subfolder_name = simulation.cluster_prefix + simulation_obj.halo_Num(cluster.clusterID) + '/' +
+    # redshift_num2str(cluster.redshift)
         file_halo_redshift = file[subfolder]
 
         if dataset_name is not None and input_data is not None:

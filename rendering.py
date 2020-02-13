@@ -411,27 +411,6 @@ class TestSuite(Map):
     def __init__(self):
         print('Using TestSuite mode.')
 
-    def _TEST_derotate_field(self):
-        from cluster import Cluster
-        from testing import angular_momentum
-
-        cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
-        mass = cluster.particle_masses('gas')
-        mass = cluster.comoving_mass(mass)
-
-        coords, vel = angular_momentum.derotate(cluster, align='gas', cluster_rest_frame=True, derotate_block=True)
-        angular_momentum_vector_GADGET, _ = cluster.angular_momentum(mass, vel, coords)
-
-        coords, vel = angular_momentum.derotate(cluster, align='gas', cluster_rest_frame=True, derotate_block=False)
-        angular_momentum_vector_DEROT, _ = cluster.angular_momentum(mass, vel, coords)
-
-        plot_angularmomentum_vectors(np.vstack((angular_momentum_vector_GADGET, angular_momentum_vector_DEROT)),
-                                     labels = None,
-                                     axes=None,
-                                     plot_unitSphere=True,
-                                     normalise_length=False,
-                                     make_all_unitary=True,
-                                     )
 
     def _TEST_velocity_map(self):
 
@@ -504,6 +483,28 @@ class TestSuite(Map):
                              circle_labels=[r'$R_{500}$', r'$5\times R_{500}$'],
                              special_markers_pars=[0, 0, 0],
                              special_markers_labels=r'CoM')
+
+    def _TEST_derotate_field(self):
+        from cluster import Cluster
+        from testing import angular_momentum
+
+        cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
+        mass = cluster.particle_masses('gas')
+        mass = cluster.comoving_mass(mass)
+
+        coords, vel = angular_momentum.derotate(cluster, align='gas', cluster_rest_frame=True, derotate_block=True)
+        angular_momentum_vector_GADGET, _ = cluster.angular_momentum(mass, vel, coords)
+
+        coords, vel = angular_momentum.derotate(cluster, align='gas', cluster_rest_frame=True, derotate_block=False)
+        angular_momentum_vector_DEROT, _ = cluster.angular_momentum(mass, vel, coords)
+
+        plot_angularmomentum_vectors(np.vstack((angular_momentum_vector_GADGET, angular_momentum_vector_DEROT)),
+                                     labels = None,
+                                     axes=None,
+                                     plot_unitSphere=True,
+                                     normalise_length=False,
+                                     make_all_unitary=True,
+                                     )
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt

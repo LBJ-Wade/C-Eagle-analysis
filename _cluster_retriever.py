@@ -17,13 +17,6 @@ from cluster import *
 from memory import *
 
 
-def halo_Num(n: int):
-    """
-    Returns the halo number in format e.g. 00, 01, 02
-    """
-    return '%02d' % (n,)
-
-
 def redshift_str2num(z: str):
     """
     Converts the redshift of the snapshot from text to numerical,

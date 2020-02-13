@@ -24,7 +24,7 @@ import h5py
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from cluster import Simulation, Cluster
-from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
+from _cluster_retriever import redshift_str2num, redshift_num2str
 from testing import angular_momentum
 from testing import mergers
 
@@ -75,7 +75,7 @@ def make_parallel_MPI(function):
             if process % size == rank:
 
                 cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-                file_name = sim.cluster_prefix + halo_Num(halo_num) + redshift
+                file_name = sim.cluster_prefix + sim.halo_Num(halo_num) + redshift
                 fileCompletePath = sim.pathSave + '/' + sim.simulation + '_output/collective_output/' + file_name + '.hdf5'
 
                 kwargs['cluster'] = cluster_obj

@@ -90,7 +90,7 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
         print('[ DEROTATE ]\t==>\tAperture radius set to default R500 true.')
 
     coords = cluster.particle_coordinates(align)
-    coords = np.subtract(coords, cluster.group_centre_of_mass(out_allPartTypes=False, aperture_radius = aperture_radius)[0])
+    coords = np.subtract(coords, cluster.group_centre_of_potential())
     vel = cluster.particle_velocity(align)
 
     if cluster_rest_frame:
