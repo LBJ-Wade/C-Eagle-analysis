@@ -59,7 +59,7 @@ class Simulation():
                     ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
                      '025', '026', '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
-            self.centralFOF_groupNumber = 1
+            self.centralFOF_groupNumber = 0
 
         elif simulation_name == 'celr_e':
             self.simulation = 'CELR-eagle'
