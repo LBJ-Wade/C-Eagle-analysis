@@ -154,8 +154,8 @@ class Cluster(Simulation,
               _cluster_retriever.Mixin,
               _cluster_profiler.Mixin):
 
-    def __init__(self, *args, clusterID: int = 0, redshift: str = 0.0, **kwargs):
-        super().__init__()
+    def __init__(self, simulation_name: str = None, clusterID: int = 0, redshift: str = 0.0, **kwargs):
+        super().__init__(simulation_name = simulation_name)
 
         # Initialise and validate attributes
         self.set_clusterID(clusterID)
