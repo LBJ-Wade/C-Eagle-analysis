@@ -158,6 +158,7 @@ class Cluster(Simulation,
         super().__init__(simulation_name = simulation_name)
 
         # Initialise and validate attributes
+        self.simulation_name = simulation_name
         self.set_clusterID(clusterID)
         self.redshift = redshift
 
