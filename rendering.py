@@ -415,7 +415,7 @@ class TestSuite(Map):
         from cluster import Cluster
         from testing import angular_momentum
 
-        cluster = Cluster(simulation_name='celr_e', clusterID = 0, redshift = 'z000p000')
+        cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
         mass = cluster.particle_masses('gas')
         mass = cluster.comoving_mass(mass)
 
@@ -426,7 +426,7 @@ class TestSuite(Map):
         angular_momentum_vector_DEROT, _ = cluster.angular_momentum(mass, vel, coords)
 
         plot_angularmomentum_vectors(np.vstack((angular_momentum_vector_GADGET, angular_momentum_vector_DEROT)),
-                                     labels = [r'angular_momentum_vector_GADGET', r'angular_momentum_vector_DEROT'],
+                                     labels = None,
                                      axes=None,
                                      plot_unitSphere=True,
                                      normalise_length=False,
