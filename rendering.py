@@ -488,7 +488,7 @@ class TestSuite(Map):
         from cluster import Cluster
         from testing import angular_momentum
 
-        cluster = Cluster(simulation_name='macsis', clusterID = 0, redshift = 'z000p000')
+        cluster = Cluster(simulation_name='celr_e', clusterID = 0, redshift = 'z000p000')
         mass = cluster.particle_masses('gas')
         mass = cluster.comoving_mass(mass)
 
