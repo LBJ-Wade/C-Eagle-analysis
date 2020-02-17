@@ -131,14 +131,14 @@ if __name__ == '__main__':
     pixel_area = (bins_x[1] - bins_x[0]) * (bins_y[1] - bins_y[0])
 
 
-    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (pixel_area * speed_of_light * hydrogen_mass * 1.16),
+    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16),
                    dtype = np.float32)
     h = np.asarray(SPH_kernel, dtype = np.float32)
 
 
 
 
-    temp_map = generate_map(x, y, m, h, res, parallel=True)
+    temp_map = generate_map(x, y, np.log10(m**2), h, res, parallel=True)
     norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
 
     from matplotlib import pyplot as plt
@@ -147,7 +147,7 @@ if __name__ == '__main__':
 
     ax = fig.add_subplot(111)
     ax.set_title('colorMap')
-    plt.imshow(temp_map, cmap=plt.get_cmap('seismic'), norm=norm)
+    plt.imshow(temp_map)
     ax.set_aspect('equal')
 
     cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
