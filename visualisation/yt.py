@@ -1,8 +1,8 @@
 
-def generate_volume():
 
-
-    ds = yt.load('/cosma5/data/dp004/C-EAGLE/Complete_Sample/CE_00/data/particledata_029_z000p000/eagle_subfind_particles_029_z000p000.0.hdf5')
+import numpy as np
+import yt
+ds = yt.load('/cosma5/data/dp004/C-EAGLE/Complete_Sample/CE_00/data/particledata_029_z000p000/eagle_subfind_particles_029_z000p000.0.hdf5')
 
     sc = yt.create_scene(ds, lens_type='perspective')
 
@@ -25,7 +25,3 @@ def generate_volume():
     source.tfh.plot('transfer_function.png', profile_field='density')
 
     sc.save('~/rendering.png', sigma_clip=6)
-
-import numpy as np
-import yt
-generate_volume()
