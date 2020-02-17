@@ -117,35 +117,31 @@ if __name__ == '__main__':
 
     coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
 
-    spatial_filter = np.where((coords[:,0] < 3*r500) & (coords[:,1] < 3*r500) & (coords[:,2] < 3*r500))[0]
+    spatial_filter = np.where(
+        (np.abs(coords[:,0]) < 3*r500) &
+        (np.abs(coords[:,1]) < 3*r500) &
+        (np.abs(coords[:,2]) < 3*r500))[0]
     coords = coords[spatial_filter, :]
     vel = vel[spatial_filter, :]
     mass = mass[spatial_filter]
     SPH_kernel = SPH_kernel[spatial_filter]
 
+    res = np.int(500)
+
+    bins_x = np.linspace(-np.min(coords[:, 0]), np.max(coords[:, 0]), res)
+    pixel_area = (bins_x[1] - bins_x[0]) **2
+
     from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
-    kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16))
+    kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (pixel_area* speed_of_light * hydrogen_mass *
+                                                                         1.16))
 
     x = np.asarray((coords[:,0] - np.min(coords[:,0]))/(np.max(coords[:,0]) - np.min(coords[:,0])), dtype = np.float64)
     y = np.asarray((coords[:,1] - np.min(coords[:,1]))/(np.max(coords[:,1]) - np.min(coords[:,1])), dtype = np.float64)
     z = np.asarray((coords[:,2] - np.min(coords[:,2]))/(np.max(coords[:,2]) - np.min(coords[:,2])), dtype = np.float64)
-
-    res = np.int(500)
-
-    bins_x = np.linspace(-np.min(coords[:, 0]), np.max(coords[:, 0]), res)
-    bins_y = np.linspace(-np.min(coords[:, 1]), np.max(coords[:, 1]), res)
-    bins_z = np.linspace(-np.min(coords[:, 2]), np.max(coords[:, 2]), res)
-    pixel_area = (bins_x[1] - bins_x[0]) * (bins_y[1] - bins_y[0])
-
-
-    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (pixel_area * speed_of_light * hydrogen_mass * 1.16),
-                   dtype = np.float32)
+    m = np.asarray(kSZ[:, 2], dtype = np.float32)
     h = np.asarray(SPH_kernel, dtype = np.float32)
 
-
-
-
-    temp_map = generate_map(x, y, mass, h, res, parallel=True)
+    temp_map = generate_map(x, y, m, h, res, parallel=True)
     norm = colors.SymLogNorm(linthresh=np.percentile(np.abs(m), 10), linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(
         m).max())
 
@@ -155,8 +151,7 @@ if __name__ == '__main__':
 
     ax = fig.add_subplot(111)
     ax.set_title('colorMap')
-    plt.imshow(temp_map, extent=[np.min(coords[:,0]),np.max(coords[:,0]),
-                                             np.min(coords[:,1]),np.max(coords[:,1])])
+    plt.imshow(temp_map, norm = norm)
 
     cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
     cax.get_xaxis().set_visible(False)
