@@ -120,7 +120,7 @@ if __name__ == '__main__':
     x = np.asarray((coords[:,0] - np.min(coords[:,0]))/(np.max(coords[:,0]) - np.min(coords[:,0])), dtype = np.float64)
     y = np.asarray((coords[:,1] - np.min(coords[:,1]))/(np.max(coords[:,1]) - np.min(coords[:,1])), dtype = np.float64)
     z = np.asarray((coords[:,2] - np.min(coords[:,2]))/(np.max(coords[:,2]) - np.min(coords[:,2])), dtype = np.float64)
-    m = np.asarray(mass, dtype = np.float32)
+    m = np.asarray(np.log10(mass * vel[:,2] * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16)), dtype = np.float32)
     h = np.asarray(SPH_kernel, dtype = np.float32)
     res = np.int(200)
 
