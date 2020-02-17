@@ -126,7 +126,7 @@ if __name__ == '__main__':
 
 
 
-    temp_map = generate_map(x, y, m, h, res)
+    temp_map = generate_map(x, y, m, h, res, parallel=True)
 
     from matplotlib.pyplot import imsave
     from matplotlib.colors import LogNorm
