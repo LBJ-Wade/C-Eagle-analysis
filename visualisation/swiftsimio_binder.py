@@ -122,8 +122,7 @@ if __name__ == '__main__':
     pixel_area = (bins[1] - bins[0]) ** 2
     kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16))
 
-    temp_map = generate_map(coords[:,0]/np.max(coords[:,0]), coords[:,0]/np.max(coords[:,1]), kSZ, SPH_kernel, 200,
-                          parallel=False)
+    temp_map = generate_map(coords[:,0]/np.max(coords[:,0]), coords[:,0]/np.max(coords[:,1]), kSZ, SPH_kernel, 200)
 
     from matplotlib.pyplot import imsave
     from matplotlib.colors import LogNorm
