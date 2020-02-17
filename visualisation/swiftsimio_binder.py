@@ -117,12 +117,12 @@ if __name__ == '__main__':
     from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
     kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16))
 
-    x = np.float64(coords[:,0]/np.max(coords[:,0]))
-    y = np.float64(coords[:,1]/np.max(coords[:,1]))
-    z = np.float64(coords[:,2]/np.max(coords[:,2]))
-    m = np.float32(kSZ)
-    h = np.float32(SPH_kernel)
-    res = np.int(200)
+    x = np.asarray(coords[:,0]/np.max(coords[:,0]), dtype = np.float64)
+    y = np.asarray(coords[:,1]/np.max(coords[:,1]), dtype = np.float64)
+    z = np.asarray(coords[:,2]/np.max(coords[:,2]), dtype = np.float64)
+    m = np.asarray(kSZ, dtype = np.float32)
+    h = np.asarray(SPH_kernel, dtype = np.float32)
+    res = np.asarray(200, dtype = np.int)
 
 
 
