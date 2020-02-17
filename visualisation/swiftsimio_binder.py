@@ -115,14 +115,18 @@ if __name__ == '__main__':
     coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
 
     from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
-
-    plot_limit = 3 * r500
-    nbins = 100
-    bins = np.linspace(-plot_limit, plot_limit, nbins)
-    pixel_area = (bins[1] - bins[0]) ** 2
     kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16))
 
-    temp_map = generate_map(coords[:,0]/np.max(coords[:,0]), coords[:,0]/np.max(coords[:,1]), kSZ, SPH_kernel, 200)
+    x = np.float64(coords[:,0]/np.max(coords[:,0]))
+    y = np.float64(coords[:,1]/np.max(coords[:,1]))
+    z = np.float64(coords[:,2]/np.max(coords[:,2]))
+    m = np.float32(kSZ)
+    h = np.float32(SPH_kernel)
+    res = np.int(200)
+
+
+
+    temp_map = generate_map(x, y, m, h, res)
 
     from matplotlib.pyplot import imsave
     from matplotlib.colors import LogNorm
