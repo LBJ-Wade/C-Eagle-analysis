@@ -122,14 +122,24 @@ if __name__ == '__main__':
     x = np.asarray((coords[:,0] - np.min(coords[:,0]))/(np.max(coords[:,0]) - np.min(coords[:,0])), dtype = np.float64)
     y = np.asarray((coords[:,1] - np.min(coords[:,1]))/(np.max(coords[:,1]) - np.min(coords[:,1])), dtype = np.float64)
     z = np.asarray((coords[:,2] - np.min(coords[:,2]))/(np.max(coords[:,2]) - np.min(coords[:,2])), dtype = np.float64)
-    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16), dtype = np.float32)
-    h = np.asarray(SPH_kernel, dtype = np.float32)
+
     res = np.int(200)
+
+    bins_x = np.linspace(-np.min(coords[:, 0]), np.max(coords[:, 0]), res)
+    bins_y = np.linspace(-np.min(coords[:, 1]), np.max(coords[:, 1]), res)
+    bins_z = np.linspace(-np.min(coords[:, 2]), np.max(coords[:, 2]), res)
+    pixel_area = (bins_x[1] - bins_x[0]) * (bins_y[1] - bins_y[0])
+
+
+    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (pixel_area * speed_of_light * hydrogen_mass * 1.16),
+                   dtype = np.float32)
+    h = np.asarray(SPH_kernel, dtype = np.float32)
+
 
 
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
-    norm = colors.SymLogNorm(linthresh=1e-7, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
+    norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
 
     from matplotlib import pyplot as plt
 
