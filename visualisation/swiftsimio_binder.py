@@ -121,7 +121,7 @@ if __name__ == '__main__':
     coords = coords[spatial_filter, :]
     vel = vel[spatial_filter, :]
     mass = mass[spatial_filter]
-    SPH_kernel = SPH_kernel[]spatial_filter
+    SPH_kernel = SPH_kernel[spatial_filter]
 
     from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
     kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16))
