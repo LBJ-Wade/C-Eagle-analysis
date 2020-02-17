@@ -96,8 +96,8 @@ def generate_volume(*args, parallel = False):
 
 
 if __name__ == '__main__':
-    from .. cluster import Cluster
-    from .. testing import angular_momentum
+    from cluster import Cluster
+    from testing import angular_momentum
     import numpy as np
 
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
