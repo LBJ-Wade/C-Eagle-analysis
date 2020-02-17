@@ -124,7 +124,7 @@ if __name__ == '__main__':
     y = np.asarray((coords[:,1] - np.min(coords[:,1]))/(np.max(coords[:,1]) - np.min(coords[:,1])), dtype = np.float64)
     z = np.asarray((coords[:,2] - np.min(coords[:,2]))/(np.max(coords[:,2]) - np.min(coords[:,2])), dtype = np.float64)
 
-    res = np.int(200)
+    res = np.int(500)
 
     bins_x = np.linspace(-np.min(coords[:, 0]), np.max(coords[:, 0]), res)
     bins_y = np.linspace(-np.min(coords[:, 1]), np.max(coords[:, 1]), res)
