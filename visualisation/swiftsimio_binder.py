@@ -117,6 +117,12 @@ if __name__ == '__main__':
 
     coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
 
+    spatial_filter = np.where((coords[:,0] < 3*r500) & (coords[:,1] < 3*r500) & (coords[:,2] < 3*r500))[0]
+    coords = coords[spatial_filter, :]
+    vel = vel[spatial_filter, :]
+    mass = mass[spatial_filter]
+    SPH_kernel = SPH_kernel[]spatial_filter
+
     from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
     kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16))
 
