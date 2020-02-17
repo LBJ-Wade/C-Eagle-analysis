@@ -1,3 +1,2 @@
-from .. import cluster
-from .. import testing
-from .. import save
+import sys
+sys.path.append("..") # Adds higher directory to python modules path.
