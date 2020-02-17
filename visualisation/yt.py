@@ -2,7 +2,7 @@
 
 import numpy as np
 import yt
-ds = yt.load('/cosma5/data/dp004/C-EAGLE/Complete_Sample/CE_00/data/particledata_029_z000p000/eagle_subfind_particles_029_z000p000.0.hdf5')
+ds = yt.load('/cosma5/data/dp004/C-EAGLE/Complete_Sample/CE_00/data/snapshot_029_z000p000/snap_029_z000p000.0.hdf5')
 
 
 # This is an object that describes the entire box

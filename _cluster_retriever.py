@@ -570,6 +570,23 @@ class Mixin:
         return densitySPH
 
     @data_subject(subject="particledata")
+    def particle_SPH_smoothinglength(self, *args, **kwargs):
+        """
+        RETURNS: 1D np.array
+        """
+        smoothinglength = np.zeros(0, dtype=np.float)
+        for path in kwargs['file_list_sorted']:
+            h5file = h5.File(path, 'r')
+            hd5set = h5file['/PartType0/SmoothingLength']
+            sub_den = hd5set[...]
+            h5file.close()
+            smoothinglength = np.concatenate((smoothinglength, sub_den), axis=0)
+            free_memory(['smoothinglength'], invert=True)
+
+        assert smoothinglength.__len__() > 0, "Array is empty."
+        return smoothinglength
+
+    @data_subject(subject="particledata")
     def particle_metallicity(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
