@@ -101,6 +101,8 @@ if __name__ == '__main__':
 
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
+    import matplotlib.colors as colors
+
     from cluster import Cluster
     from testing import angular_momentum
     import numpy as np
@@ -120,13 +122,14 @@ if __name__ == '__main__':
     x = np.asarray((coords[:,0] - np.min(coords[:,0]))/(np.max(coords[:,0]) - np.min(coords[:,0])), dtype = np.float64)
     y = np.asarray((coords[:,1] - np.min(coords[:,1]))/(np.max(coords[:,1]) - np.min(coords[:,1])), dtype = np.float64)
     z = np.asarray((coords[:,2] - np.min(coords[:,2]))/(np.max(coords[:,2]) - np.min(coords[:,2])), dtype = np.float64)
-    m = np.asarray(np.log10(mass * vel[:,2] * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16)), dtype = np.float32)
+    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16), dtype = np.float32)
     h = np.asarray(SPH_kernel, dtype = np.float32)
     res = np.int(200)
 
 
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
+    norm = colors.SymLogNorm(linthresh=1e-7, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
 
     from matplotlib import pyplot as plt
 
@@ -134,7 +137,7 @@ if __name__ == '__main__':
 
     ax = fig.add_subplot(111)
     ax.set_title('colorMap')
-    plt.imshow(temp_map)
+    plt.imshow(temp_map, cmap=plt.get_cmap('twilight'), norm=norm)
     ax.set_aspect('equal')
 
     cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
