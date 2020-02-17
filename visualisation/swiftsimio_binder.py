@@ -140,7 +140,8 @@ if __name__ == '__main__':
 
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
-    norm = colors.SymLogNorm(linthresh=1e-7, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
+    norm = colors.SymLogNorm(linthresh=np.percentile(np.abs(m), 10), linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(
+        m).max())
 
     from matplotlib import pyplot as plt
 
