@@ -122,7 +122,7 @@ if __name__ == '__main__':
     z = np.asarray(coords[:,2]/np.max(coords[:,2]), dtype = np.float64)
     m = np.asarray(mass, dtype = np.float32)
     h = np.asarray(SPH_kernel, dtype = np.float32)
-    res = np.int(200)
+    res = np.uint16(200)
 
 
 
