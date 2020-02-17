@@ -131,7 +131,7 @@ if __name__ == '__main__':
     pixel_area = (bins_x[1] - bins_x[0]) * (bins_y[1] - bins_y[0])
 
 
-    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16),
+    m = np.asarray(mass * vel[:,2] * thompson_cross_section / (pixel_area * speed_of_light * hydrogen_mass * 1.16),
                    dtype = np.float32)
     h = np.asarray(SPH_kernel, dtype = np.float32)
 
