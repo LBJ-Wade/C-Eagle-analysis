@@ -139,8 +139,8 @@ if __name__ == '__main__':
 
 
 
-    temp_map = generate_map(x, y, np.log10(m**2), h, res, parallel=True)
-    norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
+    temp_map = generate_map(x, y, m, h, res, parallel=True)
+    norm = colors.SymLogNorm(linthresh=1e-7, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
 
     from matplotlib import pyplot as plt
 
@@ -148,7 +148,8 @@ if __name__ == '__main__':
 
     ax = fig.add_subplot(111)
     ax.set_title('colorMap')
-    plt.imshow(temp_map)
+    plt.imshow(temp_map, norm= norm, extent=[np.min(coords[:,0]),np.max(coords[:,0]),
+                                             np.min(coords[:,1]),np.max(coords[:,1])])
     ax.set_aspect('equal')
 
     cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
