@@ -113,6 +113,7 @@ if __name__ == '__main__':
     mass = cluster.particle_masses('gas')
     mass = cluster.comoving_mass(mass)
     SPH_kernel = cluster.particle_SPH_smoothinglength()
+    SPH_kernel = cluster.comoving_length(SPH_kernel)
 
     coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
 
