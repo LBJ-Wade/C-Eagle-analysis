@@ -96,6 +96,11 @@ def generate_volume(*args, parallel = False):
 
 
 if __name__ == '__main__':
+    import sys
+    import os.path
+
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
     from cluster import Cluster
     from testing import angular_momentum
     import numpy as np
