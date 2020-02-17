@@ -26,3 +26,6 @@ def generate_volume():
     source.tfh.plot('transfer_function.png', profile_field='density')
 
     sc.save('~/rendering.png', sigma_clip=6)
+
+
+generate_volume()
