@@ -74,8 +74,8 @@ def test():
 
 def plots():
 	from matplotlib import pyplot as plt
-	import map_plot_parameters as plotpar
-	from numpy import logspace
+    from visualisation import map_plot_parameters as plotpar
+    from numpy import logspace
 
 	z = logspace(-5, 3.2, 100)
 	D_l = luminosity_D(z)

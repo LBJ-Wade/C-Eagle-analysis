@@ -34,8 +34,9 @@ import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from cluster import Cluster
-from rendering import Map
-import map_plot_parameters as plotpar
+from visualisation.rendering import Map
+from visualisation import map_plot_parameters as plotpar
+
 plotpar.set_defaults_plot()
 
 def group_centre_of_mass(cluster, out_allPartTypes=False, filter_radius = None):

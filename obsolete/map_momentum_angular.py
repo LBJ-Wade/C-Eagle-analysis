@@ -1,5 +1,5 @@
 import clusters_retriever as extract
-import map_plot_parameters as plotpar
+from visualisation import map_plot_parameters as plotpar
 import cluster_profiler as profile
 from obsolete import map_synthetizer as mapgen
 import kernel_convolver as kernconv

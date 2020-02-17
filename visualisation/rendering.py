@@ -11,9 +11,7 @@ This file contains methods and classes for rendering data:
 -------------------------------------------------------------------
 """
 
-from matplotlib import pyplot as plt
 import numpy as np
-from itertools import cycle
 
 from matplotlib.patches import Circle
 from mpl_toolkits.mplot3d import proj3d
@@ -21,7 +19,8 @@ from matplotlib.patches import FancyArrowPatch
 import matplotlib.colors as colors
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
-import map_plot_parameters as plotpar
+from visualisation import map_plot_parameters as plotpar
+
 plotpar.set_defaults_plot()
 
 
@@ -425,7 +424,7 @@ class TestSuite(Map):
 
     def _TEST_CELR_velocity_field(self):
 
-        from cluster import Cluster, Simulation
+        from cluster import Cluster
         from testing import angular_momentum
 
         cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
@@ -455,7 +454,7 @@ class TestSuite(Map):
 
     def _TEST_CELR_yrkSZ_field(self):
 
-        from cluster import Cluster, Simulation
+        from cluster import Cluster
         from testing import angular_momentum
 
         cluster = Cluster(simulation_name='celr_e', clusterID = 0, redshift = 'z000p000')

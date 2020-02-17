@@ -6,7 +6,7 @@ import matplotlib.gridspec as gridspec
 import matplotlib.colors as colors
 import matplotlib.patches as patches
 
-import map_plot_parameters as plotpar
+from visualisation import map_plot_parameters as plotpar
 from obsolete import map_synthetizer as mapgen
 import gas_fractions_gridSpec_calculator as data
 

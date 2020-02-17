@@ -127,7 +127,7 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
 
 if __name__ == "__main__":
 
-    from rendering import plot_angularmomentum_vectors
+    from visualisation.rendering import plot_angularmomentum_vectors
 
     cluster = Cluster(clusterID = 0, redshift = 0.)
     angmom, masses = cluster.group_angular_momentum(out_allPartTypes=True)

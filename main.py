@@ -77,11 +77,6 @@ def main():
     # fof.push_FOFangmom_alignment_matrix(simulation_name=_SIM_NAME_, out_allPartTypes=False)
     # fof.push_FOFmerging_indices(simulation_name=_SIM_NAME_, out_allPartTypes=False)
 
-    import map_plot_parameters as plotpar
-    from cluster import Cluster, Simulation
-    from testing.angular_momentum import angular_momentum_PartType_alignment_matrix
-    from save import save
-
     # plotpar.set_defaults_plot()
 
     # sim = Simulation()

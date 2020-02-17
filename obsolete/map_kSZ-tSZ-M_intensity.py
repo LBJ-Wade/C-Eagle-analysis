@@ -1,4 +1,4 @@
-import map_plot_parameters as plotpar
+from visualisation import map_plot_parameters as plotpar
 from obsolete import map_renderer_SZ as rendersz
 
 import matplotlib.pyplot as plt
