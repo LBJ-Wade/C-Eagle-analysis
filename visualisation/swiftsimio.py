@@ -1,4 +1,7 @@
 
+import sys
+sys.path.append("..") # Adds higher directory to python modules path.
+
 def generate_map(*args, parallel = False):
     """
     SWIFTSIMIO WRAPPER
