@@ -145,7 +145,7 @@ if __name__ == '__main__':
 
 
 
-    temp_map = generate_map(x, y, np.log10(mass), h, res, parallel=True)
+    temp_map = generate_map(x, y, mass, h, res, parallel=True)
     norm = colors.SymLogNorm(linthresh=np.percentile(np.abs(m), 10), linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(
         m).max())
 
