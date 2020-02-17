@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
     ax = fig.add_subplot(111)
     ax.set_title('colorMap')
-    plt.imshow(temp_map, cmap=plt.get_cmap('twilight'), norm=norm)
+    plt.imshow(temp_map, cmap=plt.get_cmap('seismic'), norm=norm)
     ax.set_aspect('equal')
 
     cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
