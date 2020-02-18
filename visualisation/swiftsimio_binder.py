@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(6, 6))
     ax = fig.add_subplot(111)
-    cs = ax.imshow(temp_map, norm=norm)
+    cs = ax.imshow(temp_map)
     cbar = fig.colorbar(cs)
     cbar.ax.minorticks_off()
     plt.show()
