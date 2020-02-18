@@ -156,15 +156,10 @@ if __name__ == '__main__':
     from matplotlib import pyplot as plt
 
     fig = plt.figure(figsize=(6, 6))
-
     ax = fig.add_subplot(111)
-    ax.set_title('colorMap')
-    plt.imshow(temp_map, norm = norm)
-
-    cax = fig.add_axes([0.12, 0.1, 0.78, 0.8])
-    cax.get_xaxis().set_visible(False)
-    cax.get_yaxis().set_visible(False)
-    plt.colorbar(orientation='vertical')
+    cs = ax.imshow(temp_map, norm=norm)
+    cbar = fig.colorbar(cs)
+    cbar.ax.minorticks_off()
     plt.show()
 
 
