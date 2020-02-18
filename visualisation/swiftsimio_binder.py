@@ -111,7 +111,7 @@ if __name__ == '__main__':
     def rescale(X, x_min, x_max):
         nom = (X - X.min(axis=0)) * (x_max - x_min)
         denom = X.max(axis=0) - X.min(axis=0)
-        denom[denom == 0] = 1
+        denom[np.where(denom == 0)[0]] = 1
         return x_min + nom / denom
 
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
