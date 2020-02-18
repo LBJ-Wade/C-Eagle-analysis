@@ -139,7 +139,7 @@ if __name__ == '__main__':
     pixel_area = (bins_x[1] - bins_x[0]) **2
 
     from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
-    kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (pixel_area* speed_of_light * hydrogen_mass *
+    kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass *
                                                                          1.16))
 
     x = np.asarray(rescale(coords[:,0], 0, 1), dtype = np.float64)
