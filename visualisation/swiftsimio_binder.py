@@ -151,15 +151,16 @@ if __name__ == '__main__':
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
     print(temp_map)
-    norm = colors.SymLogNorm(linthresh=np.percentile(np.abs(m), 5), linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(
-        m).max())
+    norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
 
     from matplotlib import pyplot as plt
 
     fig = plt.figure(figsize=(6, 6))
     ax = fig.add_subplot(111)
-    cs = ax.imshow(temp_map, cmap = 'seismic', extent = (np.min(coords[:,0]), np.max(coords[:,0]),
-                                                         np.min(coords[:,1]), np.max(coords[:,1])))
+    cs = ax.imshow(temp_map, cmap = 'seismic', norm = norm,
+                   extent = (np.min(coords[:,0]), np.max(coords[:,0]),
+                             np.min(coords[:,1]), np.max(coords[:,1]))
+                   )
     cbar = fig.colorbar(cs)
     cbar.ax.minorticks_off()
     plt.show()
