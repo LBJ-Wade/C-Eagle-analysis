@@ -107,6 +107,13 @@ if __name__ == '__main__':
     from testing import angular_momentum
     import numpy as np
 
+
+    def rescale(X, x_min, x_max):
+        nom = (X - X.min(axis=0)) * (x_max - x_min)
+        denom = X.max(axis=0) - X.min(axis=0)
+        denom[denom == 0] = 1
+        return x_min + nom / denom
+
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
     r500 = cluster.group_r500()
     r500 = cluster.comoving_length(r500)
@@ -135,14 +142,15 @@ if __name__ == '__main__':
     kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (pixel_area* speed_of_light * hydrogen_mass *
                                                                          1.16))
 
-    x = np.asarray((coords[:,0] - np.min(coords[:,0]))/(np.max(coords[:,0]) - np.min(coords[:,0])), dtype = np.float64)
-    y = np.asarray((coords[:,1] - np.min(coords[:,1]))/(np.max(coords[:,1]) - np.min(coords[:,1])), dtype = np.float64)
-    z = np.asarray((coords[:,2] - np.min(coords[:,2]))/(np.max(coords[:,2]) - np.min(coords[:,2])), dtype = np.float64)
+    x = np.asarray(rescale(coords[:,0], 0, 1), dtype = np.float64)
+    y = np.asarray(rescale(coords[:,1], 0, 1), dtype = np.float64)
+    z = np.asarray(rescale(coords[:,2], 0, 1), dtype = np.float64)
+
     m = np.asarray(kSZ[:, 2], dtype = np.float32)
     h = np.asarray(SPH_kernel, dtype = np.float32)
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
-    norm = colors.SymLogNorm(linthresh=np.percentile(np.abs(m), 10), linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(
+    norm = colors.SymLogNorm(linthresh=np.percentile(np.abs(m), 5), linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(
         m).max())
 
     from matplotlib import pyplot as plt
