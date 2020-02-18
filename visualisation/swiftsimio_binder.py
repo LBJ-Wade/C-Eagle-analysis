@@ -151,7 +151,7 @@ if __name__ == '__main__':
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
     print(temp_map)
-    norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(m).max())
+    norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(temp_map).max(), vmax=np.abs(temp_map).max())
 
     from matplotlib import pyplot as plt
 
