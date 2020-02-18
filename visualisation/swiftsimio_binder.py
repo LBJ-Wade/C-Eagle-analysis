@@ -133,7 +133,7 @@ if __name__ == '__main__':
     mass = mass[spatial_filter]
     SPH_kernel = SPH_kernel[spatial_filter]
 
-    res = np.int(500)
+    res = np.int(50)
 
     bins_x = np.linspace(-np.min(coords[:, 0]), np.max(coords[:, 0]), res)
     pixel_area = (bins_x[1] - bins_x[0]) **2
@@ -150,6 +150,7 @@ if __name__ == '__main__':
     h = np.asarray(SPH_kernel, dtype = np.float32)
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
+    print(temp_map)
     norm = colors.SymLogNorm(linthresh=np.percentile(np.abs(m), 5), linscale=0.5, vmin=-np.abs(m).max(), vmax=np.abs(
         m).max())
 
