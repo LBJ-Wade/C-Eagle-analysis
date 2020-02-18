@@ -39,6 +39,7 @@ def generate_map(*args, parallel = False):
     """
     from swiftsimio.visualisation.projection import scatter, scatter_parallel
 
+    print('[ SWIFTSIMIO ]\t ==> Invoking `projection` front-end binding.')
     if parallel:
         return scatter_parallel(*args)
     else:
@@ -89,6 +90,7 @@ def generate_volume(*args, parallel = False):
     """
     from swiftsimio.visualisation.volume_render import scatter, scatter_parallel
 
+    print('[ SWIFTSIMIO ]\t ==> Invoking `volume_render` front-end binding.')
     if parallel:
         return scatter_parallel(*args)
     else:
@@ -150,7 +152,6 @@ if __name__ == '__main__':
     h = np.asarray(SPH_kernel, dtype = np.float32)
 
     temp_map = generate_map(x, y, m, h, res, parallel=True)
-    print(temp_map)
     norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(temp_map).max(), vmax=np.abs(temp_map).max())
 
     from matplotlib import pyplot as plt
@@ -163,8 +164,8 @@ if __name__ == '__main__':
                    )
     cbar = fig.colorbar(cs)
     cbar.ax.minorticks_off()
-    ax.set_xlabel(r'$x~\mathrm{Mpc}$')
-    ax.set_ylabel(r'$y~\mathrm{Mpc}$')
+    ax.set_xlabel(r'$x\ \mathrm{Mpc}$')
+    ax.set_ylabel(r'$y\ \mathrm{Mpc}$')
     plt.show()
 
 
