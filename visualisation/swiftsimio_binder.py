@@ -158,7 +158,8 @@ if __name__ == '__main__':
 
     fig = plt.figure(figsize=(6, 6))
     ax = fig.add_subplot(111)
-    cs = ax.imshow(temp_map, cmap = 'seismic')
+    cs = ax.imshow(temp_map, cmap = 'seismic', extent = (np.min(coords[:,0]), np.max(coords[:,0]),
+                                                         np.min(coords[:,1]), np.max(coords[:,1])))
     cbar = fig.colorbar(cs)
     cbar.ax.minorticks_off()
     plt.show()
