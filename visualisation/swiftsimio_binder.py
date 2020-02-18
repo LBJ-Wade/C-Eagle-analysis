@@ -133,7 +133,7 @@ if __name__ == '__main__':
     mass = mass[spatial_filter]
     SPH_kernel = SPH_kernel[spatial_filter]
 
-    res = np.int(50)
+    res = np.int(1000)
 
     bins_x = np.linspace(-np.min(coords[:, 0]), np.max(coords[:, 0]), res)
     pixel_area = (bins_x[1] - bins_x[0]) **2
@@ -163,6 +163,8 @@ if __name__ == '__main__':
                    )
     cbar = fig.colorbar(cs)
     cbar.ax.minorticks_off()
+    ax.set_xlabel(r'$x~\mathrm{Mpc}$')
+    ax.set_ylabel(r'$y~\mathrm{Mpc}$')
     plt.show()
 
 
