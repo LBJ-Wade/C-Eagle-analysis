@@ -40,7 +40,15 @@ class Simulation():
             self.totalClusters = 30
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
-            self.redshiftAllowed = zcat.group_data()['z_value']
+            self.zcat = {
+                'z_value':
+                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
+                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
+                     'z000p073', 'z000p036', 'z000p000'],
+                'z_IDNumber':
+                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
+                     '025', '026', '027', '028', '029']}
+            self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
 
         elif self.simulation_name == 'celr_b':
