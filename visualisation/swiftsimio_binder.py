@@ -125,8 +125,8 @@ if __name__ == '__main__':
     SPH_kernel = cluster.comoving_length(SPH_kernel)
     temperature = cluster.particle_temperature()
 
-    coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
-    plotlims = 3*r500
+    coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=0.1*r500, cluster_rest_frame=True)
+    plotlims = 0.5*r500
 
     spatial_filter = np.where(
         (np.abs(coords[:,0]) < plotlims) &
