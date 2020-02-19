@@ -123,13 +123,16 @@ if __name__ == '__main__':
     mass = cluster.comoving_mass(mass)
     SPH_kernel = cluster.particle_SPH_smoothinglength()
     SPH_kernel = cluster.comoving_length(SPH_kernel)
+    temperature = cluster.particle_temperature()
 
     coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
+    plotlims = 3*r500
 
     spatial_filter = np.where(
-        (np.abs(coords[:,0]) < 3*r500) &
-        (np.abs(coords[:,1]) < 3*r500) &
-        (np.abs(coords[:,2]) < 3*r500))[0]
+        (np.abs(coords[:,0]) < plotlims) &
+        (np.abs(coords[:,1]) < plotlims) &
+        (np.abs(coords[:,2]) < plotlims) &
+        (temperature > 1e5))[0]
     coords = coords[spatial_filter, :]
     vel = vel[spatial_filter, :]
     mass = mass[spatial_filter]
@@ -159,8 +162,8 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(6, 6))
     ax = fig.add_subplot(111)
     cs = ax.imshow(temp_map, cmap = 'seismic', norm = norm,
-                   extent = (np.min(coords[:,0]), np.max(coords[:,0]),
-                             np.min(coords[:,1]), np.max(coords[:,1]))
+                   extent = (-plotlims, plotlims,
+                             -plotlims, plotlims)
                    )
     cbar = fig.colorbar(cs)
     cbar.ax.minorticks_off()
