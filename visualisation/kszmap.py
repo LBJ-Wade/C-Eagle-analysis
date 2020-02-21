@@ -42,7 +42,7 @@ class KSZMAP:
         SPH_kernel = self.cluster.particle_SPH_smoothinglength()
         temperature = self.cluster.particle_temperature()
 
-        plotlims = 0.5*r500
+        plotlims = 3*r500
         coords, vel = angular_momentum.derotate(self.cluster, align='gas', aperture_radius=plotlims,
                                                 cluster_rest_frame=True)
 
