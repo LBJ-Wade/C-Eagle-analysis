@@ -429,9 +429,7 @@ class TestSuite(Map):
 
         cluster = Cluster(simulation_name='celr_b', clusterID = 0, redshift = 'z000p000')
         r500 = cluster.group_r500()
-        r500 = cluster.comoving_length(r500)
         mass = cluster.particle_masses('gas')
-        mass = cluster.comoving_mass(mass)
 
         coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
         momentum_lineOfSight = (vel.T * mass).T
@@ -459,9 +457,7 @@ class TestSuite(Map):
 
         cluster = Cluster(simulation_name='celr_e', clusterID = 0, redshift = 'z000p000')
         r500 = cluster.group_r500()
-        r500 = cluster.comoving_length(r500)
         mass = cluster.particle_masses('gas')
-        mass = cluster.comoving_mass(mass)
 
         coords, vel = angular_momentum.derotate(cluster, align='gas', aperture_radius=r500, cluster_rest_frame=True)
 
@@ -489,7 +485,6 @@ class TestSuite(Map):
 
         cluster = Cluster(simulation_name='celr_e', clusterID = 0, redshift = 'z000p000')
         mass = cluster.particle_masses('gas')
-        mass = cluster.comoving_mass(mass)
 
         coords, vel = angular_momentum.derotate(cluster, align='gas', cluster_rest_frame=True, derotate_block=True)
         angular_momentum_vector_GADGET, _ = cluster.angular_momentum(mass, vel, coords)

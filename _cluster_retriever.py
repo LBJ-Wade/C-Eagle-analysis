@@ -71,7 +71,7 @@ class Mixin:
                 if self.simulation_name == 'celr_e' or self.simulation_name == 'ceagle':
                     sbj_string = sbj_string + '_' + self.redshift
                 elif self.simulation_name == 'celr_b' or self.simulation_name == 'macsis':
-                    pass
+                    sbj_string = sbj_string
 
                 file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
                 file_list = os.listdir(file_dir)
@@ -129,6 +129,8 @@ class Mixin:
         sub_CoP = hd5set[...]
         h5file.close()
         pos = sub_CoP[0]
+        if not self.comovingframe:
+            pos = self.comoving_length(pos)
         free_memory(['pos'], invert=True)
         return pos
 
@@ -143,6 +145,8 @@ class Mixin:
         temp = h5dset[...]
         h5file.close()
         r200c = temp[0]
+        if not self.comovingframe:
+            r200c = self.comoving_length(r200c)
         free_memory(['r200c'], invert=True)
         return r200c
 
@@ -157,6 +161,8 @@ class Mixin:
         temp = h5dset[...]
         h5file.close()
         r500c = temp[0]
+        if not self.comovingframe:
+            r500c = self.comoving_length(r500c)
         free_memory(['r500c'], invert=True)
         return r500c
 
@@ -171,6 +177,8 @@ class Mixin:
         temp = h5dset[...]
         h5file.close()
         r2500c = temp[0]
+        if not self.comovingframe:
+            r2500c = self.comoving_length(r2500c)
         free_memory(['r2500c'], invert=True)
         return r2500c
 
@@ -185,6 +193,8 @@ class Mixin:
         temp = h5dset[...]
         h5file.close()
         m_tot = temp[0]
+        if not self.comovingframe:
+            m_tot = self.comoving_mass(m_tot)
         free_memory(['m_tot'], invert=True)
         return m_tot
 
@@ -199,6 +209,8 @@ class Mixin:
         temp = h5dset[...]
         h5file.close()
         m200 = temp[0]
+        if not self.comovingframe:
+            m200 = self.comoving_mass(m200)
         free_memory(['m200'], invert=True)
         return m200
 
@@ -213,6 +225,8 @@ class Mixin:
         temp = h5dset[...]
         h5file.close()
         m500 = temp[0]
+        if not self.comovingframe:
+            m500 = self.comoving_mass(m500)
         free_memory(['m500'], invert=True)
         return m500
 
@@ -227,6 +241,8 @@ class Mixin:
         temp = h5dset[...]
         h5file.close()
         m2500 = temp[0]
+        if not self.comovingframe:
+            m2500 = self.comoving_mass(m2500)
         free_memory(['m2500'], invert=True)
         return m2500
 
@@ -315,6 +331,9 @@ class Mixin:
             h5file.close()
             pos = np.concatenate((pos, sub_CoP), axis=0)
             free_memory(['pos'], invert=True)
+
+        if not self.comovingframe:
+            pos = self.comoving_length(pos)
         return pos
 
     @data_subject(subject="groups")
@@ -343,6 +362,9 @@ class Mixin:
             h5file.close()
             pos = np.concatenate((pos, sub_CoM), axis=0)
             free_memory(['pos'], invert=True)
+
+        if not self.comovingframe:
+            pos = self.comoving_length(pos)
         return pos
 
     @data_subject(subject="groups")
@@ -371,6 +393,9 @@ class Mixin:
             h5file.close()
             vel = np.concatenate((vel, sub_v), axis=0)
             free_memory(['vel'], invert=True)
+
+        if not self.comovingframe:
+            vel = self.comoving_velocity(vel)
         return vel
 
     @data_subject(subject="groups")
@@ -388,6 +413,9 @@ class Mixin:
             h5file.close()
             mass = np.concatenate((mass, sub_m))
             free_memory(['mass'], invert=True)
+
+        if not self.comovingframe:
+            mass = self.comoving_mass(mass)
         return mass
 
     @data_subject(subject="groups")
@@ -404,6 +432,9 @@ class Mixin:
             h5file.close()
             kin_energy = np.concatenate((kin_energy, sub_ke), axis=0)
             free_memory(['kin_energy'], invert=True)
+
+        if not self.comovingframe:
+            kin_energy = self.comoving_kinetic_energy(kin_energy)
         return kin_energy
 
     @data_subject(subject="groups")
@@ -489,6 +520,9 @@ class Mixin:
             pos = np.concatenate((pos, sub_pos), axis=0)
             free_memory(['pos'], invert=True)
             assert pos.__len__() > 0, "Array is empty."
+
+        if not self.comovingframe:
+            pos = self.comoving_length(pos)
         return pos
 
     @data_subject(subject="particledata")
@@ -508,6 +542,9 @@ class Mixin:
             part_vel = np.concatenate((part_vel, sub_vel), axis=0)
             free_memory(['part_vel'], invert=True)
             assert part_vel.__len__() > 0, "Array is empty."
+
+        if not self.comovingframe:
+            part_vel = self.comoving_velocity(part_vel)
         return part_vel
 
     @data_subject(subject="particledata")
@@ -531,6 +568,10 @@ class Mixin:
                 free_memory(['part_mass'], invert=True)
 
         assert part_mass.__len__() > 0, "Array is empty."
+
+        if not self.comovingframe:
+            part_mass = self.comoving_mass(part_mass)
+
         return part_mass
 
     @data_subject(subject="particledata")
@@ -567,6 +608,10 @@ class Mixin:
             free_memory(['densitySPH'], invert=True)
 
         assert densitySPH.__len__() > 0, "Array is empty."
+
+        if not self.comovingframe:
+            densitySPH = self.comoving_density(densitySPH)
+
         return densitySPH
 
     @data_subject(subject="particledata")
@@ -584,6 +629,10 @@ class Mixin:
             free_memory(['smoothinglength'], invert=True)
 
         assert smoothinglength.__len__() > 0, "Array is empty."
+
+        if not self.comovingframe:
+            smoothinglength = self.comoving_length(smoothinglength)
+
         return smoothinglength
 
     @data_subject(subject="particledata")
@@ -599,6 +648,10 @@ class Mixin:
             h5file.close()
             metallicity = np.concatenate((metallicity, sub_Z), axis=0)
             free_memory(['metallicity'], invert=True)
+
+        if not self.comovingframe:
+            raise("Metallicity not yet implemented for comoving -> physical frame conversion.")
+
         return metallicity
 
     @data_subject(subject="particledata")

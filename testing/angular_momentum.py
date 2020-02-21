@@ -86,7 +86,6 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
     """
     if aperture_radius is None:
         aperture_radius = cluster.group_r500()
-        aperture_radius = cluster.comoving_length(aperture_radius)
         print('[ DEROTATE ]\t==>\tAperture radius set to default R500 true.')
 
     coords = cluster.particle_coordinates(align)
@@ -95,9 +94,6 @@ def derotate(cluster, align : str = 'gas', aperture_radius = None, cluster_rest_
 
     if cluster_rest_frame:
         vel = np.subtract(vel, cluster.group_zero_momentum_frame(out_allPartTypes=False, aperture_radius = aperture_radius)[0])
-
-    coords = cluster.comoving_length(coords)
-    vel = cluster.comoving_velocity(vel)
 
     if derotate_block:
         return coords, vel

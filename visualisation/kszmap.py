@@ -38,11 +38,8 @@ class KSZMAP:
     def test(self):
 
         r500 = self.cluster.group_r500()
-        r500 = self.cluster.comoving_length(r500)
         mass = self.cluster.particle_masses('gas')
-        mass = self.cluster.comoving_mass(mass)
         SPH_kernel = self.cluster.particle_SPH_smoothinglength()
-        SPH_kernel = self.cluster.comoving_length(SPH_kernel)
         temperature = self.cluster.particle_temperature()
 
         plotlims = 0.5*r500

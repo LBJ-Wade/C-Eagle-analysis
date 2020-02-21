@@ -217,35 +217,60 @@ class Cluster(Simulation,
               _cluster_retriever.Mixin,
               _cluster_profiler.Mixin):
 
-    def __init__(self, simulation_name: str = None, clusterID: int = 0, redshift: str = 0.0, **kwargs):
+    def __init__(self,
+                 simulation_name: str = None,
+                 clusterID: int = 0,
+                 redshift: str = 0.0,
+                 comovingframe: bool = False,
+                 requires: dict = {}
+                 ):
+
+        # Link to the base class by initialising it
         super().__init__(simulation_name = simulation_name)
 
         # Initialise and validate attributes
-        self.simulation_name = simulation_name
+        self.set_simulation_name(simulation_name)
         self.set_clusterID(clusterID)
+        self.set_redshift(redshift)
+        self.comovingframe = comovingframe
+        self.requires = requires
+
+    def set_simulation_name(self, simulation_name: str) -> None:
+        """
+        Function to set the simulation_name attribute and assign it to the Cluster object.
+
+        :param simulation_name: expect str
+            The name of the simulation to retrieve the cluster from.
+
+        :return: None type
+        """
+        assert (simulation_name in ['ceagle', 'celr_b', 'celr_e', 'macsis', 'bahamas']), \
+            "`simulation_name` not recognised."
+        self.simulation_name = simulation_name
+
+    def set_clusterID(self, clusterID: int) -> None:
+        """
+        Function to set the cluster_ID attribute and assign it to the Cluster object.
+
+        :param clusterID: expect int
+            The number_ID of the cluster to be assigned to the Cluster object.
+
+        :return: None type
+        """
+        assert (clusterID in self.clusterIDAllowed), 'clusterID out of bounds.'
+        self.clusterID = clusterID
+
+    def set_redshift(self, redshift: str) -> None:
+        """
+        Function to set the redshift_string attribute and assign it to the Cluster object.
+
+        :param redshift: expect str
+            The redshift in string form (EAGLE convention).
+
+        :return: None type
+        """
+        assert (redshift in self.redshiftAllowed), "`redshift` value not recognised."
         self.redshift = redshift
-
-        # Pass attributed into kwargs
-        kwargs['clusterID'] = self.clusterID
-        kwargs['redshift'] = self.redshift
-
-        # Set additional attributes from methods
-        # self.hubble_param = self.file_hubble_param()
-        # self.comic_time = self.file_comic_time()
-        # self.redshift = self.file_redshift()
-        # self.OmegaBaryon = self.file_OmegaBaryon()
-        # self.Omega0 = self.file_Omega0()
-        # self.OmegaLambda = self.file_OmegaLambda()
-
-    # Change and validate Cluster attributes
-    def set_clusterID(self, clusterID: int):
-        try:
-            assert (type(clusterID) is int), 'clusterID must be integer.'
-            assert (clusterID in self.clusterIDAllowed), 'clusterID out of bounds (00 ... 29).'
-        except AssertionError:
-            raise
-        else:
-            self.clusterID = clusterID
 
     def path_from_cluster_name(self):
         """
@@ -256,6 +281,14 @@ class Cluster(Simulation,
         cluster_ID = self.cluster_prefix + self.halo_Num(self.clusterID)
         data_dir = 'data'
         return os.path.join(master_directory, cluster_ID, data_dir)
+
+    # Set additional attributes from methods
+    # self.hubble_param = self.file_hubble_param()
+    # self.comic_time = self.file_comic_time()
+    # self.redshift = self.file_redshift()
+    # self.OmegaBaryon = self.file_OmegaBaryon()
+    # self.Omega0 = self.file_Omega0()
+    # self.OmegaLambda = self.file_OmegaLambda()
 
     def file_hubble_param(self):
         """

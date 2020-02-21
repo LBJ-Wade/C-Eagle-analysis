@@ -60,11 +60,6 @@ def thermal_index(cluster, aperture_radius = None):
     coordinate = np.subtract(coordinate, group_CoP)
     velocity = np.subtract(velocity, group_ZMF)
 
-    # Convert to comoving coords and SI units
-    mass = cluster.comoving_mass(mass)
-    velocity = cluster.comoving_velocity(velocity)
-    r500 = cluster.comoving_length(r500)
-    coordinate = cluster.comoving_length(coordinate)
 
     mass = cluster.mass_units(mass, unit_system = 'SI')
     velocity = cluster.velocity_units(velocity, unit_system = 'SI')

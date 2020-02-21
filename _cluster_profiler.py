@@ -226,7 +226,7 @@ class Mixin:
             return np.sum(angular_momentum_PartTypes, axis = 0), np.sum(Mtot_PartTypes)
 
 
-    def generate_apertures(self, comoving = False):
+    def generate_apertures(self):
         """
         Generate an array of apertures for calculating global properties of the clusters.
         The apertures use both R2500 and R200 units:
@@ -243,10 +243,6 @@ class Mixin:
             apertures = -1
             print(ValueError)
             print('Issue encountered at ', self.clusterID, self.redshift)
-
-        # Convert from comoving into physical frame
-        if not comoving:
-            apertures = self.comoving_length(apertures)
 
         return apertures
 
@@ -417,6 +413,17 @@ class Mixin:
         hubble_par = self.file_hubble_param()
         return np.divide(mass, hubble_par)
 
+    def comoving_kinetic_energy(self, kinetic_energy):
+        """
+        Rescales the density from the comoving kinetic_energy to the physical kinetic_energy
+        """
+        hubble_par = self.file_hubble_param()
+        redshift = self.file_redshift()
+        scale_factor = 1 / (redshift + 1)
+        _kinetic_energy = np.multiply(kinetic_energy, scale_factor)
+        _kinetic_energy = np.divide(_kinetic_energy, hubble_par)
+        return _kinetic_energy
+
     def comoving_momentum(self, mom):
         """
         Rescales the momentum from the comoving to the physical
@@ -428,7 +435,7 @@ class Mixin:
 
     def comoving_ang_momentum(self, angmom):
         """
-        Rescales the momentum from the comoving to the physical
+        Rescales the angular momentum from the comoving to the physical
         """
         hubble_par = self.file_hubble_param()
         redshift = self.file_redshift()
