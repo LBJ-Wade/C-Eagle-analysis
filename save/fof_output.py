@@ -95,14 +95,12 @@ def make_parallel_MPI(function):
 @make_parallel_MPI
 def MPI_decorator_test(**kwargs):
     import time
-    nb_iter = 2000
-    for i in range(nb_iter):
-        time.sleep(0.0001)
-        cluster_obj = kwargs['cluster']
-
-        print('[ FOF SAVE ]\t==>\t Merging indices on cluster {} @ z = {}'.format(cluster_obj.clusterID,
-                                                                                  cluster_obj.redshift))
-        yield ((i + 1) / nb_iter)  # Give control back to decorator
+    nb_iter = 200
+    time.sleep(0.0001)
+    cluster_obj = kwargs['cluster']
+    print('[ FOF SAVE ]\t==>\t Merging indices on cluster {} @ z = {}'.format(cluster_obj.clusterID,
+                                                                              cluster_obj.redshift))
+    yield ((i + 1) / nb_iter)  # Give control back to decorator
 
 @make_parallel_MPI
 def push_FOFapertures(*args, **kwargs):
