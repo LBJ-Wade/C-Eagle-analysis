@@ -11,7 +11,7 @@ Future implementations:
     - MPI meta-methods and multi-threading
 -------------------------------------------------------------------
 """
-
+from mpi4py import MPI
 
 def free_memory(var_list, invert=False):
     """
@@ -42,7 +42,7 @@ def dict_key_exclusionfinder(dictionary : dict, search: str) -> list:
             search_output.append(key)
     return search_output
 
-class SchedulerMPI:
+class SchedulerMPI(MPI.COMM_WORLD):
 
     def __init__(self, requires: dict):
         self.requires = requires
@@ -87,6 +87,10 @@ class SchedulerMPI:
         for other_key in dict_key_exclusionfinder(self.requires, 'partType'):
             core_counter += 1
             self.architecture[core_counter] = other_key
+
+        if len(self.architecture) > self.Get_size():
+            print('[ WARNING ]\t==> Requested more cores than there are available. Requested {0}, available {'
+                  '1}.'.format(len(self.architecture), self.Get_size()))
 
         return
 

@@ -1,16 +1,9 @@
 from __future__ import print_function, division, absolute_import
-
 import numpy as np
-import h5py as h5
 import os
-from functools import wraps
 
-# Local modules
-import redshift_catalogue_ceagle as zcat
 import _cluster_retriever
 import _cluster_profiler
-
-# Import global methods separately
 from _cluster_retriever import redshift_str2num, redshift_num2str
 
 
