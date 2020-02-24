@@ -139,7 +139,7 @@ class SchedulerMPI:
                     print('\t', y)
             print("\n.....................SchedulerMPI.architecture......................")
             for x in self.architecture:
-                print(x, ':', self.architecture[x])
+                print('core ', x, ':', self.architecture[x])
 
         else:
             for attr in dir(self):
