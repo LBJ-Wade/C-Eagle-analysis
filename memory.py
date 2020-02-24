@@ -176,7 +176,7 @@ if __name__ == '__main__':
             print(inspect.stack()[0][3])
             scheduler = SchedulerMPI.from_dictionary(self.data_required)
             scheduler.info()
-            print('[ UNIT TEST ]\T==> ', self.quick_build() == scheduler)
+            print('[ UNIT TEST ]\t==> ', self.quick_build() == scheduler)
 
         def from_cluster(self):
             print(inspect.stack()[0][3])
@@ -188,7 +188,7 @@ if __name__ == '__main__':
                                  requires = self.data_required)
             scheduler = SchedulerMPI.from_cluster(cluster)
             scheduler.info()
-            print('[ UNIT TEST ]\T==> ', self.quick_build() == scheduler)
+            print('[ UNIT TEST ]\t==> ', self.quick_build() == scheduler)
 
     test = TEST()
     test.from_dictionary()
