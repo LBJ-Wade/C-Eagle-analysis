@@ -91,7 +91,8 @@ class SchedulerMPI:
             self.architecture[core_counter] = other_key
 
         if len(self.architecture) > comm.Get_size():
-            print('[ WARNING ]\t==> Requested more cores than there are available. Requested {0}, available {'
+            print('[ SchedulerMPI ]\t==> Warning: requested more cores than there are available. Requested {0}, '
+                  'available {'
                   '1}.'.format(len(self.architecture), comm.Get_size()))
 
         return
