@@ -11,8 +11,7 @@ Future implementations:
     - MPI meta-methods and multi-threading
 -------------------------------------------------------------------
 """
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
 from cluster import Cluster
 
 def free_memory(var_list, invert=False):
@@ -107,7 +106,7 @@ class SchedulerMPI:
         return search_output
 
     def generate_arch_clusterMPI(self) -> None:
-
+        print('[ SchedulerMPI ]\t==> Generating MPI architecture...')
         core_counter = 0
         self.architecture[core_counter] = 'master'
 
