@@ -210,6 +210,7 @@ if __name__ == '__main__':
     test.from_dictionary()
     test.from_cluster()
     test.progressbar()
+    print(get_current_console_size())
 
 
 
