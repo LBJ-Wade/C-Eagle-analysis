@@ -103,7 +103,7 @@ class SchedulerMPI:
                 search_output.append(key)
         return search_output
 
-    def generate_arch_clusterMPI(self) -> None:
+    def generate_arch_clusterMPI(self):
         print('[ SchedulerMPI ]\t==> Generating MPI architecture...')
         core_counter = 0
         self.architecture[core_counter] = 'master'
@@ -117,7 +117,6 @@ class SchedulerMPI:
                 core_counter += 1
                 self.architecture[core_counter] =  key_partType + '_' + field_partType
 
-        return
 
     def info(self) -> None:
         for attr in dir(self):
