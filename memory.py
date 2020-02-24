@@ -12,6 +12,7 @@ Future implementations:
 -------------------------------------------------------------------
 """
 from mpi4py import MPI
+MPI_COMM_WORLD = MPI.COMM_WORLD
 
 def free_memory(var_list, invert=False):
     """
@@ -42,7 +43,7 @@ def dict_key_exclusionfinder(dictionary : dict, search: str) -> list:
             search_output.append(key)
     return search_output
 
-class SchedulerMPI(MPI.COMM_WORLD):
+class SchedulerMPI(MPI_COMM_WORLD):
 
     def __init__(self, requires: dict):
         self.requires = requires
