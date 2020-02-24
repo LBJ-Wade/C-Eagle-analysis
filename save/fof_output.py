@@ -27,6 +27,7 @@ from cluster import Simulation, Cluster
 from _cluster_retriever import redshift_str2num, redshift_num2str
 from testing import angular_momentum
 from testing import mergers
+import progressbar
 
 
 __HDF5_SUBFOLDER__ = 'FOF'
@@ -90,10 +91,14 @@ def make_parallel_MPI(function):
 
     return wrapper
 
-
+@progressbar.ProgressBar()
 @make_parallel_MPI
 def MPI_decorator_test():
-    pass
+    import time
+    nb_iter = 2000
+    for i in range(nb_iter):
+        time.sleep(0.0001)
+        yield ((i + 1) / nb_iter)  # Give control back to decorator
 
 @make_parallel_MPI
 def push_FOFapertures(*args, **kwargs):
