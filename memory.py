@@ -193,7 +193,7 @@ if __name__ == '__main__':
         def progressbar(self):
             import time
             print(inspect.stack()[0][3])
-            items = list(range(0, 1000))
+            items = list(range(0, 2000))
             l = len(items)
             printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
             for i, item in enumerate(items):
