@@ -96,6 +96,16 @@ class SchedulerMPI:
         self.architecture = {}
         self.generate_arch_clusterMPI()
 
+    def __eq__(self, other):
+        """
+        Overrides the default implementation
+        """
+
+        if isinstance(other, SchedulerMPI):
+            condition = (self.requires == other.requires) and (self.architecture == other.architecture)
+            return condition
+        return False
+
     @classmethod
     def from_cluster(cls, cluster):
         schedule = cls(cluster.requires)
@@ -150,11 +160,39 @@ class SchedulerMPI:
 
 
 if __name__ == '__main__':
-    data_required = {'partType0' : ['coordinates', 'velocities', 'temperature', 'sphkernel'],
-                     'partType1' : ['coordinates', 'velocities']}
-    scheduler = SchedulerMPI.from_dictionary(data_required)
-    scheduler.info()
 
+    import inspect
+
+    class TEST:
+
+        data_required = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel'],
+                         'partType1': ['coordinates', 'velocities']}
+
+        def quick_build(self):
+            scheduler = SchedulerMPI(self.data_required)
+            scheduler.info()
+            return scheduler
+
+        def from_dictionary(self):
+            print(inspect.stack()[0][3])
+            scheduler = SchedulerMPI.from_dictionary(self.data_required)
+            scheduler.info()
+            print('[ UNIT TEST ]\T==> ', self.quick_build() == scheduler)
+
+        def from_cluster(self):
+            print(inspect.stack()[0][3])
+            from cluster import Cluster
+            cluster = Cluster(  simulation_name = 'ceagle',
+                                 clusterID = 0,
+                                 redshift = 'z000p000',
+                                 comovingframe = False,
+                                 requires = self.data_required)
+            scheduler = SchedulerMPI.from_cluster(cluster)
+            scheduler.info()
+            print('[ UNIT TEST ]\T==> ', self.quick_build() == scheduler)
+
+    TEST.from_dictionary()
+    TEST.from_cluster()
 
 
 
