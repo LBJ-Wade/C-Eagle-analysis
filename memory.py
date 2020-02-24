@@ -12,6 +12,7 @@ Future implementations:
 -------------------------------------------------------------------
 """
 from mpi4py import MPI
+comm = MPI.COMM_WORLD
 
 
 def free_memory(var_list, invert=False):
@@ -49,7 +50,7 @@ class SchedulerMPI:
         self.requires = requires
         self.architecture = {}
         self.generate_arch_clusterMPI()
-        self.comm = MPI.COMM_WORLD
+        self.comm = comm
 
     def __eq__(self, other):
         """
