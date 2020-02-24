@@ -81,7 +81,7 @@ class ProgressBarPrinter:
     def print_bar(self, progress):
         block = int(round(self.width * progress)) - self.block_progress
         self.block_progress += block
-        bar = ('█' * block) + ('-' * (self.width - self.block_progress))
+        bar = ('■' * block) + ('-' * (self.width - self.block_progress))
         progress = int(progress * 100)
         elapsed_time = round(time.time() - self.start_time, 2)
         text = f"{bar}| {progress}% <{elapsed_time} seconds>"
