@@ -201,10 +201,10 @@ if __name__ == '__main__':
             items = list(range(0, 2000))
             l = len(items)
             console_length = get_current_console_size()[1]
-            printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=console_length)
+            printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=100)
             for i, item in enumerate(items):
                 time.sleep(0.001)
-                printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=console_length)
+                printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=100)
 
     test = TEST()
     test.from_dictionary()
