@@ -11,7 +11,8 @@ Future implementations:
     - MPI meta-methods and multi-threading
 -------------------------------------------------------------------
 """
-
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from cluster import Cluster
 
 def free_memory(var_list, invert=False):
@@ -130,8 +131,6 @@ class SchedulerMPI:
 
 
 if __name__ == '__main__':
-    from cluster import Cluster
-
     data_required = {'partType0' : ['coordinates', 'velocities', 'temperature', 'sphkernel'],
                      'partType1' : ['coordinates', 'velocities']}
     scheduler = SchedulerMPI.from_dictionary(data_required)
