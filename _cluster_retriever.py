@@ -18,6 +18,7 @@ import os
 import h5py as h5
 import numpy as np
 from memory import free_memory
+import progressbar
 
 
 def redshift_str2num(z: str):
@@ -506,6 +507,7 @@ class Mixin:
             sub_group_number = np.concatenate((sub_group_number, sub_gn), axis=0)
         return sub_group_number
 
+    @progressbar.ProgressBar()
     @data_subject(subject="particledata")
     def particle_coordinates(self, part_type, *args, **kwargs):
         """
@@ -514,6 +516,8 @@ class Mixin:
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         pos = np.zeros((0, 3), dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -523,11 +527,14 @@ class Mixin:
             pos = np.concatenate((pos, sub_pos), axis=0)
             free_memory(['pos'], invert=True)
             assert pos.__len__() > 0, "Array is empty."
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
         if not self.comovingframe:
             pos = self.comoving_length(pos)
         return pos
 
+    @progressbar.ProgressBar()
     @data_subject(subject="particledata")
     def particle_velocity(self, part_type, *args, **kwargs):
         """
@@ -536,6 +543,8 @@ class Mixin:
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         part_vel = np.zeros((0, 3), dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -545,11 +554,14 @@ class Mixin:
             part_vel = np.concatenate((part_vel, sub_vel), axis=0)
             free_memory(['part_vel'], invert=True)
             assert part_vel.__len__() > 0, "Array is empty."
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
         if not self.comovingframe:
             part_vel = self.comoving_velocity(part_vel)
         return part_vel
 
+    @progressbar.ProgressBar()
     @data_subject(subject="particledata")
     def particle_masses(self, part_type, *args, **kwargs):
         """
@@ -561,6 +573,8 @@ class Mixin:
         if part_type == '1':
             part_mass = np.ones(self.DM_NumPart_Total()) * self.DM_particleMass()
         else:
+            counter = 0
+            length_operation = len(kwargs['file_list_sorted'])
             part_mass = np.zeros(0, dtype=np.float)
             for path in kwargs['file_list_sorted']:
                 h5file = h5.File(path, 'r')
@@ -569,6 +583,8 @@ class Mixin:
                 h5file.close()
                 part_mass = np.concatenate((part_mass, sub_m), axis=0)
                 free_memory(['part_mass'], invert=True)
+                yield ((counter + 1) / length_operation)  # Give control back to decorator
+                counter += 1
 
         assert part_mass.__len__() > 0, "Array is empty."
 
@@ -577,13 +593,15 @@ class Mixin:
 
         return part_mass
 
+    @progressbar.ProgressBar()
     @data_subject(subject="particledata")
     def particle_temperature(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
         """
         # Check that we are extracting the temperature of gas particles
-
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         temperature = np.zeros(0, dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -592,15 +610,20 @@ class Mixin:
             h5file.close()
             temperature = np.concatenate((temperature, sub_T), axis=0)
             free_memory(['temperature'], invert=True)
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
         assert temperature.__len__() > 0, "Array is empty."
         return temperature
 
+    @progressbar.ProgressBar()
     @data_subject(subject="particledata")
     def particle_SPH_density(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
         """
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         densitySPH = np.zeros(0, dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -609,6 +632,8 @@ class Mixin:
             h5file.close()
             densitySPH = np.concatenate((densitySPH, sub_den), axis=0)
             free_memory(['densitySPH'], invert=True)
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
         assert densitySPH.__len__() > 0, "Array is empty."
 
@@ -617,11 +642,14 @@ class Mixin:
 
         return densitySPH
 
+    @progressbar.ProgressBar()
     @data_subject(subject="particledata")
     def particle_SPH_smoothinglength(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
         """
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         smoothinglength = np.zeros(0, dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -630,6 +658,8 @@ class Mixin:
             h5file.close()
             smoothinglength = np.concatenate((smoothinglength, sub_den), axis=0)
             free_memory(['smoothinglength'], invert=True)
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
         assert smoothinglength.__len__() > 0, "Array is empty."
 
@@ -638,11 +668,14 @@ class Mixin:
 
         return smoothinglength
 
+    @progressbar.ProgressBar()
     @data_subject(subject="particledata")
     def particle_metallicity(self, *args, **kwargs):
         """
         RETURNS: 1D np.array
         """
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         metallicity = np.zeros(0, dtype=np.float)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -651,6 +684,8 @@ class Mixin:
             h5file.close()
             metallicity = np.concatenate((metallicity, sub_Z), axis=0)
             free_memory(['metallicity'], invert=True)
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
         if not self.comovingframe:
             raise("Metallicity not yet implemented for comoving -> physical frame conversion.")
