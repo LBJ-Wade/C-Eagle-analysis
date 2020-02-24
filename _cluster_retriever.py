@@ -14,7 +14,7 @@ They working principle is based on OOP class inheritance.
 """
 
 from cluster import *
-from memory import *
+from memory import free_memory
 
 
 def redshift_str2num(z: str):
