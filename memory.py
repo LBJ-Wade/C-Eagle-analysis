@@ -12,8 +12,6 @@ Future implementations:
 -------------------------------------------------------------------
 """
 
-from cluster import Cluster
-
 def free_memory(var_list, invert=False):
     """
     Function for freeing memory dynamically.
@@ -84,7 +82,7 @@ class SchedulerMPI:
         self.requires = {}
 
     @classmethod
-    def from_cluster(cls, cluster: Cluster):
+    def from_cluster(cls, cluster):
         schedule = cls()
         cls.requires = cluster.requires
         cls.generate_arch_clusterMPI()
