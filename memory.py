@@ -200,17 +200,15 @@ if __name__ == '__main__':
             print(inspect.stack()[0][3])
             items = list(range(0, 2000))
             l = len(items)
-            console_length = get_current_console_size()[1]
-            printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=100)
+            printProgressBar(0, l, prefix='test.progressbar():', suffix='Complete', length=100)
             for i, item in enumerate(items):
                 time.sleep(0.001)
-                printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=100)
+                printProgressBar(i + 1, l, prefix='test.progressbar():', suffix='Complete', length=100)
 
     test = TEST()
     test.from_dictionary()
     test.from_cluster()
     test.progressbar()
-    print(get_current_console_size())
 
 
 
