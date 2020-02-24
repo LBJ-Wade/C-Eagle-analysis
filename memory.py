@@ -11,6 +11,7 @@ Future implementations:
     - MPI meta-methods and multi-threading
 -------------------------------------------------------------------
 """
+import os
 
 def free_memory(var_list, invert=False):
     """
@@ -29,6 +30,10 @@ def free_memory(var_list, invert=False):
 
 def delegate_independent_nodes():
     pass
+
+def get_current_console_size():
+    rows, columns = os.popen('stty size', 'r').read().split()
+    return rows, columns
 
 
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
@@ -195,10 +200,11 @@ if __name__ == '__main__':
             print(inspect.stack()[0][3])
             items = list(range(0, 2000))
             l = len(items)
-            printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
+            console_length = get_current_console_size()[1]
+            printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=console_length)
             for i, item in enumerate(items):
                 time.sleep(0.001)
-                printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
+                printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=console_length)
 
     test = TEST()
     test.from_dictionary()
