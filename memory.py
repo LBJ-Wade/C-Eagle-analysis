@@ -170,7 +170,6 @@ if __name__ == '__main__':
 
         def quick_build(self):
             scheduler = SchedulerMPI(self.data_required)
-            scheduler.info()
             return scheduler
 
         def from_dictionary(self):
@@ -191,8 +190,9 @@ if __name__ == '__main__':
             scheduler.info()
             print('[ UNIT TEST ]\T==> ', self.quick_build() == scheduler)
 
-    TEST.from_dictionary()
-    TEST.from_cluster()
+    test = TEST()
+    test.from_dictionary()
+    test.from_cluster()
 
 
 
