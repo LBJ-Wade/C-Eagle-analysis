@@ -75,47 +75,57 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
     if iteration == total:
         print()
 
+def dict_key_finder(dictionary : dict, search: str) -> list:
+    search_output = []
+    for key in list(dictionary.keys()):
+        if search in key:
+            search_output.append(key)
+    return search_output
+
+def dict_key_exclusionfinder(dictionary : dict, search: str) -> list:
+    search_output = []
+    for key in list(dictionary.keys()):
+        if search not in key:
+            search_output.append(key)
+    return search_output
+
 class SchedulerMPI:
 
-    def __init__(self):
+    def __init__(self, requires: dict):
+        self.requires = requires
         self.architecture = {}
-        self.requires = {}
+        self.generate_arch_clusterMPI()
 
     @classmethod
     def from_cluster(cls, cluster):
-        schedule = cls()
-        cls.requires = cluster.requires
-        cls.generate_arch_clusterMPI()
+        schedule = cls(cluster.requires)
         return schedule
 
     @classmethod
     def from_dictionary(cls, requires: dict):
-        schedule = cls()
-        cls.requires = requires
-        cls.generate_arch_clusterMPI()
+        schedule = cls(requires)
         return schedule
 
-    @staticmethod
-    def dict_key_finder(dictionary : dict, search: str) -> list:
-        search_output = []
-        for key in list(dictionary.keys()):
-            if search in key:
-                search_output.append(key)
-        return search_output
-
-    def generate_arch_clusterMPI(self):
+    def generate_arch_clusterMPI(self) -> None:
         print('[ SchedulerMPI ]\t==> Generating MPI architecture...')
         core_counter = 0
         self.architecture[core_counter] = 'master'
 
         # Loop over particle type containers
-        for key_partType in self.dict_key_finder(self.requires, 'partType'):
+        for key_partType in dict_key_finder(self.requires, 'partType'):
             allocation_partType = self.requires[key_partType]
 
-            # Loop over fields
+            # Loop over partType fields
             for field_partType in allocation_partType:
                 core_counter += 1
                 self.architecture[core_counter] =  key_partType + '_' + field_partType
+
+        # Finally, allocate cores to any other non-partType key leftover
+        for other_key in dict_key_exclusionfinder(self.requires, 'partType'):
+            core_counter += 1
+            self.architecture[core_counter] = other_key
+
+        return
 
 
     def info(self) -> None:
