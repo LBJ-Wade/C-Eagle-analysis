@@ -13,7 +13,10 @@ They working principle is based on OOP class inheritance.
 -------------------------------------------------------------------
 """
 
-from cluster import *
+from functools import wraps
+import os
+import h5py as h5
+import numpy as np
 from memory import free_memory
 
 
