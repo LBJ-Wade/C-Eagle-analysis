@@ -11,7 +11,7 @@ Future implementations:
     - MPI meta-methods and multi-threading
 -------------------------------------------------------------------
 """
-import os
+import subprocess
 
 def free_memory(var_list, invert=False):
     """
@@ -32,8 +32,8 @@ def delegate_independent_nodes():
     pass
 
 def get_current_console_size():
-    rows, columns = os.popen('stty size', 'r').read().split()
-    return rows, columns
+    rows, columns = subprocess.check_output(['stty', 'size']).decode().split()
+    return int(rows), int(columns)
 
 
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
