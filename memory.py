@@ -130,6 +130,8 @@ class SchedulerMPI:
 
 
 if __name__ == '__main__':
+    from cluster import Cluster
+
     data_required = {'partType0' : ['coordinates', 'velocities', 'temperature', 'sphkernel'],
                      'partType1' : ['coordinates', 'velocities']}
     scheduler = SchedulerMPI.from_dictionary(data_required)
