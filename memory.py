@@ -11,7 +11,7 @@ Future implementations:
     - MPI meta-methods and multi-threading
 -------------------------------------------------------------------
 """
-import subprocess
+
 
 def free_memory(var_list, invert=False):
     """
@@ -31,54 +31,7 @@ def free_memory(var_list, invert=False):
 def delegate_independent_nodes():
     pass
 
-def get_current_console_size():
-    rows, columns = subprocess.check_output(['stty', 'size']).decode().split()
-    return int(rows), int(columns)
 
-
-def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
-    """
-    Call in a loop to create terminal progress bar
-    @params:
-        iteration   - Required  : current iteration (Int)
-        total       - Required  : total iterations (Int)
-        prefix      - Optional  : prefix string (Str)
-        suffix      - Optional  : suffix string (Str)
-        decimals    - Optional  : positive number of decimals in percent complete (Int)
-        length      - Optional  : character length of bar (Int)
-        fill        - Optional  : bar fill character (Str)
-        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
-
-
-    Note: This is for Python 3; see the comments for details on using this in Python 2.
-
-    Sample Usage
-    import time
-
-    # A List of Items
-    items = list(range(0, 57))
-    l = len(items)
-
-    # Initial call to print 0% progress
-    printProgressBar(0, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
-    for i, item in enumerate(items):
-        # Do stuff...
-        time.sleep(0.1)
-        # Update Progress Bar
-        printProgressBar(i + 1, l, prefix = 'Progress:', suffix = 'Complete', length = 50)
-
-
-    Sample Output:
-
-    Progress: |█████████████████████████████████████████████-----| 90.0% Complete
-    """
-    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
-    filledLength = int(length * iteration // total)
-    bar = fill * filledLength + '-' * (length - filledLength)
-    print('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = printEnd)
-    # Print New Line on Complete
-    if iteration == total:
-        print()
 
 def dict_key_finder(dictionary : dict, search: str) -> list:
     search_output = []
@@ -195,20 +148,11 @@ if __name__ == '__main__':
             scheduler.info()
             print('[ UNIT TEST ]\t==> ', self.quick_build() == scheduler)
 
-        def progressbar(self):
-            import time
-            print(inspect.stack()[0][3])
-            items = list(range(0, 2000))
-            l = len(items)
-            printProgressBar(0, l, prefix='TEST.progressbar():', suffix='Complete', length=100)
-            for i, item in enumerate(items):
-                time.sleep(0.001)
-                printProgressBar(i + 1, l, prefix='TEST.progressbar():', suffix='Complete', length=100)
+
 
     test = TEST()
     test.from_dictionary()
     test.from_cluster()
-    test.progressbar()
 
 
 
