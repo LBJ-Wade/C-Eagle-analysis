@@ -132,16 +132,16 @@ class SchedulerMPI:
         print('------------------------------------------------------------------')
         print('                           CLASS INFO                            \n')
         if not verbose:
-            print("obj.%s" % ('requires'))
+            print("SchedulerMPI.%s" % ('requires'))
             for x in self.requires:
                 print(x)
                 for y in self.requires[x]:
                     print('\t', y)
-            print("obj.%s" % ('architecture'))
+            print("SchedulerMPI.%s" % ('architecture'))
             for x in self.architecture:
                 print(x)
                 for y in self.architecture[x]:
-                    print(y, ':', self.architecture[x][y])
+                    print('\t', y)
         else:
             for attr in dir(self):
                 print("obj.%s = %r" % (attr, getattr(self, attr)))
