@@ -132,12 +132,12 @@ class SchedulerMPI:
         print('------------------------------------------------------------------')
         print('                           CLASS INFO                             ')
         if not verbose:
-            print(".......................SchedulerMPI.requires.......................")
+            print("\n.......................SchedulerMPI.requires.......................")
             for x in self.requires:
                 print(x)
                 for y in self.requires[x]:
                     print('\t', y)
-            print(".....................SchedulerMPI.architecture......................")
+            print("\n.....................SchedulerMPI.architecture......................")
             for x in self.architecture:
                 print(x, ':', self.architecture[x])
 
