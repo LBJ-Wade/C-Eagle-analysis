@@ -62,9 +62,9 @@ class ProgressBarPrinter:
         self.stream = stream
 
         # Prints the progress bar's layout
-        print(f"{fname}: |{'-' * self.width}| 0%% <0.00 seconds>",
+        print(f"{fname}: |{'·' * self.width}| 0%% < 0.00 seconds >",
               flush=True, end='', file=self.stream)
-        print("\b" * (self.width + len("| 0%% <0.00 seconds>")),
+        print("\b" * (self.width + len("| 0%% < 0.00 seconds >")),
               end='', file=self.stream)
 
     def update(self, progress):
@@ -81,10 +81,10 @@ class ProgressBarPrinter:
     def print_bar(self, progress):
         block = int(round(self.width * progress)) - self.block_progress
         self.block_progress += block
-        bar = ('■' * block) + ('-' * (self.width - self.block_progress))
+        bar = ('■' * block) + ('·' * (self.width - self.block_progress))
         progress = int(progress * 100)
         elapsed_time = round(time.time() - self.start_time, 2)
-        text = f"{bar}| {progress}% <{elapsed_time} seconds>"
+        text = f"{bar}| {progress}% < {elapsed_time} seconds >"
         print(text + ("\b" * (len(text) - block)),
               flush=True, end='', file=self.stream)
 
