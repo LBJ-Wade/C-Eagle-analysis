@@ -12,7 +12,7 @@ or MB and it is possible to transfer it locally for further analysis.
 -------------------------------------------------------------------
 """
 
-from save import save
+import save
 
 from mpi4py import MPI
 import itertools
