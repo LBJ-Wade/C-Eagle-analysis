@@ -133,15 +133,15 @@ class SchedulerMPI:
         print('                           CLASS INFO                            \n')
         if not verbose:
             print("obj.%s" % ('requires'))
-            for x in getattr(self, 'requires'):
+            for x in self.requires:
                 print(x)
-                for y in getattr(self, 'requires')[x]:
-                    print(y, ':', getattr(self, 'requires')[x][y])
+                for y in self.requires[x]:
+                    print(y, ':', self.requires[x][y])
             print("obj.%s" % ('architecture'))
-            for x in getattr(self, 'architecture'):
+            for x in self.architecture:
                 print(x)
-                for y in getattr(self, 'architecture')[x]:
-                    print(y, ':', getattr(self, 'architecture')[x][y])
+                for y in self.architecture[x]:
+                    print(y, ':', self.architecture[x][y])
         else:
             for attr in dir(self):
                 print("obj.%s = %r" % (attr, getattr(self, attr)))
