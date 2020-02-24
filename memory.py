@@ -136,7 +136,7 @@ class SchedulerMPI:
             for x in self.requires:
                 print(x)
                 for y in self.requires[x]:
-                    print(y, ':', self.requires[x][y])
+                    print('\t', y)
             print("obj.%s" % ('architecture'))
             for x in self.architecture:
                 print(x)
