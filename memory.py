@@ -12,7 +12,7 @@ Future implementations:
 -------------------------------------------------------------------
 """
 from mpi4py import MPI
-MPI_COMM_WORLD = MPI.COMM_WORLD
+
 
 def free_memory(var_list, invert=False):
     """
@@ -43,12 +43,13 @@ def dict_key_exclusionfinder(dictionary : dict, search: str) -> list:
             search_output.append(key)
     return search_output
 
-class SchedulerMPI(MPI_COMM_WORLD):
+class SchedulerMPI:
 
     def __init__(self, requires: dict):
         self.requires = requires
         self.architecture = {}
         self.generate_arch_clusterMPI()
+        self.comm = MPI.COMM_WORLD
 
     def __eq__(self, other):
         """
@@ -89,9 +90,9 @@ class SchedulerMPI(MPI_COMM_WORLD):
             core_counter += 1
             self.architecture[core_counter] = other_key
 
-        if len(self.architecture) > self.Get_size():
+        if len(self.architecture) > self.comm.Get_size():
             print('[ WARNING ]\t==> Requested more cores than there are available. Requested {0}, available {'
-                  '1}.'.format(len(self.architecture), self.Get_size()))
+                  '1}.'.format(len(self.architecture), self.comm.Get_size()))
 
         return
 
