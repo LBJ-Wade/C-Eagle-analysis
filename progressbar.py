@@ -93,7 +93,7 @@ class ProgressBarPrinter:
         print(flush=True, file=self.stream)
 
 
-def ProgressBar(width=50, step=0.1, stream=sys.stdout):
+def ProgressBar(width=70, step=0.1, stream=sys.stdout):
     """Decorator, prints a progress bar when a decored function yields it's
     current progress.
     When you want the progress bar to be updated you should yield the progress
