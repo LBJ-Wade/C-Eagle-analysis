@@ -6,6 +6,12 @@ def get_current_console_size():
     rows, columns = subprocess.check_output(['stty', 'size']).decode().split()
     return int(rows), int(columns)
 
+def normalise_string_len(string, length):
+    if len(string) >= length:
+        return string[:length]
+    else:
+        return string.ljust(length, ' ')
+
 # Simple implementation
 def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
     """
@@ -93,7 +99,7 @@ class ProgressBarPrinter:
         print(flush=True, file=self.stream)
 
 
-def ProgressBar(width=70, step=0.1, stream=sys.stdout):
+def ProgressBar(width=75, step=0.1, stream=sys.stdout):
     """Decorator, prints a progress bar when a decored function yields it's
     current progress.
     When you want the progress bar to be updated you should yield the progress
@@ -108,7 +114,8 @@ def ProgressBar(width=70, step=0.1, stream=sys.stdout):
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            pb = ProgressBarPrinter(width, step, stream, func.__name__)
+            progress_name = normalise_string_len(func.__name__, 25)
+            pb = ProgressBarPrinter(width, step, stream, progress_name)
             progress_generator = func(*args, **kwargs)
             try:
                 while True:

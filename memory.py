@@ -28,11 +28,6 @@ def free_memory(var_list, invert=False):
                 del globals()[name]
 
 
-def delegate_independent_nodes():
-    pass
-
-
-
 def dict_key_finder(dictionary : dict, search: str) -> list:
     search_output = []
     for key in list(dictionary.keys()):
