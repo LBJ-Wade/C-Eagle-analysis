@@ -130,13 +130,13 @@ class SchedulerMPI:
 
     def info(self, verbose: bool = False) -> None:
         print('------------------------------------------------------------------')
-        print('|                           CLASS INFO                            \n')
+        print('                           CLASS INFO                            \n')
         if not verbose:
-            print("|\tobj.%s = %r" % ('requires', getattr(self, 'requires')))
-            print("|\tobj.%s = %r" % ('architecture', getattr(self, 'architecture')))
+            print("obj.%s = %r" % ('requires', getattr(self, 'requires')))
+            print("obj.%s = %r" % ('architecture', getattr(self, 'architecture')))
         else:
             for attr in dir(self):
-                print("|\tobj.%s = %r" % (attr, getattr(self, attr)))
+                print("obj.%s = %r" % (attr, getattr(self, attr)))
         print('\n------------------------------------------------------------------')
         return
 
