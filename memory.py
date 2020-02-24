@@ -50,7 +50,6 @@ class SchedulerMPI:
         self.requires = requires
         self.architecture = {}
         self.generate_arch_clusterMPI()
-        self.comm = comm
 
     def __eq__(self, other):
         """
@@ -91,9 +90,9 @@ class SchedulerMPI:
             core_counter += 1
             self.architecture[core_counter] = other_key
 
-        if len(self.architecture) > self.comm.Get_size():
+        if len(self.architecture) > comm.Get_size():
             print('[ WARNING ]\t==> Requested more cores than there are available. Requested {0}, available {'
-                  '1}.'.format(len(self.architecture), self.comm.Get_size()))
+                  '1}.'.format(len(self.architecture), comm.Get_size()))
 
         return
 
