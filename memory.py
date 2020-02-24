@@ -190,9 +190,20 @@ if __name__ == '__main__':
             scheduler.info()
             print('[ UNIT TEST ]\t==> ', self.quick_build() == scheduler)
 
+        def progressbar(self):
+            import time
+            print(inspect.stack()[0][3])
+            items = list(range(0, 3000))
+            l = len(items)
+            printProgressBar(0, l, prefix='Progress:', suffix='Complete', length=50)
+            for i, item in enumerate(items):
+                # time.sleep(0.1)
+                printProgressBar(i + 1, l, prefix='Progress:', suffix='Complete', length=50)
+
     test = TEST()
     test.from_dictionary()
     test.from_cluster()
+    test.progressbar()
 
 
 
