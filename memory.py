@@ -139,9 +139,8 @@ class SchedulerMPI:
                     print('\t', y)
             print("SchedulerMPI.%s" % ('architecture'))
             for x in self.architecture:
-                print(x)
-                for y in self.architecture[x]:
-                    print('\t', y)
+                print(x, ':', self.architecture[x])
+
         else:
             for attr in dir(self):
                 print("obj.%s = %r" % (attr, getattr(self, attr)))
