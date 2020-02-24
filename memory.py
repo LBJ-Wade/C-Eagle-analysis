@@ -129,9 +129,11 @@ class SchedulerMPI:
 
 
     def info(self) -> None:
+        print('------------------------------------------------------------------')
+        print('|                           CLASS INFO                            \n')
         for attr in dir(self):
-            print("obj.%s = %r" % (attr, getattr(self, attr)))
-
+            print("|\tobj.%s = %r" % (attr, getattr(self, attr)))
+        print('\n------------------------------------------------------------------')
         return
 
 
