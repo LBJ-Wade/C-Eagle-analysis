@@ -92,14 +92,14 @@ def make_parallel_MPI(function):
     return wrapper
 
 i = 0
-@progressbar.ProgressBar()
+# @progressbar.ProgressBar()
 @make_parallel_MPI
 def MPI_decorator_test(**kwargs):
     import time
     nb_iter = 200
     time.sleep(0.0001)
     i=+1
-    yield ((i) / nb_iter)  # Give control back to decorator
+    # yield ((i) / nb_iter)  # Give control back to decorator
 
 @make_parallel_MPI
 def push_FOFapertures(*args, **kwargs):
