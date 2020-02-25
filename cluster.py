@@ -237,6 +237,25 @@ class Cluster(Simulation,
         self.requires = requires
         self.import_requires()
 
+        # Set additional cosmoloy attributes from methods
+        self.hubble_param = self.file_hubble_param()
+        self.comic_time   = self.file_comic_time()
+        self.redshift     = self.file_redshift()
+        self.OmegaBaryon  = self.file_OmegaBaryon()
+        self.Omega0       = self.file_Omega0()
+        self.OmegaLambda  = self.file_OmegaLambda()
+
+        # Set FoF attributes
+        self.centre_of_potential = self.group_centre_of_potential()
+        self.r200 = self.group_r200()
+        self.r500 = self.group_r500()
+        self.r2500 = self.group_r2500()
+        self.Mtot = self.group_mass()
+        self.M200 = self.group_M200()
+        self.M500 = self.group_M500()
+        self.M2500 = self.group_M2500()
+        self.NumOfSubhalos = self.NumOfSubhalos()
+
     def set_simulation_name(self, simulation_name: str) -> None:
         """
         Function to set the simulation_name attribute and assign it to the Cluster object.
@@ -284,13 +303,6 @@ class Cluster(Simulation,
         data_dir = 'data'
         return os.path.join(master_directory, cluster_ID, data_dir)
 
-    # Set additional attributes from methods
-    # self.hubble_param = self.file_hubble_param()
-    # self.comic_time = self.file_comic_time()
-    # self.redshift = self.file_redshift()
-    # self.OmegaBaryon = self.file_OmegaBaryon()
-    # self.Omega0 = self.file_Omega0()
-    # self.OmegaLambda = self.file_OmegaLambda()
 
     def file_hubble_param(self):
         """
