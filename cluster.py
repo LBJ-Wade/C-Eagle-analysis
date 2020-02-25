@@ -181,9 +181,9 @@ class Simulation():
     def info(self, verbose: bool = False):
 
         if not verbose:
+            print('------------------------------------------------------------------')
+            print('                           CLASS INFO                             ')
             for attribute_key in self.__dict__.keys():
-                print('------------------------------------------------------------------')
-                print('                           CLASS INFO                             ')
                 print('\n', attribute_key)
                 print(self.__dict__[attribute_key])
         else:
