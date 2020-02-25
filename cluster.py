@@ -178,9 +178,15 @@ class Simulation():
         if dtype == float:
             return [redshift_str2num(z) for z in self.redshiftAllowed]
 
-    def info(self):
-        for attr in dir(self):
-            print("obj.%s = %r" % (attr, getattr(self, attr)))
+    def info(self, verbose: bool = False):
+
+        if not verbose:
+            for attribute_key in self.__dict__.keys():
+                print(attribute_key)
+                print('\t', self.__dict__[attribute_key])
+        else:
+            for attr in dir(self):
+                print("obj.%s = %r" % (attr, getattr(self, attr)))
 
     def halo_Num(self, n: int):
         """
@@ -384,8 +390,6 @@ if __name__ == '__main__':
                               requires=self.data_required)
 
             cluster.info()
-
-
 
     test = TEST()
     test.cluster_imports()
