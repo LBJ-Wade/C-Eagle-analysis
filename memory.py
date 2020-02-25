@@ -240,7 +240,7 @@ if __name__ == '__main__':
     # test.from_cluster()
     import numpy as np
     data = np.linspace(0, 100, 101)
-    test.scatter(data)
+    test.scatter_data(data)
 
 
 
