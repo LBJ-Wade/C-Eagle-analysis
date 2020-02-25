@@ -176,10 +176,13 @@ def test_loop_redshifts(i):
 
 if __name__ == '__main__':
     # test_simple()
+
     from mpi4py import MPI
 
     comm = MPI.COMM_WORLD
     size = comm.Get_size()
     rank = comm.Get_rank()
+    print('process:', rank)
+    plt.ion()
     test_loop_apertures(rank)
     test_loop_redshifts(rank)
