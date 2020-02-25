@@ -222,8 +222,7 @@ class Cluster(Simulation,
                  simulation_name: str = None,
                  clusterID: int = 0,
                  redshift: str = None,
-                 comovingframe: bool = False,
-                 requires: dict = None):
+                 comovingframe: bool = False):
 
         # Link to the base class by initialising it
         super().__init__(simulation_name = simulation_name)
@@ -233,8 +232,8 @@ class Cluster(Simulation,
         self.set_clusterID(clusterID)
         self.set_redshift(redshift)
         self.comovingframe = comovingframe
-        self.set_requires(requires)
-        self.import_requires()
+        if 'requires' in self.__dict__():
+            self.import_requires()
 
         # Set additional cosmoloy attributes from methods
         self.hubble_param = self.file_hubble_param()
