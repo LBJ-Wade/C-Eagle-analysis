@@ -13,8 +13,6 @@ Future implementations:
 """
 from mpi4py import MPI
 import networkx
-import floweaver
-import matplotlib.pyplot as plt
 
 comm = MPI.COMM_WORLD
 size = comm.get_size()
