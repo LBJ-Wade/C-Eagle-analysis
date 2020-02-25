@@ -235,10 +235,16 @@ if __name__ == '__main__':
     # data = np.linspace(0, 100, 101)
     # test.scatter_data(data)
 
-
     if rank == 0:
-        data = [(i + 1) ** 2 for i in range(size)]
-    comm.Scatter(data, root=0)
+        data = [i for i in range(8)]
+        # dividing data into chunks
+        chunks = [[] for _ in range(size)]
+        for i, chunk in enumerate(data):
+            chunks[i % size].append(chunk)
+    else:
+        data = None
+        chunks = None
+    data = comm.scatter(chunks, root=0)
 
     print("%s: %s" % (rank, data))
 
