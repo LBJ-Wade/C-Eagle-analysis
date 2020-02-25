@@ -47,10 +47,11 @@ class KSZMAP:
         :param plotlimits:
         """
 
+        # Impose cluster requirements
+        cluster.set_requires({'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']})
 
         # Initialise the KSZ map fields
         self.cluster = cluster
-        self.cluster.set_requires({'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']})
         self.resolution = resolution
         self.aperture = cluster.r500 if aperture == None else aperture
         self.plotlimits = 3*cluster.r500 if plotlimits == None else plotlimits
@@ -95,8 +96,8 @@ class KSZMAP:
 
         # Attach the image to the Axes class
         image = axes.imshow(temp_map, cmap='seismic', norm=norm,
-                           extent=(-self.plotlims, self.plotlims,
-                                   -self.plotlims, self.plotlims))
+                            extent=(-self.plotlims, self.plotlims,
+                                    -self.plotlims, self.plotlims))
 
         return image
 

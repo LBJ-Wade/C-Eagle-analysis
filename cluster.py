@@ -221,7 +221,7 @@ class Cluster(Simulation,
     def __init__(self,
                  simulation_name: str = None,
                  clusterID: int = 0,
-                 redshift: str = 0.0,
+                 redshift: str = None,
                  comovingframe: bool = False,
                  requires: dict = None):
 
