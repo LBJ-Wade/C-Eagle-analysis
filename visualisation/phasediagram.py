@@ -107,7 +107,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         cax2.xaxis.set_ticks_position("top")
 
         i = 0
-        filename_out = Simulation.pathSave + '/phasediagrams/' + Simulation.simulation_name + '/_' + \
+        filename_out = self.pathSave + '/phasediagrams/' + Simulation.simulation_name + '/_' + \
                        self.cluster.cluster_prefix + self.cluster.clusterID + self.cluster.redshift
 
         while os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
