@@ -15,8 +15,8 @@ from mpi4py import MPI
 import networkx
 
 comm = MPI.COMM_WORLD
-size = comm.get_size()
-rank = comm.get_rank()
+size = comm.Get_size()
+rank = comm.Get_rank()
 
 
 def free_memory(var_list, invert=False):
