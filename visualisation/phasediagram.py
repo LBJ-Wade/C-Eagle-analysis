@@ -107,15 +107,21 @@ class PhaseDiagram(Simulation, rendering.Map):
         # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
         cax2.xaxis.set_ticks_position("top")
 
-        i = 0
-        filename_out = self.pathSave + '/phasediagrams/' + self.cluster.simulation_name + '/_' + \
+
+        filename_out = self.pathSave + '/phasediagrams/' + self.cluster.simulation_name + '/' + \
                        self.cluster.cluster_prefix + str(self.cluster.clusterID) + self.cluster.redshift
 
-        while os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
-            i += 1
-            plt.savefig(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png")
+        if not os.path.exists(self.pathSave + '/phasediagrams/' + self.cluster.simulation_name):
+            os.makedirs(self.pathSave + '/phasediagrams/' + self.cluster.simulation_name)
 
-
+        i = 0
+        while True:
+            if not os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
+                plt.savefig(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png")
+                print('[ PhaseDiagram ]\t==> Saved: ', filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png")
+                break
+            else:
+                i += 1
 
 
 def test_simple():
@@ -165,6 +171,6 @@ def test_loop_redshifts():
 
 
 if __name__ == '__main__':
-    test_simple()
+    # test_simple()
     test_loop_apertures()
     test_loop_redshifts()
