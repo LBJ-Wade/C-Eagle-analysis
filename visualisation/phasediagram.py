@@ -88,8 +88,9 @@ class PhaseDiagram(Simulation, rendering.Map):
 
 
     def setup_plot(self):
-
-        fig = plt.figure(figsize=(6, 6))
+        plt.clf()
+        plt.close()
+        fig = plt.figure(figsize=(7, 6))
         axes = fig.add_subplot(111)
 
         image = self.make_panel(axes)
@@ -126,8 +127,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         #         break
         #     else:
         #         i += 1
-        plt.clf()
-        plt.close()
+
 
 
 def test_simple():
