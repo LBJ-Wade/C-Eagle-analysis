@@ -95,12 +95,12 @@ class KSZMAP:
         temp_map = swift.generate_map(x, y, m, h, self.resolution, parallel=True)
         norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5,
                                  vmin=-np.abs(temp_map).max(),
-                                 vmax=np.abs(temp_map).max())
+                                 vmax= np.abs(temp_map).max())
 
         # Attach the image to the Axes class
         image = axes.imshow(temp_map, cmap='seismic', norm=norm,
-                            extent=(-self.plotlims, self.plotlims,
-                                    -self.plotlims, self.plotlims))
+                            extent=(-self.plotlimits, self.plotlimits,
+                                    -self.plotlimits, self.plotlimits))
 
         return image
 

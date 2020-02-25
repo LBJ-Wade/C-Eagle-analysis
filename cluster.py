@@ -376,19 +376,19 @@ class Cluster(Simulation,
     def import_requires(self):
         for part_type in self.requires.keys():
             for field in self.requires[part_type]:
-                if field == 'mass':
+                if field == 'mass' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1]))
-                elif field == 'coordinates':
+                elif field == 'coordinates' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1]))
-                elif field == 'velocity':
+                elif field == 'velocity' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1]))
-                elif field == 'temperature':
+                elif field == 'temperature' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1]))
-                elif field == 'sphdensity':
+                elif field == 'sphdensity' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1]))
-                elif field == 'sphkernel':
+                elif field == 'sphkernel' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1]))
-                elif field == 'metallicity':
+                elif field == 'metallicity' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1]))
 
 
