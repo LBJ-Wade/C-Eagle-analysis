@@ -199,7 +199,7 @@ if __name__ == '__main__':
 
 
     test = TEST()
-    # test.from_dictionary()
+    test.from_dictionary()
     # test.from_cluster()
     test.scatter()
 
