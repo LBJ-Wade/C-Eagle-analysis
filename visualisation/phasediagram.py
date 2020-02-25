@@ -138,7 +138,7 @@ def test_loop_apertures():
     for aperture in apertures:
         # Create a PhaseDiagram object and link it to the cluster object
         t_rho_diagram = PhaseDiagram(cluster, aperture=aperture)
-        # t_rho_diagram.info()
+        t_rho_diagram.info()
 
         # Test the map output
         t_rho_diagram.setup_plot()
@@ -151,7 +151,7 @@ def test_loop_redshifts():
     for z in redshifts:
         # Create a cluster object
         cluster = Cluster(simulation_name='ceagle', clusterID=0, redshift=z)
-        # cluster.info()
+        cluster.info()
 
         # Create a PhaseDiagram object and link it to the cluster object
         t_rho_diagram = PhaseDiagram(cluster)
