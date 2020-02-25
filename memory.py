@@ -176,10 +176,8 @@ if __name__ == '__main__':
                 print(test)
                 outputData = np.zeros(len(test))       # Create output array of same size
                 split = np.array_split(test, size, axis=0)  # Split input array by the number of available cores
-                split_sizes = []
-
-                for i in range(0, len(split), 1):
-                    split_sizes = np.append(split_sizes, len(split[i]))
+                split_sizes = [len(split[i]) for i in range(0, len(split), 1)]
+                print(split_sizes)
 
                 split_sizes_input = split_sizes * len(test)
                 displacements_input = np.insert(np.cumsum(split_sizes_input), 0, 0)[0:-1]
