@@ -88,8 +88,8 @@ class PhaseDiagram(Simulation, rendering.Map):
 
         axes.set_xscale('log')
         axes.set_yscale('log')
-        axes.set_xlabel(r'$\rho\ \matrm{[n_H\ cm^{-3}]}$')
-        axes.set_ylabel(r'$T\ \mathrm{[K]}$')
+        axes.set_xlabel(r"$\rho\ \matrm{[n_H\ cm^{-3}]}$")
+        axes.set_ylabel(r"$T\ \mathrm{[K]}$")
 
         # Colorbar adjustments
         ax2_divider = make_axes_locatable(axes)
@@ -104,7 +104,7 @@ class PhaseDiagram(Simulation, rendering.Map):
 
 if __name__ == '__main__':
     # Create a cluster object
-    cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
+    cluster = Cluster(simulation_name='ceagle', clusterID=0, redshift='z000p000')
     # Create a PhaseDiagram object and link it to the cluster object
     t_rho_diagram = PhaseDiagram(cluster)
     t_rho_diagram.info()
