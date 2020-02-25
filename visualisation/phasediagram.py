@@ -15,7 +15,7 @@ class PhaseDiagram(Simulation, rendering.Map):
     REQUIRES = {'partType0': ['coordinates', 'temperature', 'sphdensity', 'mass']}
 
     # Inherit only some methods
-    pathSave = Simulation.__dict__["pathSave"]
+    pathSave = Simulation.pathSave
     info = Simulation.__dict__["info"]
     get_centers_from_bins = rendering.Map.__dict__["get_centers_from_bins"]
     bins_meshify = rendering.Map.__dict__["bins_meshify"]
