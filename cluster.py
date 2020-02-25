@@ -232,8 +232,6 @@ class Cluster(Simulation,
         self.set_clusterID(clusterID)
         self.set_redshift(redshift)
         self.comovingframe = comovingframe
-        if 'requires' in self.__dict__():
-            self.import_requires()
 
         # Set additional cosmoloy attributes from methods
         self.hubble_param = self.file_hubble_param()
@@ -245,12 +243,12 @@ class Cluster(Simulation,
 
         # Set FoF attributes
         self.centre_of_potential = self.group_centre_of_potential()
-        self.r200 = self.group_r200()
-        self.r500 = self.group_r500()
+        self.r200  = self.group_r200()
+        self.r500  = self.group_r500()
         self.r2500 = self.group_r2500()
-        self.Mtot = self.group_mass()
-        self.M200 = self.group_M200()
-        self.M500 = self.group_M500()
+        self.Mtot  = self.group_mass()
+        self.M200  = self.group_M200()
+        self.M500  = self.group_M500()
         self.M2500 = self.group_M2500()
         self.NumOfSubhalos = self.NumOfSubhalos(central_FOF = self.centralFOF_groupNumber)
 

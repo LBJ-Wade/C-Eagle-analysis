@@ -50,7 +50,8 @@ class KSZMAP:
         """
 
         # Impose cluster requirements
-        cluster.__init__(requires = self.REQUIRES)
+        cluster.set_requires(self.REQUIRES)
+        cluster.import_requires()
 
         # Initialise the KSZ map fields
         self.cluster = cluster
