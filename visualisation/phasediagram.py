@@ -88,14 +88,14 @@ class PhaseDiagram(Simulation, rendering.Map):
 
         axes.set_xscale('log')
         axes.set_yscale('log')
-        axes.set_xlabel("Density [$n_H$ cm$^{-3}$]")
-        axes.set_ylabel("Temperature [K]")
+        axes.set_xlabel(r'$\rho~\matrm{[n_H~cm^{-3}]}$')
+        axes.set_ylabel(r'$T~\mathrm{[K]}$')
 
         # Colorbar adjustments
         ax2_divider = make_axes_locatable(axes)
         cax2 = ax2_divider.append_axes("right", size="3%", pad="2%")
         cbar = plt.colorbar(image, cax=cax2, orientation='vertical')
-        cbar.set_label("$Mass$ [M_\odot]", labelpad=17)
+        cbar.set_label(r"$M~\mathrm{[M_\odot]}$", labelpad=17)
         # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
         cax2.xaxis.set_ticks_position("top")
 
