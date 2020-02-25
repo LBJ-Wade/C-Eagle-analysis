@@ -5,20 +5,19 @@ import matplotlib.colors as colors
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
-
-from rendering import Map
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from cluster import Cluster, Simulation
+from visualisation import rendering
 
 
-class PhaseDiagram(Simulation, Map):
+class PhaseDiagram(Simulation, rendering.Map):
 
     REQUIRES = {'partType0': ['coordinates', 'temperature', 'sphdensity', 'mass']}
 
     # Inherit only some methods
     info = Simulation.__dict__["info"]
-    get_centers_from_bins = Map.__dict__["get_centers_from_bins"]
-    bins_meshify = Map.__dict__["bins_meshify"]
+    get_centers_from_bins = rendering.Map.__dict__["get_centers_from_bins"]
+    bins_meshify = rendering.Map.__dict__["bins_meshify"]
 
 
     def __init__(self,
