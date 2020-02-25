@@ -15,6 +15,7 @@ class PhaseDiagram(Simulation, rendering.Map):
     REQUIRES = {'partType0': ['coordinates', 'temperature', 'sphdensity', 'mass']}
 
     # Inherit only some methods
+    pathSave = Simulation.__dict__["pathSave"]
     info = Simulation.__dict__["info"]
     get_centers_from_bins = rendering.Map.__dict__["get_centers_from_bins"]
     bins_meshify = rendering.Map.__dict__["bins_meshify"]
@@ -107,7 +108,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         cax2.xaxis.set_ticks_position("top")
 
         i = 0
-        filename_out = self.pathSave + '/phasediagrams/' + self.simulation_name + '/_' + \
+        filename_out = self.pathSave + '/phasediagrams/' + self.cluster.simulation_name + '/_' + \
                        self.cluster.cluster_prefix + self.cluster.clusterID + self.cluster.redshift
 
         while os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
