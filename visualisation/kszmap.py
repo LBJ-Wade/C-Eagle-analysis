@@ -8,7 +8,7 @@ import swiftsimio_binder as swift
 from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from cluster import Cluster
+from cluster import Cluster, Simulation
 from testing import angular_momentum
 
 
@@ -32,12 +32,12 @@ def rescale(X, x_min, x_max):
     denom = X.max(axis=0) - X.min(axis=0)
     return x_min + nom / denom
 
-class KSZMAP(Cluster):
+class KSZMAP(Simulation):
 
     REQUIRES = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']}
 
     # Inherit only some methods
-    info = Cluster.__dict__["info"]
+    info = Simulation.__dict__["info"]
 
     def __init__(self,
                  cluster: Cluster,
