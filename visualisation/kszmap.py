@@ -116,6 +116,7 @@ class KSZMAP:
 if __name__ == '__main__':
     # Create a cluster object
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
+    cluster.info()
     # Create a KSZMAP object and link it to the cluster object
     test_map = KSZMAP(cluster)
     # Test the map output
