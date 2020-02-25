@@ -34,6 +34,8 @@ def rescale(X, x_min, x_max):
 
 class KSZMAP:
 
+    REQUIRES = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']}
+
     def __init__(self,
                  cluster: Cluster,
                  resolution: int = 200,
@@ -48,7 +50,7 @@ class KSZMAP:
         """
 
         # Impose cluster requirements
-        cluster.set_requires({'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']})
+        cluster.__init__(requires = self.REQUIRES)
 
         # Initialise the KSZ map fields
         self.cluster = cluster
