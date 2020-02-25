@@ -182,8 +182,10 @@ class Simulation():
 
         if not verbose:
             for attribute_key in self.__dict__.keys():
-                print(attribute_key)
-                print('\t', self.__dict__[attribute_key])
+                print('------------------------------------------------------------------')
+                print('                           CLASS INFO                             ')
+                print('\n', attribute_key)
+                print(self.__dict__[attribute_key])
         else:
             for attr in dir(self):
                 print("obj.%s = %r" % (attr, getattr(self, attr)))
