@@ -112,19 +112,20 @@ class PhaseDiagram(Simulation, rendering.Map):
 
 
         filename_out = self.pathSave + '/phasediagrams/' + self.cluster.simulation_name + '/' + \
-                       self.cluster.cluster_prefix + str(self.cluster.clusterID) + self.cluster.redshift
+                       self.cluster.cluster_prefix + str(self.cluster.clusterID) + '_' + self.cluster.redshift
 
         if not os.path.exists(self.pathSave + '/phasediagrams/' + self.cluster.simulation_name):
             os.makedirs(self.pathSave + '/phasediagrams/' + self.cluster.simulation_name)
 
-        i = 0
-        while True:
-            if not os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
-                plt.savefig(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png", dpi = 200)
-                print('[ PhaseDiagram ]\t==> Saved: ', filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png")
-                break
-            else:
-                i += 1
+        plt.savefig(filename_out + f"_aperture{self.aperture:7.2f}_bins{self.resolution}.png", dpi=300)
+        # i = 0
+        # while True:
+        #     if not os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
+        #         plt.savefig(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png", dpi = 200)
+        #         print('[ PhaseDiagram ]\t==> Saved: ', filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png")
+        #         break
+        #     else:
+        #         i += 1
 
 
 def test_simple():
@@ -140,9 +141,9 @@ def test_simple():
     # Test the map output
     t_rho_diagram.setup_plot()
 
-def test_loop_apertures():
+def test_loop_apertures(i):
     # Create a cluster object
-    cluster = Cluster(simulation_name='ceagle', clusterID=10, redshift='z000p000')
+    cluster = Cluster(simulation_name='ceagle', clusterID=i, redshift='z000p000')
     apertures = cluster.generate_apertures()
 
     for aperture in apertures:
@@ -153,14 +154,14 @@ def test_loop_apertures():
         # Test the map output
         t_rho_diagram.setup_plot()
 
-def test_loop_redshifts():
+def test_loop_redshifts(i):
 
     simulation = Simulation(simulation_name='ceagle')
     redshifts = simulation.redshiftAllowed
 
     for z in redshifts:
         # Create a cluster object
-        cluster = Cluster(simulation_name='ceagle', clusterID=10, redshift=z)
+        cluster = Cluster(simulation_name='ceagle', clusterID=i, redshift=z)
         cluster.info()
 
         # Create a PhaseDiagram object and link it to the cluster object
@@ -175,5 +176,10 @@ def test_loop_redshifts():
 
 if __name__ == '__main__':
     # test_simple()
-    test_loop_apertures()
-    test_loop_redshifts()
+    from mpi4py import MPI
+
+    comm = MPI.COMM_WORLD
+    size = comm.Get_size()
+    rank = comm.Get_rank()
+    test_loop_apertures(rank)
+    test_loop_redshifts(rank)

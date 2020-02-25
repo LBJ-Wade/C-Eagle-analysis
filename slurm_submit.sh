@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 128                                           # The number of cores you need...
-#SBATCH -J CELR_red                                            # Give it something meaningful.
+#SBATCH --ntasks 30                                           # The number of cores you need...
+#SBATCH -J Ceagle                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
 #SBATCH -p cosma6                                              # or some other partition, e.g. cosma, cosma6, etc.
@@ -21,7 +21,7 @@ module load openmpi
 module load hdf5
 
 # Run the program
-mpiexec -n $SLURM_NTASKS python3 ./main.py
+mpiexec -n $SLURM_NTASKS python3 ./visualisation/phasediagram.py
 
 
 
