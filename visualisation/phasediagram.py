@@ -13,9 +13,9 @@ from visualisation import rendering
 class PhaseDiagram(Simulation, rendering.Map):
 
     REQUIRES = {'partType0': ['coordinates', 'temperature', 'sphdensity', 'mass']}
+    pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
 
     # Inherit only some methods
-    pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
     info = Simulation.__dict__["info"]
     get_centers_from_bins = rendering.Map.__dict__["get_centers_from_bins"]
     bins_meshify = rendering.Map.__dict__["bins_meshify"]
@@ -109,7 +109,7 @@ class PhaseDiagram(Simulation, rendering.Map):
 
         i = 0
         filename_out = self.pathSave + '/phasediagrams/' + self.cluster.simulation_name + '/_' + \
-                       self.cluster.cluster_prefix + self.cluster.clusterID + self.cluster.redshift
+                       self.cluster.cluster_prefix + str(self.cluster.clusterID) + self.cluster.redshift
 
         while os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
             i += 1
