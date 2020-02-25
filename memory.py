@@ -175,6 +175,7 @@ if __name__ == '__main__':
             if rank == 0:
                 test = np.arange(0, 512, dtype='float64')
                 test = np.tile(test, [256, 1])  # Create 2D input array. Numbers 1 to 512 increment across dimension 2.
+                print(test)
                 outputData = np.zeros([256, 512])  # Create output array of same size
                 split = np.array_split(test, size, axis=0)  # Split input array by the number of available cores
 
@@ -192,10 +193,7 @@ if __name__ == '__main__':
                 print("Input data split into vectors of sizes %s" % split_sizes_input)
                 print("Input data split with displacements of %s" % displacements_input)
 
-                plt.imshow(test)
-                plt.colorbar()
-                plt.title('Input data')
-                plt.show()
+
 
             else:
                 # Create variables on other cores
@@ -223,10 +221,6 @@ if __name__ == '__main__':
             for i in range(0, np.shape(output_chunk)[0], 1):
                 output[i, 0:512] = output_chunk[i]
 
-            plt.imshow(output)
-            plt.title("Output shape %s for rank %d" % (output.shape, rank))
-            plt.colorbar()
-            plt.show()
 
             print("Output shape %s for rank %d" % (output.shape, rank))
 
@@ -238,15 +232,13 @@ if __name__ == '__main__':
             if rank == 0:
                 outputData = outputData[0:len(test), :]
                 print("Final data shape %s" % (outputData.shape,))
-                plt.imshow(outputData)
-                plt.colorbar()
-                plt.show()
+
                 print(outputData)
 
 
 
     test = TEST()
-    test.from_dictionary()
+    # test.from_dictionary()
     # test.from_cluster()
     test.scatter()
 
