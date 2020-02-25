@@ -93,10 +93,10 @@ class PhaseDiagram(Simulation, rendering.Map):
         axes = fig.add_subplot(111)
 
         image = self.make_panel(axes)
-        axes.set_title(r"$\mathrm{{0}~halo{1}~{2}~Aperture:{1:.2f}~Mpc}$".format(self.cluster.simulation_name,
-                                                                            self.cluster.clusterID,
-                                                                            self.cluster.redshift,
-                                                                            self.aperture))
+        axes.set_title(r"$\mathrm{%s ~ halo~%d ~ %s ~Aperture: ~ %:.2f ~ Mpc}$"  %  self.cluster.simulation_name,
+                                                                                    self.cluster.clusterID,
+                                                                                    self.cluster.redshift,
+                                                                                    self.aperture)
         axes.set_xscale('log')
         axes.set_yscale('log')
         axes.set_xlabel(r"$\rho\ \mathrm{[n_H\ cm^{-3}]}$")
