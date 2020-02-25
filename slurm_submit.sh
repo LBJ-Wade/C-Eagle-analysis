@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 1                                           # The number of cores you need...
+#SBATCH --ntasks 30                                           # The number of cores you need...
 #SBATCH -J Ceagle                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
@@ -16,13 +16,12 @@ module purge
 #module unload python/2.7.15
 module load python/3.6.5
 
-#module load intel_comp/2018
-#module load openmpi
-#module load hdf5
+module load intel_comp/2018
+module load openmpi
+module load hdf5
 
 # Run the program
-#mpiexec -n $SLURM_NTASKS python3 ./visualisation/phasediagram.py
-python3 ./visualisation/phasediagram.py
+mpiexec -n $SLURM_NTASKS python3 ./visualisation/phasediagram.py
 
 
 

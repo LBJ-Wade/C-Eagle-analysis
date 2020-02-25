@@ -1,9 +1,12 @@
+import matplotlib
+matplotlib.use('Agg')
 import sys
 import os.path
 import numpy as np
 import matplotlib.colors as colors
 from matplotlib import pyplot as plt
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from cluster import Cluster, Simulation
@@ -179,6 +182,10 @@ def test_loop_redshifts(i):
 if __name__ == '__main__':
     # test_simple()
 
-    for rank in range(0, 30):
-        test_loop_apertures(rank)
-        test_loop_redshifts(rank)
+    from mpi4py import MPI
+
+    comm = MPI.COMM_WORLD
+    size = comm.Get_size()
+    rank = comm.Get_rank()
+    test_loop_apertures(rank)
+    test_loop_redshifts(rank)
