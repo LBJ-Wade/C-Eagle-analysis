@@ -15,7 +15,6 @@ class PhaseDiagram(Simulation, rendering.Map):
     REQUIRES = {'partType0': ['coordinates', 'temperature', 'sphdensity', 'mass']}
 
     # Inherit only some methods
-    pathSave = Simulation.pathSave
     info = Simulation.__dict__["info"]
     get_centers_from_bins = rendering.Map.__dict__["get_centers_from_bins"]
     bins_meshify = rendering.Map.__dict__["bins_meshify"]
@@ -34,6 +33,9 @@ class PhaseDiagram(Simulation, rendering.Map):
         :param aperture:
         :param plotlimits:
         """
+
+        # Initialise Simulation class
+        Simulation.__init__(simulation_name=self.cluster.simulation_name)
 
         # Impose cluster requirements
         cluster.set_requires(self.REQUIRES)
