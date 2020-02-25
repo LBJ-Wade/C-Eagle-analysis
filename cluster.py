@@ -223,8 +223,7 @@ class Cluster(Simulation,
                  clusterID: int = 0,
                  redshift: str = 0.0,
                  comovingframe: bool = False,
-                 requires: dict = {}
-                 ):
+                 requires: dict = None):
 
         # Link to the base class by initialising it
         super().__init__(simulation_name = simulation_name)
@@ -299,9 +298,9 @@ class Cluster(Simulation,
         :param imports:
         :return:
         """
-        if imports == dict({}):
-            print('[ SetRequires ]\t==> Warning: no pull requests for cluster datasets.')
         self.requires = imports
+        if self.requires == None:
+            print('[ SetRequires ]\t==> Warning: no pull requests for cluster datasets.')
 
 
     def path_from_cluster_name(self):
