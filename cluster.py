@@ -254,7 +254,7 @@ class Cluster(Simulation,
         self.M200 = self.group_M200()
         self.M500 = self.group_M500()
         self.M2500 = self.group_M2500()
-        self.NumOfSubhalos = self.NumOfSubhalos()
+        self.NumOfSubhalos = self.NumOfSubhalos(central_FOF = self.centralFOF_groupNumber)
 
     def set_simulation_name(self, simulation_name: str) -> None:
         """
