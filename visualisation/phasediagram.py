@@ -57,7 +57,11 @@ class PhaseDiagram(Simulation, rendering.Map):
         radial_dist = np.linalg.norm(np.subtract(self.cluster.partType0_coordinates,
                                                  self.cluster.centre_of_potential), axis=1)
         spatial_filter = np.where((self.cluster.partType0_temperature > 1e4) &
+                                  (np.log10(self.cluster.partType0_temperature) < np.log10(
+                                      self.cluster.density_units(self.cluster.partType0_sphdensity,
+                                                                 unit_system='nHcgs'))/3 + 31/6) &
                                   (radial_dist < self.aperture))[0]
+
 
 
         mass = self.cluster.mass_units(self.cluster.partType0_mass[spatial_filter], unit_system='astro')
@@ -107,7 +111,7 @@ class PhaseDiagram(Simulation, rendering.Map):
 
 if __name__ == '__main__':
     # Create a cluster object
-    cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
+    cluster = Cluster(simulation_name='ceagle', clusterID=0, redshift='z000p000')
     cluster.info()
 
     # Create a PhaseDiagram object and link it to the cluster object
