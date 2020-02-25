@@ -22,7 +22,7 @@ class PhaseDiagram(Simulation, rendering.Map):
 
     def __init__(self,
                  cluster: Cluster,
-                 resolution: int = 200,
+                 resolution: int = 300,
                  aperture: float = None,
                  density_bounds: list = None,
                  temperature_bounds: list = None):
@@ -86,7 +86,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         return image
 
 
-    def test(self):
+    def setup_plot(self):
 
         fig = plt.figure(figsize=(6, 6))
         axes = fig.add_subplot(111)
@@ -106,17 +106,64 @@ class PhaseDiagram(Simulation, rendering.Map):
         # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
         cax2.xaxis.set_ticks_position("top")
 
-        plt.show()
+        i = 0
+        filename_out = Simulation.pathSave + '/phasediagrams/' + Simulation.simulation_name + '/_' + \
+                       self.cluster.cluster_prefix + self.cluster.clusterID + self.cluster.redshift
+
+        while os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
+            i += 1
+            plt.savefig(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png")
 
 
-if __name__ == '__main__':
+
+
+def test_simple():
+
     # Create a cluster object
     cluster = Cluster(simulation_name='ceagle', clusterID=0, redshift='z000p000')
-    cluster.info()
+    # cluster.info()
 
     # Create a PhaseDiagram object and link it to the cluster object
     t_rho_diagram = PhaseDiagram(cluster)
-    t_rho_diagram.info()
+    # t_rho_diagram.info()
 
     # Test the map output
-    t_rho_diagram.test()
+    t_rho_diagram.setup_plot()
+
+def test_loop_apertures():
+    # Create a cluster object
+    cluster = Cluster(simulation_name='ceagle', clusterID=0, redshift='z000p000')
+    apertures = cluster.generate_apertures()
+
+    for aperture in apertures:
+        # Create a PhaseDiagram object and link it to the cluster object
+        t_rho_diagram = PhaseDiagram(cluster, aperture=aperture)
+        # t_rho_diagram.info()
+
+        # Test the map output
+        t_rho_diagram.setup_plot()
+
+def test_loop_redshifts():
+
+    simulation = Simulation(simulation_name='ceagle')
+    redshifts = simulation.redshiftAllowed
+
+    for z in redshifts:
+        # Create a cluster object
+        cluster = Cluster(simulation_name='ceagle', clusterID=0, redshift=z)
+        # cluster.info()
+
+        # Create a PhaseDiagram object and link it to the cluster object
+        t_rho_diagram = PhaseDiagram(cluster)
+        # t_rho_diagram.info()
+
+        # Test the map output
+        t_rho_diagram.setup_plot()
+
+
+
+
+if __name__ == '__main__':
+    test_simple()
+    test_loop_apertures()
+    test_loop_redshifts()
