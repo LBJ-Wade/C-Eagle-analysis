@@ -95,7 +95,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         ax2_divider = make_axes_locatable(axes)
         cax2 = ax2_divider.append_axes("right", size="3%", pad="2%")
         cbar = plt.colorbar(image, cax=cax2, orientation='vertical')
-        cbar.set_label(r'$M\/\\mathrm{M_\odot}$', labelpad=17)
+        cbar.set_label("$Mass$ [M_\odot]", labelpad=17)
         # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
         cax2.xaxis.set_ticks_position("top")
 
