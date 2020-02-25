@@ -57,9 +57,9 @@ class PhaseDiagram(Simulation, rendering.Map):
         radial_dist = np.linalg.norm(np.subtract(self.cluster.partType0_coordinates,
                                                  self.cluster.centre_of_potential), axis=1)
         spatial_filter = np.where((self.cluster.partType0_temperature > 1e4) &
-                                  (np.log10(self.cluster.partType0_temperature) < np.log10(
+                                  (np.log10(self.cluster.partType0_temperature) > np.log10(
                                       self.cluster.density_units(self.cluster.partType0_sphdensity,
-                                                                 unit_system='nHcgs'))/3 + 31/6) &
+                                                                 unit_system='nHcgs'))/3 + 4.7) &
                                   (radial_dist < self.aperture))[0]
 
 
