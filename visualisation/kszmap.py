@@ -2,8 +2,10 @@ import sys
 import os.path
 import numpy as np
 import matplotlib.colors as colors
+from matplotlib import pyplot as plt
 
 import swiftsimio_binder as swift
+from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from cluster import Cluster
@@ -32,61 +34,82 @@ def rescale(X, x_min, x_max):
 
 class KSZMAP:
 
-    def __init__(self, cluster: Cluster):
+    def __init__(self,
+                 cluster: Cluster,
+                 resolution: int = 200,
+                 aperture: float = None,
+                 plotlimits: float = None):
+        """
+
+        :param cluster:
+        :param resolution:
+        :param aperture:
+        :param plotlimits:
+        """
+
+
+        # Initialise the KSZ map fields
         self.cluster = cluster
         self.cluster.requires = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']}
+        self.resolution = resolution
+        self.aperture = cluster.r500 if aperture == None else aperture
+        self.plotlimits = 3*cluster.r500 if plotlimits == None else plotlimits
+
+
+    def make_panel(self, axes: plt.Axes.axes, projection: str) -> plt.imshow:
+        """
+        Returns the
+        :param projection:
+        :return:
+        """
+        # Derotate cluster
+        coords, vel = angular_momentum.derotate(self.cluster,
+                                                align='gas',
+                                                aperture_radius=self.aperture,
+                                                cluster_rest_frame=True)
+
+        # Filter particles
+        spatial_filter = np.where((np.abs(coords[:, 0]) < self.plotlimits) &
+                                  (np.abs(coords[:, 1]) < self.plotlimits) &
+                                  (self.cluster.partType0_temperature > 1e5))[0]
+
+        coords     = coords[spatial_filter, :]
+        vel        = vel[spatial_filter, :]
+        mass       = self.cluster.partType0_mass[spatial_filter]
+        SPH_kernel = self.cluster.partType0_sphkernel[spatial_filter]
+
+        constant_factor = (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16)
+        kSZ = np.multiply((vel.T * mass).T, constant_factor)
+
+        x = np.asarray(rescale(coords[:, 0], 0, 1), dtype=np.float64)
+        y = np.asarray(rescale(coords[:, 1], 0, 1), dtype=np.float64)
+        z = np.asarray(rescale(coords[:, 2], 0, 1), dtype=np.float64)
+        m = np.asarray(kSZ[:, 2], dtype=np.float32)
+        h = np.asarray(SPH_kernel, dtype=np.float32)
+
+        # Generate the sph-smoothed map
+        temp_map = swift.generate_map(x, y, m, h, self.resolution, parallel=True)
+        norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5,
+                                 vmin=-np.abs(temp_map).max(),
+                                 vmax=np.abs(temp_map).max())
+
+        # Attach the image to the Axes class
+        image = axes.imshow(temp_map, cmap='seismic', norm=norm,
+                           extent=(-self.plotlims, self.plotlims,
+                                   -self.plotlims, self.plotlims))
+
+        return image
+
 
     def test(self):
 
-        r500 = self.cluster.group_r500()
-        mass = self.cluster.particle_masses('gas')
-        SPH_kernel = self.cluster.particle_SPH_smoothinglength()
-        temperature = self.cluster.particle_temperature()
-
-        plotlims = 3*r500
-        coords, vel = angular_momentum.derotate(self.cluster, align='gas', aperture_radius=plotlims,
-                                                cluster_rest_frame=True)
-
-        spatial_filter = np.where(
-            (np.abs(coords[:,0]) < plotlims) &
-            (np.abs(coords[:,1]) < plotlims) &
-            (temperature > 1e5))[0]
-        coords = coords[spatial_filter, :]
-        vel = vel[spatial_filter, :]
-        mass = mass[spatial_filter]
-        SPH_kernel = SPH_kernel[spatial_filter]
-
-        res = np.int(1000)
-
-        bins_x = np.linspace(-np.min(coords[:, 0]), np.max(coords[:, 0]), res)
-        pixel_area = (bins_x[1] - bins_x[0]) **2
-
-        from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
-        kSZ = np.multiply((vel.T * mass).T, (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass *
-                                                                             1.16))
-
-        x = np.asarray(rescale(coords[:,0], 0, 1), dtype = np.float64)
-        y = np.asarray(rescale(coords[:,1], 0, 1), dtype = np.float64)
-        z = np.asarray(rescale(coords[:,2], 0, 1), dtype = np.float64)
-
-        m = np.asarray(kSZ[:, 2], dtype = np.float32)
-        h = np.asarray(SPH_kernel, dtype = np.float32)
-
-        temp_map = swift.generate_map(x, y, m, h, res, parallel=True)
-        norm = colors.SymLogNorm(linthresh=1e-5, linscale=0.5, vmin=-np.abs(temp_map).max(), vmax=np.abs(temp_map).max())
-
-        from matplotlib import pyplot as plt
-
         fig = plt.figure(figsize=(6, 6))
         ax = fig.add_subplot(111)
-        cs = ax.imshow(temp_map, cmap = 'seismic', norm = norm,
-                       extent = (-plotlims, plotlims,
-                                 -plotlims, plotlims)
-                       )
-        cbar = fig.colorbar(cs)
+        panel = self.make_panel(ax, 'xy')
+        cbar = fig.colorbar(panel)
         cbar.ax.minorticks_off()
-        ax.set_xlabel(r'$x\ \mathrm{Mpc}$')
-        ax.set_ylabel(r'$y\ \mathrm{Mpc}$')
+        ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
+        ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
         plt.show()
 
 
