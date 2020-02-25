@@ -240,7 +240,7 @@ class Cluster(Simulation,
         # Set additional cosmoloy attributes from methods
         self.hubble_param = self.file_hubble_param()
         self.comic_time   = self.file_comic_time()
-        self.redshift     = self.file_redshift()
+        self.z            = self.file_redshift()
         self.OmegaBaryon  = self.file_OmegaBaryon()
         self.Omega0       = self.file_Omega0()
         self.OmegaLambda  = self.file_OmegaLambda()
