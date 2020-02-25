@@ -126,6 +126,8 @@ class PhaseDiagram(Simulation, rendering.Map):
         #         break
         #     else:
         #         i += 1
+        plt.clf()
+        plt.close()
 
 
 def test_simple():
