@@ -34,8 +34,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         :param plotlimits:
         """
 
-        # Initialise Simulation class
-        Simulation.__init__(simulation_name=self.cluster.simulation_name)
+        self.pathSave = Simulation.__init__().pathSave
 
         # Impose cluster requirements
         cluster.set_requires(self.REQUIRES)
