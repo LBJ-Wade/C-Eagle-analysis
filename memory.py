@@ -17,6 +17,8 @@ import floweaver
 import matplotlib.pyplot as plt
 
 comm = MPI.COMM_WORLD
+size = comm.get_size()
+rank = comm.get_rank()
 
 
 def free_memory(var_list, invert=False):
@@ -136,6 +138,7 @@ class SchedulerMPI:
 
 
 
+
 if __name__ == '__main__':
 
     import inspect
@@ -167,11 +170,38 @@ if __name__ == '__main__':
             scheduler.info()
             print('[ UNIT TEST ]\t==> ', self.quick_build() == scheduler)
 
+        def scatter(self):
+            import numpy
+            if rank == 0:
+                x = numpy.linspace(0, 100, 11)
+            else:
+                x = None
+
+            if rank == 2:
+                xlocal = numpy.zeros(9)
+            else:
+                xlocal = numpy.zeros(1)
+
+            if rank == 0:
+                print("Scatter")
+            comm.Scatterv([x, (1, 1, 9), (0, 1, 2), MPI.DOUBLE], xlocal)
+            print("process " + str(rank) + " has " + str(xlocal))
+
+            comm.Barrier()
+            if rank == 0:
+                print("Gather")
+                xGathered = numpy.zeros(11)
+            else:
+                xGathered = None
+            comm.Gatherv(xlocal, [xGathered, (1, 1, 9), (0, 1, 2), MPI.DOUBLE])
+            print("process " + str(rank) + " has " + str(xGathered))
+
 
 
     test = TEST()
     test.from_dictionary()
     test.from_cluster()
+    test.scatter()
 
 
 

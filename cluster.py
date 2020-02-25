@@ -357,7 +357,7 @@ class Cluster(Simulation,
     def import_requires(self):
         for part_type in self.requires.keys():
             for field in self.requires[part_type]:
-                if field == 'masses':
+                if field == 'mass':
                     setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1]))
                 elif field == 'coordinates':
                     setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1]))
