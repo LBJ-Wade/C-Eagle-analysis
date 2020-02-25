@@ -236,15 +236,10 @@ if __name__ == '__main__':
     # test.scatter_data(data)
 
 
-
     if rank == 0:
-        data = [{'key1': [7, 2.72, 2 + 3j]},
-                {'key2': ('abc', 'xyz')},
-                {'key3': ('abc', 'xyz')},
-                {'key4': ('cde', 'xyz')}]
-    else:
-        data = None
-    data = comm.scatter(data, root=0)
+        data = [(i + 1) ** 2 for i in range(size)]
+    comm.Scatter(data, root=0)
+
     print("%s: %s" % (rank, data))
 
 
