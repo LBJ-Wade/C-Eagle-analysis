@@ -88,7 +88,7 @@ class PhaseDiagram(Simulation, rendering.Map):
 
         axes.set_xscale('log')
         axes.set_yscale('log')
-        axes.set_xlabel(r"$\rho\ \matrm{[n_H\ cm^{-3}]}$")
+        axes.set_xlabel(r"$\rho\ \mathrm{[n_H\ cm^{-3}]}$")
         axes.set_ylabel(r"$T\ \mathrm{[K]}$")
 
         # Colorbar adjustments
