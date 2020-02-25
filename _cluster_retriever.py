@@ -495,7 +495,7 @@ class Mixin:
         """
         raise ValueError(_warning_)
 
-        if part_type.__len__() > 1:
+        if len(part_type) > 1:
             part_type = self.particle_type_conversion[part_type]
 
         sub_group_number = np.zeros(0, dtype=np.int)

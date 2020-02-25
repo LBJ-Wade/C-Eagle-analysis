@@ -12,6 +12,10 @@ Future implementations:
 -------------------------------------------------------------------
 """
 from mpi4py import MPI
+import networkx
+import floweaver
+import matplotlib.pyplot as plt
+
 comm = MPI.COMM_WORLD
 
 
@@ -92,10 +96,23 @@ class SchedulerMPI:
 
         if len(self.architecture) > comm.Get_size():
             print('[ SchedulerMPI ]\t==> Warning: requested more cores than there are available. Requested {0}, '
-                  'available {'
-                  '1}.'.format(len(self.architecture), comm.Get_size()))
+                  'available {1}.'.format(len(self.architecture), comm.Get_size()))
 
         return
+
+    def requires_as_graph(self) -> networkx.DiGraph:
+        g = networkx.DiGraph()
+        g.add_edges_from(self.requires.keys())
+        for k, v in self.requires.items():
+            g.add_edges_from(([(k, t) for t in v]))
+        return g
+
+    def architecture_as_graph(self) -> networkx.DiGraph:
+        g = networkx.DiGraph()
+        g.add_edges_from(self.architecture.keys())
+        for k, v in self.architecture.items():
+            g.add_edges_from(([(k, t) for t in v]))
+        return g
 
 
     def info(self, verbose: bool = False) -> None:

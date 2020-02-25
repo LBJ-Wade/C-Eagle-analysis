@@ -227,6 +227,7 @@ class Cluster(Simulation,
         self.set_redshift(redshift)
         self.comovingframe = comovingframe
         self.requires = requires
+        self.import_requires()
 
     def set_simulation_name(self, simulation_name: str) -> None:
         """
@@ -345,4 +346,46 @@ class Cluster(Simulation,
     def DM_NumPart_Total(self):
         return self.file_NumPart_Total()[1]
 
+    def import_requires(self):
+        for part_type in self.requires.keys():
+            for field in self.requires[part_type]:
+                if field == 'masses':
+                    setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1]))
+                elif field == 'coordinates':
+                    setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1]))
+                elif field == 'velocity':
+                    setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1]))
+                elif field == 'temperature':
+                    setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1]))
+                elif field == 'sphdensity':
+                    setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1]))
+                elif field == 'sphkernel':
+                    setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1]))
+                elif field == 'metallicity':
+                    setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1]))
 
+
+
+
+if __name__ == '__main__':
+
+    import inspect
+
+    class TEST:
+        data_required = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel'],
+                         'partType1': ['coordinates', 'velocities']}
+
+        def cluster_imports(self):
+            print(inspect.stack()[0][3])
+            cluster = Cluster(simulation_name='celr_e',
+                              clusterID=0,
+                              redshift='z000p000',
+                              comovingframe=False,
+                              requires=self.data_required)
+
+            cluster.info()
+
+
+
+    test = TEST()
+    test.cluster_imports()

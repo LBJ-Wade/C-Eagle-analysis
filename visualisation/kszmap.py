@@ -34,6 +34,7 @@ class KSZMAP:
 
     def __init__(self, cluster: Cluster):
         self.cluster = cluster
+        self.cluster.requires = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']}
 
     def test(self):
 
