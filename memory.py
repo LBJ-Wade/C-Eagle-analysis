@@ -168,13 +168,11 @@ if __name__ == '__main__':
             scheduler.info()
             print('[ UNIT TEST ]\t==> ', self.quick_build() == scheduler)
 
-        def scatter(self):
+        def scatter_data(self, data):
             import numpy as np
-            from matplotlib import pyplot as plt
 
             if rank == 0:
-                test = np.arange(0, 512, dtype='float64')
-                test = np.tile(test, [256, 1])  # Create 2D input array. Numbers 1 to 512 increment across dimension 2.
+                test = data
                 print(test)
                 outputData = np.zeros([256, 512])  # Create output array of same size
                 split = np.array_split(test, size, axis=0)  # Split input array by the number of available cores
@@ -240,7 +238,9 @@ if __name__ == '__main__':
     test = TEST()
     # test.from_dictionary()
     # test.from_cluster()
-    test.scatter()
+    import numpy as np
+    data = np.linspace(0, 100, 101)
+    test.scatter(data)
 
 
 
