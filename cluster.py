@@ -234,7 +234,7 @@ class Cluster(Simulation,
         self.set_clusterID(clusterID)
         self.set_redshift(redshift)
         self.comovingframe = comovingframe
-        self.requires = requires
+        self.set_requires(requires)
         self.import_requires()
 
         # Set additional cosmoloy attributes from methods
@@ -292,6 +292,17 @@ class Cluster(Simulation,
         """
         assert (redshift in self.redshiftAllowed), "`redshift` value not recognised."
         self.redshift = redshift
+
+    def set_requires(self, imports: dict) -> None:
+        """
+
+        :param imports:
+        :return:
+        """
+        if imports == dict({}):
+            print('[ SetRequires ]\t==> Warning: no pull requests for cluster datasets.')
+        self.requires = imports
+
 
     def path_from_cluster_name(self):
         """

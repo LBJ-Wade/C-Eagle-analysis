@@ -50,7 +50,7 @@ class KSZMAP:
 
         # Initialise the KSZ map fields
         self.cluster = cluster
-        self.cluster.requires = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']}
+        self.cluster.set_requires({'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel', 'mass']})
         self.resolution = resolution
         self.aperture = cluster.r500 if aperture == None else aperture
         self.plotlimits = 3*cluster.r500 if plotlimits == None else plotlimits
@@ -116,7 +116,7 @@ class KSZMAP:
 if __name__ == '__main__':
     # Create a cluster object
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
-    cluster.info()
+    # cluster.info()
     # Create a KSZMAP object and link it to the cluster object
     test_map = KSZMAP(cluster)
     # Test the map output
