@@ -148,7 +148,7 @@ def test_simple():
 
 def test_loop_apertures(i):
     # Create a cluster object
-    cluster = Cluster(simulation_name='ceagle', clusterID=i, redshift='z000p000')
+    cluster = Cluster(simulation_name='celr_b', clusterID=i, redshift='z000p000')
     apertures = cluster.generate_apertures()
 
     for aperture in apertures:
@@ -161,12 +161,12 @@ def test_loop_apertures(i):
 
 def test_loop_redshifts(i):
 
-    simulation = Simulation(simulation_name='ceagle')
+    simulation = Simulation(simulation_name='celr_b')
     redshifts = simulation.redshiftAllowed
 
     for z in redshifts:
         # Create a cluster object
-        cluster = Cluster(simulation_name='ceagle', clusterID=i, redshift=z)
+        cluster = Cluster(simulation_name='celr_b', clusterID=i, redshift=z)
         cluster.info()
 
         # Create a PhaseDiagram object and link it to the cluster object
