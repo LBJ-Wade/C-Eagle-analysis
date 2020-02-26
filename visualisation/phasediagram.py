@@ -121,7 +121,8 @@ class PhaseDiagram(Simulation, rendering.Map):
         if not os.path.exists(self.pathSave + '/phasediagrams/' + self.cluster.simulation_name):
             os.makedirs(self.pathSave + '/phasediagrams/' + self.cluster.simulation_name)
 
-        plt.savefig(filename_out + f"_aperture{self.aperture:7.2f}_bins{self.resolution}.png", dpi=300)
+        aperture = ('%5.2f' % self.aperture).replace('.', 'p')
+        plt.savefig(filename_out + f"_aperture{aperture}_bins{self.resolution}.png", dpi=300)
         # i = 0
         # while True:
         #     if not os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
