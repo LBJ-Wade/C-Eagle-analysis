@@ -274,7 +274,7 @@ class Arrow3D(FancyArrowPatch):
         FancyArrowPatch.draw(self, renderer)
 
 
-class LosGeometry(Axes):
+class LosGeometry:
 
     # Inherit static methods from cluster.Cluster
     rotation_matrix_about_axis = staticmethod(Cluster.rotation_matrix_about_axis)
@@ -284,16 +284,16 @@ class LosGeometry(Axes):
     rotation_matrix_about_y = Cluster.rotation_matrix_about_y
     rotation_matrix_about_z = Cluster.rotation_matrix_about_z
 
-    def __init__(self, figure: Figure) -> None:
-        self.figure = figure
+    def __init__(self, parent_axes: Axes) -> None:
+        self.parent_axes = parent_axes
         self.inset_axes = None
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
         self.los_label = [0, -2.2, -0.2]
         self.observer_rotation_matrix = None
 
     # Reading methods
-    def get_figure(self):
-        return self.figure
+    def get_parent_axes(self):
+        return self.parent_axes
 
     def get_inset_axes(self):
         return self.inset_axes
@@ -308,7 +308,7 @@ class LosGeometry(Axes):
         return self.observer_rotation_matrix
 
     # Writing methods
-    def set_figure(self, new_figure: Figure) -> None:
+    def set_parent_axes(self, new_parent_axes: Axes) -> None:
         """
         Set a new `figure` attribute to the class.
 
@@ -317,7 +317,7 @@ class LosGeometry(Axes):
 
         :return: None
         """
-        self.figure = new_figure
+        self.parent_axes = new_parent_axes
 
     def set_inset_axes(self, new_inset_axes: Axes) -> None:
         """
@@ -351,7 +351,8 @@ class LosGeometry(Axes):
 
         :return: None
         """
-        inset_axis = self.figure.add_axes([left, bottom, width, height], projection='3d')
+
+        inset_axis = self.parent_axes.inset_axes([left, bottom, width, height], projection='3d', transform=self.parent_axes.transData)
         if self.inset_axes is None:
             self.set_inset_axes(inset_axis)
 
