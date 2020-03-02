@@ -276,8 +276,12 @@ class Arrow3D(FancyArrowPatch):
 class LosGeometry(Axes):
 
     # Inherit static methods from cluster.Cluster
-    rotation_matrix_from_polar_angles = staticmethod(Cluster.rotation_matrix_from_polar_angles)
+    rotation_matrix_from_polar_angles = staticmethod(Cluster.rotation_matrix_about_axis)
     apply_rotation_matrix = staticmethod(Cluster.apply_rotation_matrix)
+
+    rotation_matrix_about_x = Cluster.rotation_matrix_about_x
+    rotation_matrix_about_y = Cluster.rotation_matrix_about_y
+    rotation_matrix_about_z = Cluster.rotation_matrix_about_z
 
     def __init__(self, figure: Figure,  axes: Axes) -> None:
         self.figure = figure
@@ -348,7 +352,7 @@ class LosGeometry(Axes):
             self.set_inset_axes(inset_axis)
 
 
-    def set_observer(self, theta, phi):
+    def set_observer(self, rot_x: float = None, rot_y: float = None, rot_z: float = None):
         """
         def rotation_matrix_from_polar_angles(theta, phi):
 
@@ -363,11 +367,22 @@ class LosGeometry(Axes):
 
         :return: A transform matrix (3x3)
         """
-        theta, phi = theta * np.pi / 180, phi* np.pi / 180
-        rotation_matrix = self.rotation_matrix_from_polar_angles(theta, phi)
-        print(rotation_matrix)
-        new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
-        self.los_vector = new_los_vector
+        if rot_x is not None:
+            rotation_matrix = self.rotation_matrix_about_x(rot_x * np.pi / 180)
+            new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
+            self.los_vector = new_los_vector
+
+        if rot_y is not None:
+            rotation_matrix = self.rotation_matrix_about_y(rot_y * np.pi / 180)
+            new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
+            self.los_vector = new_los_vector
+
+        if rot_z is not None:
+            rotation_matrix = self.rotation_matrix_about_z(rot_z * np.pi / 180)
+            new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
+            self.los_vector = new_los_vector
+
+
 
     def draw_observer(self):
 
@@ -524,7 +539,7 @@ class TestSuite(Map, LosGeometry):
 
         diagram = LosGeometry(fig, axes)
         diagram.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
-        diagram.set_observer(0, 90)
+        diagram.set_observer(rot_x=0, rot_y=30, rot_z=-90)
         vectors = [
             [0,1,1],
             [2,5,6],

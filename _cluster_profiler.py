@@ -264,7 +264,7 @@ class Mixin:
         return rotation_matrix
 
     @staticmethod
-    def rotation_matrix_from_polar_angles(theta, phi):
+    def rotation_matrix_about_axis(axis, theta):
         """
         Find the rotation matrix that rotates a vector about the origin by delta(theta) in the elevation
         and by delta(phi) about the azimuthal axis.
@@ -277,19 +277,28 @@ class Mixin:
 
         :return: A transform matrix (3x3)
         """
-        reference_vector = [1, 0, 0]
-        X = np.sin(theta) * np.cos(phi)
-        Y = np.sin(theta) * np.sin(phi)
-        Z = np.cos(theta)
-        rotated_vector = [X, Y, Z]
+        axis = np.asarray(axis)
+        axis = axis / np.sqrt(np.dot(axis, axis))
+        a = np.cos(theta / 2.0)
+        b, c, d = -axis * np.sin(theta / 2.0)
+        aa, bb, cc, dd = a * a, b * b, c * c, d * d
+        bc, ad, ac, ab, bd, cd = b * c, a * d, a * c, a * b, b * d, c * d
+        return np.array([[aa + bb - cc - dd, 2 * (bc + ad), 2 * (bd - ac)],
+                         [2 * (bc - ad), aa + cc - bb - dd, 2 * (cd + ab)],
+                         [2 * (bd + ac), 2 * (cd - ab), aa + dd - bb - cc]])
 
-        a, b = (reference_vector / np.linalg.norm(reference_vector)).reshape(3), (rotated_vector / np.linalg.norm(rotated_vector)).reshape(3)
-        v = np.cross(a, b)
-        c = np.dot(a, b)
-        s = np.linalg.norm(v)
-        kmat = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
-        rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * ((1 - c) / (s ** 2))
-        return rotation_matrix
+
+    def rotation_matrix_about_x(self, angle):
+        axis = [1,0,0]
+        return self.rotation_matrix_about_axis(axis, angle)
+
+    def rotation_matrix_about_y(self, angle):
+        axis = [0,1,0]
+        return self.rotation_matrix_about_axis(axis, angle)
+
+    def rotation_matrix_about_z(self, angle):
+        axis = [0,0,1]
+        return self.rotation_matrix_about_axis(axis, angle)
 
     @staticmethod
     def _TEST_apply_rotation_matrix(rot_matrix, vectors):
