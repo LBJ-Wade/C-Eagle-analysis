@@ -348,7 +348,7 @@ class LosGeometry(Axes):
             self.set_inset_axes(inset_axis)
 
 
-    def set_observer(self, move: tuple = (0, 0)):
+    def set_observer(self, *args):
         """
         def rotation_matrix_from_polar_angles(theta, phi):
 
@@ -363,7 +363,7 @@ class LosGeometry(Axes):
 
         :return: A transform matrix (3x3)
         """
-        rotation_matrix = self.rotation_matrix_from_polar_angles(move[0], move[1])
+        rotation_matrix = self.rotation_matrix_from_polar_angles(*args)
         new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
         del self.los_vector
         self.los_vector = new_los_vector
@@ -523,7 +523,7 @@ class TestSuite(Map, LosGeometry):
 
         diagram = LosGeometry(fig, axes)
         diagram.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
-        diagram.set_observer(move = (-np.pi/2, 0))
+        diagram.set_observer(-1.54, 0.0)
         vectors = [
             [0,1,1],
             [2,5,6],
