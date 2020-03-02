@@ -348,7 +348,7 @@ class LosGeometry(Axes):
             self.set_inset_axes(inset_axis)
 
 
-    def set_observer(self, *args):
+    def set_observer(self, theta, phi):
         """
         def rotation_matrix_from_polar_angles(theta, phi):
 
@@ -363,7 +363,7 @@ class LosGeometry(Axes):
 
         :return: A transform matrix (3x3)
         """
-        rotation_matrix = self.rotation_matrix_from_polar_angles(*args)
+        rotation_matrix = self.rotation_matrix_from_polar_angles(theta, phi)
         new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
         del self.los_vector
         self.los_vector = new_los_vector
