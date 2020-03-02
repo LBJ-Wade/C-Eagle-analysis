@@ -370,7 +370,7 @@ class LosGeometry(Axes):
 
     def draw_observer(self):
 
-        los_vector_reshaped = self.los_vector.T.reshape((3,2)).tolist()
+        los_vector_reshaped = np.asarray(self.los_vector).T.reshape((3,2)).tolist()
         LineOfSight_color = '#EB3F11'
         LineOfSight = Arrow3D(los_vector_reshaped[0], los_vector_reshaped[1], los_vector_reshaped[2],
                               mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
