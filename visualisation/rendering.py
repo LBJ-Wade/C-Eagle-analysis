@@ -289,7 +289,28 @@ class LosGeometry(Axes):
         self.inset_axes = None
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
         self.los_label = [0, -2.2, -0.2]
+        self.observer_rotation_matrix = None
 
+    # Reading methods
+    def get_figure(self):
+        return self.figure
+
+    def get_axes(self):
+        return self.axes
+
+    def get_inset_axes(self):
+        return self.inset_axes
+
+    def get_los_vector(self):
+        return self.los_vector
+
+    def get_los_label(self):
+        return self.los_label
+
+    def get_observer_rotation_matrix(self):
+        return self.observer_rotation_matrix
+
+    # Writing methods
     def set_figure(self, new_figure: Figure) -> None:
         """
         Set a new `figure` attribute to the class.
@@ -556,7 +577,7 @@ class TestSuite(Map, LosGeometry):
 
     def _TEST_basic_LoS(self):
 
-        fig = plt.figure(figsize=(8, 8))
+        fig = plt.figure(figsize=(15, 15))
         axes = fig.add_axes()
 
         diagram = LosGeometry(fig, axes)
