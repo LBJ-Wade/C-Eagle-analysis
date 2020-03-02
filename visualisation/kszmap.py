@@ -3,6 +3,8 @@ import os.path
 import numpy as np
 import matplotlib.colors as colors
 from matplotlib import pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 
 import swiftsimio_binder as swift
 from rendering import LosGeometry
@@ -118,14 +120,20 @@ class KSZMAP(Simulation):
 
 
         panel = self.make_panel(ax, 'xy')
-        cbar = fig.colorbar(panel, fraction=0.046, pad=0.04)
+
+        # Manipulate the colorbar on the side
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="4%", pad=0.)
+        cax.set_label(r'$y_{rKSZ}$')
+
+        cbar = fig.colorbar(panel, cax=cax)
         cbar.ax.minorticks_off()
 
         ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
         ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
 
         observer = LosGeometry(fig)
-        observer.set_inset_geometry(0.55, 0.16, 0.25, 0.25)
+        observer.set_inset_geometry(0.57, 0.14, 0.25, 0.25)
         observer.set_observer(rot_x=0, rot_y=0, rot_z=90)
         vectors = [
             [0, 1, 1],
