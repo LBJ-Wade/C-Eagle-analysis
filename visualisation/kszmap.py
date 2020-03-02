@@ -115,6 +115,14 @@ class KSZMAP(Simulation):
         fig = plt.figure(figsize=(15, 15))
         ax = fig.add_subplot(111)
 
+
+
+        panel = self.make_panel(ax, 'xy')
+        cbar = fig.colorbar(panel)
+        cbar.ax.minorticks_off()
+        ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
+        ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
+
         observer = LosGeometry(fig, ax)
         observer.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
         observer.set_observer(rot_x=0, rot_y=0, rot_z=90)
@@ -124,16 +132,11 @@ class KSZMAP(Simulation):
             [-3, -2, 0]
         ]
         observer.plot_angularmomentum_vectors(vectors,
-                                             labels=None,
-                                             plot_unitSphere=True,
-                                             normalise_length=False,
-                                             make_all_unitary=True)
+                                              labels=None,
+                                              plot_unitSphere=True,
+                                              normalise_length=False,
+                                              make_all_unitary=True)
 
-        panel = self.make_panel(ax, 'xy')
-        cbar = fig.colorbar(panel)
-        cbar.ax.minorticks_off()
-        ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
-        ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
         plt.show()
 
 
