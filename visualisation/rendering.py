@@ -276,7 +276,7 @@ class Arrow3D(FancyArrowPatch):
 class LosGeometry(Axes):
 
     # Inherit static methods from cluster.Cluster
-    rotation_matrix_from_polar_angles = staticmethod(Cluster.rotation_matrix_about_axis)
+    rotation_matrix_about_axis = staticmethod(Cluster.rotation_matrix_about_axis)
     apply_rotation_matrix = staticmethod(Cluster.apply_rotation_matrix)
 
     rotation_matrix_about_x = Cluster.rotation_matrix_about_x
