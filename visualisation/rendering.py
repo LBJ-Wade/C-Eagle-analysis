@@ -10,7 +10,8 @@ This file contains methods and classes for rendering data:
     - diagrams
 -------------------------------------------------------------------
 """
-
+import os
+import sys
 import numpy as np
 import matplotlib
 import scipy as sp
@@ -22,6 +23,9 @@ from matplotlib.patches import Circle
 from mpl_toolkits.mplot3d import proj3d
 from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+from cluster import Cluster
 
 
 
@@ -271,10 +275,15 @@ class Arrow3D(FancyArrowPatch):
 
 class LosGeometry(Axes):
 
+    # Inherit static methods from cluster.Cluster
+    rotation_matrix_from_polar_angles = Cluster.rotation_matrix_from_polar_angles
+    apply_rotation_matrix = Cluster.apply_rotation_matrix
+
     def __init__(self, figure: Figure,  axes: Axes) -> None:
         self.figure = figure
         self.axes = axes
         self.inset_axes = None
+        self.los_vector = [[0, -2, 0], [0, -1, 0]]
 
     def set_figure(self, new_figure: Figure) -> None:
         """
@@ -339,6 +348,38 @@ class LosGeometry(Axes):
             self.set_inset_axes(inset_axis)
 
 
+    def set_observer(self, *args):
+        """
+        def rotation_matrix_from_polar_angles(theta, phi):
+
+        Find the rotation matrix that rotates a vector about the origin by delta(theta) in the elevation
+        and by delta(phi) about the azimuthal axis.
+
+        :param theta: expect float in degrees
+            The displacement angle in elevation.
+
+        :param phi: expect float in degrees
+            The displacement angle in azimuth.
+
+        :return: A transform matrix (3x3)
+        """
+        rotation_matrix = self.rotation_matrix_from_polar_angles(*args)
+        new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
+        del self.los_vector
+        self.los_vector = new_los_vector
+
+    def draw_observer(self):
+
+        los_vector_reshaped = self.los_vector.T.reshape((3,2)).tolist()
+        LineOfSight_color = '#EB3F11'
+        LineOfSight = Arrow3D(los_vector_reshaped[0], los_vector_reshaped[1], los_vector_reshaped[2],
+                              mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
+        self.inset_axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70,
+                                label=r'$\mathrm{Line~of~sight}$')
+        self.inset_axes.add_artist(LineOfSight)
+        print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
+
+
 
 
 
@@ -401,16 +442,13 @@ class LosGeometry(Axes):
             self.inset_axes.plot_wireframe(x, y, z, color='#AFD275', alpha = 0.2)
 
             # Draw line of sight observer
-            LineOfSight_color = '#EB3F11'
-            LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0], mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
-            self.inset_axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70, label=r'Line of sight')
-            self.inset_axes.add_artist(LineOfSight)
-            print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
+            self.draw_observer()
 
             # Draw reference rotation vector
             Reference_Ang_Momentum_color = '#E59813'
             Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
-            self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70, label=r'Reference angular momentum')
+            self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70,
+                                    label=r'$\mathrm{Reference~angular~momentum}$')
             self.inset_axes.add_artist(Reference_Ang_Momentum)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
 
@@ -588,7 +626,7 @@ class TestSuite(Map, LosGeometry):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    exec(open('visualisation/dark_mode.py').read())
+    exec(open('visualisation/light_mode.py').read())
     TestSuite()._TEST_basic_LoS()
     plt.show()
 

@@ -250,11 +250,40 @@ class Mixin:
     def rotation_matrix_from_vectors(vec1, vec2):
         """
         Find the rotation matrix that aligns vec1 to vec2
+
         :param vec1: A 3d "source" vector
         :param vec2: A 3d "destination" vector
         :return mat: A transform matrix (3x3) which when applied to vec1, aligns it with vec2.
         """
         a, b = (vec1 / np.linalg.norm(vec1)).reshape(3), (vec2 / np.linalg.norm(vec2)).reshape(3)
+        v = np.cross(a, b)
+        c = np.dot(a, b)
+        s = np.linalg.norm(v)
+        kmat = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
+        rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * ((1 - c) / (s ** 2))
+        return rotation_matrix
+
+    @staticmethod
+    def rotation_matrix_from_polar_angles(theta, phi):
+        """
+        Find the rotation matrix that rotates a vector about the origin by delta(theta) in the elevation
+        and by delta(phi) about the azimuthal axis.
+
+        :param theta: expect float in degrees
+            The displacement angle in elevation.
+
+        :param phi: expect float in degrees
+            The displacement angle in azimuth.
+
+        :return: A transform matrix (3x3)
+        """
+        reference_vector = [1, 0, 0]
+        X = np.sin(theta) * np.cos(phi)
+        Y = np.sin(theta) * np.sin(phi)
+        Z = np.cos(theta)
+        rotated_vector = [X, Y, Z]
+
+        a, b = (reference_vector / np.linalg.norm(reference_vector)).reshape(3), (rotated_vector / np.linalg.norm(rotated_vector)).reshape(3)
         v = np.cross(a, b)
         c = np.dot(a, b)
         s = np.linalg.norm(v)
