@@ -124,7 +124,7 @@ class KSZMAP(Simulation):
                         r'Aperture radius = {:.2f} Mpc'.format(self.aperture),
                         r'Map resolution = {:.4f} Mpc'.format(2*self.plotlimits/self.resolution)]
 
-
+        print(r'\n'.join(items_labels))
         axes.text(0.95, 0.95, r'\n'.join(items_labels),
                   horizontalalignment='right',
                   verticalalignment='top',
