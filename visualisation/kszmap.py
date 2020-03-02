@@ -123,7 +123,7 @@ class KSZMAP(Simulation):
         ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
         ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
 
-        observer = LosGeometry(fig)
+        observer = LosGeometry(ax)
         observer.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
         observer.set_observer(rot_x=0, rot_y=0, rot_z=90)
         vectors = [
