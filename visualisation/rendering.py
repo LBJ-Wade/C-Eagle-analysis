@@ -588,7 +588,7 @@ class TestSuite(Map, LosGeometry):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    from visualisation.map_plot_parameters import set_defaults_plot as mpl_set_pars
+    from .map_plot_parameters import set_defaults_plot as mpl_set_pars
     mpl_set_pars()
     TestSuite()._TEST_basic_LoS()
     plt.show()
