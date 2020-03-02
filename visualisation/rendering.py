@@ -478,9 +478,9 @@ class LosGeometry(Axes):
         self.inset_axes.yaxis.pane.set_edgecolor(colors[-1])
         self.inset_axes.zaxis.pane.set_edgecolor(colors[-1])
 
-        self.inset_axes.set_xlabel(r'$x$', labelpad=-10)
-        self.inset_axes.set_ylabel(r'$y$', labelpad=-10)
-        self.inset_axes.set_zlabel(r'$z$', labelpad=-10)
+        self.inset_axes.set_xlabel(r'$x$', labelpad=-15)
+        self.inset_axes.set_ylabel(r'$y$', labelpad=-15)
+        self.inset_axes.set_zlabel(r'$z$', labelpad=-15)
 
         # draw a point at origin
         self.inset_axes.scatter([0], [0], [0], color="k", s=80)
