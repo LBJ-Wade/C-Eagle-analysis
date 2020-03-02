@@ -539,7 +539,7 @@ class TestSuite(Map, LosGeometry):
 
         diagram = LosGeometry(fig, axes)
         diagram.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
-        diagram.set_observer(rot_x=0, rot_y=30, rot_z=-90)
+        diagram.set_observer(rot_x=0, rot_y=0, rot_z=-90)
         vectors = [
             [0,1,1],
             [2,5,6],
