@@ -1,6 +1,7 @@
 import sys
 import os.path
 import numpy as np
+import matplotlib
 import matplotlib.colors as colors
 from matplotlib import pyplot as plt
 
@@ -65,7 +66,7 @@ class KSZMAP(Simulation):
         self.plotlimits = 3*cluster.r500 if plotlimits == None else plotlimits
 
 
-    def make_panel(self, axes: plt.Axes.axes, projection: str) -> plt.imshow:
+    def make_panel(self, axes: matplotlib.axes.Axes, projection: str) -> plt.imshow:
         """
         Returns the
         :param projection:
