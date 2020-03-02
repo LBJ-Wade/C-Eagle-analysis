@@ -47,7 +47,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         self.resolution = resolution
         self.aperture = cluster.r500 if aperture == None else aperture
         self.density_bounds = [1e-8, 1e5] if density_bounds == None else density_bounds
-        self.temperature_bounds = [1e3, 1e8] if temperature_bounds == None else temperature_bounds
+        self.temperature_bounds = [1e3, 1e10] if temperature_bounds == None else temperature_bounds
 
 
     def make_panel(self, axes: plt.Axes.axes) -> plt.pcolormesh:
@@ -162,12 +162,12 @@ def test_loop_apertures(i):
 
 def test_loop_redshifts(i):
 
-    simulation = Simulation(simulation_name='ceagle')
+    simulation = Simulation(simulation_name='celr_b')
     redshifts = simulation.redshiftAllowed
 
     for z in redshifts:
         # Create a cluster object
-        cluster = Cluster(simulation_name='ceagle', clusterID=i, redshift=z)
+        cluster = Cluster(simulation_name='celr_b', clusterID=i, redshift=z)
         cluster.info()
 
         # Create a PhaseDiagram object and link it to the cluster object

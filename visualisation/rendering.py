@@ -12,6 +12,7 @@ This file contains methods and classes for rendering data:
 """
 
 import numpy as np
+import matplotlib
 
 from matplotlib.patches import Circle
 from mpl_toolkits.mplot3d import proj3d
@@ -272,127 +273,198 @@ class Arrow3D(FancyArrowPatch):
         FancyArrowPatch.draw(self, renderer)
 
 
+class LosGeometry(matplotlib.axes.Axes):
 
-def plot_angularmomentum_vectors(vectors,
-                                 labels = None,
-                                 axes = None,
-                                 plot_unitSphere = False,
-                                 normalise_length = True,
-                                 make_all_unitary = False
-                                 ):
-    """
-    Function that uses the Arrow3D class to plot vectors in 3D space.
+    def __init__(self, figure: matplotlib.figure.Figure,  axes: matplotlib.axes.Axes) -> None:
+        self.figure = figure
+        self.axes = axes
+        self.inset_axes = None
 
-    :param vectors: (np.ndarray)
-                    1D np.array for single vector or 2D np.array for more than 1 vector
-    :param axes: (matplotlib.pyplot.Axes.axes)
-                    environment in which to plot the vectors
-                    If None one will be automatically created
-    :param plot_unitSphere: (bool)
-                    Default = False. Plots a wire-framed unitary sphere.
-    :param normalise_length: (bool)
-                    Default = True. Normalises the vectors to that with the largest magnitude.
-    :param make_all_unitary: (bool)
-                    Default = False. Normalises each vector by its magnitude, making them all unitary.
-    :return: No returns
-    """
-    if type(vectors) is not np.ndarray:
-        vectors = np.asarray(vectors)
+    def set_figure(self, new_figure: matplotlib.figure.Figure) -> None:
+        """
+        Set a new `figure` attribute to the class.
 
-    colors = Colorscheme().natural()
+        :param new_axes:  expect a matplotlib.figure.Figure object
+            The new matplotlib.figure.Figure environment to build the diagram in.
 
-    if axes is None:
-        fig = plt.figure()
-        axes = fig.gca(projection='3d')
-        axes.set_aspect("equal")
+        :return: None
+        """
+        del self.figure
+        self.figure = new_figure
+
+    def set_axes(self, new_axes: matplotlib.axes.Axes) -> None:
+        """
+        Set a new `axes` attribute to the class.
+
+        :param new_axes:  expect a matplotlib.axes.Axes object
+            The new matplotlib.axes.Axes environment to build the diagram in.
+
+        :return: None
+        """
+        del self.axes
+        self.axes = new_axes
+
+    def set_inset_axes(self, new_inset_axes: matplotlib.axes.Axes) -> None:
+        """
+        Set a new `axes` attribute to the class.
+
+        :param new_inset_axes:  expect a matplotlib.axes.Axes object
+            The new *INSET* matplotlib.axes.Axes environment to build the 3d diagram in.
+
+        :return: None
+        """
+        del self.inset_axes
+        self.inset_axes = new_inset_axes
+
+    def set_inset_geometry(self, left, bottom, width, height) -> None:
+        """
+        Generates an `inset_axes` within the `axes` environment, according to the geometry
+        specified by the four positional arguments:
+
+        :param left: expect float between (0,1).
+            Specifies the left-hand side boundary of the `inset_axes`, as a fraction of the
+            `axes` dimensions.
+
+        :param bottom: expect float between (0,1).
+            Specifies the bottom boundary of the `inset_axes`, as a fraction of the
+            `axes` dimensions.
+
+        :param width: expect float between (0,1).
+            Specifies the width of the `inset_axes`, as a fraction of the `axes` dimensions.
+
+        :param height: expect float between (0,1).
+            Specifies the height of the `inset_axes`, as a fraction of the `axes` dimensions.
+
+        :return: None
+        """
+
+        inset_axis = self.figure.add_axes([left, bottom, width, height], projection='3d')
+        if self.inset_axes is None:
+            self.set_inset_axes(inset_axis)
+
+
+
+
+
+
+    def plot_angularmomentum_vectors(self,
+                                     vectors,
+                                     labels = None,
+                                     plot_unitSphere = False,
+                                     normalise_length = True,
+                                     make_all_unitary = False):
+        """
+        Function that uses the Arrow3D class to plot vectors in 3D space.
+
+        :param vectors: (np.ndarray)
+                        1D np.array for single vector or 2D np.array for more than 1 vector
+
+        :param plot_unitSphere: (bool)
+                        Default = False. Plots a wire-framed unitary sphere.
+
+        :param normalise_length: (bool)
+                        Default = True. Normalises the vectors to that with the largest magnitude.
+
+        :param make_all_unitary: (bool)
+                        Default = False. Normalises each vector by its magnitude, making them all unitary.
+
+        :return: No returns
+        """
+        if type(vectors) is not np.ndarray:
+            vectors = np.asarray(vectors)
+
+        colors = Colorscheme().natural()
+
+
+        self.inset_axes.set_aspect("equal")
 
         # Edit the pane layout
-        axes.grid(False)
+        self.inset_axes.grid(False)
 
-        axes.xaxis.pane.fill = colors[-1]
-        axes.yaxis.pane.fill = colors[-1]
-        axes.zaxis.pane.fill = colors[-1]
+        self.inset_axes.xaxis.pane.fill = colors[-1]
+        self.inset_axes.yaxis.pane.fill = colors[-1]
+        self.inset_axes.zaxis.pane.fill = colors[-1]
 
-        axes.xaxis.pane.set_edgecolor(colors[-1])
-        axes.yaxis.pane.set_edgecolor(colors[-1])
-        axes.zaxis.pane.set_edgecolor(colors[-1])
+        self.inset_axes.xaxis.pane.set_edgecolor(colors[-1])
+        self.inset_axes.yaxis.pane.set_edgecolor(colors[-1])
+        self.inset_axes.zaxis.pane.set_edgecolor(colors[-1])
 
-        axes.set_xlabel(r'$x$')
-        axes.set_ylabel(r'$y$')
-        axes.set_zlabel(r'$z$')
+        self.inset_axes.set_xlabel(r'$x$')
+        self.inset_axes.set_ylabel(r'$y$')
+        self.inset_axes.set_zlabel(r'$z$')
 
         # draw a point at origin
-        axes.scatter([0], [0], [0], color="k", s=80)
+        self.inset_axes.scatter([0], [0], [0], color="k", s=80)
 
-    if plot_unitSphere:
-        # draw sphere
-        u, v = np.mgrid[0:2*np.pi:40j, 0:np.pi:20j]
-        x = np.cos(u)*np.sin(v)
-        y = np.sin(u)*np.sin(v)
-        z = np.cos(v)
-        axes.plot_wireframe(x, y, z, color='#AFD275', alpha = 0.2)
+        if plot_unitSphere:
+            # draw sphere
+            u, v = np.mgrid[0:2*np.pi:40j, 0:np.pi:20j]
+            x = np.cos(u)*np.sin(v)
+            y = np.sin(u)*np.sin(v)
+            z = np.cos(v)
+            self.inset_axes.plot_wireframe(x, y, z, color='#AFD275', alpha = 0.2)
 
-        # Draw line of sight observer
-        LineOfSight_color = '#EB3F11'
-        LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0], mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
-        axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70, label=r'Line of sight')
-        axes.add_artist(LineOfSight)
-        print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
+            # Draw line of sight observer
+            LineOfSight_color = '#EB3F11'
+            LineOfSight = Arrow3D([0, 0], [-2, -1], [0, 0], mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
+            self.inset_axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70, label=r'Line of sight')
+            self.inset_axes.add_artist(LineOfSight)
+            print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
-        # Draw reference rotation vector
-        Reference_Ang_Momentum_color = '#E59813'
-        Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
-        axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70, label=r'Reference angular momentum')
-        axes.add_artist(Reference_Ang_Momentum)
-        print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
+            # Draw reference rotation vector
+            Reference_Ang_Momentum_color = '#E59813'
+            Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
+            self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70, label=r'Reference angular momentum')
+            self.inset_axes.add_artist(Reference_Ang_Momentum)
+            print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
 
 
 
-    # Manipulate vectors
-    if vectors.ndim == 1:
-        # If there's only one vector, then the np.array will be 1D
-        print('[ PLOT 3D VECTOR ]\t==>\tOnly one vector detected.')
-        if normalise_length or make_all_unitary:
-            vectors = np.divide(vectors, np.linalg.norm(vectors))
+        # Manipulate vectors
+        if vectors.ndim == 1:
+            # If there's only one vector, then the np.array will be 1D
+            print('[ PLOT 3D VECTOR ]\t==>\tOnly one vector detected.')
+            if normalise_length or make_all_unitary:
+                vectors = np.divide(vectors, np.linalg.norm(vectors))
 
-        a = Arrow3D([0, vectors[0]], [0, vectors[1]], [0, vectors[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color="k")
-        axes.add_artist(a)
-        axes.set_xlim([-np.max(vectors), np.max(vectors)])
-        axes.set_ylim([-np.max(vectors), np.max(vectors)])
-        axes.set_zlim([-np.max(vectors), np.max(vectors)])
+            a = Arrow3D([0, vectors[0]], [0, vectors[1]], [0, vectors[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color="k")
+            self.inset_axes.add_artist(a)
+            self.inset_axes.set_xlim([-np.max(vectors), np.max(vectors)])
+            self.inset_axes.set_ylim([-np.max(vectors), np.max(vectors)])
+            self.inset_axes.set_zlim([-np.max(vectors), np.max(vectors)])
 
-    else:
-        # If there's more than 1 vector, then the np.array will be 2D
-        vectors_magnitudes = np.linalg.norm(vectors, axis = 1)
+        else:
+            # If there's more than 1 vector, then the np.array will be 2D
+            vectors_magnitudes = np.linalg.norm(vectors, axis = 1)
 
-        if normalise_length:
-            vectors = np.divide(vectors, np.max(vectors_magnitudes))
+            if normalise_length:
+                vectors = np.divide(vectors, np.max(vectors_magnitudes))
 
-        if labels is None:
-            labels = [''] * vectors_magnitudes.__len__()
+            if labels is None:
+                labels = [''] * vectors_magnitudes.__len__()
 
-        assert labels.__len__() == vectors_magnitudes.__len__()
+            assert labels.__len__() == vectors_magnitudes.__len__()
 
-        for vector, magnitude, label, color in zip(vectors, vectors_magnitudes, labels, colors):
+            for vector, magnitude, label, color in zip(vectors, vectors_magnitudes, labels, colors):
+
+                if make_all_unitary:
+                    vector = np.divide(vector, magnitude)
+
+                a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color = color)
+                self.inset_axes.scatter([], [], c=color, marker=r"$\longrightarrow$", s = 70, label = label )
+                self.inset_axes.add_artist(a)
+                print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(labels.index(label)))
 
             if make_all_unitary:
-                vector = np.divide(vector, magnitude)
+                self.inset_axes.set_xlim([-1.5, 1.5])
+                self.inset_axes.set_ylim([-1.5, 1.5])
+                self.inset_axes.set_zlim([-1.5, 1.5])
+            else:
+                self.inset_axes.set_xlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
+                self.inset_axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
+                self.inset_axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
 
-            a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color = color)
-            axes.scatter([], [], c=color, marker=r"$\longrightarrow$", s = 70, label = label )
-            axes.add_artist(a)
-            print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(labels.index(label)))
-
-        if make_all_unitary:
-            axes.set_xlim([-1.5, 1.5])
-            axes.set_ylim([-1.5, 1.5])
-            axes.set_zlim([-1.5, 1.5])
-        else:
-            axes.set_xlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
-            axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
-            axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
-
-    axes.legend(loc="best", markerscale=3)
+        self.inset_axes.legend(loc="best", markerscale=3)
 
 
 
@@ -405,10 +477,28 @@ legend_labels = [r'$\mathrm{Gas}$',
                          r'$\mathrm{Black holes}$']
 """
 
-class TestSuite(Map):
+class TestSuite(Map, LosGeometry):
 
     def __init__(self):
         print('Using TestSuite mode.')
+
+    def _TEST_basic_LoS(self):
+
+        fig = plt.figure()
+        axes = fig.add_axes()
+
+        diagram = LosGeometry(fig, axes)
+        diagram.set_inset_geometry([0.6, 0.0, 0.4, 0.4])
+        vectors = [
+            [0,1,1],
+            [2,5,6],
+            [-3,-2,0]
+        ]
+        diagram.plot_angularmomentum_vectors(vectors,
+                                             labels = None,
+                                             plot_unitSphere = True,
+                                             normalise_length = True,
+                                             make_all_unitary = True)
 
 
     def _TEST_velocity_map(self):
@@ -492,7 +582,7 @@ class TestSuite(Map):
         coords, vel = angular_momentum.derotate(cluster, align='gas', cluster_rest_frame=True, derotate_block=False)
         angular_momentum_vector_DEROT, _ = cluster.angular_momentum(mass, vel, coords)
 
-        plot_angularmomentum_vectors(np.vstack((angular_momentum_vector_GADGET, angular_momentum_vector_DEROT)),
+        self.plot_angularmomentum_vectors(np.vstack((angular_momentum_vector_GADGET, angular_momentum_vector_DEROT)),
                                      labels = None,
                                      axes=None,
                                      plot_unitSphere=True,
@@ -502,7 +592,7 @@ class TestSuite(Map):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    TestSuite()._TEST_derotate_field()
+    TestSuite()._TEST_basic_LoS()
     plt.show()
 
 
