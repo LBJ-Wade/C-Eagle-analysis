@@ -354,6 +354,7 @@ class LosGeometry(Axes):
         inset_axis = self.figure.add_axes([left, bottom, width, height], projection='3d')
         if self.inset_axes is None:
             self.set_inset_axes(inset_axis)
+            self.inset_axes.patch.set_alpha(0) # Transparent background
 
 
     def set_observer(self, rot_x: float = None, rot_y: float = None, rot_z: float = None) -> None:
