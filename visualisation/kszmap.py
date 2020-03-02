@@ -105,7 +105,7 @@ class KSZMAP(Simulation):
                                  vmax= np.abs(temp_map).max())
 
         # Attach the image to the Axes class
-        image = axes.imshow(temp_map, cmap='seismic', norm=norm, origin='lower',
+        image = axes.imshow(temp_map, cmap='RdBu', norm=norm, origin='lower',
                             extent=(-self.plotlimits, self.plotlimits,
                                     -self.plotlimits, self.plotlimits))
 
