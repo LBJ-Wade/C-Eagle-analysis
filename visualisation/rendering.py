@@ -288,6 +288,7 @@ class LosGeometry(Axes):
         self.axes = axes
         self.inset_axes = None
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
+        self.los_label = [0, -2.3, 0]
 
     def set_figure(self, new_figure: Figure) -> None:
         """
@@ -352,35 +353,47 @@ class LosGeometry(Axes):
             self.set_inset_axes(inset_axis)
 
 
-    def set_observer(self, rot_x: float = None, rot_y: float = None, rot_z: float = None):
+    def set_observer(self, rot_x: float = None, rot_y: float = None, rot_z: float = None) -> None:
         """
-        def rotation_matrix_from_polar_angles(theta, phi):
+        Derotates the observer's viewpoint around the 3 axes of the cluster's frame. Note that the
+        whole cluster might already have been derotated and aligned to the particle's angular momentum
+        vector.
+        This function sets the observer's orientation to the new position and sets also a new attribute
+        to the LosGeometry class with the observer's rotation matrix, useful ofr computing the
+        scalar kSZ map along a particular line-of-sight.
 
-        Find the rotation matrix that rotates a vector about the origin by delta(theta) in the elevation
-        and by delta(phi) about the azimuthal axis.
+        :param rot_x: expected float within (0, 360)
+            The angle in degrees by which the observer's viewpoint is derotated about the x axis.
 
-        :param theta: expect float in degrees
-            The displacement angle in elevation.
+        :param rot_y: expected float within (0, 360)
+            The angle in degrees by which the observer's viewpoint is derotated about the y axis.
 
-        :param phi: expect float in degrees
-            The displacement angle in azimuth.
+        :param rot_z: expected float within (0, 360)
+            The angle in degrees by which the observer's viewpoint is derotated about the y axis.
 
-        :return: A transform matrix (3x3)
+        :return: None
         """
-        if rot_x is not None:
-            rotation_matrix = self.rotation_matrix_about_x(rot_x * np.pi / 180)
-            new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
-            self.los_vector = new_los_vector
 
-        if rot_y is not None:
-            rotation_matrix = self.rotation_matrix_about_y(rot_y * np.pi / 180)
-            new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
-            self.los_vector = new_los_vector
+        # Start from default always
+        self.los_vector = [[0, -2, 0], [0, -1, 0]]
 
-        if rot_z is not None:
-            rotation_matrix = self.rotation_matrix_about_z(rot_z * np.pi / 180)
-            new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
-            self.los_vector = new_los_vector
+        rot_x = 0. if rot_x is None else rot_x
+        rot_y = 0. if rot_y is None else rot_y
+        rot_z = 0. if rot_z is None else rot_z
+
+        rotation_matrix_x = self.rotation_matrix_about_x(rot_x * np.pi / 180)
+        rotation_matrix_y = self.rotation_matrix_about_y(rot_y * np.pi / 180)
+        rotation_matrix_z = self.rotation_matrix_about_z(rot_z * np.pi / 180)
+
+        combined_matrix = rotation_matrix_x.as_matrix().dot(rotation_matrix_y.as_matrix())
+        combined_matrix = combined_matrix.as_matrix().dot(rotation_matrix_z.as_matrix())
+        self.observer_rotation_matrix = combined_matrix
+
+        new_los_vector = self.apply_rotation_matrix(combined_matrix, self.los_vector)
+        self.los_vector = new_los_vector
+        new_los_label = self.apply_rotation_matrix(combined_matrix, self.los_label)
+        self.los_label = new_los_label
+
 
 
 
@@ -392,6 +405,8 @@ class LosGeometry(Axes):
                               mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
         self.inset_axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70,
                                 label=r'$\mathrm{Line~of~sight}$')
+        self.inset_axes.text(self.los_label[0], self.los_label[1], self.los_label[2], r'$\mathcal{O}$', size = 20,
+                             color = LineOfSight_color)
         self.inset_axes.add_artist(LineOfSight)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
@@ -509,6 +524,10 @@ class LosGeometry(Axes):
                 self.inset_axes.set_xlim([-1.5, 1.5])
                 self.inset_axes.set_ylim([-1.5, 1.5])
                 self.inset_axes.set_zlim([-1.5, 1.5])
+                plt.setp(self.inset_axes.get_xticklabels(), visible=False)
+                plt.setp(self.inset_axes.get_yticklabels(), visible=False)
+                plt.setp(self.inset_axes.get_zticklabels(), visible=False)
+
             else:
                 self.inset_axes.set_xlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
                 self.inset_axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
