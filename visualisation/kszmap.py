@@ -109,6 +109,10 @@ class KSZMAP(Simulation):
                             extent=(-self.plotlimits, self.plotlimits,
                                     -self.plotlimits, self.plotlimits))
 
+        axes.axhline(y=0, linewidth=2, color='b', linestyle='--')
+        axes.axvline(x=0, linewidth=2, color='b', linestyle='--')
+
+
         return image
 
 
