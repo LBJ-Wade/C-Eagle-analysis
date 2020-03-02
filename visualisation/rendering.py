@@ -16,6 +16,7 @@ import numpy as np
 import matplotlib
 import scipy as sp
 
+from matplotlib import pyplot as plt
 import matplotlib.colors as colors
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
@@ -667,7 +668,7 @@ class TestSuite(Map, LosGeometry):
                                      )
 
 if __name__ == "__main__":
-    from matplotlib import pyplot as plt
+
     exec(open('visualisation/light_mode.py').read())
     TestSuite()._TEST_basic_LoS()
     plt.show()
