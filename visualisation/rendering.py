@@ -13,20 +13,14 @@ This file contains methods and classes for rendering data:
 
 import numpy as np
 import matplotlib
+import scipy as sp
 
+import matplotlib.colors as colors
 from matplotlib.patches import Circle
 from mpl_toolkits.mplot3d import proj3d
 from matplotlib.patches import FancyArrowPatch
-import matplotlib.colors as colors
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
-from . import map_plot_parameters as plotpar
-
-plotpar.set_defaults_plot()
-
-
-import matplotlib as mpl
-import scipy as sp
 
 
 #################################
@@ -45,10 +39,10 @@ class Colorscheme:
     def futuristic(self): return ['#2C3531', '#116466', '#D9B08C', '#FFCB9A', '#D1E8E2']
 
 
-class MidpointNormalize(mpl.colors.Normalize):
+class MidpointNormalize(matplotlib.colors.Normalize):
     def __init__(self, vmin, vmax, midpoint=0, clip=False):
         self.midpoint = midpoint
-        mpl.colors.Normalize.__init__(self, vmin, vmax, clip)
+        matplotlib.colors.Normalize.__init__(self, vmin, vmax, clip)
 
     def __call__(self, value, clip=None):
         normalized_min = max(0, 1 / 2 * (1 - abs((self.midpoint - self.vmin) / (self.midpoint - self.vmax))))
@@ -592,6 +586,10 @@ class TestSuite(Map, LosGeometry):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
+    from matplotlib import rc
+    rc('text', usetex=True)
+    rc('savefig', dpi=500)  # higher res outputs
+
     TestSuite()._TEST_basic_LoS()
     plt.show()
 
