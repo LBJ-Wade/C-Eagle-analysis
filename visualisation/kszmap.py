@@ -116,7 +116,7 @@ class KSZMAP(Simulation):
         return image
 
     def make_cluster_label(self, axes: plt.Axes.axes):
-        items_labels = r"""rkSZ PROJECTION MAP\n
+        items_labels = r"""rkSZ PROJECTION MAP
                         Cluster {:s}\ {:d}
                         $z$ = {:.3f}
                         $R_{{500\ true}}$ = {:.2f} Mpc
