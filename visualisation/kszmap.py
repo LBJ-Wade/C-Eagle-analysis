@@ -139,6 +139,9 @@ class KSZMAP(Simulation):
         ax = fig.add_subplot(111)
         panel = self.make_panel(ax)
 
+        # Annotate cluster map
+        self.make_cluster_label(ax)
+
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="3%", pad=0.)
