@@ -409,7 +409,7 @@ class LosGeometry(Axes):
         LineOfSight_color = '#EB3F11'
         LineOfSight = Arrow3D(los_vector_reshaped[0], los_vector_reshaped[1], los_vector_reshaped[2],
                               mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
-        self.inset_axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70,
+        self.inset_axes.scatter([], [], c=LineOfSight_color, marker=r"$\mathbf{\longrightarrow}$", s=70,
                                 label=r'$\mathrm{Line~of~sight}$')
         self.inset_axes.text(self.los_label[0], self.los_label[1], self.los_label[2], r'$\mathcal{O}$', color = LineOfSight_color)
         self.inset_axes.add_artist(LineOfSight)
@@ -484,7 +484,7 @@ class LosGeometry(Axes):
             # Draw reference rotation vector
             Reference_Ang_Momentum_color = '#E59813'
             Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
-            self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\longrightarrow$", s=70,
+            self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\mathbf{\longrightarrow}$", s=70,
                                     label=r'$\mathrm{Reference~angular~momentum}$')
             self.inset_axes.add_artist(Reference_Ang_Momentum)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
@@ -542,7 +542,7 @@ class LosGeometry(Axes):
                 self.inset_axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
                 self.inset_axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
 
-        self.inset_axes.legend(loc="upper right", markerscale=3, )
+        self.inset_axes.legend(loc="upper right", markerscale=3, fancybox=True, framealpha=0.6)
 
 
 
