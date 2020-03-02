@@ -113,7 +113,7 @@ class KSZMAP(Simulation):
     def test(self):
 
         fig = plt.figure(figsize=(15, 15))
-        ax = fig.add_subplot(111)
+        ax = fig.add_axes()
 
 
 
