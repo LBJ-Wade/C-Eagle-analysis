@@ -364,6 +364,7 @@ class LosGeometry(Axes):
         :return: A transform matrix (3x3)
         """
         rotation_matrix = self.rotation_matrix_from_polar_angles(theta, phi)
+        print(rotation_matrix)
         new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
         self.los_vector = new_los_vector
 
