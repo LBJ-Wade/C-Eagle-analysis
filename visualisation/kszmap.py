@@ -67,7 +67,7 @@ class KSZMAP(Simulation):
         self.plotlimits = 3*cluster.r500 if plotlimits == None else plotlimits
 
 
-    def make_panel(self, axes: plt.Axes.axes, projection: str) -> plt.imshow:
+    def make_panel(self, axes: plt.Axes.axes) -> plt.imshow:
         """
         Returns the
         :param projection:
@@ -109,8 +109,8 @@ class KSZMAP(Simulation):
                             extent=(-self.plotlimits, self.plotlimits,
                                     -self.plotlimits, self.plotlimits))
 
-        axes.axhline(y=0, linewidth=2, color='b', linestyle='--')
-        axes.axvline(x=0, linewidth=2, color='b', linestyle='--')
+        axes.axhline(y=0, linewidth=1.5, color='k', linestyle='--')
+        axes.axvline(x=0, linewidth=1.5, color='k', linestyle='--')
 
 
         return image
@@ -120,15 +120,11 @@ class KSZMAP(Simulation):
 
         fig = plt.figure(figsize=(15, 15))
         ax = fig.add_subplot(111)
-
-
-
-        panel = self.make_panel(ax, 'xy')
+        panel = self.make_panel(ax)
 
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="3%", pad=0.)
-
         cbar = fig.colorbar(panel, cax=cax, )
         cbar.ax.minorticks_off()
         cbar.ax.set_ylabel(r'$y_{rKSZ}$', rotation=270)
