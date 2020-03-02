@@ -125,7 +125,7 @@ class KSZMAP(Simulation):
 
         str_label = r"rkSZ PROJECTION MAP\n"
         for item_key in items_labels.keys():
-            str_label + item_key + items_labels[item_key] + '\n'
+            str_label + item_key + str(items_labels[item_key]) + '\n'
 
         axes.text(0.95, 0.95, str_label,
                   horizontalalignment='right',
