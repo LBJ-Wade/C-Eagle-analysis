@@ -363,6 +363,7 @@ class LosGeometry(Axes):
 
         :return: A transform matrix (3x3)
         """
+        theta, phi = theta * np.pi / 180, phi* np.pi / 180
         rotation_matrix = self.rotation_matrix_from_polar_angles(theta, phi)
         print(rotation_matrix)
         new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
@@ -523,7 +524,7 @@ class TestSuite(Map, LosGeometry):
 
         diagram = LosGeometry(fig, axes)
         diagram.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
-        diagram.set_observer(-np.pi/2, np.pi)
+        diagram.set_observer(-90, 0)
         vectors = [
             [0,1,1],
             [2,5,6],
