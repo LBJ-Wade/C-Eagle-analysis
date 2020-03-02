@@ -347,7 +347,6 @@ class LosGeometry(Axes):
 
         :return: None
         """
-        plt.rcParams.update({'font.size': 25})
         inset_axis = self.figure.add_axes([left, bottom, width, height], projection='3d')
         if self.inset_axes is None:
             self.set_inset_axes(inset_axis)
@@ -439,6 +438,7 @@ class LosGeometry(Axes):
 
         :return: No returns
         """
+        plt.rcParams.update({'font.size': 17})
         if type(vectors) is not np.ndarray:
             vectors = np.asarray(vectors)
 
