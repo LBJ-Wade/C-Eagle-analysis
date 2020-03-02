@@ -557,12 +557,12 @@ class TestSuite(Map, LosGeometry):
 
     def _TEST_basic_LoS(self):
 
-        fig = plt.figure()
+        fig = plt.figure(figsize=(8, 8))
         axes = fig.add_axes()
 
         diagram = LosGeometry(fig, axes)
         diagram.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
-        diagram.set_observer(rot_x=-90, rot_y=0, rot_z=0)
+        diagram.set_observer(rot_x=0, rot_y=0, rot_z=90)
         vectors = [
             [0,1,1],
             [2,5,6],
