@@ -5,11 +5,13 @@ import matplotlib.colors as colors
 from matplotlib import pyplot as plt
 
 import swiftsimio_binder as swift
+from rendering import LosGeometry
 from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from cluster import Cluster, Simulation
 from testing import angular_momentum
+
 
 
 def rescale(X, x_min, x_max):
@@ -110,8 +112,23 @@ class KSZMAP(Simulation):
 
     def test(self):
 
-        fig = plt.figure(figsize=(6, 6))
+        fig = plt.figure(figsize=(15, 15))
         ax = fig.add_subplot(111)
+
+        observer = LosGeometry(fig, ax)
+        observer.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
+        observer.set_observer(rot_x=0, rot_y=0, rot_z=90)
+        vectors = [
+            [0, 1, 1],
+            [2, 5, 6],
+            [-3, -2, 0]
+        ]
+        observer.plot_angularmomentum_vectors(vectors,
+                                             labels=None,
+                                             plot_unitSphere=True,
+                                             normalise_length=False,
+                                             make_all_unitary=True)
+
         panel = self.make_panel(ax, 'xy')
         cbar = fig.colorbar(panel)
         cbar.ax.minorticks_off()
@@ -124,6 +141,7 @@ if __name__ == '__main__':
     # Create a cluster object
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
     # Create a KSZMAP object and link it to the cluster object
+
     test_map = KSZMAP(cluster)
     test_map.info()
     # Test the map output
