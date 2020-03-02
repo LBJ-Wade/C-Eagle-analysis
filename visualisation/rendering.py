@@ -16,6 +16,8 @@ import matplotlib
 import scipy as sp
 
 import matplotlib.colors as colors
+from matplotlib.figure import Figure
+from matplotlib.axes import Axes
 from matplotlib.patches import Circle
 from mpl_toolkits.mplot3d import proj3d
 from matplotlib.patches import FancyArrowPatch
@@ -267,14 +269,14 @@ class Arrow3D(FancyArrowPatch):
         FancyArrowPatch.draw(self, renderer)
 
 
-class LosGeometry:
+class LosGeometry(Axes):
 
-    def __init__(self, figure: matplotlib.figure.Figure,  axes: matplotlib.axes.Axes) -> None:
+    def __init__(self, figure: Figure,  axes: Axes) -> None:
         self.figure = figure
         self.axes = axes
         self.inset_axes = None
 
-    def set_figure(self, new_figure: matplotlib.figure.Figure) -> None:
+    def set_figure(self, new_figure: Figure) -> None:
         """
         Set a new `figure` attribute to the class.
 
@@ -286,7 +288,7 @@ class LosGeometry:
         del self.figure
         self.figure = new_figure
 
-    def set_axes(self, new_axes: matplotlib.axes.Axes) -> None:
+    def set_axes(self, new_axes: Axes) -> None:
         """
         Set a new `axes` attribute to the class.
 
@@ -298,7 +300,7 @@ class LosGeometry:
         del self.axes
         self.axes = new_axes
 
-    def set_inset_axes(self, new_inset_axes: matplotlib.axes.Axes) -> None:
+    def set_inset_axes(self, new_inset_axes: Axes) -> None:
         """
         Set a new `axes` attribute to the class.
 
@@ -587,9 +589,9 @@ class TestSuite(Map, LosGeometry):
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
     from matplotlib import rc
+
     rc('text', usetex=True)
     rc('savefig', dpi=500)  # higher res outputs
-
     TestSuite()._TEST_basic_LoS()
     plt.show()
 
