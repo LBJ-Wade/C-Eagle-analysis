@@ -283,9 +283,8 @@ class LosGeometry(Axes):
     rotation_matrix_about_y = Cluster.rotation_matrix_about_y
     rotation_matrix_about_z = Cluster.rotation_matrix_about_z
 
-    def __init__(self, figure: Figure,  axes: Axes) -> None:
+    def __init__(self, figure: Figure) -> None:
         self.figure = figure
-        self.parent_axes = axes
         self.inset_axes = None
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
         self.los_label = [0, -2.2, -0.2]
@@ -294,9 +293,6 @@ class LosGeometry(Axes):
     # Reading methods
     def get_figure(self):
         return self.figure
-
-    def get_parent_axes(self):
-        return self.parent_axes
 
     def get_inset_axes(self):
         return self.inset_axes
@@ -321,17 +317,6 @@ class LosGeometry(Axes):
         :return: None
         """
         self.figure = new_figure
-
-    def set_axes(self, new_axes: Axes) -> None:
-        """
-        Set a new `axes` attribute to the class.
-
-        :param new_axes:  expect a matplotlib.axes.Axes object
-            The new matplotlib.axes.Axes environment to build the diagram in.
-
-        :return: None
-        """
-        self.axes = new_axes
 
     def set_inset_axes(self, new_inset_axes: Axes) -> None:
         """
