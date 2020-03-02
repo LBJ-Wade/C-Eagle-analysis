@@ -116,15 +116,15 @@ class KSZMAP(Simulation):
         return image
 
     def make_cluster_label(self, axes: plt.Axes.axes):
-        items_labels = [r'rkSZ PROJECTION MAP',
-                        r'Simulation {:s}'.format(cluster.simulation),
-                        r'Cluster ID {:d}'.format(cluster.clusterID),
-                        r'$z$ = {:.3f}'.format(cluster.z),
-                        r'R \textsubscript{{500\ true}} = {:.2f} Mpc'.format(cluster.r500),
-                        r'Aperture radius = {:.2f} Mpc'.format(self.aperture),
-                        r'Map resolution = {:.4f} Mpc'.format(2*self.plotlimits/self.resolution)]
+        items_labels = [r"rkSZ PROJECTION MAP",
+                        r"Simulation {:s}".format(cluster.simulation),
+                        r"Cluster ID {:d}".format(cluster.clusterID),
+                        r"$z$ = {:.3f}".format(cluster.z),
+                        r"R \textsubscript{{500\ true}} = {:.2f} Mpc".format(cluster.r500),
+                        r"Aperture radius = {:.2f} Mpc".format(self.aperture),
+                        r"Map resolution = {:.4f} Mpc".format(2*self.plotlimits/self.resolution)]
 
-        print(r'\n'.join(items_labels))
+        print("\n ".join(items_labels))
         axes.text(0.95, 0.95, r'\n'.join(items_labels),
                   horizontalalignment='right',
                   verticalalignment='top',
