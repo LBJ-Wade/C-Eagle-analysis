@@ -285,7 +285,7 @@ class LosGeometry(Axes):
 
     def __init__(self, figure: Figure,  axes: Axes) -> None:
         self.figure = figure
-        self.axes = axes
+        self.parent_axes = axes
         self.inset_axes = None
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
         self.los_label = [0, -2.2, -0.2]
@@ -295,8 +295,8 @@ class LosGeometry(Axes):
     def get_figure(self):
         return self.figure
 
-    def get_axes(self):
-        return self.axes
+    def get_parent_axes(self):
+        return self.parent_axes
 
     def get_inset_axes(self):
         return self.inset_axes
@@ -320,7 +320,6 @@ class LosGeometry(Axes):
 
         :return: None
         """
-        del self.figure
         self.figure = new_figure
 
     def set_axes(self, new_axes: Axes) -> None:
@@ -332,7 +331,6 @@ class LosGeometry(Axes):
 
         :return: None
         """
-        del self.axes
         self.axes = new_axes
 
     def set_inset_axes(self, new_inset_axes: Axes) -> None:
@@ -344,7 +342,6 @@ class LosGeometry(Axes):
 
         :return: None
         """
-        del self.inset_axes
         self.inset_axes = new_inset_axes
 
     def set_inset_geometry(self, left, bottom, width, height) -> None:
