@@ -536,8 +536,7 @@ class LosGeometry(Axes):
                 self.inset_axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
                 self.inset_axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
 
-        self.inset_axes.legend(markerscale=3, bbox_to_anchor=(0., 1.02, 1., .102), loc='lower right',
-                               ncol=1, mode="expand", borderaxespad=0.)
+        self.inset_axes.legend(loc="upper right", markerscale=3, )
 
 
 
