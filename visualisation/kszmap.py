@@ -139,7 +139,7 @@ class KSZMAP(Simulation):
 
     def test(self):
 
-        fig = plt.figure(figsize=(15, 15))
+        fig = plt.figure(figsize=(13, 13))
         ax = fig.add_subplot(111)
         # Annotate cluster map
         self.make_cluster_label(ax)
@@ -149,15 +149,15 @@ class KSZMAP(Simulation):
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="3%", pad=0.)
-        cbar = fig.colorbar(panel, cax=cax, )
+        cbar = fig.colorbar(panel, cax=cax)
         cbar.ax.minorticks_off()
-        cbar.ax.set_ylabel(r'$y_{rKSZ} \equiv \frac{\Delta T}{T_{CMB}}$', rotation=270)
+        cbar.ax.set_ylabel(r'$y_{rKSZ} \equiv \frac{\Delta T}{T_{CMB}}$', rotation=270, size = 20)
 
         ax.set_xlabel(r'$x\quad \mathrm{[Mpc]}$')
         ax.set_ylabel(r'$z\quad \mathrm{[Mpc]}$')
 
         observer = LosGeometry(fig)
-        observer.set_inset_geometry(0.62, 0.1, 0.25, 0.25)
+        observer.set_inset_geometry(0.6, 0.12, 0.25, 0.25)
         observer.set_observer(rot_x=0, rot_y=0, rot_z=0)
         vectors = [
             [0, 1, 1],
