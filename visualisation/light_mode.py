@@ -1,4 +1,7 @@
 from matplotlib import rc, rcParams
+
+
+rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
 rc('text', usetex=True)
 rc('savefig', dpi=500)       # higher res outputs
 
