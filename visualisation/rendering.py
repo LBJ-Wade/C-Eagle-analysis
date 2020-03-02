@@ -20,7 +20,7 @@ from matplotlib.patches import FancyArrowPatch
 import matplotlib.colors as colors
 from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
-from visualisation import map_plot_parameters as plotpar
+from . import map_plot_parameters as plotpar
 
 plotpar.set_defaults_plot()
 
