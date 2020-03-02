@@ -385,8 +385,8 @@ class LosGeometry(Axes):
         rotation_matrix_y = self.rotation_matrix_about_y(rot_y * np.pi / 180)
         rotation_matrix_z = self.rotation_matrix_about_z(rot_z * np.pi / 180)
 
-        combined_matrix = np.as_matrix(rotation_matrix_x).dot(np.as_matrix(rotation_matrix_y))
-        combined_matrix = np.as_matrix(combined_matrix).dot(np.as_matrix(rotation_matrix_z))
+        combined_matrix = np.asmatrix(rotation_matrix_x).dot(np.asmatrix(rotation_matrix_y))
+        combined_matrix = np.asmatrix(combined_matrix).dot(np.asmatrix(rotation_matrix_z))
         self.observer_rotation_matrix = combined_matrix
 
         new_los_vector = self.apply_rotation_matrix(combined_matrix, self.los_vector)
