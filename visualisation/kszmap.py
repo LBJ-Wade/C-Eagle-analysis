@@ -120,7 +120,7 @@ class KSZMAP(Simulation):
                         r'Simulation {:s}'.format(cluster.simulation),
                         r'Cluster ID {:d}'.format(cluster.clusterID),
                         r'$z$ = {:.3f}'.format(cluster.z),
-                        r'$R_{{500\ true}}$ = {:.2f} Mpc'.format(cluster.r500),
+                        r'R \textsubscript{{500\ true}} = {:.2f} Mpc'.format(cluster.r500),
                         r'Aperture radius = {:.2f} Mpc'.format(self.aperture),
                         r'Map resolution = {:.4f} Mpc'.format(2*self.plotlimits/self.resolution)]
 
