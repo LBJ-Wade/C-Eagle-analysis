@@ -105,7 +105,7 @@ class KSZMAP(Simulation):
                                  vmax= np.abs(temp_map).max())
 
         # Attach the image to the Axes class
-        image = axes.imshow(temp_map, cmap='seismic', norm=norm,
+        image = axes.imshow(temp_map, cmap='seismic', norm=norm, origin='lower',
                             extent=(-self.plotlimits, self.plotlimits,
                                     -self.plotlimits, self.plotlimits))
 
@@ -133,8 +133,8 @@ class KSZMAP(Simulation):
         ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
 
         observer = LosGeometry(fig)
-        observer.set_inset_geometry(0.6, 0.12, 0.25, 0.25)
-        observer.set_observer(rot_x=0, rot_y=0, rot_z=90)
+        observer.set_inset_geometry(0.62, 0.1, 0.25, 0.25)
+        observer.set_observer(rot_x=0, rot_y=0, rot_z=0)
         vectors = [
             [0, 1, 1],
             [2, 5, 6],
