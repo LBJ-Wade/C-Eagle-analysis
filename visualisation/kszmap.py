@@ -117,13 +117,14 @@ class KSZMAP(Simulation):
 
 
 
-
-
+        panel = self.make_panel(ax, 'xy')
+        cbar = fig.colorbar(panel)
+        cbar.ax.minorticks_off()
         ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
         ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
 
-        observer = LosGeometry(ax)
-        observer.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
+        observer = LosGeometry(fig)
+        observer.set_inset_geometry(0.6, 0.2, 0.3, 0.3)
         observer.set_observer(rot_x=0, rot_y=0, rot_z=90)
         vectors = [
             [0, 1, 1],
@@ -135,10 +136,6 @@ class KSZMAP(Simulation):
                                               plot_unitSphere=True,
                                               normalise_length=False,
                                               make_all_unitary=True)
-
-        panel = self.make_panel(ax, 'xy')
-        cbar = fig.colorbar(panel)
-        cbar.ax.minorticks_off()
 
         plt.show()
 
