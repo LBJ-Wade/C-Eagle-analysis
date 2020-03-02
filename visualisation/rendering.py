@@ -267,7 +267,7 @@ class Arrow3D(FancyArrowPatch):
         FancyArrowPatch.draw(self, renderer)
 
 
-class LosGeometry(matplotlib.axes.Axes):
+class LosGeometry:
 
     def __init__(self, figure: matplotlib.figure.Figure,  axes: matplotlib.axes.Axes) -> None:
         self.figure = figure
