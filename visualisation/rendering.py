@@ -288,7 +288,7 @@ class LosGeometry(Axes):
         self.axes = axes
         self.inset_axes = None
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
-        self.los_label = [0, -2.3, -0.1]
+        self.los_label = [0, -2.2, -0.2]
 
     def set_figure(self, new_figure: Figure) -> None:
         """
@@ -375,7 +375,7 @@ class LosGeometry(Axes):
 
         # Start from default always
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
-        self.los_label = [0, -2.3, -0.1]
+        self.los_label = [0, -2.2, -0.2]
 
         rot_x = 0. if rot_x is None else rot_x
         rot_y = 0. if rot_y is None else rot_y
@@ -405,8 +405,7 @@ class LosGeometry(Axes):
                               mutation_scale=20, lw=3, arrowstyle="-|>", color=LineOfSight_color)
         self.inset_axes.scatter([], [], c=LineOfSight_color, marker=r"$\longrightarrow$", s=70,
                                 label=r'$\mathrm{Line~of~sight}$')
-        self.inset_axes.text(self.los_label[0], self.los_label[1], self.los_label[2], r'$\mathcal{O}$', size = 25,
-                             color = LineOfSight_color)
+        self.inset_axes.text(self.los_label[0], self.los_label[1], self.los_label[2], r'$\mathcal{O}$', color = LineOfSight_color)
         self.inset_axes.add_artist(LineOfSight)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
