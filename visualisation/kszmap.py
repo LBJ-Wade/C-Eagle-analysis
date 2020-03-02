@@ -127,10 +127,10 @@ class KSZMAP(Simulation):
         cax = divider.append_axes("right", size="3%", pad=0.)
         cbar = fig.colorbar(panel, cax=cax, )
         cbar.ax.minorticks_off()
-        cbar.ax.set_ylabel(r'$y_{rKSZ}$', rotation=270)
+        cbar.ax.set_ylabel(r'$y_{rKSZ} \equiv \frac{\Delta T}{T_{CMB}}$', rotation=270)
 
-        ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
-        ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
+        ax.set_xlabel(r'$x\quad \mathrm{[Mpc]}$')
+        ax.set_ylabel(r'$z\quad \mathrm{[Mpc]}$')
 
         observer = LosGeometry(fig)
         observer.set_inset_geometry(0.62, 0.1, 0.25, 0.25)
