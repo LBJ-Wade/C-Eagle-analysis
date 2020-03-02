@@ -365,7 +365,6 @@ class LosGeometry(Axes):
         """
         rotation_matrix = self.rotation_matrix_from_polar_angles(theta, phi)
         new_los_vector = self.apply_rotation_matrix(rotation_matrix, self.los_vector)
-        del self.los_vector
         self.los_vector = new_los_vector
 
     def draw_observer(self):
