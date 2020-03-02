@@ -493,7 +493,7 @@ class TestSuite(Map, LosGeometry):
         diagram.plot_angularmomentum_vectors(vectors,
                                              labels = None,
                                              plot_unitSphere = True,
-                                             normalise_length = True,
+                                             normalise_length = False,
                                              make_all_unitary = True)
 
 
@@ -588,10 +588,8 @@ class TestSuite(Map, LosGeometry):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    from matplotlib import rc
-
-    rc('text', usetex=True)
-    rc('savefig', dpi=500)  # higher res outputs
+    from visualisation.map_plot_parameters import set_defaults_plot as mpl_set_pars
+    mpl_set_pars()
     TestSuite()._TEST_basic_LoS()
     plt.show()
 
