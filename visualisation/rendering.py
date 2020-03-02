@@ -484,7 +484,7 @@ class TestSuite(Map, LosGeometry):
         axes = fig.add_axes()
 
         diagram = LosGeometry(fig, axes)
-        diagram.set_inset_geometry([0.6, 0.0, 0.4, 0.4])
+        diagram.set_inset_geometry(0.6, 0.0, 0.4, 0.4)
         vectors = [
             [0,1,1],
             [2,5,6],
