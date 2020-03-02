@@ -588,7 +588,7 @@ class TestSuite(Map, LosGeometry):
 
 if __name__ == "__main__":
     from matplotlib import pyplot as plt
-    exec(open('./light_mode.py').read())
+    exec(open('visualisation/light_mode.py').read())
     TestSuite()._TEST_basic_LoS()
     plt.show()
 
