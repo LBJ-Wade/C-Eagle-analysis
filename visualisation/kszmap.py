@@ -1,7 +1,6 @@
 import sys
 import os.path
 import numpy as np
-import matplotlib
 import matplotlib.colors as colors
 from matplotlib import pyplot as plt
 
@@ -66,7 +65,7 @@ class KSZMAP(Simulation):
         self.plotlimits = 3*cluster.r500 if plotlimits == None else plotlimits
 
 
-    def make_panel(self, axes: matplotlib.axes.Axes, projection: str) -> plt.imshow:
+    def make_panel(self, axes: plt.Axes.axes, projection: str) -> plt.imshow:
         """
         Returns the
         :param projection:
@@ -114,13 +113,12 @@ class KSZMAP(Simulation):
     def test(self):
 
         fig = plt.figure(figsize=(15, 15))
-        ax = fig.add_axes()
+        ax = fig.add_subplot(111)
 
 
 
-        panel = self.make_panel(ax, 'xy')
-        cbar = fig.colorbar(panel)
-        cbar.ax.minorticks_off()
+
+
         ax.set_xlabel(r'$x\ /\mathrm{Mpc}$')
         ax.set_ylabel(r'$y\ /\mathrm{Mpc}$')
 
@@ -137,6 +135,10 @@ class KSZMAP(Simulation):
                                               plot_unitSphere=True,
                                               normalise_length=False,
                                               make_all_unitary=True)
+
+        panel = self.make_panel(ax, 'xy')
+        cbar = fig.colorbar(panel)
+        cbar.ax.minorticks_off()
 
         plt.show()
 
