@@ -130,7 +130,7 @@ class KSZMAP(Simulation):
                                                               2*self.plotlimits/self.resolution)
 
         print(items_labels)
-        axes.text(0.62, 0.95, items_labels,
+        axes.text(0.03, 0.97, items_labels,
                   horizontalalignment='left',
                   verticalalignment='top',
                   transform=axes.transAxes,
