@@ -110,18 +110,18 @@ class KSZMAP(Simulation):
                             extent=(-self.plotlimits, self.plotlimits,
                                     -self.plotlimits, self.plotlimits))
 
-        axes.axhline(y=0, linewidth=1.5, color='k', linestyle='--')
-        axes.axvline(x=0, linewidth=1.5, color='k', linestyle='--')
+        axes.axhline(y=0, linewidth=1.5, color='k', linestyle='--', alpha = 0.6)
+        axes.axvline(x=0, linewidth=1.5, color='k', linestyle='--', alpha = 0.6)
 
 
         return image
 
     def draw_circle(self, axes, centre: tuple = (0,0), radius: float = None, label: str = None):
 
-        axes.add_artist(Circle(centre, radius=radius, color='black', fill=False, linestyle='--'))
-        axes.annotate(label, (centre[0], centre[1] + radius),
-                      va="center", ha="center",
-                      bbox=dict(boxstyle="round", facecolor="white", edgecolor='white', alpha=0.6))
+        axes.add_artist(Circle(centre, radius=radius, color='green', fill=False, linestyle='--', linewidth=1.5))
+        axes.annotate(label, (centre[0], centre[1] + 1.1*radius),
+                      va="bottom", ha="center", size = 20,
+                      bbox=dict(boxstyle="round", facecolor="none", edgecolor='white', alpha=1))
 
     def make_cluster_label(self, axes: plt.Axes.axes):
         items_labels = r"""rkSZ PROJECTION MAP
