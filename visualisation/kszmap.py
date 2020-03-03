@@ -150,7 +150,7 @@ class KSZMAP(Simulation):
         cax = divider.append_axes("right", size="3%", pad=0.)
         cbar = fig.colorbar(panel, cax=cax)
         cbar.ax.minorticks_off()
-        cbar.ax.set_ylabel(r'$y_{rKSZ} \equiv \frac{\Delta T}{T_{CMB}}$', rotation=270, size = 25, labelpad=10)
+        cbar.ax.set_ylabel(r'$y_{rKSZ} \equiv \frac{\Delta T}{T_{CMB}}$', rotation=270, size = 25, labelpad=30)
 
         ax.set_xlabel(r'$x\quad \mathrm{[Mpc]}$')
         ax.set_ylabel(r'$z\quad \mathrm{[Mpc]}$')
@@ -175,10 +175,11 @@ class KSZMAP(Simulation):
 
 if __name__ == '__main__':
     exec(open('visualisation/light_mode.py').read())
+
     # Create a cluster object
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
-    # Create a KSZMAP object and link it to the cluster object
 
+    # Create a KSZMAP object and link it to the cluster object
     test_map = KSZMAP(cluster)
     test_map.info()
     # Test the map output
