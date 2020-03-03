@@ -418,7 +418,7 @@ class LosGeometry(Axes):
                                 label=r'$\mathrm{Line~of~sight}$')
         self.inset_axes.text(self.los_label[0], self.los_label[1], self.los_label[2], r'$\mathcal{O}$', color = LineOfSight_color)
         self.inset_axes.add_artist(LineOfSight)
-        self.vector_MPL_ARROWS += LineOfSight
+        self.vector_MPL_ARROWS.append(LineOfSight)
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
 
@@ -501,7 +501,7 @@ class LosGeometry(Axes):
             self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\mathbf{\longrightarrow}$", s=70,
                                     label=r'$\mathrm{Reference~angular~momentum}$')
             self.inset_axes.add_artist(Reference_Ang_Momentum)
-            self.vector_MPL_ARROWS += Reference_Ang_Momentum
+            self.vector_MPL_ARROWS.append(Reference_Ang_Momentum)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
 
 
@@ -515,7 +515,7 @@ class LosGeometry(Axes):
 
             a = Arrow3D([0, vectors[0]], [0, vectors[1]], [0, vectors[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color="k")
             self.inset_axes.add_artist(a)
-            self.vector_MPL_ARROWS += a
+            self.vector_MPL_ARROWS.append(a)
             self.inset_axes.set_xlim([-np.max(vectors), np.max(vectors)])
             self.inset_axes.set_ylim([-np.max(vectors), np.max(vectors)])
             self.inset_axes.set_zlim([-np.max(vectors), np.max(vectors)])
@@ -540,7 +540,7 @@ class LosGeometry(Axes):
                 a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color = color)
                 self.inset_axes.scatter([], [], c=color, marker=r"$\longrightarrow$", s = 70, label = label )
                 self.inset_axes.add_artist(a)
-                self.vector_MPL_ARROWS += a
+                self.vector_MPL_ARROWS.append(a)
                 print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(labels.index(label)))
 
             if make_all_unitary:
