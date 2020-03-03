@@ -421,7 +421,7 @@ class LosGeometry(Axes):
 
     def draw_legend(self, axes):
         h, l = self.get_legend(axes)
-        axes.legend(h, l)
+        axes.legend(h, l, loc="upper right", markerscale=3, fancybox=True, framealpha=0.6)
 
 
     def plot_angularmomentum_vectors(self,
