@@ -162,6 +162,7 @@ class KSZMAP(Simulation):
 
         ax.set_xlabel(r'$x\quad \mathrm{[Mpc]}$')
         ax.set_ylabel(r'$z\quad \mathrm{[Mpc]}$')
+        self.draw_circle(ax, radius = cluster.r500, label = r'$R_{500\ true}$')
 
         observer = LosGeometry(fig)
         observer.set_inset_geometry(0.60, 0.12, 0.25, 0.25)
