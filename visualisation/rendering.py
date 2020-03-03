@@ -489,7 +489,7 @@ class LosGeometry(Axes):
             Reference_Ang_Momentum_color = '#E59813'
             Reference_Ang_Momentum = Arrow3D([0, 0], [0, 0], [0, 1], mutation_scale=20, lw=3, arrowstyle="-|>", color=Reference_Ang_Momentum_color)
             self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\mathbf{\longrightarrow}$", s=70,
-                                    label=r'$\mathrm{Reference~angular~momentum}$')
+                                    label=r'$\mathrm{Reference~} \mathbf{L}$')
             self.inset_axes.add_artist(Reference_Ang_Momentum)
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
 

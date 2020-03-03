@@ -110,10 +110,8 @@ class KSZMAP(Simulation):
                             extent=(-self.plotlimits, self.plotlimits,
                                     -self.plotlimits, self.plotlimits))
 
-        axes.axhline(y=0, linewidth=1., color='grey', linestyle='-', alpha = 0.3)
-        axes.axvline(x=0, linewidth=1., color='grey', linestyle='-', alpha = 0.3)
-
-
+        axes.axhline(y=0, linewidth=1., color='black', linestyle='-', alpha = 0.3)
+        axes.axvline(x=0, linewidth=1., color='black', linestyle='-', alpha = 0.3)
         return image
 
     def draw_circle(self, axes, centre: tuple = (0,0), radius: float = None, label: str = None):
@@ -172,8 +170,11 @@ class KSZMAP(Simulation):
             [2, 5, 6],
             [-3, -2, 0]
         ]
+        labels = [r'$\mathbf{L}_\mathrm{gas}$',
+                  r'$\mathbf{L}_\mathrm{DM}$',
+                  r'$\mathbf{L}_\mathrm{stars}$']
         observer.plot_angularmomentum_vectors(vectors,
-                                              labels=None,
+                                              labels=labels,
                                               plot_unitSphere=True,
                                               normalise_length=False,
                                               make_all_unitary=True)
