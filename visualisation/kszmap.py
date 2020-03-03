@@ -3,6 +3,7 @@ import os.path
 import numpy as np
 import matplotlib.colors as colors
 from matplotlib import pyplot as plt
+from matplotlib.patches import Circle
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
@@ -114,6 +115,13 @@ class KSZMAP(Simulation):
 
 
         return image
+
+    def draw_circle(self, axes, centre: tuple = (0,0), radius: float = None, label: str = None):
+
+        axes.add_artist(Circle(centre, radius=radius, color='black', fill=False, linestyle='--'))
+        axes.annotate(label, (centre[0], centre[1] + radius),
+                      va="center", ha="center",
+                      bbox=dict(boxstyle="round", facecolor="white", edgecolor='white', alpha=0.6))
 
     def make_cluster_label(self, axes: plt.Axes.axes):
         items_labels = r"""rkSZ PROJECTION MAP
