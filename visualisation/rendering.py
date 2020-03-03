@@ -20,6 +20,7 @@ from matplotlib import pyplot as plt
 import matplotlib.colors as colors
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
+from matplotlib.legend import Legend
 from matplotlib.patches import Circle
 from mpl_toolkits.mplot3d import proj3d
 from matplotlib.patches import FancyArrowPatch
@@ -291,6 +292,7 @@ class LosGeometry(Axes):
         self.los_vector = [[0, -2, 0], [0, -1, 0]]
         self.los_label = [0, -2.2, -0.2]
         self.observer_rotation_matrix = None
+        self.vector_MPL_ARROWS = []
 
     # Reading methods
     def get_figure(self):
@@ -307,6 +309,9 @@ class LosGeometry(Axes):
 
     def get_observer_rotation_matrix(self):
         return self.observer_rotation_matrix
+
+    def get_vector_MPL_ARROWS(self):
+        return self.vector_MPL_ARROWS
 
     # Writing methods
     def set_figure(self, new_figure: Figure) -> None:
@@ -413,11 +418,20 @@ class LosGeometry(Axes):
                                 label=r'$\mathrm{Line~of~sight}$')
         self.inset_axes.text(self.los_label[0], self.los_label[1], self.los_label[2], r'$\mathcal{O}$', color = LineOfSight_color)
         self.inset_axes.add_artist(LineOfSight)
+        self.vector_MPL_ARROWS += LineOfSight
         print('[ PLOT 3D VECTOR ]\t==>\tDrawing observer_LineOfSight.')
 
 
+    def get_legend(self, axes):
+
+        leg = Legend(axes, self.vector_MPL_ARROWS,
+                     loc="upper right", markerscale=3, fancybox=True, framealpha=0.6, frameon=False)
+        return leg
 
 
+    def draw_legend(self, axes):
+        leg = self.get_legend(axes)
+        axes.add_artist(leg)
 
 
     def plot_angularmomentum_vectors(self,
@@ -487,6 +501,7 @@ class LosGeometry(Axes):
             self.inset_axes.scatter([], [], c=Reference_Ang_Momentum_color, marker=r"$\mathbf{\longrightarrow}$", s=70,
                                     label=r'$\mathrm{Reference~angular~momentum}$')
             self.inset_axes.add_artist(Reference_Ang_Momentum)
+            self.vector_MPL_ARROWS += Reference_Ang_Momentum
             print('[ PLOT 3D VECTOR ]\t==>\tDrawing Reference_Ang_Momentum.')
 
 
@@ -500,6 +515,7 @@ class LosGeometry(Axes):
 
             a = Arrow3D([0, vectors[0]], [0, vectors[1]], [0, vectors[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color="k")
             self.inset_axes.add_artist(a)
+            self.vector_MPL_ARROWS += a
             self.inset_axes.set_xlim([-np.max(vectors), np.max(vectors)])
             self.inset_axes.set_ylim([-np.max(vectors), np.max(vectors)])
             self.inset_axes.set_zlim([-np.max(vectors), np.max(vectors)])
@@ -524,6 +540,7 @@ class LosGeometry(Axes):
                 a = Arrow3D([0, vector[0]], [0, vector[1]], [0, vector[2]], mutation_scale=20, lw=1, arrowstyle="-|>", color = color)
                 self.inset_axes.scatter([], [], c=color, marker=r"$\longrightarrow$", s = 70, label = label )
                 self.inset_axes.add_artist(a)
+                self.vector_MPL_ARROWS += a
                 print('[ PLOT 3D VECTOR ]\t==>\tDrawing vector {}'.format(labels.index(label)))
 
             if make_all_unitary:
@@ -542,7 +559,8 @@ class LosGeometry(Axes):
                 self.inset_axes.set_ylim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
                 self.inset_axes.set_zlim([-np.max(vectors_magnitudes), np.max(vectors_magnitudes)])
 
-        self.inset_axes.legend(loc="upper right", markerscale=3, fancybox=True, framealpha=0.6)
+        # self.inset_axes.legend(loc="upper right", markerscale=3, fancybox=True, framealpha=0.6)
+
 
 
 

@@ -169,6 +169,7 @@ class KSZMAP(Simulation):
                                               normalise_length=False,
                                               make_all_unitary=True)
 
+        observer.draw_legend(ax)
         plt.show()
 
 
