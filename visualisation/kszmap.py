@@ -8,7 +8,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 import swiftsimio_binder as swift
-from rendering import LosGeometry
+from losgeometry import LosGeometry
 from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
