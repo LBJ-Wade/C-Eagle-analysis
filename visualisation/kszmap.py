@@ -127,12 +127,12 @@ class KSZMAP(Simulation):
                         $z$ = {:.3f}
                         $R_{{500\ true}}$ = {:.2f} Mpc
                         Aperture radius = {:.2f} Mpc
-                        Map resolution = {:.4f} Mpc""".format(cluster.simulation,
+                        Map resolution = {:.4f} kpc""".format(cluster.simulation,
                                                               cluster.clusterID,
                                                               cluster.z,
                                                               cluster.r500,
                                                               self.aperture,
-                                                              2*self.plotlimits/self.resolution)
+                                                              2*self.plotlimits/self.resolution * 1e3)
 
         print(items_labels)
         axes.text(0.03, 0.97, items_labels,
@@ -190,7 +190,10 @@ if __name__ == '__main__':
     cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
 
     # Create a KSZMAP object and link it to the cluster object
-    test_map = KSZMAP(cluster)
+    test_map = KSZMAP(cluster,
+                      resolution = 300,
+                      aperture = cluster.r2500,
+                      plotlimits = 3*cluster.r2500 )
     test_map.info()
     # Test the map output
     test_map.test()
