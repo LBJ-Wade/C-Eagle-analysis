@@ -142,14 +142,13 @@ class KSZMAP(Simulation):
                   size = 20)
 
 
-    def test(self):
+    def make_plot(self):
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
         # Annotate cluster map
         self.make_cluster_label(ax)
         panel = self.make_panel(ax)
-
 
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
@@ -180,14 +179,14 @@ class KSZMAP(Simulation):
                                               make_all_unitary=True)
 
         observer.draw_legend(ax)
-        plt.show()
+
 
 
 if __name__ == '__main__':
     exec(open('visualisation/light_mode.py').read())
 
     # Create a cluster object
-    cluster = Cluster(simulation_name='celr_e', clusterID=0, redshift='z000p000')
+    cluster = Cluster(simulation_name='ceagle', clusterID=20, redshift='z000p000')
 
     # Create a KSZMAP object and link it to the cluster object
     test_map = KSZMAP(cluster,
@@ -196,4 +195,5 @@ if __name__ == '__main__':
                       plotlimits = 3*cluster.r2500 )
     test_map.info()
     # Test the map output
-    test_map.test()
+    test_map.make_plot()
+    plt.show()
