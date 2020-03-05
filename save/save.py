@@ -74,7 +74,7 @@ class SimulationOutput(Simulation):
                 print('{}{}'.format(subindent, f))
 
     def print_directory_tree(self):
-        self.list_files(self.pathSave)
+        self.list_files(os.path.join(self.pathSave, self.simulation_name))
 
     def dir_tree_to_dict(self, path_):
         file_token = ''
