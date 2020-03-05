@@ -235,10 +235,8 @@ class Mixin:
             The array with 100 different apertures, ranging from 0.5 R2500 to 5*R200
             NOTE: the apertures are returned in the PHYSICAL frame.
         """
-        r2500 = self.group_r2500()
-        r200 = self.group_r200()
-        if r2500 > 0. and r200 > 0.:
-            apertures = np.logspace(np.log10(0.5 * r2500), np.log10(5 * r200), 20)
+        if self.r2500 > 0. and self.r200 > 0.:
+            apertures = np.logspace(np.log10(0.5 * self.r2500), np.log10(5 * self.r200), 20)
         else:
             apertures = -1
             print(ValueError)
