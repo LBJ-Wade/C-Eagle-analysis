@@ -42,8 +42,10 @@ class SimulationOutput(Simulation):
 
         if not os.path.exists(os.path.join(self.pathSave, self.simulation_name)):
             os.makedirs(os.path.join(self.pathSave, self.simulation_name))
-
         print(f'\t{self.directory_levels[0]} checked.')
+
+        counter = 0
+        length_operation = len(self.clusterIDAllowed)*len(self.redshiftAllowed)
 
         for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
 
@@ -53,6 +55,9 @@ class SimulationOutput(Simulation):
                                     f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
             if not os.path.exists(out_path):
                 os.makedirs(out_path)
+
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
         print(f'\t{self.directory_levels[1]} checked.')
         print(f'\t{self.directory_levels[2]} checked.')
