@@ -66,14 +66,17 @@ class SimulationOutput(Simulation):
     @staticmethod
     def list_files(startpath):
         for root, dirs, files in os.walk(startpath):
+            dirs.sort()
             level = root.replace(startpath, '').count(os.sep)
             indent = ' ' * 4 * (level)
             print('{}{}/'.format(indent, os.path.basename(root)))
             subindent = ' ' * 4 * (level + 1)
+            files.sort()
             for f in files:
                 print('{}{}'.format(subindent, f))
 
     def print_directory_tree(self):
+        print(self.pathSave)
         self.list_files(os.path.join(self.pathSave, self.simulation_name))
 
     def dir_tree_to_dict(self, path_):
