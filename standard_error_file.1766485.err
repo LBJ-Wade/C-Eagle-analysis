@@ -1,0 +1,1593 @@
+-> Unloading module intel_mpi because compiler has been unloaded
+-> Unloading module intel_mpi because compiler has been unloaded
+--------------------------------------------------------------------------
+A process has executed an operation involving a call to the
+"fork()" system call to create a child process.  Open MPI is currently
+operating in a condition that could result in memory corruption or
+other system errors; your job may hang, crash, or produce silent
+data corruption.  The use of fork() (or system() or other calls that
+create child processes) is strongly discouraged.
+
+The process that invoked fork was:
+
+  Local host:          [[19385,1],23] (PID 4951)
+
+If you are *absolutely sure* that your application will successfully
+and correctly survive a call to fork(), you may disable this warning
+by setting the mpi_warn_on_fork MCA parameter to 0.
+--------------------------------------------------------------------------
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 503, in get_text_width_height_descent
+    page = next(iter(dvi))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/dviread.py", line 254, in __iter__
+    have_page = self._read()
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/dviread.py", line 315, in _read
+    self._dtable[byte](self, byte)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/dviread.py", line 171, in wrapper
+    return method(self, *[f(self, byte-min) for f in get_args])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/dviread.py", line 460, in _fnt_def
+    self._fnt_def_real(k, c, s, d, a, l)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/dviread.py", line 465, in _fnt_def_real
+    tfm = _tfmfile(fontname)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/dviread.py", line 1057, in _fontfile
+    filename = find_tex_file(texname + suffix)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/dviread.py", line 1045, in find_tex_file
+    stderr=subprocess.PIPE)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'kpsewhich': 'kpsewhich'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+[m6498.pri.cosma7.alces.network:16916] 29 more processes have sent help message help-opal-runtime.txt / opal_init:warn-fork
+[m6498.pri.cosma7.alces.network:16916] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+Traceback (most recent call last):
+  File "./visualisation/phasediagram.py", line 191, in <module>
+    test_loop_apertures(rank)
+  File "./visualisation/phasediagram.py", line 161, in test_loop_apertures
+    t_rho_diagram.setup_plot()
+  File "./visualisation/phasediagram.py", line 125, in setup_plot
+    plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/pyplot.py", line 710, in savefig
+    res = fig.savefig(*args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2035, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backend_bases.py", line 2263, in print_figure
+    **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 513, in print_png
+    FigureCanvasAgg.draw(self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 433, in draw
+    self.figure.draw(self.renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/artist.py", line 55, in draw_wrapper
+    return draw(artist, renderer, *args, **kwargs)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 1466, in draw
+    **self._tight_parameters)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/figure.py", line 2275, in tight_layout
+    pad=pad, h_pad=h_pad, w_pad=w_pad, rect=rect)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 328, in get_tight_layout_figure
+    pad=pad, h_pad=h_pad, w_pad=w_pad)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 114, in auto_adjust_subplotpars
+    tight_bbox_raw = union([ax.get_tightbbox(renderer) for ax in subplots
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/tight_layout.py", line 115, in <listcomp>
+    if ax.get_visible()])
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/axes/_base.py", line 4164, in get_tightbbox
+    bb.append(self.title.get_window_extent(renderer))
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 922, in get_window_extent
+    bbox, info, descent = self._get_layout(self._renderer)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/text.py", line 309, in _get_layout
+    ismath=ismath)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/backends/backend_agg.py", line 232, in get_text_width_height_descent
+    s, fontsize, renderer=self)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 501, in get_text_width_height_descent
+    dvifile = self.make_dvi(tex, fontsize)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 365, in make_dvi
+    texfile], tex)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/site-packages/matplotlib/texmanager.py", line 335, in _run_checked_subprocess
+    stderr=subprocess.STDOUT)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 336, in check_output
+    **kwargs).stdout
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 403, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 709, in __init__
+    restore_signals, start_new_session)
+  File "/cosma/local/Python/3.6.5/lib/python3.6/subprocess.py", line 1344, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'latex': 'latex'
+--------------------------------------------------------------------------
+mpiexec detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[19385,1],20]
+  Exit code:    1
+--------------------------------------------------------------------------
