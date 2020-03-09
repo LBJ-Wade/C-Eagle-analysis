@@ -87,10 +87,12 @@ class SimulationOutput(Simulation):
             return tree  # note we discontinue iteration trough os.walk
 
 
+
 if __name__ == '__main__':
 
-    output_sim = SimulationOutput(simulation_name='ceagle')
-    output_sim.print_directory_tree()
+    for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
+        SimulationOutput(simulation_name = sim)
+
 
 
 
