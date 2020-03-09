@@ -12,13 +12,12 @@ or MB and it is possible to transfer it locally for further analysis.
 -------------------------------------------------------------------
 """
 
-import save
 
+import sys
 from mpi4py import MPI
+import os.path
 import itertools
 import numpy as np
-import sys
-import os.path
 import h5py
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
@@ -27,13 +26,19 @@ from cluster import Simulation, Cluster
 from _cluster_retriever import redshift_str2num, redshift_num2str
 from testing import angular_momentum
 from testing import mergers
+from save import save
 import progressbar
-
 
 __HDF5_SUBFOLDER__ = 'FOF'
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
+
+class FOFOutput(save.SimulationOutput):
+
+    def __init__(self, cluster):
+
+        save.SimulationOutput.__init__()
 
 
 #####################################################
