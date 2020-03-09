@@ -41,6 +41,7 @@ class FOFOutput(save.SimulationOutput):
         save.SimulationOutput.__init__()
 
 
+
 #####################################################
 #													#
 #				D E C O R A T O R S  				#
