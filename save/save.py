@@ -91,6 +91,7 @@ if __name__ == '__main__':
 
     output_sim = SimulationOutput(simulation_name='ceagle')
     output_sim.print_directory_tree()
+    print('Hello')
 
 
 
