@@ -39,9 +39,54 @@ size = comm.Get_size()
 
 class FOFOutput(SimulationOutput):
 
-    def __init__(self):
-        pass
-        pass
+    def __init__(self, cluster: Cluster = None):
+        
+        assert cluster is not None, "Cluster argument cannot be empty."
+        SimulationOutput.__init__(simulation_name = cluster.simulation_name)
+
+        self.out_path = os.path.join(cluster.pathSave,
+                                     cluster.simulation_name,
+                                     f'halo{cluster.halo_Num(cluster.clusterID)}',
+                                     f'halo{cluster.halo_Num(cluster.clusterID)}_{cluster.redshift}')
+
+    
+    def make_hdf5_file(self, filename: str) -> h5py.File:
+
+        if os.path.isfile(os.path.join(self.out_path, file_name)):
+            os.remove(os.path.join(self.out_path, file_name))
+            print(f'[ FOFOutput ]\t==> Deleting the old version of {filename}...')
+
+        with h5py.File(os.path.join(self.out_path, file_name), "w") as file:
+            self.filename = file_name
+    
+    def make_hdf5_dataset(self, 
+                            datasetname: str, 
+                            subfolder: str = None, 
+                            data: np.ndarray = None, 
+                            attributes: str = None):
+        
+        assert datasetname is not None, "`datasetname` cannot be empty."
+        assert data is not None, "`data` cannot be empty."
+        assert os.path.isfile(os.path.join(self.out_path, self.filename)), f"hdf5 file {self.filename} does not exist."
+        with h5py.File(os.path.join(self.out_path, self.filename)), "r+") as file:
+
+            # Set the base group equal to the file
+            group = file
+
+            if subfolder is not None:
+                file.create_group(subfolder)
+                group = file[subfolder]
+            
+            dataset = group.create_dataset(datasetname, data = data)
+            if attributes is not None:
+                dataset.attrs['Description'] = attributes
+
+
+        
+
+
+            
+        
 
         
 
