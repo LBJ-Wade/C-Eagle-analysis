@@ -11,15 +11,14 @@ This process of data reduction level condenses data down to a few KB
 or MB and it is possible to transfer it locally for further analysis.
 -------------------------------------------------------------------
 """
-
-import save
-
+import sys
+import os
 from mpi4py import MPI
 import itertools
 import numpy as np
-import sys
-import os.path
 import h5py
+
+import save
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
@@ -29,12 +28,22 @@ from testing import angular_momentum
 from testing import mergers
 import progressbar
 
+from save.save import SimulationOutput
+
 
 __HDF5_SUBFOLDER__ = 'FOF'
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
+
+class FOFOutput(SimulationOutput):
+
+    def __init__(self):
+        pass
+        pass
+
+        
 
 #####################################################
 #													#
