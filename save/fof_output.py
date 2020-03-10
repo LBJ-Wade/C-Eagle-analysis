@@ -218,6 +218,7 @@ class FOFDatagen:
         attributes = {'Description' : 'R_crits',
                       'Units' : 'Mpc'}
         out = FOFOutput(self.cluster, filename = 'R_crit.hdf5', data = data, attrs = attributes)
+        out.makefile()
 
 
 if __name__ == '__main__':
