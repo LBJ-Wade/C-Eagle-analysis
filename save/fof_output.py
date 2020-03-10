@@ -221,7 +221,7 @@ class FOFOutput(save.SimulationOutput):
 
 class FOFDatagen:
 
-    get_directory = FOFOutput.get_directory()
+    get_directory = property(FOFOutput.get_directory())
 
     def __init__(self, cluster: Cluster):
 
