@@ -237,13 +237,40 @@ class FOFDatagen(FOFOutput):
         out = FOFOutput(self.cluster, filename = 'R_crit.hdf5', data = data, attrs = attributes)
         out.makefile()
 
+    def push_apertures(self):
+        data = {'/Apertures': np.array(self.cluster.generate_apertures)}
+        attributes = {'Description': 'Aperture radii in comoving coordinates',
+                      'Units': 'Mpc'}
+        out = FOFOutput(self.cluster, filename='apertures.hdf5', data=data, attrs=attributes)
+        out.makefile()
+
+    def push_mass(self):
+        data = {'/R_200_crit': np.array([self.cluster.r200])}
+        attributes = {'Description': 'R_crits',
+                      'Units': 'Mpc'}
+        out = FOFOutput(self.cluster, filename='R_crit.hdf5', data=data, attrs=attributes)
+        out.makefile()
+
+    def push_centre_of_mass(self):
+        pass
+
+    def push_angular_momentum_n_mass(self):
+        pass
+
+    def push_angmom_alignment_matrix(self):
+        pass
+
+    def push_merging_indices(self):
+        pass
+
+
 
 if __name__ == '__main__':
 
     cluster = Cluster(simulation_name = 'ceagle', clusterID = 0, redshift = 'z000p000')
     out = FOFDatagen(cluster)
     out.push_R_crit()
-    print(out.get_directory())
+    out.push_apertures()
 
 
 
