@@ -260,8 +260,8 @@ class FOFDatagen(FOFOutput):
             part_mass_aperture = self.cluster.group_mass(out_allPartTypes=True, aperture_radius=r)
             tot_mass_aperture = np.sum(part_mass_aperture)
 
-            part_mass = np.concatenate((part_mass, [part_mass_aperture]), axis=0)
-            total_mass = np.concatenate((total_mass, [tot_mass_aperture]), axis=0)
+            part_mass = np.concatenate((part_mass, part_mass_aperture[:, None]), axis=0)
+            total_mass = np.concatenate((total_mass, tot_mass_aperture[:, None]), axis=0)
 
         data = {'/Total_mass': np.array(total_mass),
                 '/ParType0_mass' : np.array(part_mass)[:,0],
