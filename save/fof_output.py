@@ -39,6 +39,7 @@ class FOFOutput(save.SimulationOutput):
     def __init__(self, cluster):
 
         save.SimulationOutput.__init__()
+        pass
 
 
 
