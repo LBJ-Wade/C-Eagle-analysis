@@ -89,8 +89,6 @@ class SimulationOutput(Simulation):
 
 
 if __name__ == '__main__':
-
-
     for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
         SimulationOutput(simulation_name = sim)
 
