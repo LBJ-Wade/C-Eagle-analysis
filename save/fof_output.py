@@ -93,6 +93,7 @@ class FOFOutput(save.SimulationOutput):
     @staticmethod
     def groups_from_path(internal_path: str):
         l = internal_path.split('/')
+        print(list(filter(lambda a: a is not '', l)))
         return list(filter(lambda a: a is not '', l))
 
     @staticmethod
