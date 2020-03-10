@@ -221,16 +221,16 @@ class FOFOutput(save.SimulationOutput):
 
 class FOFDatagen:
 
-    get_directory = property(FOFOutput.get_directory())
-
     def __init__(self, cluster: Cluster):
 
         self.cluster = cluster
-        self.FOFDirectory = os.path.join(cluster.pathSave,
-                                         cluster.simulation_name,
-                                         f'halo{self.halo_Num(cluster.clusterID)}',
-                                         f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
+        self.directory = os.path.join(cluster.pathSave,
+                                     cluster.simulation_name,
+                                     f'halo{self.halo_Num(cluster.clusterID)}',
+                                     f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
 
+    def get_directory(self):
+        return self.directory
 
     def push_R_crit(self):
         data = {'/R_200_crit' : np.array([self.cluster.r200]),
