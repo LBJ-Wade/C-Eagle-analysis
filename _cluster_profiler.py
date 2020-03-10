@@ -109,9 +109,9 @@ class Mixin:
             mass = mass[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
             Mtot_PartTypes[idx] = np.sum(mass)
+            print(Mtot_PartTypes)
 
         if out_allPartTypes:
-            print(Mtot_PartTypes)
             return Mtot_PartTypes
         else:
             return np.sum(Mtot_PartTypes)
