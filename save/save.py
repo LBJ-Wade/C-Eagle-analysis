@@ -22,6 +22,7 @@ from cluster import Simulation, Cluster
 import progressbar
 
 
+
 class SimulationOutput(Simulation):
 
     # How the directory is structured
@@ -86,10 +87,18 @@ class SimulationOutput(Simulation):
             return tree  # note we discontinue iteration trough os.walk
 
 
+
 if __name__ == '__main__':
-    
+
+<<<<<<< HEAD
     output_sim = SimulationOutput(simulation_name='ceagle')
     output_sim.print_directory_tree()
+    print('Hello')
+=======
+    for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
+        SimulationOutput(simulation_name = sim)
+
+>>>>>>> 4188138b4ca47f5c056bf42fbab650b4c6d4dda8
 
 
 
