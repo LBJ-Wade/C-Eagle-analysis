@@ -150,7 +150,7 @@ class FOFOutput(save.SimulationOutput):
 
             nested_groups = self.groups_from_path(internal_path)
             if len(nested_groups) == 1:
-                FOFfile.create_dataset(nested_groups[-1], data=dataset_content)
+                FOFfile.create_dataset(nested_groups[0], data=dataset_content)
             else:
                 for nested_group in nested_groups[:-1]:
                     g = FOFfile.create_group(nested_group)
