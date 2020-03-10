@@ -252,22 +252,22 @@ class FOFDatagen(FOFOutput):
 
     def push_mass(self):
 
-        ParTypes_mass = np.zeros((0, 4), dtype=np.float)
-        Total_mass = np.zeros(0, dtype=np.float)
+        part_mass = np.zeros((0, 4), dtype=np.float)
+        total_mass = np.zeros(0, dtype=np.float)
 
         for r in self.cluster.generate_apertures():
 
-            ParTypes_mass_aperture = self.cluster.group_mass(out_allPartTypes=True, aperture_radius=r)
-            Total_mass_aperture = np.sum(Total_mass)
+            part_mass_aperture = self.cluster.group_mass(out_allPartTypes=True, aperture_radius=r)
+            tot_mass_aperture = np.sum(part_mass_aperture)
 
-            ParTypes_mass = np.concatenate((ParTypes_mass, [ParTypes_mass_aperture]), axis=0)
-            Total_mass = np.concatenate((Total_mass, [Total_mass_aperture]), axis=0)
+            part_mass = np.concatenate((part_mass, [part_mass_aperture]), axis=0)
+            total_mass = np.concatenate((total_mass, [tot_mass_aperture]), axis=0)
 
-        data = {'/Total_mass': np.array(Total_mass),
-                '/ParType0_mass' : np.array(ParTypes_mass)[:,0],
-                '/ParType1_mass' : np.array(ParTypes_mass)[:,1],
-                '/ParType4_mass' : np.array(ParTypes_mass)[:,4],
-                '/ParType5_mass' : np.array(ParTypes_mass)[:,5]}
+        data = {'/Total_mass': np.array(total_mass),
+                '/ParType0_mass' : np.array(part_mass)[:,0],
+                '/ParType1_mass' : np.array(part_mass)[:,1],
+                '/ParType4_mass' : np.array(part_mass)[:,4],
+                '/ParType5_mass' : np.array(part_mass)[:,5]}
 
         attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
         for each particle type (in the order 0, 1, 4, 5).
