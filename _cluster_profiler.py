@@ -87,7 +87,7 @@ class Mixin:
 
     def group_mass(self, out_allPartTypes=False, aperture_radius=None):
 
-        Mtot_PartTypes = np.zeros((0,), dtype=np.float)
+        Mtot_PartTypes = np.zeros((1,), dtype=np.float)
 
         for part_type in ['0', '1', '4', '5']:
 
@@ -110,7 +110,9 @@ class Mixin:
             assert mass.__len__() > 0, "Array is empty - check filtering."
 
             sum_of_masses = np.sum(mass)
-            Mtot_PartTypes = np.concatenate(Mtot_PartTypes, [sum_of_masses], axis=0)
+            Mtot_PartTypes = np.concatenate(Mtot_PartTypes, sum_of_masses.reshape((1,)), axis=0)
+
+        Mtot_PartTypes = np.delete(Mtot_PartTypes, 0, axis=0)
 
         if out_allPartTypes:
             return Mtot_PartTypes
