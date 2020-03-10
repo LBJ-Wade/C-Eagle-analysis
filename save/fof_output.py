@@ -221,12 +221,15 @@ class FOFOutput(save.SimulationOutput):
 
 class FOFDatagen:
 
-    directory = FOFOutput.FOFDirectory
     get_directory = FOFOutput.get_directory()
 
     def __init__(self, cluster: Cluster):
 
         self.cluster = cluster
+        self.FOFDirectory = os.path.join(cluster.pathSave,
+                                         cluster.simulation_name,
+                                         f'halo{self.halo_Num(cluster.clusterID)}',
+                                         f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
 
 
     def push_R_crit(self):
