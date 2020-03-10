@@ -257,7 +257,7 @@ class FOFDatagen(FOFOutput):
 
         for r in self.cluster.generate_apertures():
 
-            part_mass_aperture = self.cluster.group_mass(out_allPartTypes=True, aperture_radius=r)
+            part_mass_aperture = self.cluster.group_mass(out_allPartTypes=False, aperture_radius=r)
             print(part_mass_aperture)
             # part_mass = np.concatenate((part_mass, part_mass_aperture.reshape((1,4))), axis=0)
             # print(part_mass)
