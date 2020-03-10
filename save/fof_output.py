@@ -212,9 +212,9 @@ class FOFDatagen:
 
 
     def push_R_crit(self):
-        data = {'/R_200_crit' : np.array(self.cluster.r200),
-                '/R_500_crit' : np.array(self.cluster.r500),
-                '/R_2500_crit' : np.array(self.cluster.r2500)}
+        data = {'R_200_crit' : np.array(self.cluster.r200),
+                'R_500_crit' : np.array(self.cluster.r500),
+                'R_2500_crit' : np.array(self.cluster.r2500)}
         attributes = {'Description' : 'R_crits',
                       'Units' : 'Mpc'}
         out = FOFOutput(self.cluster, filename = 'R_crit.hdf5', data = data, attrs = attributes)
