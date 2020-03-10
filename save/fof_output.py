@@ -12,8 +12,6 @@ or MB and it is possible to transfer it locally for further analysis.
 -------------------------------------------------------------------
 """
 
-import save
-
 from mpi4py import MPI
 import itertools
 import numpy as np
@@ -28,12 +26,215 @@ from _cluster_retriever import redshift_str2num, redshift_num2str
 from testing import angular_momentum
 from testing import mergers
 import progressbar
+from save import save
 
 
 __HDF5_SUBFOLDER__ = 'FOF'
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
+
+class FOFOutput(save.SimulationOutput):
+
+    def __init__(self,
+                 cluster: Cluster,
+                 filename: str = None,
+                 data: dict = None,
+                 attrs: dict = None):
+        """
+        Initialization of the FOFOutput class.
+
+        :param cluster: expect Cluster object
+            The FOFOutput is unique to the Cluster object and communicates with the output directory with
+            specific halo number and redshift.
+
+        :param filename: expect str
+            The filename should end with `.hdf5` and represents the output file for storing the computed
+            data.
+
+        :param data: expect dict
+            The data keyword accepts a dictionary for the input data> It should be of the form:
+            {'internal/path/groups/dataset_name' : data_numpy_array,
+             'internal/path/groups/dataset_name' : data_numpy_array,
+                            ...                  :     ...         }
+            The input of a dictionary is optional (default set to None).
+
+        :param attrs: expect dict
+            The attributes parsed into the attrs keyword are associated to the whole file. The dictionary
+            should be of the format:
+            {`Description` : ```Something that describe the datasets```,
+             `Units`       : `meters second^-1`}
+        """
+
+        super(save.SimulationOutput, self).__init__(simulation_name=cluster.simulation_name)
+
+        assert filename.endswith('.hdf5'), f"Filename must end with `.hdf5` extension. Got {filename} instead."
+
+        self.filename = filename
+        self.data = data
+        self.attrs = attrs
+        self.FOFDirectory = os.path.join(cluster.pathSave,
+                                        cluster.simulation_name,
+                                        f'halo{self.halo_Num(cluster.clusterID)}',
+                                        f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
+
+
+    def makefile(self):
+        dataset_paths, dataset_values = self.split_data_dict(self.data)
+        self.make_hdf5file(dataset_paths = dataset_paths,  dataset_values = dataset_values)
+
+    def push(self, additional_datasets):
+        dataset_paths, dataset_values = self.split_data_dict(additional_datasets)
+        self.add_to_hdf5file(dataset_paths = dataset_paths,  dataset_values = dataset_values)
+
+    @staticmethod
+    def groups_from_path(internal_path: str):
+        return internal_path.split('/')
+
+    @staticmethod
+    def split_data_dict(data_dict: dict):
+        return data_dict.keys(), data_dict.values()
+
+    def make_hdf5file(self, dataset_paths: list = None, dataset_values: list = None) -> None:
+        """
+        Function that makes a new hdf5 file and pushes data into it. It is to be used in conjunction with
+        the split_data_dict static method and the self.data attribute member.
+
+        :param dataset_paths: expect list of strings with `/` separators
+            This is the list of paths internal to the hdf5 file from the base directory to the dataset
+            name. Example:
+            ['internal/path/groups/dataset_name',
+             'internal/path/groups/dataset_name',
+                            ...                 ]
+            If only one path needed, parse ['only/internal/path/groups/dataset_name'].
+            The list must contain at least one path or one dataset and tha string cannot end with a separator,
+            as this would indicate an internal directory with no dataset name specified.
+
+        :param dataset_values: expect list of np.arrays
+            This is the list of np.arrays, uniquely matched to the datasets internal paths.
+            The format is similar to the dataset path argument. Since they should come from `self.data` attribute,
+            they should have the same length by definition.
+
+        :return: None
+        """
+
+        assert dataset_paths is not None and len(dataset_paths) != 0, ("`dataset_path` not valid. Expected at least " \
+                                                                      f"one list element, got {len(dataset_paths)}.")
+
+        assert dataset_values is not None and len(dataset_values) != 0, ("`dataset_values` not valid. Expected at least " \
+                                                                           f"one list element, got {len(dataset_values)}.")
+
+
+        # Remove file if already exists and create a new one
+        if os.path.isfile(os.path.join(self.FOFDirectory, self.filename)):
+            os.remove(os.path.join(self.FOFDirectory, self.filename))
+            print(f'[ FOFOutput ]\t==> Removed old {self.filename} file.')
+
+        # Create file and optional groups within it
+        FOFfile = h5py.File(os.path.join(self.FOFDirectory, self.filename), 'w')
+        print(f'[ FOFOutput ]\t==> Created new {self.filename} file.')
+
+        # Push the attributes to file, if any
+        if self.attrs is not None and len(self.attrs.keys()) > 0:
+            for key, text in zip(self.attrs.keys(), self.attrs.values()):
+                FOFfile.attrs[key] = text
+
+        for internal_path, dataset_content in zip(dataset_paths, dataset_values):
+
+            assert not internal_path.endswith('/'), "Invalid hdf5 internal path"
+            assert type(dataset_content) is np.ndarray, "Can only push numpy.ndarrays into hdf5 files."
+
+            nested_groups = self.groups_from_path(internal_path)
+            for nested_group in nested_groups[:-1]:
+                g = FOFfile.create_group(nested_group)
+                g.create_dataset(nested_groups[-1], data = dataset_content)
+
+            print(f'[ FOFOutput ]\t==> Created {internal_path} dataset in {self.filename} file.')
+
+        FOFfile.close()
+
+
+    def add_to_hdf5file(self, dataset_paths: list = None, dataset_values: list = None) -> None:
+        """
+        Function that takes an existing hdf5 file and appends new datasets into it. It is to be used in conjunction with
+        the split_data_dict static method and the self.data attribute member.
+
+        :param dataset_paths: expect list of strings with `/` separators
+            This is the list of paths internal to the hdf5 file from the base directory to the dataset
+            name. Example:
+            ['internal/path/groups/dataset_name',
+             'internal/path/groups/dataset_name',
+                            ...                 ]
+            If only one path needed, parse ['only/internal/path/groups/dataset_name'].
+            The list must contain at least one path or one dataset and tha string cannot end with a separator,
+            as this would indicate an internal directory with no dataset name specified.
+
+        :param dataset_values: expect list of np.arrays
+            This is the list of np.arrays, uniquely matched to the datasets internal paths.
+            The format is similar to the dataset path argument. Since they should come from `self.data` attribute,
+            they should have the same length by definition.
+
+        :return: None
+        """
+
+        assert dataset_paths is not None and len(dataset_paths) != 0, ("`dataset_path` not valid. Expected at least " \
+                                                                        f"one list element, got {len(dataset_paths)}.")
+
+        assert dataset_values is not None and len(dataset_values) != 0, ("`dataset_values` not valid. Expected at least " \
+                                                                        f"one list element, got {len(dataset_values)}.")
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, self.filename)), f"Target hdf5 file must exist in {self.FOFDirectory}"
+
+        # Open file and optional groups within it
+        FOFfile = h5py.File(os.path.join(self.FOFDirectory, self.filename), 'r+')
+        print(f'[ FOFOutput ]\t==> Opening {self.filename} file.')
+
+        for internal_path, dataset_content in zip(dataset_paths, dataset_values):
+
+            assert not internal_path.endswith('/'), "Invalid hdf5 internal path"
+            assert type(dataset_content) is np.ndarray, "Can only push numpy.ndarrays into hdf5 files."
+
+            nested_groups = self.groups_from_path(internal_path)
+            for nested_group in nested_groups[:-1]:
+                g = FOFfile.create_group(nested_group)
+                g.create_dataset(nested_groups[-1], data=dataset_content)
+
+            print(f'[ FOFOutput ]\t==> Created {internal_path} dataset in {self.filename} file.')
+
+        FOFfile.close()
+
+
+
+
+class FOFDatagen:
+
+    def __init__(self, cluster: Cluster):
+
+        self.cluster = cluster
+
+
+    def push_R_crit(self):
+        data = {'/R_200_crit' : np.array(self.cluster.r200),
+                '/R_500_crit' : np.array(self.cluster.r500),
+                '/R_2500_crit' : np.array(self.cluster.r2500)}
+        attributes = {'Description' : 'R_crits',
+                      'Units' : 'Mpc'}
+        out = FOFOutput(self.cluster, filename = 'R_crit.hdf5', data = data, attrs = attributes)
+
+
+if __name__ == '__main__':
+
+    cluster = Cluster(simulation_name = 'ceagle', clusterID = 0, redshift = 'z000p000')
+    FOFDatagen(cluster).push_R_crit()
+
+
+
+
+
+
+
+
+
 
 
 #####################################################
