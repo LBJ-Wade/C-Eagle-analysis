@@ -79,14 +79,6 @@ class FOFOutput(save.SimulationOutput):
                                         f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
 
 
-    def makefile(self):
-        dataset_paths, dataset_values = self.split_data_dict(self.data)
-        self.make_hdf5file(dataset_paths = dataset_paths,  dataset_values = dataset_values)
-
-    def push(self, additional_datasets):
-        dataset_paths, dataset_values = self.split_data_dict(additional_datasets)
-        self.add_to_hdf5file(dataset_paths = dataset_paths,  dataset_values = dataset_values)
-
     @staticmethod
     def groups_from_path(internal_path: str):
         return internal_path.split('/')
@@ -204,7 +196,13 @@ class FOFOutput(save.SimulationOutput):
         FOFfile.close()
 
 
+    def makefile(self):
+        data = self.split_data_dict(self.data)
+        self.make_hdf5file(dataset_paths = list(data[0]),  dataset_values = list(data[1]))
 
+    def push(self, additional_datasets):
+        data = self.split_data_dict(additional_datasets)
+        self.add_to_hdf5file(dataset_paths = list(data[0]),  dataset_values = list(data[1]))
 
 class FOFDatagen:
 
