@@ -78,6 +78,17 @@ class FOFOutput(save.SimulationOutput):
                                         f'halo{self.halo_Num(cluster.clusterID)}',
                                         f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
 
+    def get_filename(self):
+        return self.filename
+
+    def get_directory(self):
+        return self.FOFDirectory
+
+    def get_data(self):
+        return self.data
+
+    def get_attrs(self):
+        return self.attrs
 
     @staticmethod
     def groups_from_path(internal_path: str):
@@ -210,6 +221,9 @@ class FOFOutput(save.SimulationOutput):
 
 class FOFDatagen:
 
+    directory = FOFOutput.FOFDirectory
+    get_directory = FOFOutput.get_directory()
+
     def __init__(self, cluster: Cluster):
 
         self.cluster = cluster
@@ -228,7 +242,9 @@ class FOFDatagen:
 if __name__ == '__main__':
 
     cluster = Cluster(simulation_name = 'ceagle', clusterID = 0, redshift = 'z000p000')
-    FOFDatagen(cluster).push_R_crit()
+    out = FOFDatagen(cluster)
+    out.push_R_crit()
+    print(out.get_directory())
 
 
 
