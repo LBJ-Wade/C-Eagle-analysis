@@ -81,7 +81,8 @@ class FOFOutput(save.SimulationOutput):
 
     @staticmethod
     def groups_from_path(internal_path: str):
-        return internal_path.split('/')
+        l = internal_path.split('/')
+        return list(filter(lambda a: a is not '', l))
 
     @staticmethod
     def split_data_dict(data_dict: dict):
@@ -137,9 +138,12 @@ class FOFOutput(save.SimulationOutput):
             assert type(dataset_content) is np.ndarray, "Can only push numpy.ndarrays into hdf5 files."
 
             nested_groups = self.groups_from_path(internal_path)
-            for nested_group in nested_groups[:-1]:
-                g = FOFfile.create_group(nested_group)
-                g.create_dataset(nested_groups[-1], data = dataset_content)
+            if len(nested_groups) == 1:
+                FOFfile.create_dataset(nested_groups[-1], data=dataset_content)
+            else:
+                for nested_group in nested_groups[:-1]:
+                    g = FOFfile.create_group(nested_group)
+                    g.create_dataset(nested_groups[-1], data = dataset_content)
 
             print(f'[ FOFOutput ]\t==> Created {internal_path} dataset in {self.filename} file.')
 
@@ -212,9 +216,9 @@ class FOFDatagen:
 
 
     def push_R_crit(self):
-        data = {'R_200_crit' : np.array([self.cluster.r200]),
-                'R_500_crit' : np.array([self.cluster.r500]),
-                'R_2500_crit' : np.array([self.cluster.r2500])}
+        data = {'/R_200_crit' : np.array([self.cluster.r200]),
+                '/R_500_crit' : np.array([self.cluster.r500]),
+                '/R_2500_crit' : np.array([self.cluster.r2500])}
         attributes = {'Description' : 'R_crits',
                       'Units' : 'Mpc'}
         out = FOFOutput(self.cluster, filename = 'R_crit.hdf5', data = data, attrs = attributes)
