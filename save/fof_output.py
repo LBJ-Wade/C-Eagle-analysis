@@ -93,7 +93,6 @@ class FOFOutput(save.SimulationOutput):
     @staticmethod
     def groups_from_path(internal_path: str):
         l = internal_path.split('/')
-        print(list(filter(lambda a: a is not '', l)))
         return list(filter(lambda a: a is not '', l))
 
     @staticmethod
@@ -239,7 +238,7 @@ class FOFDatagen(FOFOutput):
         out.makefile()
 
     def push_apertures(self):
-        data = {'/Apertures': np.array(self.cluster.generate_apertures)}
+        data = {'/Apertures': np.array(self.cluster.generate_apertures())}
         attributes = {'Description': 'Aperture radii in comoving coordinates',
                       'Units': 'Mpc'}
         out = FOFOutput(self.cluster, filename='apertures.hdf5', data=data, attrs=attributes)
