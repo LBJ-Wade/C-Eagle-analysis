@@ -20,6 +20,20 @@ from memory import free_memory
 
 class Mixin:
 
+    @staticmethod
+    def mass(mass, coords):
+        """
+        AIM: reads the FoF group central of mass from the path and file given
+        RETURNS: type = np.array of 3 doubles
+        ACCESS DATA: e.g. group_CoM[0] for getting the x value
+        """
+        assert mass.__len__() > 0, "Array is empty."
+        assert coords.__len__() > 0, "Array is empty."
+        assert mass.__len__() == coords.__len__(), "Mass and coords arrays do not have same size."
+
+        sum_of_masses = np.sum(mass)
+        free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
+        return sum_of_masses
 
     @staticmethod
     def kinetic_energy(mass, vel):
@@ -71,6 +85,41 @@ class Mixin:
         free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
         return zero_momentum, sum_of_masses
 
+    def group_mass(self, out_allPartTypes=False, aperture_radius=None):
+
+        Mtot_PartTypes = np.zeros(0, dtype=np.float)
+
+        for part_type in ['0', '1', '4', '5']:
+
+            # Import data
+            mass = self.particle_masses(part_type)
+            coords = self.particle_coordinates(part_type)
+            group_num = self.group_number_part(part_type)
+
+            # Filter the particles belonging to the
+            # GroupNumber FOF == 1, which by definition is centred in the
+            # Centre of Potential and is disconnected from other FoF groups.
+            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis=1)
+
+            if aperture_radius is None:
+                aperture_radius = self.group_r500()
+                print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+            # print('centralFOF_groupNumber:', self.centralFOF_groupNumber)
+            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
+            mass = mass[index]
+            coords = coords[index]
+            assert mass.__len__() > 0, "Array is empty - check filtering."
+            assert coords.__len__() > 0, "Array is empty - check filtering."
+
+            # Compute CoM for each particle type
+            sum_of_masses = self.mass(mass, coords)
+            Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
+
+        if out_allPartTypes:
+            return Mtot_PartTypes
+        else:
+            return np.sum(Mtot_PartTypes)
 
     def group_centre_of_mass(self, out_allPartTypes=False, aperture_radius = None):
         """

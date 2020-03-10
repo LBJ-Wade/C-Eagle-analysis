@@ -202,9 +202,12 @@ class FOFOutput(save.SimulationOutput):
             assert type(dataset_content) is np.ndarray, "Can only push numpy.ndarrays into hdf5 files."
 
             nested_groups = self.groups_from_path(internal_path)
-            for nested_group in nested_groups[:-1]:
-                g = FOFfile.create_group(nested_group)
-                g.create_dataset(nested_groups[-1], data=dataset_content)
+            if len(nested_groups) == 1:
+                FOFfile.create_dataset(nested_groups[0], data=dataset_content)
+            else:
+                for nested_group in nested_groups[:-1]:
+                    g = FOFfile.create_group(nested_group)
+                    g.create_dataset(nested_groups[-1], data=dataset_content)
 
             print(f'[ FOFOutput ]\t==> Created {internal_path} dataset in {self.filename} file.')
 
@@ -234,25 +237,66 @@ class FOFDatagen(FOFOutput):
                 '/R_2500_crit' : np.array([self.cluster.r2500])}
         attributes = {'Description' : 'R_crits',
                       'Units' : 'Mpc'}
-        out = FOFOutput(self.cluster, filename = 'R_crit.hdf5', data = data, attrs = attributes)
+        out = FOFOutput(self.cluster, filename = 'rcrit.hdf5', data = data, attrs = attributes)
         out.makefile()
 
     def push_apertures(self):
+
         data = {'/Apertures': np.array(self.cluster.generate_apertures())}
+
         attributes = {'Description': 'Aperture radii in comoving coordinates',
                       'Units': 'Mpc'}
+
         out = FOFOutput(self.cluster, filename='apertures.hdf5', data=data, attrs=attributes)
         out.makefile()
 
     def push_mass(self):
-        data = {'/R_200_crit': np.array([self.cluster.r200])}
-        attributes = {'Description': 'R_crits',
-                      'Units': 'Mpc'}
-        out = FOFOutput(self.cluster, filename='R_crit.hdf5', data=data, attrs=attributes)
+
+        ParTypes_mass = np.zeros((0, 4), dtype=np.float)
+        Total_mass = np.zeros(0, dtype=np.float)
+
+        for r in self.cluster.generate_apertures():
+
+            ParTypes_mass_aperture = self.cluster.group_mass(out_allPartTypes=True, aperture_radius=r)
+            Total_mass_aperture = np.sum(Total_mass)
+
+            ParTypes_mass = np.concatenate((ParTypes_mass, [ParTypes_mass_aperture]), axis=0)
+            Total_mass = np.concatenate((Total_mass, [Total_mass_aperture]), axis=0)
+
+        data = {'/Total_mass': np.array(Total_mass),
+                '/ParType0_mass' : np.array(ParTypes_mass)[:,0],
+                '/ParType1_mass' : np.array(ParTypes_mass)[:,1],
+                '/ParType4_mass' : np.array(ParTypes_mass)[:,4],
+                '/ParType5_mass' : np.array(ParTypes_mass)[:,5]}
+
+        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
+        for each particle type (in the order 0, 1, 4, 5).
+        The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
+                      'Units': '10^10 M_sun'}
+
+        out = FOFOutput(self.cluster, filename='mass.hdf5', data=data, attrs=attributes)
         out.makefile()
 
     def push_centre_of_mass(self):
-        pass
+
+        Total_CoM = np.zeros((0, 3), dtype=np.float)
+
+        # Loop over apertures
+        for r in self.cluster.generate_apertures():
+            CoM_aperture, _ = self.cluster.group_centre_of_mass(aperture_radius=r,
+                                                               out_allPartTypes=True)
+            CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
+
+        data = {'/Total_CoM': np.array(Total_mass),
+                '/ParTypes_CoM': np.array(ParTypes_mass)}
+
+        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
+               for each particle type (in the order 0, 1, 4, 5).
+               The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
+                      'Units': '10^10 M_sun'}
+
+        out = FOFOutput(self.cluster, filename='mass.hdf5', data=data, attrs=attributes)
+        out.makefile()
 
     def push_angular_momentum_n_mass(self):
         pass
@@ -271,6 +315,7 @@ if __name__ == '__main__':
     out = FOFDatagen(cluster)
     out.push_R_crit()
     out.push_apertures()
+    out.push_mass()
 
 
 
