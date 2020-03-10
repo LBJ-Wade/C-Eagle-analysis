@@ -26,7 +26,7 @@ from _cluster_retriever import redshift_str2num, redshift_num2str
 from testing import angular_momentum
 from testing import mergers
 import progressbar
-from save import save
+import save
 
 
 __HDF5_SUBFOLDER__ = 'FOF'
