@@ -253,7 +253,7 @@ class FOFDatagen(FOFOutput):
     def push_mass(self):
 
         part_mass = np.zeros((4,), dtype=np.float)
-        total_mass = np.zeros((0,), dtype=np.float)
+        total_mass = np.zeros(0, dtype=np.float)
 
         for r in self.cluster.generate_apertures():
 
