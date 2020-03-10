@@ -219,18 +219,14 @@ class FOFOutput(save.SimulationOutput):
         data = self.split_data_dict(additional_datasets)
         self.add_to_hdf5file(dataset_paths = list(data[0]),  dataset_values = list(data[1]))
 
-class FOFDatagen:
+
+
+
+
+class FOFDatagen(FOFOutput):
 
     def __init__(self, cluster: Cluster):
-
         self.cluster = cluster
-        self.directory = os.path.join(cluster.pathSave,
-                                     cluster.simulation_name,
-                                     f'halo{self.halo_Num(cluster.clusterID)}',
-                                     f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
-
-    def get_directory(self):
-        return self.directory
 
     def push_R_crit(self):
         data = {'/R_200_crit' : np.array([self.cluster.r200]),
