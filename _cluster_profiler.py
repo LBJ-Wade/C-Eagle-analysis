@@ -85,7 +85,7 @@ class Mixin:
         free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
         return zero_momentum, sum_of_masses
 
-    def group_mass(self, out_allPartTypes=False, aperture_radius=None):
+    def group_mass_aperture(self, out_allPartTypes=False, aperture_radius=None):
 
         Mtot_PartTypes = np.zeros(4, dtype=np.float)
 
@@ -109,7 +109,6 @@ class Mixin:
             mass = mass[index]
             assert mass.__len__() > 0, "Array is empty - check filtering."
             Mtot_PartTypes[idx] = np.sum(mass)
-            print(Mtot_PartTypes)
 
         if out_allPartTypes:
             return Mtot_PartTypes
