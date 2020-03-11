@@ -21,6 +21,14 @@ from memory import free_memory
 class Mixin:
 
     @staticmethod
+    def angle_between_vectors(v1, v2):
+        # v1 is your firsr vector
+        # v2 is your second vector
+        angle = np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
+        # Return the result in degrees
+        return angle * 180 / np.pi
+
+    @staticmethod
     def mass(mass, coords):
         """
         AIM: reads the FoF group central of mass from the path and file given

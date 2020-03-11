@@ -50,13 +50,41 @@ class FOFRead(Simulation):
                                                                                           f"found in {self.FOFDirectory}."
                                                                                           "Check that they have already been computed for this cluster and this redshift.")
 
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
+                                                                                          f"found in {self.FOFDirectory}."
+                                                                                          "Check that they have already been computed for this cluster and this redshift.")
+
+        # Read aperture data
+        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
+            apertures = np.array(input_file.get('Apertures'))
+
         # Read angular momentum data
-        input_file = h5py.File(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5'), 'r')
+        with h5py.File(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5'), 'r') as input_file:
+            Total_angmom    = np.array(input_file.get('Total_angmom'))
+            ParType0_angmom = np.array(input_file.get('ParType0_angmom'))
+            ParType1_angmom = np.array(input_file.get('ParType1_angmom'))
+            ParType4_angmom = np.array(input_file.get('ParType4_angmom'))
+            ParType5_angmom = np.array(input_file.get('ParType5_angmom'))
 
-        Total_angmom = np.array(input_file.get('Total_angmom'))
-        ParType0_angmom = np.array(input_file.get('ParType0_angmom'))
-        ParType1_angmom = np.array(input_file.get('ParType1_angmom'))
-        ParType4_angmom = np.array(input_file.get('ParType4_angmom'))
-        ParType5_angmom = np.array(input_file.get('ParType5_angmom'))
+        # One 5x5 matrix for each aperture
+        alignment_matrix = np.zeros((len(apertures), 5, 5), dtype=np.float)
 
-        input_file.close()
+        for m, r in np.ndenumerate(apertures):
+
+            # Gather ang momenta for a single aperture
+            ang_momenta = np.zeros((5,3))
+            ang_momenta[0] = Total_angmom[m]
+            ang_momenta[1] = ParType0_angmom[m]
+            ang_momenta[2] = ParType1_angmom[m]
+            ang_momenta[3] = ParType4_angmom[m]
+            ang_momenta[4] = ParType5_angmom[m]
+
+            for i, j in itertools.product(range(5), range(5)):
+                if i == j:
+                    alignment_matrix[m][i][j] = 0.
+                else:
+                    alignment_matrix[m][i][j] = self.cluster.angle_between_vectors(ang_momenta[i], ang_momenta[j])
+
+        return alignment_matrix
+
+
