@@ -258,13 +258,10 @@ class FOFDatagen(FOFOutput):
         for r in self.cluster.generate_apertures():
 
             part_mass_aperture = self.cluster.group_mass_aperture(out_allPartTypes=True, aperture_radius=r)
-            print(part_mass_aperture)
             part_mass = np.concatenate((part_mass, [part_mass_aperture]), axis=0)
 
             tot_mass_aperture = np.sum(part_mass_aperture)
             total_mass = np.concatenate((total_mass, [tot_mass_aperture]), axis=0)
-
-
 
         data = {'/Total_mass': np.array(total_mass),
                 '/ParType0_mass' : np.array(part_mass)[:,0],
@@ -280,26 +277,39 @@ class FOFDatagen(FOFOutput):
         out = FOFOutput(self.cluster, filename='mass.hdf5', data=data, attrs=attributes)
         out.makefile()
 
-    # def push_centre_of_mass(self):
-    #
-    #     Total_CoM = np.zeros((0, 3), dtype=np.float)
-    #
-    #     # Loop over apertures
-    #     for r in self.cluster.generate_apertures():
-    #         CoM_aperture, _ = self.cluster.group_centre_of_mass(aperture_radius=r,
-    #                                                            out_allPartTypes=True)
-    #         CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
-    #
-    #     data = {'/Total_CoM': np.array(Total_mass),
-    #             '/ParTypes_CoM': np.array(ParTypes_mass)}
-    #
-    #     attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture,
-    #            for each particle type (in the order 0, 1, 4, 5).
-    #            The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
-    #                   'Units': '10^10 M_sun'}
-    #
-    #     out = FOFOutput(self.cluster, filename='mass.hdf5', data=data, attrs=attributes)
-    #     out.makefile()
+    def push_centre_of_mass(self):
+
+        Total_CoM    = np.zeros((0,3), dtype=np.float)
+        ParType0_CoM = np.zeros((0,3), dtype=np.float)
+        ParType1_CoM = np.zeros((0,3), dtype=np.float)
+        ParType4_CoM = np.zeros((0,3), dtype=np.float)
+        ParType5_CoM = np.zeros((0,3), dtype=np.float)
+
+        for r in self.cluster.generate_apertures():
+
+            part_CoM_aperture, _mass = self.cluster.group_centre_of_mass(aperture_radius=r, out_allPartTypes=True)
+            ParType0_CoM = np.concatenate((ParType0_CoM, [part_CoM_aperture[0]]), axis = 0)
+            ParType1_CoM = np.concatenate((ParType1_CoM, [part_CoM_aperture[1]]), axis = 0)
+            ParType4_CoM = np.concatenate((ParType4_CoM, [part_CoM_aperture[2]]), axis = 0)
+            ParType5_CoM = np.concatenate((ParType5_CoM, [part_CoM_aperture[3]]), axis = 0)
+
+            Total_CoM_aperture, _totmass = self.cluster.centre_of_mass(_mass, part_CoM_aperture)
+            Total_CoM = np.concatenate((Total_CoM, [Total_CoM_aperture]), axis=0)
+
+        data = {'/Total_CoM'    : np.array(Total_CoM),
+                '/ParType0_CoM' : np.array(ParType0_CoM),
+                '/ParType1_CoM' : np.array(ParType1_CoM),
+                '/ParType4_CoM' : np.array(ParType4_CoM),
+                '/ParType5_CoM' : np.array(ParType5_CoM)}
+
+        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
+        for each particle type (in the order 0, 1, 4, 5).
+        The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
+                      'Units': '10^10 M_sun'}
+
+        out = FOFOutput(self.cluster, filename='centre_of_mass.hdf5', data=data, attrs=attributes)
+        out.makefile()
+
 
     def push_angular_momentum_n_mass(self):
         pass
@@ -318,8 +328,8 @@ if __name__ == '__main__':
     out = FOFDatagen(cluster)
     # out.push_R_crit()
     # out.push_apertures()
-    out.push_mass()
-
+    # out.push_mass()
+    out.push_centre_of_mass()
 
 
 
