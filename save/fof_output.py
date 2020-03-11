@@ -284,6 +284,10 @@ class FOFDatagen(FOFOutput):
 
     def __init__(self, cluster: Cluster):
         self.cluster = cluster
+        self.FOFDirectory = os.path.join(cluster.pathSave,
+                                         cluster.simulation_name,
+                                         f'halo{self.halo_Num(cluster.clusterID)}',
+                                         f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
 
     def push_R_crit(self):
         data = {'/R_200_crit' : np.array([self.cluster.r200]),
@@ -438,7 +442,8 @@ class FOFDatagen(FOFOutput):
 
         dynamical_merging_index = || CoM(r) - CoP(r) || / r
 
-        The calculation of the dynamical_merging_index assumes the CoM data are already generated as partial results.
+        The calculation of the dynamical_merging_index assumes the CoM and aperture data are already generated as
+        partial results.
 
         :return: None
         """
@@ -448,17 +453,25 @@ class FOFDatagen(FOFOutput):
                                                                                         "already been computed for "
                                                                                         "this cluster and this "
                                                                                         "redshift")
-        
-        apertures = self.cluster.generate_apertures()
-        CoP = np.ones((len(apertures,)))*self.cluster.group_centre_of_potential()
 
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
+                                                                                   f"found in {self.FOFDirectory}."
+                                                                                   "Check that they have already been "
+                                                                                   "computed for this cluster and this redshift.")
+
+        # Read aperture data
+        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
+            apertures = np.array(input_file.get('Apertures'))
+
+        # Read centre_of_mass data
         with h5py.File(os.path.join(self.FOFDirectory, 'centre_of_mass.hdf5'), 'r') as input_file:
-
             Total_CoM    = np.array(input_file.get('Total_CoM'))
             ParType0_CoM = np.array(input_file.get('ParType0_CoM'))
             ParType1_CoM = np.array(input_file.get('ParType1_CoM'))
             ParType4_CoM = np.array(input_file.get('ParType4_CoM'))
             ParType5_CoM = np.array(input_file.get('ParType5_CoM'))
+
+        CoP = np.ones((len(apertures, ))) * self.cluster.group_centre_of_potential()
 
         Total_dynindex    = self.cluster.dynamical_merging_index(CoP, Total_CoM, apertures)
         ParType0_dynindex = self.cluster.dynamical_merging_index(CoP, ParType0_CoM, apertures)
