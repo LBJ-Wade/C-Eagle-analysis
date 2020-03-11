@@ -283,6 +283,7 @@ class FOFOutput(save.SimulationOutput):
 class FOFDatagen(FOFOutput, Simulation):
 
     def __init__(self, cluster: Cluster):
+        super(Simulation, self).__init__(simulation_name=cluster.simulation_name)
         self.cluster = cluster
         self.FOFDirectory = os.path.join(cluster.pathSave,
                                          cluster.simulation_name,
