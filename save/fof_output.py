@@ -28,11 +28,65 @@ from testing import mergers
 import progressbar
 import save
 
-
 __HDF5_SUBFOLDER__ = 'FOF'
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
+
+#####################################################
+#													#
+#				D E C O R A T O R S  				#
+# 									 				#
+#####################################################
+
+def make_parallel_MPI(function):
+    """
+    This decorator adds functionality to the processing routing for the whole
+    simulation. It creates a list of processes to initialise, each taking a
+    halo at a redshifts. It then allocates dynamically each process to a idle
+    CPU in a recursive way using the modulus function. Ae each iteration it
+    executes the function to be wrapped with *args and **kwargs.
+
+    :param decorator_kwargs: simulation_name = (str)
+    :param decorator_kwargs: out_allPartTypes = (bool)
+    :return: decorated function with predefined **kwargs
+
+    The **Kwargs are dynamically allocated to the external methods.
+    """
+
+    def wrapper(*args, **kwargs):
+
+        # Checks that the essential paremeters are there
+        assert not kwargs['out_allPartTypes'] is None
+        assert not kwargs['simulation_name'] is None
+
+        # Generate a simulation object and oush it to **kwargs
+        sim = Simulation(simulation_name=kwargs['simulation_name'])
+        kwargs['simulation'] = sim
+
+        # Set-up the MPI allocation schedule
+        process = 0
+        process_iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+
+        for halo_num, redshift in process_iterator:
+
+            if process % size == rank:
+
+                cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
+                file_name = sim.cluster_prefix + sim.halo_Num(halo_num) + redshift
+                fileCompletePath = sim.pathSave + '/' + sim.simulation + '_output/collective_output/' + file_name + '.hdf5'
+
+                kwargs['cluster'] = cluster_obj
+                kwargs['fileCompletePath'] = fileCompletePath
+
+                print('CPU ({}/{}) is processing halo {} @ z = {} ------ process ID: {}'.format(rank, size, cluster_obj.clusterID, cluster_obj.redshift, process))
+                # Each CPU loops over all apertures - this avoids concurrence in file reading
+                # The loop over apertures is defined explicitly in the wrapped function.
+                function(*args, **kwargs)
+
+            process += 1
+
+    return wrapper
 
 class FOFOutput(save.SimulationOutput):
 
@@ -302,18 +356,51 @@ class FOFDatagen(FOFOutput):
                 '/ParType4_CoM' : np.array(ParType4_CoM),
                 '/ParType5_CoM' : np.array(ParType5_CoM)}
 
-        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
-        for each particle type (in the order 0, 1, 4, 5).
-        The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
-                      'Units': '10^10 M_sun'}
+        attributes = {'Description': """Datasets with the (x,y,z) cartesian coordinates of the Centre of Mass of the 
+        cluster, computed based on particles within a specific aperture radius from the Centre of Potential.
+        The datasets contain the CoM for each high-res particle type and also the combined total value of all particles.""",
+                      'Units': '[Mpc], [Mpc], [Mpc]'}
 
         out = FOFOutput(self.cluster, filename='centre_of_mass.hdf5', data=data, attrs=attributes)
+        out.makefile()
+
+    def push_peculiar_velocity(self):
+
+        Total_ZMF    = np.zeros((0,3), dtype=np.float)
+        ParType0_ZMF = np.zeros((0,3), dtype=np.float)
+        ParType1_ZMF = np.zeros((0,3), dtype=np.float)
+        ParType4_ZMF = np.zeros((0,3), dtype=np.float)
+        ParType5_ZMF = np.zeros((0,3), dtype=np.float)
+
+        for r in self.cluster.generate_apertures():
+
+            part_ZMF_aperture, _mass = self.cluster.group_zero_momentum_frame(aperture_radius=r, out_allPartTypes=True)
+            ParType0_ZMF = np.concatenate((ParType0_ZMF, [part_ZMF_aperture[0]]), axis = 0)
+            ParType1_ZMF = np.concatenate((ParType1_ZMF, [part_ZMF_aperture[1]]), axis = 0)
+            ParType4_ZMF = np.concatenate((ParType4_ZMF, [part_ZMF_aperture[2]]), axis = 0)
+            ParType5_ZMF = np.concatenate((ParType5_ZMF, [part_ZMF_aperture[3]]), axis = 0)
+
+            Total_ZMF_aperture, _totmass = self.cluster.zero_momentum_frame(_mass, part_ZMF_aperture)
+            Total_ZMF = np.concatenate((Total_ZMF, [Total_ZMF_aperture]), axis=0)
+
+        data = {'/Total_ZMF'    : np.array(Total_ZMF),
+                '/ParType0_ZMF' : np.array(ParType0_ZMF),
+                '/ParType1_ZMF' : np.array(ParType1_ZMF),
+                '/ParType4_ZMF' : np.array(ParType4_ZMF),
+                '/ParType5_ZMF' : np.array(ParType5_ZMF)}
+
+        attributes = {'Description': """Datasets with the peculiar linear bulk velocity of the cluster, calculated 
+        from particles within a specific aperture radius from the Centre of Potential. Individual datasets contain peculiar velocity information 
+        about each particle type separately, as well as one with combined total contribution.""",
+                      'Units': '[km s^-1], [km s^-1], [km s^-1]'}
+
+        out = FOFOutput(self.cluster, filename='peculiar_velocity.hdf5', data=data, attrs=attributes)
         out.makefile()
 
 
     def push_angular_momentum(self):
 
-        Total_angmom = np.zeros((0, 3), dtype=np.float)
+        Total_angmom    = np.zeros((0, 3), dtype=np.float)
         ParType0_angmom = np.zeros((0, 3), dtype=np.float)
         ParType1_angmom = np.zeros((0, 3), dtype=np.float)
         ParType4_angmom = np.zeros((0, 3), dtype=np.float)
@@ -335,12 +422,12 @@ class FOFDatagen(FOFOutput):
                 '/ParType4_angmom': np.array(ParType4_angmom),
                 '/ParType5_angmom': np.array(ParType5_angmom)}
 
-        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
-        for each particle type (in the order 0, 1, 4, 5).
-        The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
-                      'Units': '10^10 M_sun'}
+        attributes = {'Description': """Datasets with the angular momentum vector of the cluster, calculated 
+        from particles within a specific aperture radius from the Centre of Potential. Individual datasets contain 
+        angular momentum information about each particle type separately, as well as one with combined total contribution.""",
+                      'Units': '[10^10 M_sun * km * s^-1 * Mpc], [10^10 M_sun * km * s^-1 * Mpc], [10^10 M_sun * km * s^-1 * Mpc]'}
 
-        out = FOFOutput(self.cluster, filename='centre_of_mass.hdf5', data=data, attrs=attributes)
+        out = FOFOutput(self.cluster, filename='angular_momentum.hdf5', data=data, attrs=attributes)
         out.makefile()
 
     def push_angmom_alignment_matrix(self):
@@ -355,10 +442,12 @@ if __name__ == '__main__':
 
     cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
     out = FOFDatagen(cluster)
-    # out.push_R_crit()
-    # out.push_apertures()
-    # out.push_mass()
+    out.push_R_crit()
+    out.push_apertures()
+    out.push_mass()
     out.push_centre_of_mass()
+    out.push_peculiar_velocity()
+    out.push_angular_momentum()
 
 
 
@@ -369,60 +458,6 @@ if __name__ == '__main__':
 
 
 
-#####################################################
-#													#
-#				D E C O R A T O R S  				#
-# 									 				#
-#####################################################
-
-def make_parallel_MPI(function):
-    """
-    This decorator adds functionality to the processing routing for the whole
-    simulation. It creates a list of processes to initialise, each taking a
-    halo at a redshifts. It then allocates dynamically each process to a idle
-    CPU in a recursive way using the modulus function. Ae each iteration it
-    executes the function to be wrapped with *args and **kwargs.
-
-    :param decorator_kwargs: simulation_name = (str)
-    :param decorator_kwargs: out_allPartTypes = (bool)
-    :return: decorated function with predefined **kwargs
-
-    The **Kwargs are dynamically allocated to the external methods.
-    """
-
-    def wrapper(*args, **kwargs):
-
-        # Checks that the essential paremeters are there
-        assert not kwargs['out_allPartTypes'] is None
-        assert not kwargs['simulation_name'] is None
-
-        # Generate a simulation object and oush it to **kwargs
-        sim = Simulation(simulation_name=kwargs['simulation_name'])
-        kwargs['simulation'] = sim
-
-        # Set-up the MPI allocation schedule
-        process = 0
-        process_iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
-
-        for halo_num, redshift in process_iterator:
-
-            if process % size == rank:
-
-                cluster_obj = Cluster(clusterID=int(halo_num), redshift=redshift_str2num(redshift))
-                file_name = sim.cluster_prefix + sim.halo_Num(halo_num) + redshift
-                fileCompletePath = sim.pathSave + '/' + sim.simulation + '_output/collective_output/' + file_name + '.hdf5'
-
-                kwargs['cluster'] = cluster_obj
-                kwargs['fileCompletePath'] = fileCompletePath
-
-                print('CPU ({}/{}) is processing halo {} @ z = {} ------ process ID: {}'.format(rank, size, cluster_obj.clusterID, cluster_obj.redshift, process))
-                # Each CPU loops over all apertures - this avoids concurrence in file reading
-                # The loop over apertures is defined explicitly in the wrapped function.
-                function(*args, **kwargs)
-
-            process += 1
-
-    return wrapper
 
 i = 0
 # @progressbar.ProgressBar()
