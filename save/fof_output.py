@@ -280,7 +280,7 @@ class FOFOutput(save.SimulationOutput):
 
 
 
-class FOFDatagen(FOFOutput):
+class FOFDatagen(FOFOutput, Simulation):
 
     def __init__(self, cluster: Cluster):
         self.cluster = cluster
