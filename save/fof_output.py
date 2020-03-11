@@ -514,12 +514,12 @@ if __name__ == '__main__':
 
     cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
     out = FOFDatagen(cluster)
-    out.push_R_crit()
-    out.push_apertures()
-    out.push_mass()
-    out.push_centre_of_mass()
-    out.push_peculiar_velocity()
-    out.push_angular_momentum()
+    # out.push_R_crit()
+    # out.push_apertures()
+    # out.push_mass()
+    # out.push_centre_of_mass()
+    # out.push_peculiar_velocity()
+    # out.push_angular_momentum()
     out.push_dynamical_merging_index()
 
 
