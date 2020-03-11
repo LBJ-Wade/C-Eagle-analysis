@@ -159,8 +159,6 @@ class Mixin:
             CoM_PartTypes = np.append(CoM_PartTypes, [centre_of_mass], axis=0)
             Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
 
-            print(part_type, centre_of_mass)
-
         if out_allPartTypes:
             return CoM_PartTypes, Mtot_PartTypes
         else:

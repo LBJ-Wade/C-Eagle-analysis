@@ -311,8 +311,37 @@ class FOFDatagen(FOFOutput):
         out.makefile()
 
 
-    def push_angular_momentum_n_mass(self):
-        pass
+    def push_angular_momentum(self):
+
+        Total_angmom = np.zeros((0, 3), dtype=np.float)
+        ParType0_angmom = np.zeros((0, 3), dtype=np.float)
+        ParType1_angmom = np.zeros((0, 3), dtype=np.float)
+        ParType4_angmom = np.zeros((0, 3), dtype=np.float)
+        ParType5_angmom = np.zeros((0, 3), dtype=np.float)
+
+        for r in self.cluster.generate_apertures():
+            part_angmom_aperture, _mass = self.cluster.group_angular_momentum(aperture_radius=r, out_allPartTypes=True)
+            ParType0_angmom = np.concatenate((ParType0_angmom, [part_angmom_aperture[0]]), axis=0)
+            ParType1_angmom = np.concatenate((ParType1_angmom, [part_angmom_aperture[1]]), axis=0)
+            ParType4_angmom = np.concatenate((ParType4_angmom, [part_angmom_aperture[2]]), axis=0)
+            ParType5_angmom = np.concatenate((ParType5_angmom, [part_angmom_aperture[3]]), axis=0)
+
+            Total_angmom_aperture = np.sum(part_angmom_aperture, axis=0)
+            Total_angmom = np.concatenate((Total_angmom, [Total_angmom_aperture]), axis=0)
+
+        data = {'/Total_angmom'   : np.array(Total_angmom),
+                '/ParType0_angmom': np.array(ParType0_angmom),
+                '/ParType1_angmom': np.array(ParType1_angmom),
+                '/ParType4_angmom': np.array(ParType4_angmom),
+                '/ParType5_angmom': np.array(ParType5_angmom)}
+
+        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
+        for each particle type (in the order 0, 1, 4, 5).
+        The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
+                      'Units': '10^10 M_sun'}
+
+        out = FOFOutput(self.cluster, filename='centre_of_mass.hdf5', data=data, attrs=attributes)
+        out.makefile()
 
     def push_angmom_alignment_matrix(self):
         pass
