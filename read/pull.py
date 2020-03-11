@@ -88,3 +88,9 @@ class FOFRead(Simulation):
         return alignment_matrix
 
 
+if __name__ == '__main__':
+
+    cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
+    read = FOFRead(cluster)
+    print(read.pull_angmom_alignment_angles())
+
