@@ -472,7 +472,7 @@ class FOFDatagen(save.SimulationOutput):
             ParType4_CoM = np.array(input_file.get('ParType4_CoM'))
             ParType5_CoM = np.array(input_file.get('ParType5_CoM'))
 
-        CoP = np.ones((len(apertures, ))) * self.cluster.group_centre_of_potential()
+        CoP = np.ones((len(apertures, 3))) * self.cluster.group_centre_of_potential().reshape((1,3))
 
         Total_dynindex    = self.cluster.dynamical_merging_index(CoP, Total_CoM, apertures)
         ParType0_dynindex = self.cluster.dynamical_merging_index(CoP, ParType0_CoM, apertures)
