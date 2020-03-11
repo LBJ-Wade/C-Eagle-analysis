@@ -86,6 +86,53 @@ class FOFRead(Simulation):
                     alignment_matrix[m][i][j] = self.cluster.angle_between_vectors(ang_momenta[i], ang_momenta[j])
 
         return alignment_matrix
+    
+    def pull_peculiar_velocity_alignment_angles(self):
+        """
+        Compute the angular momentum alignment angles between different particle types, based on the results from the angular
+        momentum output. This function therefore requires the angular momentum file to exist.
+        :return: None
+        """
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
+                                                                                          f"found in {self.FOFDirectory}."
+                                                                                          "Check that they have already been computed for this cluster and this redshift.")
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
+                                                                                          f"found in {self.FOFDirectory}."
+                                                                                          "Check that they have already been computed for this cluster and this redshift.")
+
+        # Read aperture data
+        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
+            apertures = np.array(input_file.get('Apertures'))
+
+        # Read angular momentum data
+        with h5py.File(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5'), 'r') as input_file:
+            Total_ZMF    = np.array(input_file.get('Total_ZMF'))
+            ParType0_ZMF = np.array(input_file.get('ParType0_ZMF'))
+            ParType1_ZMF = np.array(input_file.get('ParType1_ZMF'))
+            ParType4_ZMF = np.array(input_file.get('ParType4_ZMF'))
+            ParType5_ZMF = np.array(input_file.get('ParType5_ZMF'))
+
+        # One 5x5 matrix for each aperture
+        alignment_matrix = np.zeros((len(apertures), 5, 5), dtype=np.float)
+
+        for m, r in np.ndenumerate(apertures):
+
+            # Gather ang momenta for a single aperture
+            ang_momenta = np.zeros((5,3))
+            ang_momenta[0] = Total_ZMF[m]
+            ang_momenta[1] = ParType0_ZMF[m]
+            ang_momenta[2] = ParType1_ZMF[m]
+            ang_momenta[3] = ParType4_ZMF[m]
+            ang_momenta[4] = ParType5_ZMF[m]
+
+            for i, j in itertools.product(range(5), range(5)):
+                if i == j:
+                    alignment_matrix[m][i][j] = 0.
+                else:
+                    alignment_matrix[m][i][j] = self.cluster.angle_between_vectors(ang_momenta[i], ang_momenta[j])
+
+        return alignment_matrix
 
 
 if __name__ == '__main__':
@@ -94,4 +141,5 @@ if __name__ == '__main__':
     read = FOFRead(cluster)
 
     print(read.pull_angmom_alignment_angles())
+    print(read.pull_peculiar_velocity_alignment_angles())
 
