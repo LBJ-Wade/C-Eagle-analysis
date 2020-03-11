@@ -27,7 +27,7 @@ class FOFRead(Simulation):
 
     def __init__(self, cluster: Cluster):
 
-        super(Simulation, self).__init__(simulation_name=cluster.simulation_name)
+        super().__init__(simulation_name=cluster.simulation_name)
         self.cluster = cluster
         self.FOFDirectory = os.path.join(cluster.pathSave,
                                          cluster.simulation_name,
@@ -92,5 +92,6 @@ if __name__ == '__main__':
 
     cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
     read = FOFRead(cluster)
+
     print(read.pull_angmom_alignment_angles())
 
