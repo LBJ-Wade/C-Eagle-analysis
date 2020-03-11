@@ -430,10 +430,69 @@ class FOFDatagen(FOFOutput):
         out = FOFOutput(self.cluster, filename='angular_momentum.hdf5', data=data, attrs=attributes)
         out.makefile()
 
-    def push_angmom_alignment_matrix(self):
+
+    def push_dynamical_merging_index(self):
+        """
+        Computes the dynamical index based on the centre of potential coordinates, the centre of mass coordinates
+        and the aperture radius.
+
+        dynamical_merging_index = || CoM(r) - CoP(r) || / r
+
+        The calculation of the dynamical_merging_index assumes the CoM data are already generated as partial results.
+
+        :return: None
+        """
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'centre_of_mass.hdf5')), ("Centre of mass data not "
+                                                                                          f"found in {self.FOFDirectory}."
+                                                                                          "Check that they have "
+                                                                                        "already been computed for "
+                                                                                        "this cluster and this "
+                                                                                        "redshift")
+        
+        apertures = self.cluster.generate_apertures()
+        CoP = np.ones((len(apertures,)))*self.cluster.group_centre_of_potential()
+
+        with h5py.File(os.path.join(self.FOFDirectory, 'centre_of_mass.hdf5'), 'r') as input_file:
+
+            Total_CoM    = np.array(input_file.get('Total_CoM'))
+            ParType0_CoM = np.array(input_file.get('ParType0_CoM'))
+            ParType1_CoM = np.array(input_file.get('ParType1_CoM'))
+            ParType4_CoM = np.array(input_file.get('ParType4_CoM'))
+            ParType5_CoM = np.array(input_file.get('ParType5_CoM'))
+
+        Total_dynindex    = self.cluster.dynamical_merging_index(CoP, Total_CoM, apertures)
+        ParType0_dynindex = self.cluster.dynamical_merging_index(CoP, ParType0_CoM, apertures)
+        ParType1_dynindex = self.cluster.dynamical_merging_index(CoP, ParType1_CoM, apertures)
+        ParType4_dynindex = self.cluster.dynamical_merging_index(CoP, ParType4_CoM, apertures)
+        ParType5_dynindex = self.cluster.dynamical_merging_index(CoP, ParType5_CoM, apertures)
+
+        data = {'/Total_dynindex'   : np.array(Total_dynindex),
+                '/ParType0_dynindex': np.array(ParType0_dynindex),
+                '/ParType1_dynindex': np.array(ParType1_dynindex),
+                '/ParType4_dynindex': np.array(ParType4_dynindex),
+                '/ParType5_dynindex': np.array(ParType5_dynindex)}
+
+        attributes = {'Description': """Datasets with the dynamical merging index of the cluster, calculated 
+                from particles within a specific aperture radius from the Centre of Potential. Individual datasets contain 
+                merging index information about each particle type separately, as well as one with combined total 
+                contribution.
+                The dynamical merging index is computed according to the equation:
+                dynamical_merging_index = || CoM(r) - CoP(r) || / r.
+                
+                Note: The particle type infomation combines the CoM calculated for every particle type and the 
+                overall CoP of the whole FoF cluster. I.e., the CoP is not computed in a particle type-wise manner. 
+                If in doubt, use the Total_dynindex dataset, which contains the dynamical merging index computed for 
+                all particle types within a given aperture.
+                """,
+                      'Units': '[None]'}
+
+        out = FOFOutput(self.cluster, filename='dynamical_merging_index.hdf5', data=data, attrs=attributes)
+        out.makefile()
+
+    def push_thermodynamic_merging_index(self):
         pass
 
-    def push_merging_indices(self):
+    def push_substructure_merging_index(self):
         pass
 
 
@@ -448,13 +507,7 @@ if __name__ == '__main__':
     out.push_centre_of_mass()
     out.push_peculiar_velocity()
     out.push_angular_momentum()
-
-
-
-
-
-
-
+    out.push_dynamical_merging_index()
 
 
 
@@ -469,98 +522,7 @@ def MPI_decorator_test(**kwargs):
     i=+1
     # yield ((i) / nb_iter)  # Give control back to decorator
 
-@make_parallel_MPI
-def push_FOFapertures(*args, **kwargs):
 
-    cluster_obj = kwargs['cluster']
-    print('[ FOF SAVE ]\t==>\t Apertures on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
-    save.create_dataset(kwargs['fileCompletePath'],
-                       subfolder = __HDF5_SUBFOLDER__,
-                       dataset_name = 'Apertures',
-                       input_data = cluster_obj.generate_apertures(),
-                       attributes = """Global properties of the FoF group are determined using particles
-                       data, filtering particles within a specific radius from the Centre of Potential. Such
-                       radius is defined as "aperture radius" and in this code is given by the method
-                       cluster.Cluster.generate_apertures() in physical coordinates.
-    
-                       Units: Mpc
-                       """)
-
-@make_parallel_MPI
-def push_FOFcentre_of_mass(*args, **kwargs):
-    """
-    Saves the CoM data into the catalogues.
-    :param simulation: (cluster.Simulation) object
-    :return: None
-    """
-
-    cluster_obj = kwargs['cluster']
-    print('[ FOF SAVE ]\t==>\t CoM on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
-
-    CoM = np.zeros((0, 3), dtype=np.float)
-
-    # Loop over apertures
-    for r in cluster_obj.generate_apertures():
-
-        CoM_aperture, _ = cluster_obj.group_centre_of_mass(aperture_radius = r, out_allPartTypes = kwargs['out_allPartTypes'])
-        CoM = np.concatenate((CoM, [CoM_aperture]), axis=0)
-
-    assert CoM.__len__() == cluster_obj.generate_apertures().__len__()
-
-    save.create_dataset(kwargs['fileCompletePath'],
-                        subfolder=__HDF5_SUBFOLDER__,
-                        dataset_name='Group_Centre_of_Mass',
-                        input_data= CoM,
-                        attributes="""The Centre of Mass (CoM) is calculated for each aperture listed in the 
-                        `Aperture dataset`. PartTypes included: 0, 1, 4, 5.
-
-                        Units: h^-1 Mpc 
-                        """)
-
-@make_parallel_MPI
-def push_FOFangular_momentum_n_mass(*args, **kwargs):
-    """
-    Saves the angular momentum data into the catalogues.
-    :param simulation: (cluster.Simulation) object
-    :return: None
-    """
-    cluster_obj = kwargs['cluster']
-
-    print('[ FOF SAVE ]\t==>\t CoM on cluster {} @ z = {}'.format(cluster_obj.clusterID, cluster_obj.redshift))
-
-    ang_momentum = np.zeros((0, 3), dtype=np.float)
-    mass = np.zeros(0, dtype=np.float)
-
-    # Loop over apertures
-    for r in cluster_obj.generate_apertures():
-
-        ang_momentum_aperture, mass_aperture = cluster_obj.group_angular_momentum(aperture_radius = r, out_allPartTypes = kwargs['out_allPartTypes'])
-
-        ang_momentum = np.concatenate((ang_momentum, [ang_momentum_aperture]), axis=0)
-        mass = np.concatenate((mass, [mass_aperture]), axis=0)
-
-    assert ang_momentum.__len__() == cluster_obj.generate_apertures().__len__()
-    assert mass.__len__() == cluster_obj.generate_apertures().__len__()
-
-    save.create_dataset(kwargs['fileCompletePath'],
-                        subfolder=__HDF5_SUBFOLDER__,
-                        dataset_name='Group_Angular_Momentum',
-                        input_data=ang_momentum,
-                        attributes="""The total angular momentum is calculated for each aperture listed in the 
-                        `Aperture dataset`. PartTypes included: 0, 1, 4, 5.
-
-                        Units: 10^10 M_sun * 10^3 km/s * Mpc
-                        """)
-
-    save.create_dataset(kwargs['fileCompletePath'],
-                        subfolder=__HDF5_SUBFOLDER__,
-                        dataset_name='TotalMass',
-                        input_data=mass,
-                        attributes="""The total mass is calculated for each aperture listed in the 
-                                    `Aperture dataset. PartTypes included: 0, 1, 4, 5.
-
-                                    Units: 10^10 M_sun
-                                    """)
 
 @make_parallel_MPI
 def push_FOFangmom_alignment_matrix(*args, **kwargs):

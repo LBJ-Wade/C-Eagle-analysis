@@ -47,6 +47,20 @@ class Mixin:
         return np.sum(te)
 
     @staticmethod
+    def dynamical_merging_index(CoP, CoM, aperture):
+        """
+        Computed as dynamical_merging_index = || CoM(r) - CoP(r) || / r
+
+        :param CoP: The centre of potential of the cluster
+        :param CoM: The centre of mass of the cluster
+        :param aperture: The aperture radius (from the CoP) for the particle selection
+        :return: float within [0,1]
+        """
+        displacement = np.linalg.norm(np.subtract(CoM, CoP), axis=1)
+        dynamic_index = np.divide(displacement, aperture)
+        return dynamic_index
+
+    @staticmethod
     def angular_momentum(mass, velocity, position):
         """Defined as L = m(r CROSS v)"""
         rxv = np.cross(position, velocity)
