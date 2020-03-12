@@ -402,14 +402,13 @@ class FOFDatagen(save.SimulationOutput):
         out = FOFOutput(self.cluster, filename='peculiar_velocity.hdf5', data=data, attrs=attributes)
         out.makefile()
 
-    # TODO
     def push_kinetic_energy(self):
         
         part_kin_energy = np.zeros((0, 4), dtype=np.float)
         total_kin_energy = np.zeros((0,), dtype=np.float)
 
         for r in self.cluster.generate_apertures():
-            part_kin_energy_aperture = self.cluster.kinetic_energy(out_allPartTypes=True, aperture_radius=r)
+            part_kin_energy_aperture = self.cluster.group_kinetic_energy(out_allPartTypes=True, aperture_radius=r)
             part_kin_energy = np.concatenate((part_kin_energy, [part_kin_energy_aperture]), axis=0)
 
             tot_kin_energy_aperture = np.sum(part_kin_energy_aperture)

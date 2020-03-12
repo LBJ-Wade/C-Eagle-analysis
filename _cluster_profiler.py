@@ -107,7 +107,75 @@ class Mixin:
         free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
         return zero_momentum, sum_of_masses
 
+    def group_kinetic_energy(self, out_allPartTypes=False, aperture_radius=None):
+        """
+        Compute the kinetic energy of the particles within a given aperture radius,
+        considered from the centre of potential. The function calculates the kinetic energy
+        from particle data according to
+        kinetic_energy = 1/2 * mass * || velocity ||^2.
+
+        :param out_allPartTypes: expect boolean
+            Default = False -> returns the total combined kinetic energy from all particle
+            types. If set to True, it returns a numpy.ndarray with the total kinetic energy
+            of the 4 individual particle types.
+
+        :param aperture_radius: expect float
+            The aperture radius is the distance from the centre of potential of the cluster,
+            used to select the particles for the calculation. Everything outside the aperture
+            sphere is filtered out.
+            The units should be physical Mpc.
+
+        :return: float or np.array(dtype = np.float)
+            Returns the kinetic energy of the particles within the aperture sphere.
+        """
+
+        Mtot_PartTypes = np.zeros(4, dtype=np.float)
+
+        for idx, part_type in enumerate(['0', '1', '4', '5']):
+
+            # Import data
+            mass = self.particle_masses(part_type)
+            coords = self.particle_coordinates(part_type)
+            group_num = self.group_number_part(part_type)
+
+            # Filter the particles belonging to the
+            # GroupNumber FOF == 1, which by definition is centred in the
+            # Centre of Potential and is disconnected from other FoF groups.
+            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis=1)
+
+            if aperture_radius is None:
+                aperture_radius = self.group_r500()
+                print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
+            mass = mass[index]
+            assert mass.__len__() > 0, "Array is empty - check filtering."
+            Mtot_PartTypes[idx] = np.sum(mass)
+
+        if out_allPartTypes:
+            return Mtot_PartTypes
+        else:
+            return np.sum(Mtot_PartTypes)
+
     def group_mass_aperture(self, out_allPartTypes=False, aperture_radius=None):
+        """
+        Compute the total mass the particles within a given aperture radius,
+        considered from the centre of potential.
+
+        :param out_allPartTypes: expect boolean
+            Default = False -> returns the total combined mass from all particle
+            types. If set to True, it returns a numpy.ndarray with the total kinetic energy
+            of the 4 individual particle types.
+
+        :param aperture_radius: expect float
+            The aperture radius is the distance from the centre of potential of the cluster,
+            used to select the particles for the calculation. Everything outside the aperture
+            sphere is filtered out.
+            The units should be physical Mpc.
+
+        :return: float or np.array(dtype = np.float)
+            Returns the kinetic energy of the particles within the aperture sphere.
+        """
 
         Mtot_PartTypes = np.zeros(4, dtype=np.float)
 
