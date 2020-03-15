@@ -77,7 +77,7 @@ class CorrelationMatrix(pull.FOFRead):
         ax.set_yticks(ticks_major, minor=False)
         ax.set_xticks(ticks_minor, minor=True)
         ax.set_yticks(ticks_minor, minor=True)
-        ax.set_xticklabels(x_labels)
+        ax.set_xticklabels(x_labels, rotation = 90)
         ax.set_yticklabels(x_labels)
 
 
