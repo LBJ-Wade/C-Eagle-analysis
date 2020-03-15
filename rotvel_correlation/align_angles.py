@@ -194,5 +194,6 @@ if __name__ == '__main__':
 
     cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
     matrix = CorrelationMatrix(cluster)
+    matrix.fix_aperture(10)
     matrix.plot_matrix()
 
