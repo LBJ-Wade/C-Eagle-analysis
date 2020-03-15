@@ -79,7 +79,7 @@ class CorrelationMatrix(pull.FOFRead):
 
         # Let the horizontal axes labeling appear on top.
         ax.tick_params(top=False, bottom=True,
-                       labeltop=True, labelbottom=False)
+                       labeltop=False, labelbottom=True)
 
         # Rotate the tick labels and set their alignment.
         plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
@@ -92,7 +92,7 @@ class CorrelationMatrix(pull.FOFRead):
         ax.set_xticks(np.arange(data.shape[1] + 1) - .5, minor=True)
         ax.set_yticks(np.arange(data.shape[0] + 1) - .5, minor=True)
         ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
-        ax.tick_params(which="minor", bottom=False, left=False)
+        ax.tick_params(which="minor", bottom=True, left=False)
 
         return im, cbar
 
