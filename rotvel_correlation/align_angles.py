@@ -71,6 +71,9 @@ class CorrelationMatrix(pull.FOFRead):
             r'$\mathbf{\widehat{L}}^{(BH)}$'
         ]
 
+        ticks = np.arange(0, len(x_labels), 1)
+        ax.set_xticks(ticks)
+        ax.set_yticks(ticks)
         ax.set_xticklabels(x_labels)
         ax.set_yticklabels(x_labels)
         ax.grid(which='minor', color='w', linestyle='-', linewidth = 3)
