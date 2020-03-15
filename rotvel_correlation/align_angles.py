@@ -50,11 +50,13 @@ class CorrelationMatrix(pull.FOFRead):
         ax = fig.add_subplot(111)
 
         im = ax.imshow(angle_matrix, cmap='Set3_r', vmin=0, vmax=180, origin='lower')
+        cbar_ticks_major = np.linspace(0, 180, 12)
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="3%", pad=0.1)
         cbar = fig.colorbar(im, cax=cax)
         cbar.ax.minorticks_off()
+        cbar.ax.set_yticks(cbar_ticks_major, minor=False)
         cbar.ax.set_ylabel(r'$\Delta \theta$ \quad [degrees]', rotation=270, size=25, labelpad=30)
 
         x_labels = [
