@@ -34,13 +34,20 @@ class CorrelationMatrix(pull.FOFRead):
 
         super().__init__(cluster)
         self.aperture_index = None
+        self.data = None
 
     def fix_aperture(self, aperture: np.int):
         self.aperture_index = aperture
 
+    def get_data(self):
+        return self.pull_rot_vel_alignment_angles()
+
+    def set_data(self, data):
+        self.data = data
+
     def plot_matrix(self):
         apertures = self.pull_apertures()
-        angle_matrix = self.pull_rot_vel_alignment_angles()
+        angle_matrix = self.data
 
         if self.aperture_index is not None:
             apertures = apertures[self.aperture_index]
@@ -103,8 +110,29 @@ class CorrelationMatrix(pull.FOFRead):
 
 if __name__ == '__main__':
     exec(open('visualisation/light_mode.py').read())
-    cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
-    matrix = CorrelationMatrix(cluster)
-    matrix.fix_aperture(10)
-    matrix.plot_matrix()
+
+    def test():
+        cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
+        matrix = CorrelationMatrix(cluster)
+        data = matrix.get_data()
+        matrix.set_data(data)
+        matrix.fix_aperture(10)
+        matrix.plot_matrix()
+
+    def all_clusters():
+        simulation = Simulation(simulation_name='celr_e')
+        matrix_list = []
+        for id in simulation.clusterIDAllowed:
+            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p000')
+            print(f'Analysing cluster {cluster.clusterID}')
+            matrix = CorrelationMatrix(cluster)
+            data = matrix.get_data()[10]
+            matrix_list.append(data)
+
+        average_matrix = np.mean(matrix_list, axis=0)
+        matrix.set_data(average_matrix)
+        matrix.plot_matrix()
+
+
+
 
