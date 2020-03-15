@@ -33,25 +33,15 @@ class CorrelationMatrix(pull.FOFRead):
     def __init__(self, cluster: Cluster):
 
         super().__init__(cluster)
-        self.aperture_index = None
-        self.data = None
-
-    def fix_aperture(self, aperture: np.int):
-        self.aperture_index = aperture
 
     def get_data(self):
         return self.pull_rot_vel_alignment_angles()
 
-    def set_data(self, data):
-        self.data = data
+    def get_apertures(self):
+        return self.pull_apertures()
 
-    def plot_matrix(self):
-        apertures = self.pull_apertures()
-        angle_matrix = self.data
-
-        if self.aperture_index is not None:
-            apertures = apertures[self.aperture_index]
-            angle_matrix = angle_matrix[self.aperture_index]
+    @staticmethod
+    def plot_matrix(angle_matrix, apertures):
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
@@ -93,7 +83,7 @@ class CorrelationMatrix(pull.FOFRead):
                 text = ax.text(j, i, r"{:.2f}".format(angle_matrix[i, j]),
                                ha="center", va="center", color="k", size = 15)
 
-        # ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
+        ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
 
         ax.tick_params(which='minor', length=0, color='w')
@@ -115,23 +105,26 @@ if __name__ == '__main__':
         cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
         matrix = CorrelationMatrix(cluster)
         data = matrix.get_data()
-        matrix.set_data(data)
-        matrix.fix_aperture(10)
-        matrix.plot_matrix()
+        aperture = matrix.get_apertures()
+
+        matrix.plot_matrix(data[15], aperture[15])
 
     def all_clusters():
         simulation = Simulation(simulation_name='celr_e')
         matrix_list = []
+        aperture_list = []
         for id in simulation.clusterIDAllowed:
             cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p000')
             print(f'Analysing cluster {cluster.clusterID}')
             matrix = CorrelationMatrix(cluster)
-            data = matrix.get_data()[10]
+            data = matrix.get_data()[15]
+            aperture = matrix.get_apertures()[15]
             matrix_list.append(data)
+            aperture_list.append(aperture)
 
         average_matrix = np.mean(matrix_list, axis=0)
-        matrix.set_data(average_matrix)
-        matrix.plot_matrix()
+        average_aperture = np.mean(aperture_list, axis=0)
+        matrix.plot_matrix(average_matrix, average_aperture)
 
     all_clusters()
 
