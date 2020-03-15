@@ -86,7 +86,7 @@ class CorrelationMatrix(pull.FOFRead):
 
         ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
         fig.tight_layout()
-        ax.grid(b = True, color='w', linestyle='-', linewidth=10, alpha = 1)
+        ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
         plt.show()
 
 
