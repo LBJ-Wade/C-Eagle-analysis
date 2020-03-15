@@ -114,7 +114,7 @@ if __name__ == '__main__':
         matrix_list = []
         aperture_list = []
         for id in simulation.clusterIDAllowed:
-            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p000')
+            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p199')
             print(f'Analysing cluster {cluster.clusterID}')
             matrix = CorrelationMatrix(cluster)
             data = matrix.get_data()[apertureidx]
@@ -123,12 +123,12 @@ if __name__ == '__main__':
             aperture_list.append(aperture)
 
         print([a[0][1] for a in matrix_list])
-        average_matrix = np.std(matrix_list, axis=0)
+        average_matrix = np.mean(matrix_list, axis=0)
         average_aperture = np.mean(aperture_list, axis=0)
         matrix.plot_matrix(average_matrix, average_aperture)
 
         plt.savefig(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation',
-                                 f'std_{cluster.redshift}_aperture_{apertureidx}.png'))
+                                 f'mean_{cluster.redshift}_aperture_{apertureidx}.png'))
 
     for i in range(18):
         all_clusters(i)
