@@ -163,26 +163,26 @@ class CorrelationMatrix(pull.FOFRead):
             apertures = apertures[self.aperture_index]
             angle_matrix = angle_matrix[self.aperture_index]
 
-        fig = plt.figure(figsize=(12, 12))
-        ax = fig.add_subplot(111)
+        fig, ax = plt.subplots()
 
         x_labels = [
-            r'$Total_ZMF$',
-            r'$Total_angmom$',
-            r'$ParType0_ZMF$',
-            r'$ParType1_ZMF$',
-            r'$ParType4_ZMF$',
-            r'$ParType5_ZMF$',
-            r'$ParType0_angmom$',
-            r'$ParType1_angmom$',
-            r'$ParType4_angmom$',
-            r'$ParType5_angmom$'
+            r'$Total~ZMF$',
+            r'$Total~angmom$',
+            r'$ParType0~ZMF$',
+            r'$ParType1~ZMF$',
+            r'$ParType4~ZMF$',
+            r'$ParType5~ZMF$',
+            r'$ParType0~angmom$',
+            r'$ParType1~angmom$',
+            r'$ParType4~angmom$',
+            r'$ParType5~angmom$'
         ]
 
         im, cbar = self.heatmap(angle_matrix, x_labels, x_labels, ax=ax,
-                           cmap="tab20c", cbarlabel=r"Misalignment angle  [degrees]")
+                                cmap="tab20c", cbarlabel=r"Misalignment angle  [degrees]",
+                                norm = matplotlib.colors.LogNorm())
         texts = self.annotate_heatmap(im, valfmt=r"{x:.1f}")
-        ax.set_title(r"Aperture = {}".format(apertures))
+        fig.set_title(r"Aperture = {:.2f}".format(apertures))
 
         fig.tight_layout()
         plt.show()
