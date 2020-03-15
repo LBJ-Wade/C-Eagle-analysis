@@ -53,22 +53,22 @@ class CorrelationMatrix(pull.FOFRead):
         im = ax.imshow(angle_matrix, cmap='RdBu', norm=norm, origin='lower')
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="3%", pad=0.)
+        cax = divider.append_axes("right", size="3%", pad=10.)
         cbar = fig.colorbar(im, cax=cax)
         cbar.ax.minorticks_off()
-        cbar.ax.set_ylabel(r'$y_{rKSZ} \equiv \frac{\Delta T}{T_{CMB}}$', rotation=270, size=25, labelpad=30)
+        cbar.ax.set_ylabel(r'$\Delta \theta$ \quad [degrees]', rotation=270, size=25, labelpad=30)
 
         x_labels = [
-            r'$\mathbf{\hat{v_{pec}}}$',
-            r'$\mathbf{\hat{L}}$',
-            r'$\mathbf{\hat{v_{pec}^{(gas)}}}$',
-            r'$\mathbf{\hat{v_{pec}^{(DM)}}}$',
-            r'$\mathbf{\hat{v_{pec}^{(stars)}}}$',
-            r'$\mathbf{\hat{v_{pec}^{(BH)}}}$',
-            r'$\mathbf{\hat{L^{(gas)}}}$',
-            r'$\mathbf{\hat{L^{(DM)}}}$',
-            r'$\mathbf{\hat{L^{(stars)}}}$',
-            r'$\mathbf{\hat{L^{(BH)}}}$'
+            r'$\mathbf{\widehat{v_{pec}}}$',
+            r'$\mathbf{\widehat{L}}$',
+            r'$\mathbf{\widehat{v_{pec}^{(gas)}}}$',
+            r'$\mathbf{\widehat{v_{pec}^{(DM)}}}$',
+            r'$\mathbf{\widehat{v_{pec}^{(stars)}}}$',
+            r'$\mathbf{\widehat{v_{pec}^{(BH)}}}$',
+            r'$\mathbf{\widehat{L^{(gas)}}}$',
+            r'$\mathbf{\widehat{L^{(DM)}}}$',
+            r'$\mathbf{\widehat{L^{(stars)}}}$',
+            r'$\mathbf{\widehat{L^{(BH)}}}$'
         ]
 
         ax.set_xticklabels(x_labels)
@@ -77,8 +77,8 @@ class CorrelationMatrix(pull.FOFRead):
         # Loop over data dimensions and create text annotations.
         for i in range(len(x_labels)):
             for j in range(len(x_labels)):
-                text = ax.text(j, i, angle_matrix[i, j],
-                               ha="center", va="center", color="k")
+                text = ax.text(j, i, r"{:.2f}".format(angle_matrix[i, j]),
+                               ha="center", va="center", color="k", size = 15)
 
         ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
         fig.tight_layout()
