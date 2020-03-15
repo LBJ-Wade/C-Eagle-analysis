@@ -40,6 +40,20 @@ class FOFRead(Simulation):
     def get_directory(self):
         return self.FOFDirectory
 
+    def pull_apertures(self):
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
+                                                                                   f"found in {self.FOFDirectory}."
+                                                                                   "Check that they have "
+                                                                                   "already been computed for this "
+                                                                                   "cluster and this redshift.")
+
+        # Read aperture data
+        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
+            apertures = np.array(input_file.get('Apertures'))
+
+        return apertures
+
     def pull_angmom_alignment_angles(self):
         """
         Compute the angular momentum alignment angles between different particle types, based on the results from the angular
@@ -143,7 +157,7 @@ class FOFRead(Simulation):
 
         return alignment_matrix
     
-    def pull_rot_vel_angles_correlation(self):
+    def pull_rot_vel_alignment_angles(self):
 
         assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
                                                                                            f"found in {self.FOFDirectory}."
@@ -211,8 +225,45 @@ class FOFRead(Simulation):
                     alignment_matrix[m][i][j] = self.cluster.angle_between_vectors(corr_entry[i], corr_entry[j])
 
         return alignment_matrix
-        
-        
+
+
+    def pull_rot_vel_magnitudes_vectors(self):
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
+                                                                                           f"found in {self.FOFDirectory}."
+                                                                                           "Check that they have "
+                                                                                           "already been computed "
+                                                                                           "for this cluster and "
+                                                                                           "this redshift.")
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
+                                                                                   f"found in {self.FOFDirectory}."
+                                                                                   "Check that they have "
+                                                                                   "already been computed for this "
+                                                                                   "cluster and this redshift.")
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5')), ("Angular momentum data not "
+                                                                                          f"found in {self.FOFDirectory}."
+                                                                                          "Check that they have "
+                                                                                          "already been computed for "
+                                                                                          "this cluster and this redshift.")
+
+        # Read aperture data
+        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
+            apertures = np.array(input_file.get('Apertures'))
+
+        # Read angular momentum data
+        with h5py.File(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5'), 'r') as input_file:
+            Total_angmom = np.array(input_file.get('Total_angmom'))
+
+
+        # Read peculiar valocity data
+        with h5py.File(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5'), 'r') as input_file:
+            Total_ZMF = np.array(input_file.get('Total_ZMF'))
+
+
+
+
 
 
 if __name__ == '__main__':
@@ -220,7 +271,6 @@ if __name__ == '__main__':
     cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
     read = FOFRead(cluster)
 
-    # print(read.pull_angmom_alignment_angles())
-    # print(read.pull_peculiar_velocity_alignment_angles())
-    print(read.pull_rot_vel_angles_correlation())
+    print(read.pull_apertures())
+    print(read.pull_peculiar_velocity_alignment_angles())
 
