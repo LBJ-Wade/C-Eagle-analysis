@@ -53,7 +53,7 @@ class CorrelationMatrix(pull.FOFRead):
         im = ax.imshow(angle_matrix, cmap='RdBu', norm=norm, origin='lower')
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="3%", pad=10.)
+        cax = divider.append_axes("right", size="3%", pad=0.05)
         cbar = fig.colorbar(im, cax=cax)
         cbar.ax.minorticks_off()
         cbar.ax.set_ylabel(r'$\Delta \theta$ \quad [degrees]', rotation=270, size=25, labelpad=30)
