@@ -78,7 +78,7 @@ class CorrelationMatrix(pull.FOFRead):
         ax.set_yticklabels(row_labels)
 
         # Let the horizontal axes labeling appear on top.
-        ax.tick_params(top=True, bottom=False,
+        ax.tick_params(top=False, bottom=True,
                        labeltop=True, labelbottom=False)
 
         # Rotate the tick labels and set their alignment.
@@ -163,7 +163,7 @@ class CorrelationMatrix(pull.FOFRead):
             apertures = apertures[self.aperture_index]
             angle_matrix = angle_matrix[self.aperture_index]
 
-        fig, ax = plt.subplots()
+        fig, ax = plt.subplots(figsize=(8, 8))
 
         x_labels = [
             r'$Total~ZMF$',
@@ -181,7 +181,7 @@ class CorrelationMatrix(pull.FOFRead):
         im, cbar = self.heatmap(angle_matrix, x_labels, x_labels, ax=ax,
                                 cmap="RdYlGn_r", cbarlabel=r"Misalignment angle  [degrees]")
         texts = self.annotate_heatmap(im, valfmt=r"{x:.1f}")
-        plt.title(r"Aperture = {:.2f}".format(apertures))
+        plt.title(r"Aperture = {:.2f} Mpc".format(apertures))
 
         fig.tight_layout()
         plt.show()
