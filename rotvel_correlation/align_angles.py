@@ -179,8 +179,7 @@ class CorrelationMatrix(pull.FOFRead):
         ]
 
         im, cbar = self.heatmap(angle_matrix, x_labels, x_labels, ax=ax,
-                                cmap="tab20c", cbarlabel=r"Misalignment angle  [degrees]",
-                                norm = matplotlib.colors.LogNorm())
+                                cmap="RdYlGn_r", cbarlabel=r"Misalignment angle  [degrees]")
         texts = self.annotate_heatmap(im, valfmt=r"{x:.1f}")
         fig.set_title(r"Aperture = {:.2f}".format(apertures))
 
