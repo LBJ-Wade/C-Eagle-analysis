@@ -50,7 +50,7 @@ class CorrelationMatrix(pull.FOFRead):
         ax = fig.add_subplot(111)
 
         norm = colors.LogNorm(vmin=1e-1, vmax=180)
-        im = ax.imshow(angle_matrix, cmap='RdBu', norm=norm, origin='upper')
+        im = ax.imshow(angle_matrix, cmap='RdBu', norm=norm, origin='lower')
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="3%", pad=0.1)
@@ -76,7 +76,7 @@ class CorrelationMatrix(pull.FOFRead):
         ax.set_yticks(ticks)
         ax.set_xticklabels(x_labels)
         ax.set_yticklabels(x_labels)
-        ax.grid(which='minor', color='w', linestyle='-', linewidth = 3)
+        plt.grid(which='minor', color='w', linestyle='-', linewidth = 10)
 
         # Loop over data dimensions and create text annotations.
         for i in range(len(x_labels)):
