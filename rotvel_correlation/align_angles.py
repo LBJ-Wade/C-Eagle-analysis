@@ -123,7 +123,7 @@ if __name__ == '__main__':
             aperture_list.append(aperture)
 
         print([a[0][1] for a in matrix_list])
-        average_matrix = np.mean(matrix_list, axis=0)
+        average_matrix = np.std(matrix_list, axis=0)
         average_aperture = np.mean(aperture_list, axis=0)
         matrix.plot_matrix(average_matrix, average_aperture)
 
