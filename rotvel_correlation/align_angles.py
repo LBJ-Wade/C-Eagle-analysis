@@ -72,8 +72,10 @@ class CorrelationMatrix(pull.FOFRead):
         ]
 
         ticks = np.arange(0, len(x_labels), 1)
-        ax.set_xticks(ticks)
-        ax.set_yticks(ticks)
+        ax.set_xticks(ticks, minor=False)
+        ax.set_yticks(ticks, minor=False)
+        ax.set_xticks(ticks, minor=True)
+        ax.set_yticks(ticks, minor=True)
         ax.set_xticklabels(x_labels)
         ax.set_yticklabels(x_labels)
 
