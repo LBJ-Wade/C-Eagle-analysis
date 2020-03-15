@@ -69,8 +69,6 @@ class CorrelationMatrix(pull.FOFRead):
         im = ax.imshow(data, **kwargs)
 
         # Create colorbar
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="3%", pad=10.)
         cbar = ax.figure.colorbar(im, ax=cax, **cbar_kw)
         cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
@@ -136,7 +134,7 @@ class CorrelationMatrix(pull.FOFRead):
         if threshold is not None:
             threshold = im.norm(threshold)
         else:
-            threshold = im.norm(data.max()) / 2.
+            threshold = im.norm(180) / 2.
 
         # Set default alignment to center, but allow it to be
         # overwritten by textkw.
