@@ -49,7 +49,7 @@ class CorrelationMatrix(pull.FOFRead):
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
 
-        im = ax.imshow(angle_matrix, cmap='Pastel2', vmin=0, vmax=180, origin='lower')
+        im = ax.imshow(angle_matrix, cmap='Set3_r', vmin=0, vmax=180, origin='lower')
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="3%", pad=0.1)
