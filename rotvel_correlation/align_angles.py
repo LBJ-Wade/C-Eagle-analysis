@@ -71,11 +71,12 @@ class CorrelationMatrix(pull.FOFRead):
             r'$\mathbf{\widehat{L}}^{(BH)}$'
         ]
 
-        ticks = np.arange(0, len(x_labels), 1)
-        ax.set_xticks(ticks, minor=False)
-        ax.set_yticks(ticks, minor=False)
-        ax.set_xticks(ticks, minor=True)
-        ax.set_yticks(ticks, minor=True)
+        ticks_major = np.arange(0, len(x_labels), 1)
+        ticks_minor = np.arange(-0.5, len(x_labels)+1, 1)
+        ax.set_xticks(ticks_major, minor=False)
+        ax.set_yticks(ticks_major, minor=False)
+        ax.set_xticks(ticks_minor, minor=True)
+        ax.set_yticks(ticks_minor, minor=True)
         ax.set_xticklabels(x_labels)
         ax.set_yticklabels(x_labels)
 
