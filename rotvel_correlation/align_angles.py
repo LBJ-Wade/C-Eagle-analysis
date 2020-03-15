@@ -92,7 +92,7 @@ class CorrelationMatrix(pull.FOFRead):
             ax.spines[pos].set_edgecolor('w')
 
         fig.tight_layout()
-        plt.show()
+        # plt.show()
 
 
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
 
         matrix.plot_matrix(data[15], aperture[15])
 
-    def all_clusters():
+    def all_clusters(apertureidx):
         simulation = Simulation(simulation_name='celr_e')
         matrix_list = []
         aperture_list = []
@@ -117,17 +117,21 @@ if __name__ == '__main__':
             cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p000')
             print(f'Analysing cluster {cluster.clusterID}')
             matrix = CorrelationMatrix(cluster)
-            data = matrix.get_data()[15]
-            aperture = matrix.get_apertures()[15]
+            data = matrix.get_data()[apertureidx]
+            aperture = matrix.get_apertures()[apertureidx]
             matrix_list.append(data)
             aperture_list.append(aperture)
 
         print([a[0][1] for a in matrix_list])
-        average_matrix = np.std(matrix_list, axis=0)
+        average_matrix = np.mean(matrix_list, axis=0)
         average_aperture = np.mean(aperture_list, axis=0)
         matrix.plot_matrix(average_matrix, average_aperture)
 
-    all_clusters()
+        plt.savefig(os.path.join(simulation.pathSave, 'rotvel_correlation',
+                                 f'mean_{cluster.redshift}_aperture_{apertureidx}.pdf'))
+
+    for i in range(18):
+        all_clusters(i)
 
 
 
