@@ -167,16 +167,16 @@ class CorrelationMatrix(pull.FOFRead):
         ax = fig.add_subplot(111)
 
         x_labels = [
-            'Total_ZMF',
-            'Total_angmom',
-            'ParType0_ZMF',
-            'ParType1_ZMF',
-            'ParType4_ZMF',
-            'ParType5_ZMF',
-            'ParType0_angmom',
-            'ParType1_angmom',
-            'ParType4_angmom',
-            'ParType5_angmom'
+            r'Total_ZMF',
+            r'Total_angmom',
+            r'ParType0_ZMF',
+            r'ParType1_ZMF',
+            r'ParType4_ZMF',
+            r'ParType5_ZMF',
+            r'ParType0_angmom',
+            r'ParType1_angmom',
+            r'ParType4_angmom',
+            r'ParType5_angmom'
         ]
 
         im, cbar = self.heatmap(angle_matrix, x_labels, x_labels, ax=ax,
