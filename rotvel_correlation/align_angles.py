@@ -76,7 +76,7 @@ class CorrelationMatrix(pull.FOFRead):
         ax.set_yticks(ticks)
         ax.set_xticklabels(x_labels)
         ax.set_yticklabels(x_labels)
-        plt.grid(which='minor', color='w', linestyle='-', linewidth = 10)
+
 
         # Loop over data dimensions and create text annotations.
         for i in range(len(x_labels)):
@@ -84,8 +84,9 @@ class CorrelationMatrix(pull.FOFRead):
                 text = ax.text(j, i, r"{:.2f}".format(angle_matrix[i, j]),
                                ha="center", va="center", color="k", size = 15)
 
-        ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
+        ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20, labelpad = 5)
         fig.tight_layout()
+        plt.grid(b = True, color='w', linestyle='-', linewidth=10)
         plt.show()
 
 
