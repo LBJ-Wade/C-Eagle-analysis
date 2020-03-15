@@ -19,6 +19,8 @@ import os.path
 import h5py
 import matplotlib
 import matplotlib.pyplot as plt
+from mpl_toolkits.axes_grid1 import make_axes_locatable
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
@@ -67,7 +69,9 @@ class CorrelationMatrix(pull.FOFRead):
         im = ax.imshow(data, **kwargs)
 
         # Create colorbar
-        cbar = ax.figure.colorbar(im, ax=ax, **cbar_kw)
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="3%", pad=10.)
+        cbar = ax.figure.colorbar(im, ax=cax, **cbar_kw)
         cbar.ax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
         # We want to show all ticks...
@@ -82,8 +86,7 @@ class CorrelationMatrix(pull.FOFRead):
                        labeltop=False, labelbottom=True)
 
         # Rotate the tick labels and set their alignment.
-        plt.setp(ax.get_xticklabels(), rotation=-30, ha="right",
-                 rotation_mode="anchor")
+        plt.setp(ax.get_xticklabels(), rotation=30, ha="right", rotation_mode="anchor")
 
         # Turn spines off and create white grid.
         for edge, spine in ax.spines.items():
@@ -91,8 +94,9 @@ class CorrelationMatrix(pull.FOFRead):
 
         ax.set_xticks(np.arange(data.shape[1] + 1) - .5, minor=True)
         ax.set_yticks(np.arange(data.shape[0] + 1) - .5, minor=True)
-        ax.grid(which="minor", color="w", linestyle='-', linewidth=3)
+        ax.grid(which="minor", color="w", linestyle='-', linewidth=5)
         ax.tick_params(which="minor", bottom=True, left=False)
+
 
         return im, cbar
 
@@ -181,7 +185,7 @@ class CorrelationMatrix(pull.FOFRead):
         im, cbar = self.heatmap(angle_matrix, x_labels, x_labels, ax=ax,
                                 cmap="RdYlGn_r", cbarlabel=r"Misalignment angle  [degrees]")
         texts = self.annotate_heatmap(im, valfmt=r"{x:.1f}")
-        plt.title(r"Aperture = {:.2f} Mpc".format(apertures))
+        plt.title(r"Aperture = {:.2f} Mpc".format(apertures), size = 25)
 
         fig.tight_layout()
         plt.show()
