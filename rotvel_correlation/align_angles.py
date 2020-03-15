@@ -72,7 +72,7 @@ class CorrelationMatrix(pull.FOFRead):
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="5%", pad=0.05)
         cbar = cax.figure.colorbar(im, ax=cax, **cbar_kw)
-        cbar.cax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
+        cax.set_ylabel(cbarlabel, rotation=-90, va="bottom")
 
         # We want to show all ticks...
         ax.set_xticks(np.arange(data.shape[1]))
