@@ -90,8 +90,8 @@ class CorrelationMatrix(pull.FOFRead):
         ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
 
-        for ticks in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
-            ticks.set_color('w')
+        ax.tick_params(which='minor', length=0, color='w')
+        ax.tick_params(which='major', length=0, color='w')
         for pos in ['top', 'bottom', 'right', 'left']:
             ax.spines[pos].set_edgecolor('w')
 
