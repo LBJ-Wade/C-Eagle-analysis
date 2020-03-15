@@ -84,7 +84,7 @@ class CorrelationMatrix(pull.FOFRead):
                 text = ax.text(j, i, r"{:.2f}".format(angle_matrix[i, j]),
                                ha="center", va="center", color="k", size = 15)
 
-        ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20, labelpad = 5)
+        ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
         fig.tight_layout()
         plt.grid(b = True, color='w', linestyle='-', linewidth=10)
         plt.show()
