@@ -49,11 +49,11 @@ class CorrelationMatrix(pull.FOFRead):
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
 
-        norm = colors.LogNorm(vmin=1e-6, vmax=180)
+        norm = colors.LogNorm(vmin=1e-1, vmax=180)
         im = ax.imshow(angle_matrix, cmap='RdBu', norm=norm, origin='lower')
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="3%", pad=0.05)
+        cax = divider.append_axes("right", size="3%", pad=0.1)
         cbar = fig.colorbar(im, cax=cax)
         cbar.ax.minorticks_off()
         cbar.ax.set_ylabel(r'$\Delta \theta$ \quad [degrees]', rotation=270, size=25, labelpad=30)
@@ -61,14 +61,14 @@ class CorrelationMatrix(pull.FOFRead):
         x_labels = [
             r'$\mathbf{\widehat{v_{pec}}}$',
             r'$\mathbf{\widehat{L}}$',
-            r'$\mathbf{\widehat{v_{pec}^{(gas)}}}$',
-            r'$\mathbf{\widehat{v_{pec}^{(DM)}}}$',
-            r'$\mathbf{\widehat{v_{pec}^{(stars)}}}$',
-            r'$\mathbf{\widehat{v_{pec}^{(BH)}}}$',
-            r'$\mathbf{\widehat{L^{(gas)}}}$',
-            r'$\mathbf{\widehat{L^{(DM)}}}$',
-            r'$\mathbf{\widehat{L^{(stars)}}}$',
-            r'$\mathbf{\widehat{L^{(BH)}}}$'
+            r'$\mathbf{\widehat{v_{pec}}}^{(gas)}$',
+            r'$\mathbf{\widehat{v_{pec}}}^{(DM)}$',
+            r'$\mathbf{\widehat{v_{pec}}}^{(stars)}$',
+            r'$\mathbf{\widehat{v_{pec}}}^{(BH)}$',
+            r'$\mathbf{\widehat{L}}^{(gas)}$',
+            r'$\mathbf{\widehat{L}}^{(DM)}$',
+            r'$\mathbf{\widehat{L}}^{(stars)}$',
+            r'$\mathbf{\widehat{L}}^{(BH)}$'
         ]
 
         ax.set_xticklabels(x_labels)
