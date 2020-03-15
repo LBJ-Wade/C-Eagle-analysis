@@ -133,6 +133,8 @@ if __name__ == '__main__':
         matrix.set_data(average_matrix)
         matrix.plot_matrix()
 
+    all_clusters()
+
 
 
 
