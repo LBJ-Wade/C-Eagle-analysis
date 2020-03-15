@@ -127,7 +127,7 @@ if __name__ == '__main__':
         average_aperture = np.mean(aperture_list, axis=0)
         matrix.plot_matrix(average_matrix, average_aperture)
 
-        plt.savefig(os.path.join(simulation.pathSave, 'rotvel_correlation',
+        plt.savefig(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation',
                                  f'mean_{cluster.redshift}_aperture_{apertureidx}.pdf'))
 
     for i in range(18):
