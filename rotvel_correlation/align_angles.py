@@ -71,8 +71,8 @@ class CorrelationMatrix(pull.FOFRead):
             r'$\mathbf{\widehat{L}}^{(BH)}$'
         ]
 
-        ax.set_xticklabels(x_labels, labelpad = 0.1)
-        ax.set_yticklabels(x_labels, labelpad = 0.1)
+        ax.set_xticklabels(x_labels)
+        ax.set_yticklabels(x_labels)
         ax.grid(which='minor', color='w', linestyle='-', linewidth = 3)
 
         # Loop over data dimensions and create text annotations.
