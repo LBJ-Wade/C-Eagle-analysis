@@ -163,7 +163,8 @@ class CorrelationMatrix(pull.FOFRead):
             apertures = apertures[self.aperture_index]
             angle_matrix = angle_matrix[self.aperture_index]
 
-        fig, ax = plt.subplots()
+        fig = plt.figure(figsize=(12, 12))
+        ax = fig.add_subplot(111)
 
         x_labels = [
             'Total_ZMF',
@@ -179,8 +180,9 @@ class CorrelationMatrix(pull.FOFRead):
         ]
 
         im, cbar = self.heatmap(angle_matrix, x_labels, x_labels, ax=ax,
-                           cmap="YlGn", cbarlabel="Misalignment angle")
-        texts = self.annotate_heatmap(im, valfmt="{x:.1f}")
+                           cmap="tab20c", cbarlabel=r"Misalignment angle  [degrees]")
+        texts = self.annotate_heatmap(im, valfmt=r"{x:.1f}")
+        ax.set_title(r"Aperture = {}".format(apertures))
 
         fig.tight_layout()
         plt.show()
@@ -190,8 +192,7 @@ class CorrelationMatrix(pull.FOFRead):
 
 
 if __name__ == '__main__':
-
-
+    exec(open('visualisation/light_mode.py').read())
     cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
     matrix = CorrelationMatrix(cluster)
     matrix.fix_aperture(10)
