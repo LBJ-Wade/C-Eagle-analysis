@@ -72,7 +72,7 @@ class CorrelationMatrix(pull.FOFRead):
         ]
 
         ticks_major = np.arange(0, len(x_labels), 1)
-        ticks_minor = np.arange(-0.5, len(x_labels)+1, 1)
+        ticks_minor = np.arange(-0.5, len(x_labels), 1)
         ax.set_xticks(ticks_major, minor=False)
         ax.set_yticks(ticks_major, minor=False)
         ax.set_xticks(ticks_minor, minor=True)
@@ -88,8 +88,14 @@ class CorrelationMatrix(pull.FOFRead):
                                ha="center", va="center", color="k", size = 15)
 
         ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
-        fig.tight_layout()
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
+
+        for ticks in ax.xaxis.get_ticklines() + ax.yaxis.get_ticklines():
+            ticks.set_color('w')
+        for pos in ['top', 'bottom', 'right', 'left']:
+            ax.spines[pos].set_edgecolor('w')
+
+        fig.tight_layout()
         plt.show()
 
 
