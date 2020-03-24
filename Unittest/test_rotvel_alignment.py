@@ -71,7 +71,6 @@ class TestRotVel(unittest.TestCase):
 
         # Compute angular momentum as r [cross] v
         linear_momentum_r = velocity_ZMF*mass[:, None]
-        print(linear_momentum_r, coordinates, sep='\n')
         ang_momentum = np.sum(np.cross(coordinates, linear_momentum_r), axis = 0)/np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
@@ -79,6 +78,11 @@ class TestRotVel(unittest.TestCase):
             ang_momentum))) * 180/np.pi
 
         # Display results
+        print(f"""
+        {'celr_e | halo 0 | z=0':-^30}
+        Comoving frame: {True}
+        Units: {'Gadget units'}
+        """)
         print(f"Shape of r500: {r500.shape}")
         print(f"Shape of CoP: {CoP.shape}")
         print(f"Shape of group_number: {group_number.shape}")
@@ -86,13 +90,12 @@ class TestRotVel(unittest.TestCase):
         print(f"Shape of velocity: {velocity.shape}")
         print(f"Shape of mass: {mass.shape}")
         print(f"Shape of temperature: {temperature.shape}")
-        print('\n')
         print(f"Shape of mask: {mask.shape}")
         print(f"Shape of coordinates_r: {coordinates_r.shape}")
         print(f"Shape of velocity_r: {velocity_ZMF.shape}")
         print(f"Shape of pec_velocity: {pec_velocity.shape}")
         print(f"Shape of ang_momentum: {ang_momentum.shape}")
-        print('\n\n')
+        print('\n')
         print(f"pec_velocity = {pec_velocity}")
         print(f"ang_momentum = {ang_momentum}")
         print(f"delta_theta = {delta_theta}")
