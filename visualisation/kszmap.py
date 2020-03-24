@@ -57,7 +57,7 @@ class KSZMAP(Simulation):
         :param plotlimits:
         """
 
-        # Impose cluster requirements
+        # Impose cluste             r requirements
         cluster.set_requires(self.REQUIRES)
         cluster.import_requires()
 

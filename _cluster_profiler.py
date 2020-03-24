@@ -24,7 +24,23 @@ class Mixin:
     def angle_between_vectors(v1, v2):
         # v1 is your firsr vector
         # v2 is your second vector
-        angle = np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
+
+        v1 = np.array(v1)
+        v2 = np.array(v2)
+
+        # If the vectors are almost equal, then the arccos returns nan because of numerical
+        # precision: catch that case and return 0 angle instead.
+        if np.abs(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)) - 1) < 1e-14:
+            # print(f"[ Angle between vectors]\t==> Warning: the vectors {v1} and {v2} are very well aligned to better "
+            #       f"than 1e-12. The separation angle has therefore been set to 0. deg")
+            angle = 0.
+        elif np.abs(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)) + 1) < 1e-14:
+            # print(f"[ Angle between vectors]\t==> Warning: the vectors {v1} and {v2} are very well anti-aligned to "
+            #       f"better "
+            #       f"than 1e-12. The separation angle has therefore been set to 180. deg")
+            angle = np.pi
+        else:
+            angle = np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
         # Return the result in degrees
         return angle * 180 / np.pi
 
@@ -392,7 +408,14 @@ class Mixin:
         s = np.linalg.norm(v)
         kmat = np.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
         rotation_matrix = np.eye(3) + kmat + kmat.dot(kmat) * ((1 - c) / (s ** 2))
-        return rotation_matrix
+
+        # Catch exception where the vectors are perfectly aligned
+        if Mixin.angle_between_vectors(vec1, vec2) < 1e-10:
+            return np.identity(3)
+        elif np.abs(Mixin.angle_between_vectors(vec1, vec2) - 180) < 1e-10:
+            return (-1) * np.identity(3)
+        else:
+            return np.asarray(rotation_matrix)
 
     @staticmethod
     def rotation_matrix_about_axis(axis, theta):
