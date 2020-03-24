@@ -134,7 +134,6 @@ class TestRotVel(unittest.TestCase):
 
         # Apply masks:
         #   aperture radius = R500_true
-        #   no equation of state
         #   central FOF group
         mask = np.where(
             (coordinates_r < r500) &
