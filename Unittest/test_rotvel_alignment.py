@@ -123,8 +123,7 @@ class TestRotVel(unittest.TestCase):
             hd5set = f['/PartType1/Mass']
             mass = hd5set[...]
 
-            hd5set = f['/PartType1/Temperature']
-            temperature = hd5set[...]
+
 
         # Convert in cluster-centric radial coordinates
         coordinates_r = np.sqrt(
@@ -139,7 +138,6 @@ class TestRotVel(unittest.TestCase):
         #   central FOF group
         mask = np.where(
             (coordinates_r < r500) &
-            (temperature < 10**5) &
             (group_number == 1)
         )[0]
 
@@ -148,7 +146,6 @@ class TestRotVel(unittest.TestCase):
         coordinates_r = coordinates_r[mask]
         velocity = velocity[mask]
         mass = mass[mask]
-        temperature = temperature[mask]
 
         # Compute peculiar velocity
         pec_velocity = np.sum(velocity*mass[:, None], axis = 0)/np.sum(mass)
@@ -175,7 +172,6 @@ class TestRotVel(unittest.TestCase):
         print(f"Shape of coordinates: {coordinates.shape}")
         print(f"Shape of velocity: {velocity.shape}")
         print(f"Shape of mass: {mass.shape}")
-        print(f"Shape of temperature: {temperature.shape}")
         print(f"Shape of mask: {mask.shape}")
         print(f"Shape of coordinates_r: {coordinates_r.shape}")
         print(f"Shape of velocity_r: {velocity_ZMF.shape}")
