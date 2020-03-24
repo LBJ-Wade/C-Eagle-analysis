@@ -65,9 +65,9 @@ class TestRotVel(unittest.TestCase):
         pec_velocity = np.sum(velocity*mass.reshape(velocity.shape[0],1))/np.sum(mass)
 
         velocity_r = np.sqrt(
-            (velocity[:, 0] - pec_velocity[0]) ** 2 +
-            (velocity[:, 1] - pec_velocity[1]) ** 2 +
-            (velocity[:, 2] - pec_velocity[2]) ** 2
+            (velocity[:, 0] - pec_velocity[0].reshape(velocity.shape[0],1)) ** 2 +
+            (velocity[:, 1] - pec_velocity[1].reshape(velocity.shape[0],1)) ** 2 +
+            (velocity[:, 2] - pec_velocity[2].reshape(velocity.shape[0],1)) ** 2
         )
 
         # Compute angular momentum
