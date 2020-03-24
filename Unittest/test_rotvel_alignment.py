@@ -56,7 +56,7 @@ class TestRotVel(unittest.TestCase):
         #   central FOF group
         mask = np.where(
             (coordinates_radial < r500) &
-            (temperature < 10**5) &
+            (temperature > 10**5) &
             (group_number == 1)
         )[0]
 
