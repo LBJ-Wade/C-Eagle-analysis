@@ -120,8 +120,10 @@ class TestRotVel(unittest.TestCase):
             hd5set = f['/PartType1/Velocity']
             velocity = hd5set[...]
 
-            hd5set = f['/PartType1/Mass']
-            mass = hd5set[...]
+            h5dset = f["/Header"]
+            DM_particleMass   = h5dset.attrs.get('MassTable', default=None)[1]
+            DM_Numberparticle = h5dset.attrs.get('NumPart_Total', default=None)[1]
+            mass = np.ones(DM_Numberparticle) * DM_particleMass
 
 
         # Convert in cluster-centric radial coordinates
@@ -170,7 +172,7 @@ class TestRotVel(unittest.TestCase):
 
         # Display results
         print(
-            f"{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\nParticles: {'Gas'}\n")
+            f"{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\nParticles: {'DM'}\n")
         print(f"Shape of r500: {r500.shape}")
         print(f"Shape of CoP: {CoP.shape}")
         print(f"Shape of group_number: {group_number.shape}")
