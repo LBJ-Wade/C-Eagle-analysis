@@ -36,8 +36,7 @@ class TestRotVel(unittest.TestCase):
             hd5set = f['/PartType0/Temperature']
             temperature = hd5set[...]
 
-        # Convert in cluster-centric radial coordinates (`_r` == `rescaled`)
-
+        # Convert in cluster-centric radial coordinates
         coordinates_r = np.sqrt(
             (coordinates[:, 0] - CoP[0]) ** 2 +
             (coordinates[:, 1] - CoP[1]) ** 2 +
@@ -64,16 +63,16 @@ class TestRotVel(unittest.TestCase):
         # Compute peculiar velocity
         pec_velocity = np.sum(velocity*mass[:, None], axis = 0)/np.sum(mass)
 
-        velocity_r = np.sqrt(
+        velocity_ZMF = np.sqrt(
             (velocity[:, 0] - pec_velocity[0]) ** 2 +
             (velocity[:, 1] - pec_velocity[1]) ** 2 +
             (velocity[:, 2] - pec_velocity[2]) ** 2
         )
 
         # Compute angular momentum as r [cross] v
-        linear_momentum_r = velocity_r*mass[:, None]
-        print(linear_momentum_r, coordinates_r, sep='\n')
-        ang_momentum = np.sum(np.cross(coordinates_r, linear_momentum_r), axis = 0)/np.sum(mass)
+        linear_momentum_r = velocity_ZMF*mass[:, None]
+        print(linear_momentum_r, coordinates, sep='\n')
+        ang_momentum = np.sum(np.cross(coordinates, linear_momentum_r), axis = 0)/np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
         delta_theta = np.arccos(np.dot(pec_velocity, ang_momentum) / (np.linalg.norm(pec_velocity) * np.linalg.norm(
@@ -90,7 +89,7 @@ class TestRotVel(unittest.TestCase):
         print('\n')
         print(f"Shape of mask: {mask.shape:<10}")
         print(f"Shape of coordinates_r: {coordinates_r.shape:<10}")
-        print(f"Shape of velocity_r: {velocity_r.shape:<10}")
+        print(f"Shape of velocity_r: {velocity_ZMF.shape:<10}")
         print(f"Shape of pec_velocity: {pec_velocity.shape:<10}")
         print(f"Shape of ang_momentum: {ang_momentum.shape:<10}")
         print('\n\n')
