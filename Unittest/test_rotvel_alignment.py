@@ -62,7 +62,7 @@ class TestRotVel(unittest.TestCase):
         temperature = temperature[mask]
 
         # Compute peculiar velocity
-        pec_velocity = np.sum(velocity*mass.reshape(velocity.shape[0],1), axis = 0)/np.sum(mass)
+        pec_velocity = np.sum(velocity*mass[:, None], axis = 0)/np.sum(mass)
 
         velocity_r = np.sqrt(
             (velocity[:, 0] - pec_velocity[0]) ** 2 +
@@ -71,7 +71,7 @@ class TestRotVel(unittest.TestCase):
         )
 
         # Compute angular momentum as r [cross] v
-        linear_momentum_r = velocity_r*mass.reshape(velocity_r.shape[0],1)
+        linear_momentum_r = velocity_r*mass[:, None]
         ang_momentum = np.sum(np.cross(coordinates_r, linear_momentum_r), axis = 0)/np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
