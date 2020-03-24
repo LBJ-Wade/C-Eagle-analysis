@@ -37,28 +37,32 @@ class TestRotVel(unittest.TestCase):
             temperature = hd5set[...]
 
         # Convert in cluster-centric radial coordinates
-        coordinates_r = np.sqrt(
+        coordinates_radial = np.sqrt(
             (coordinates[:, 0] - CoP[0]) ** 2 +
             (coordinates[:, 1] - CoP[1]) ** 2 +
             (coordinates[:, 2] - CoP[2]) ** 2
         )
+
+        # Rescale coordinates to the CoP
+        coordinates = np.asarray([
+            (coordinates[:, 0] - CoP[0]),
+            (coordinates[:, 1] - CoP[1]),
+            (coordinates[:, 2] - CoP[2])
+        ]).T
 
         # Apply masks:
         #   aperture radius = R500_true
         #   no equation of state
         #   central FOF group
         mask = np.where(
-            (coordinates_r < r500) &
+            (coordinates_radial < r500) &
             (temperature < 10**5) &
             (group_number == 1)
         )[0]
 
-        group_number = group_number[mask]
         coordinates = coordinates[mask]
-        coordinates_r = coordinates_r[mask]
         velocity = velocity[mask]
         mass = mass[mask]
-        temperature = temperature[mask]
 
         # Compute peculiar velocity
         pec_velocity = np.sum(velocity*mass[:, None], axis = 0)/np.sum(mass)
@@ -70,7 +74,7 @@ class TestRotVel(unittest.TestCase):
         ]).T
 
         # Compute angular momentum as r [cross] v
-        linear_momentum_r = velocity*mass[:, None]
+        linear_momentum_r = velocity_ZMF*mass[:, None]
         ang_momentum = np.sum(np.cross(coordinates, linear_momentum_r), axis = 0)/np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
@@ -87,7 +91,6 @@ class TestRotVel(unittest.TestCase):
         print(f"Shape of mass: {mass.shape}")
         print(f"Shape of temperature: {temperature.shape}")
         print(f"Shape of mask: {mask.shape}")
-        print(f"Shape of coordinates_r: {coordinates_r.shape}")
         print(f"Shape of velocity_r: {velocity_ZMF.shape}")
         print(f"Shape of pec_velocity: {pec_velocity.shape}")
         print(f"Shape of ang_momentum: {ang_momentum.shape}")
