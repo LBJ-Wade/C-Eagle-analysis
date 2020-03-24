@@ -10,7 +10,7 @@ class TestRotVel(unittest.TestCase):
 
         # Read in celr_e | halo 0 | z=0
         path = '/cosma5/data/dp004/dc-pear3/data/eagle/halo_00/data/groups_029_z000p000'
-        with h5.File(os.path.join(path, 'eagle_subfind_tab_029_z000p000.0.hdf5', 'r')) as f:
+        with h5.File(os.path.join(path, 'eagle_subfind_tab_029_z000p000.0.hdf5'), 'r') as f:
 
             hd5set = f['/FOF/Group_R_Crit500']
             r500 = hd5set[...][0]
@@ -19,7 +19,7 @@ class TestRotVel(unittest.TestCase):
             CoP = hd5set[...][0]
 
         path = '/cosma5/data/dp004/dc-pear3/data/eagle/halo_00/data/particledata_029_z000p000'
-        with h5.File(os.path.join(path, 'eagle_subfind_particles_029_z000p000.0.hdf5', 'r')) as f:
+        with h5.File(os.path.join(path, 'eagle_subfind_particles_029_z000p000.0.hdf5'), 'r') as f:
 
             hd5set = f['/PartType0/GroupNumber']
             group_number = hd5set[...]
