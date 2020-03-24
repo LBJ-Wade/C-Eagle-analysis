@@ -83,8 +83,6 @@ class TestRotVel(unittest.TestCase):
 
         # Display results
         print(f"{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\nParticles: {'Gas'}\n")
-        print(f"Shape of r500: {r500.shape}")
-        print(f"Shape of CoP: {CoP.shape}")
         print(f"Shape of group_number: {group_number.shape}")
         print(f"Shape of coordinates: {coordinates.shape}")
         print(f"Shape of velocity: {velocity.shape}")
@@ -163,7 +161,7 @@ class TestRotVel(unittest.TestCase):
         ]).T
 
         # Compute angular momentum as r [cross] v
-        linear_momentum_r = velocity * mass[:, None]
+        linear_momentum_r = velocity_ZMF * mass[:, None]
         ang_momentum = np.sum(np.cross(coordinates, linear_momentum_r), axis=0) / np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
@@ -171,10 +169,7 @@ class TestRotVel(unittest.TestCase):
             ang_momentum))) * 180 / np.pi
 
         # Display results
-        print(
-            f"{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\nParticles: {'DM'}\n")
-        print(f"Shape of r500: {r500.shape}")
-        print(f"Shape of CoP: {CoP.shape}")
+        print(f"{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\nParticles: {'DM'}\n")
         print(f"Shape of group_number: {group_number.shape}")
         print(f"Shape of coordinates: {coordinates.shape}")
         print(f"Shape of velocity: {velocity.shape}")
