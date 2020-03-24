@@ -63,11 +63,11 @@ class TestRotVel(unittest.TestCase):
         # Compute peculiar velocity
         pec_velocity = np.sum(velocity*mass[:, None], axis = 0)/np.sum(mass)
 
-        velocity_ZMF = [
+        velocity_ZMF = np.asarray([
             (velocity[:, 0] - pec_velocity[0]),
             (velocity[:, 1] - pec_velocity[1]),
             (velocity[:, 2] - pec_velocity[2])
-        ]
+        ]).T
 
         # Compute angular momentum as r [cross] v
         linear_momentum_r = velocity_ZMF*mass[:, None]
