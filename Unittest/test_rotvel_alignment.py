@@ -70,7 +70,7 @@ class TestRotVel(unittest.TestCase):
         ]).T
 
         # Compute angular momentum as r [cross] v
-        linear_momentum_r = velocity_ZMF*mass[:, None]
+        linear_momentum_r = velocity*mass[:, None]
         ang_momentum = np.sum(np.cross(coordinates, linear_momentum_r), axis = 0)/np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
