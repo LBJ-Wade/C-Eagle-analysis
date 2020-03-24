@@ -78,7 +78,7 @@ class TestRotVel(unittest.TestCase):
             ang_momentum))) * 180/np.pi
 
         # Display results
-        print(f"""{'celr_e | halo 0 | z=0':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\n""")
+        print(f"""{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\n""")
         print(f"Shape of r500: {r500.shape}")
         print(f"Shape of CoP: {CoP.shape}")
         print(f"Shape of group_number: {group_number.shape}")
