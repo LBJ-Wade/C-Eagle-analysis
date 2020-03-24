@@ -72,7 +72,8 @@ class TestRotVel(unittest.TestCase):
 
         # Compute angular momentum as r [cross] v
         linear_momentum_r = velocity_r*mass[:, None]
-        ang_momentum = np.sum(np.cross(coordinates_r, linear_momentum_r, axis = 1), axis = 0)/np.sum(mass)
+        print(linear_momentum_r, coordinates_r, sep='\n')
+        ang_momentum = np.sum(np.cross(coordinates_r, linear_momentum_r), axis = 0)/np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
         delta_theta = np.arccos(np.dot(pec_velocity, ang_momentum) / (np.linalg.norm(pec_velocity) * np.linalg.norm(
