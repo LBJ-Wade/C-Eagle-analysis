@@ -74,7 +74,7 @@ class TestRotVel(unittest.TestCase):
         ]).T
 
         # Compute angular momentum as r [cross] v
-        linear_momentum_r = velocity_ZMF*mass[:, None]
+        linear_momentum_r = velocity*mass[:, None]
         ang_momentum = np.sum(np.cross(coordinates, linear_momentum_r), axis = 0)/np.sum(mass)
 
         # Compute angle between pec_velocity and ang_momentum
@@ -91,7 +91,7 @@ class TestRotVel(unittest.TestCase):
         print(f"Shape of mass: {mass.shape}")
         print(f"Shape of temperature: {temperature.shape}")
         print(f"Shape of mask: {mask.shape}")
-        print(f"Shape of velocity_r: {velocity_ZMF.shape}")
+        print(f"Shape of velocity_ZMF: {velocity_ZMF.shape}")
         print(f"Shape of pec_velocity: {pec_velocity.shape}")
         print(f"Shape of ang_momentum: {ang_momentum.shape}")
         print('\n')
