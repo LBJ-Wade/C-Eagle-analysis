@@ -61,7 +61,7 @@ class TestRotVel(unittest.TestCase):
         temperature = temperature[mask]
 
         # Compute peculiar velocity
-        pec_velocity = np.sum(np.multiply(velocity*mass[:, None], axis=0), axis = 0)/np.sum(mass)
+        pec_velocity = np.sum(np.multiply(velocity*mass[:, None]), axis = 0)/np.sum(mass)
 
         velocity_ZMF = np.sqrt(
             (velocity[:, 0] - pec_velocity[0]) ** 2 +
@@ -70,7 +70,7 @@ class TestRotVel(unittest.TestCase):
         )
 
         # Compute angular momentum as r [cross] v
-        linear_momentum_r = np.multiply(velocity_ZMF*mass[:, None], axis=0)
+        linear_momentum_r = np.multiply(velocity_ZMF*mass[:, None])
         print(linear_momentum_r, coordinates, sep='\n')
         ang_momentum = np.sum(np.cross(coordinates, linear_momentum_r, axis = 0), axis = 0)/np.sum(mass)
 
