@@ -222,7 +222,8 @@ class TestRotVel(unittest.TestCase):
 
         while file_index > 0:
             try:
-                with h5.File(os.path.join(path, f'eagle_subfind_particles_029_z000p000.{file_index}.hdf5'), 'r') as f:
+                with h5.File(os.path.join(path, f'eagle_subfind_particles_029_z000p000.{str(file_index)}.hdf5'),
+                             'r') as f:
                     hd5set = f['/PartType1/GroupNumber']
                     group_number = np.concatenate((group_number, hd5set[...]), axis=0)
             except:
