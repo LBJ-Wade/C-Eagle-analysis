@@ -4,7 +4,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from import_toolkit.cluster import Simulation, Cluster
-import memory
+from import_toolkit import memory
 
 """
 GLOBAL VARS
