@@ -11,21 +11,16 @@ etc.
 -------------------------------------------------------------------
 """
 
-from mpi4py import MPI
-import itertools
 import numpy as np
 import sys
 import os.path
-import h5py
-import matplotlib
 import matplotlib.pyplot as plt
-from matplotlib import colors
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from cluster import Simulation, Cluster
+from import_toolkit.cluster import Simulation, Cluster
 from read import pull
 
 class CorrelationMatrix(pull.FOFRead):

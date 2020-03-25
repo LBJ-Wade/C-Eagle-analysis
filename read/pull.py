@@ -11,7 +11,6 @@ etc.
 -------------------------------------------------------------------
 """
 
-from mpi4py import MPI
 import itertools
 import numpy as np
 import sys
@@ -20,7 +19,7 @@ import h5py
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from cluster import Simulation, Cluster
+from import_toolkit.cluster import Simulation, Cluster
 
 
 class FOFRead(Simulation):

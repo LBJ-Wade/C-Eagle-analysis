@@ -1,8 +1,6 @@
 import yt
 import numpy as np
-import yt.units as units
-import pylab
-from cluster import Simulation, Cluster
+from import_toolkit.cluster import Cluster
 
 def YT_plot_gas_density(cluster):
 

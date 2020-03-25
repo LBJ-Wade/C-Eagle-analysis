@@ -1,8 +1,7 @@
 import unittest
-import itertools
 
 import numpy as np
-from _cluster_profiler import Mixin
+from import_toolkit._cluster_profiler import Mixin
 
 np.set_printoptions(suppress=True)
 

@@ -33,7 +33,7 @@ import sys
 import os.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from cluster import Cluster
+from import_toolkit.cluster import Cluster
 from visualisation.rendering import Map
 from visualisation import map_plot_parameters as plotpar
 

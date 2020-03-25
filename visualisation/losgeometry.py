@@ -13,21 +13,15 @@ This file contains methods and classes for rendering data:
 import os
 import sys
 import numpy as np
-import matplotlib
-import scipy as sp
 
 from matplotlib import pyplot as plt
-import matplotlib.colors as colors
 from matplotlib.figure import Figure
 from matplotlib.axes import Axes
-from matplotlib.legend import Legend
-from matplotlib.patches import Circle
 from mpl_toolkits.mplot3d import proj3d
 from matplotlib.patches import FancyArrowPatch
-from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from cluster import Cluster
+from import_toolkit.cluster import Cluster
 from visualisation.rendering import Colorscheme
 
 class Arrow3D(FancyArrowPatch):
@@ -345,7 +339,7 @@ class TestSuite(LosGeometry):
 
 
     def _TEST_derotate_field(self):
-        from cluster import Cluster
+        from import_toolkit.cluster import Cluster
         from testing import angular_momentum
 
         cluster = Cluster(simulation_name='celr_e', clusterID = 0, redshift = 'z000p000')

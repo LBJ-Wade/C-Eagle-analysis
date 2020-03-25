@@ -3,7 +3,7 @@ import h5py
 import numpy as np
 from matplotlib import pyplot as plt
 
-from cluster import Simulation, Cluster
+from import_toolkit.cluster import Simulation, Cluster
 import memory
 
 """
