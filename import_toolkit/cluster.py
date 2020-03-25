@@ -163,6 +163,8 @@ class Cluster(Simulation,
         for part_type in self.requires.keys():
 
             group_number_index = np.where(self.group_number_part(part_type[-1]) > 0)[0]
+            print(part_type)
+            print(len(self.group_number_part(part_type[-1])))
 
             for field in self.requires[part_type]:
 
@@ -210,6 +212,7 @@ class Cluster(Simulation,
 
             else:
                 intersected_index = clean_radius_index
+            print(len(intersected_index))
 
             for field in self.requires[part_type]:
                 filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
@@ -238,7 +241,7 @@ if __name__ == '__main__':
 
             cluster.import_requires()
 
-            cluster.info()
+            # cluster.info()
 
     test = TEST()
     test.cluster_imports()
