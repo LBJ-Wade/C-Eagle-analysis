@@ -224,8 +224,9 @@ if __name__ == '__main__':
     import inspect
 
     class TEST:
-        data_required = {'partType0': ['coordinates', 'velocities', 'temperature', 'sphkernel'],
-                         'partType1': ['coordinates', 'velocities']}
+        data_required = {'partType0': ['mass', 'coordinates', 'velocities', 'temperature', 'sphdensity'],
+                         'partType1': ['mass', 'coordinates', 'velocities'],
+                         'partType4': ['mass', 'coordinates', 'velocities']}
 
         def cluster_imports(self):
             print(inspect.stack()[0][3])
