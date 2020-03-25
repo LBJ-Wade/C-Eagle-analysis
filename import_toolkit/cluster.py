@@ -1,8 +1,8 @@
 from __future__ import print_function, division, absolute_import
 import os
-from .simulation import Simulation
-from import_toolkit import _cluster_retriever
-from import_toolkit import _cluster_profiler
+from simulation import Simulation
+import _cluster_retriever
+import _cluster_profiler
 
 class Cluster(Simulation,
               _cluster_retriever.Mixin,
