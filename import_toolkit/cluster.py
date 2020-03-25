@@ -162,7 +162,7 @@ class Cluster(Simulation,
     def import_requires(self):
         for part_type in self.requires.keys():
 
-            group_number_index = np.where(self.group_number_part(part_type) > 0)[0]
+            group_number_index = np.where(self.group_number_part(part_type[-1]) > 0)[0]
 
             for field in self.requires[part_type]:
 
