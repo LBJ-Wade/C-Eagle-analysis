@@ -1,7 +1,7 @@
 from __future__ import print_function, division, absolute_import
 import numpy as np
 
-from import_toolkit._cluster_retriever import redshift_str2num
+from _cluster_retriever import redshift_str2num
 
 
 class Simulation:

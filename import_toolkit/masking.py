@@ -21,7 +21,7 @@ similar speedups.
 
 from __future__ import print_function, division, absolute_import
 import numpy as np
-from import_toolkit import Cluster
+from cluster import Cluster
 
 class Mask(Cluster):
 
