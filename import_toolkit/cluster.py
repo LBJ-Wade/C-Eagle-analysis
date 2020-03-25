@@ -1,4 +1,5 @@
 from __future__ import print_function, division, absolute_import
+from typing import List, Dict, Tuple
 import os
 from simulation import Simulation
 import _cluster_retriever
@@ -12,7 +13,8 @@ class Cluster(Simulation,
                  simulation_name: str = None,
                  clusterID: int = 0,
                  redshift: str = None,
-                 comovingframe: bool = False):
+                 comovingframe: bool = False,
+                 requires: Dict[str, List[str]] = None):
 
         # Link to the base class by initialising it
         super().__init__(simulation_name = simulation_name)
@@ -22,6 +24,7 @@ class Cluster(Simulation,
         self.set_clusterID(clusterID)
         self.set_redshift(redshift)
         self.comovingframe = comovingframe
+        self.requires = requires
 
         # Set additional cosmoloy attributes from methods
         self.hubble_param = self.file_hubble_param()
