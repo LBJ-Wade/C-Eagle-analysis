@@ -6,6 +6,7 @@ import os
 np.set_printoptions(suppress=True)
 
 class TestRotVel(unittest.TestCase):
+
     def test_rotvel_alignment_GAS(self):
 
         # Read in celr_e | halo 0 | z=0
@@ -83,16 +84,16 @@ class TestRotVel(unittest.TestCase):
 
         # Display results
         print(f"{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\nParticles: {'Gas'}\n")
-        print(f"Shape of group_number: {group_number.shape}")
-        print(f"Shape of coordinates: {coordinates.shape}")
-        print(f"Shape of velocity: {velocity.shape}")
-        print(f"Shape of mass: {mass.shape}")
-        print(f"Shape of temperature: {temperature.shape}")
-        print(f"Shape of mask: {mask.shape}")
-        print(f"Shape of velocity_ZMF: {velocity_ZMF.shape}")
-        print(f"Shape of pec_velocity: {pec_velocity.shape}")
-        print(f"Shape of ang_momentum: {ang_momentum.shape}")
-        print('\n')
+        # print(f"Shape of group_number: {group_number.shape}")
+        # print(f"Shape of coordinates: {coordinates.shape}")
+        # print(f"Shape of velocity: {velocity.shape}")
+        # print(f"Shape of mass: {mass.shape}")
+        # print(f"Shape of temperature: {temperature.shape}")
+        # print(f"Shape of mask: {mask.shape}")
+        # print(f"Shape of velocity_ZMF: {velocity_ZMF.shape}")
+        # print(f"Shape of pec_velocity: {pec_velocity.shape}")
+        # print(f"Shape of ang_momentum: {ang_momentum.shape}")
+        # print('\n')
         print(f"pec_velocity = {pec_velocity}")
         print(f"ang_momentum = {ang_momentum}")
         print(f"delta_theta = {delta_theta}")
@@ -170,15 +171,15 @@ class TestRotVel(unittest.TestCase):
 
         # Display results
         print(f"{' celr_e | halo 0 | z=0 ':-^60}\nComoving frame: {True}\nUnits: {'Gadget units'}\nParticles: {'DM'}\n")
-        print(f"Shape of group_number: {group_number.shape}")
-        print(f"Shape of coordinates: {coordinates.shape}")
-        print(f"Shape of velocity: {velocity.shape}")
-        print(f"Shape of mass: {mass.shape}")
-        print(f"Shape of mask: {mask.shape}")
-        print(f"Shape of velocity_ZMF: {velocity_ZMF.shape}")
-        print(f"Shape of pec_velocity: {pec_velocity.shape}")
-        print(f"Shape of ang_momentum: {ang_momentum.shape}")
-        print('\n')
+        # print(f"Shape of group_number: {group_number.shape}")
+        # print(f"Shape of coordinates: {coordinates.shape}")
+        # print(f"Shape of velocity: {velocity.shape}")
+        # print(f"Shape of mass: {mass.shape}")
+        # print(f"Shape of mask: {mask.shape}")
+        # print(f"Shape of velocity_ZMF: {velocity_ZMF.shape}")
+        # print(f"Shape of pec_velocity: {pec_velocity.shape}")
+        # print(f"Shape of ang_momentum: {ang_momentum.shape}")
+        # print('\n')
         print(f"pec_velocity = {pec_velocity}")
         print(f"ang_momentum = {ang_momentum}")
         print(f"delta_theta = {delta_theta}")
