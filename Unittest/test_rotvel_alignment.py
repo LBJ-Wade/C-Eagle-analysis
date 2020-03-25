@@ -211,8 +211,8 @@ class TestRotVel(unittest.TestCase):
             mass = np.ones(DM_Numberparticle) * DM_particleMass
 
             print("Particles with group number < 0", group_number[np.where(group_number<0)[0]])
-            print("Particles with group number = 0", group_number[np.where(group_number=0)[0]])
-            print("Particles with group number = 1", group_number[np.where(group_number=1)[0]])
+            print("Particles with group number = 0", group_number[np.where(group_number==0)[0]])
+            print("Particles with group number = 1", group_number[np.where(group_number==1)[0]])
 
 if __name__ == '__main__':
     unittest.main()
