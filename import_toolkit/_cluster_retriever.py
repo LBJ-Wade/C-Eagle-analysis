@@ -18,7 +18,7 @@ import os
 import h5py as h5
 import numpy as np
 from memory import free_memory
-import progressbar
+from .. import progressbar
 
 
 def redshift_str2num(z: str):
