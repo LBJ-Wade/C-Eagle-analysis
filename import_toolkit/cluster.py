@@ -1,6 +1,6 @@
 from __future__ import print_function, division, absolute_import
 import os
-import Simulation
+from .simulation import Simulation
 from import_toolkit import _cluster_retriever
 from import_toolkit import _cluster_profiler
 
