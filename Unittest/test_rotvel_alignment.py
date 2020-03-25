@@ -229,10 +229,10 @@ class TestRotVel(unittest.TestCase):
             except:
                 file_index = -1
 
-            print(f"{' ceagle | halo 0 | z=0 ':-^60}\n")
-            print(f"Particles with group number < 0: {len(np.where(group_number < 0)[0])} particles found.")
-            print(f"Particles with group number = 0: {len(np.where(group_number == 0)[0])} particles found.")
-            print(f"Particles with group number = 1: {len(np.where(group_number == 1)[0])} particles found.")
+        print(f"{' ceagle | halo 0 | z=0 ':-^60}\n")
+        print(f"Particles with group number < 0: {len(np.where(group_number < 0)[0])} particles found.")
+        print(f"Particles with group number = 0: {len(np.where(group_number == 0)[0])} particles found.")
+        print(f"Particles with group number = 1: {len(np.where(group_number == 1)[0])} particles found.")
 
 if __name__ == '__main__':
     unittest.main()
