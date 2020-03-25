@@ -210,9 +210,12 @@ class TestRotVel(unittest.TestCase):
             DM_Numberparticle = h5dset.attrs.get('NumPart_Total', default=None)[1]
             mass = np.ones(DM_Numberparticle) * DM_particleMass
 
-            print("Particles with group number < 0", group_number[np.where(group_number<0)[0]])
-            print("Particles with group number = 0", group_number[np.where(group_number==0)[0]])
-            print("Particles with group number = 1", group_number[np.where(group_number==1)[0]])
+            print("Particles with group number < 0", group_number[np.where(group_number<0)[0]],  len(np.where(
+                group_number<0)[0]), sep='\n')
+            print("Particles with group number = 0", group_number[np.where(group_number==0)[0]], len(np.where(
+                group_number==0)[0]), sep='\n')
+            print("Particles with group number = 1", group_number[np.where(group_number==1)[0]], len(np.where(
+                group_number==1)[0]), sep='\n')
 
 if __name__ == '__main__':
     unittest.main()
