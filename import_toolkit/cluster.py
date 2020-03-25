@@ -1,6 +1,8 @@
 from __future__ import print_function, division, absolute_import
 from typing import List, Dict, Tuple
 import os
+import numpy as np
+
 from simulation import Simulation
 import _cluster_retriever
 import _cluster_profiler
@@ -83,11 +85,6 @@ class Cluster(Simulation,
         self.redshift = redshift
 
     def set_requires(self, imports: dict) -> None:
-        """
-
-        :param imports:
-        :return:
-        """
         self.requires = imports
         if self.requires == None:
             print('[ SetRequires ]\t==> Warning: no pull requests for cluster datasets.')
@@ -105,10 +102,6 @@ class Cluster(Simulation,
 
 
     def file_hubble_param(self):
-        """
-        AIM: retrieves the Hubble parameter of the file
-        RETURNS: type = double
-        """
         _, attr_value = self.extract_header_attribute_name('HubbleParam')
         return attr_value
 
@@ -168,21 +161,60 @@ class Cluster(Simulation,
 
     def import_requires(self):
         for part_type in self.requires.keys():
+
+            group_number_index = np.where(self.group_number_part(part_type) > 0)[0]
+
             for field in self.requires[part_type]:
+
                 if field == 'mass' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1])[group_number_index])
+
                 elif field == 'coordinates' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1])[group_number_index])
+
                 elif field == 'velocity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1])[group_number_index])
+
                 elif field == 'temperature' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1])[group_number_index])
+
                 elif field == 'sphdensity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1])[group_number_index])
+
                 elif field == 'sphkernel' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1])[group_number_index])
+
                 elif field == 'metallicity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1])[group_number_index])
+
+
+            radial_dist = np.linalg.norm(
+                np.subtract(getattr(self, part_type+'_coordinates'), self.centre_of_potential), axis=1
+            )
+
+            clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
+
+            if (part_type == 'partType0' and
+                hasattr(self, 'partType0_sphdensity') and
+                hasattr(self, 'partType0_temperature')):
+
+                log_temperature_cut = np.log10(
+                    self.cluster.density_units(self.cluster.partType0_sphdensity, unit_system='nHcgs')) / 3 + 4.7
+
+                equation_of_state_index = np.where(
+                    (self.cluster.partType0_temperature > 1e4) &
+                    (np.log10(self.cluster.partType0_temperature) > log_temperature_cut)
+                )[0]
+
+                intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
+
+            else:
+                intersected_index = clean_radius_index
+
+            for field in self.requires[part_type]:
+                filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
+                setattr(self, part_type + '_' + field, filtered_attribute)
+
 
 
 
@@ -202,6 +234,8 @@ if __name__ == '__main__':
                               redshift='z000p000',
                               comovingframe=False,
                               requires=self.data_required)
+
+            cluster.import_requires()
 
             cluster.info()
 
