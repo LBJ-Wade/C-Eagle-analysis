@@ -226,6 +226,7 @@ class TestRotVel(unittest.TestCase):
                              'r') as f:
                     hd5set = f['/PartType1/GroupNumber']
                     group_number = np.concatenate((group_number, hd5set[...]), axis=0)
+                    file_index += 1
             except:
                 file_index = -1
 
