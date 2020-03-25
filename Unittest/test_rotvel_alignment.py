@@ -184,7 +184,35 @@ class TestRotVel(unittest.TestCase):
         print(f"ang_momentum = {ang_momentum}")
         print(f"delta_theta = {delta_theta}")
 
+    def test_particle_group_number(self):
+        # Read in celr_e | halo 0 | z=0
+        path = '/cosma5/data/dp004/dc-pear3/data/eagle/halo_00/data/groups_029_z000p000'
+        with h5.File(os.path.join(path, 'eagle_subfind_tab_029_z000p000.0.hdf5'), 'r') as f:
+            hd5set = f['/FOF/Group_R_Crit500']
+            r500 = hd5set[...][0]
 
+            hd5set = f['/FOF/GroupCentreOfPotential']
+            CoP = hd5set[...][0]
+
+        path = '/cosma5/data/dp004/dc-pear3/data/eagle/halo_00/data/particledata_029_z000p000'
+        with h5.File(os.path.join(path, 'eagle_subfind_particles_029_z000p000.0.hdf5'), 'r') as f:
+            hd5set = f['/PartType1/GroupNumber']
+            group_number = hd5set[...]
+
+            hd5set = f['/PartType1/Coordinates']
+            coordinates = hd5set[...]
+
+            hd5set = f['/PartType1/Velocity']
+            velocity = hd5set[...]
+
+            h5dset = f["/Header"]
+            DM_particleMass   = h5dset.attrs.get('MassTable', default=None)[1]
+            DM_Numberparticle = h5dset.attrs.get('NumPart_Total', default=None)[1]
+            mass = np.ones(DM_Numberparticle) * DM_particleMass
+
+            print("Particles with group number < 0", group_number[np.where(group_number<0)[0]])
+            print("Particles with group number = 0", group_number[np.where(group_number=0)[0]])
+            print("Particles with group number = 1", group_number[np.where(group_number=1)[0]])
 
 if __name__ == '__main__':
     unittest.main()
