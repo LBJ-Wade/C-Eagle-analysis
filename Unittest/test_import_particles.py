@@ -2,7 +2,7 @@ import unittest
 import h5py as h5
 import numpy as np
 import os
-from import_toolkit import Cluster
+from ..import_toolkit.cluster import Cluster
 np.set_printoptions(suppress=True)
 
 class TestMixin(unittest.TestCase):
