@@ -160,10 +160,47 @@ class Cluster(Simulation,
         return self.file_NumPart_Total()[1]
 
     def import_requires(self):
+        """
+        -------------------------------------------------------------------------
+        Mask method to select only the particles used in the
+        analysis, excluding all those which would be thrown out at some
+        point of the pipeline.
+        An example of these are the unbound particles with group_number < 0.
+        The equation of state and particles beyond the high-resolution zoom
+        regions are other examples of particles which would not be used in
+        the pipeline.
+        By cutting out the unwanted particles at runtime, the pipeline is
+        left with fewer particles to store in the RAM memory, preventing
+        overflow errors and allowing to use a lower number of cores to achieve
+        similar speedups.
+
+        No arguments are specified in this method. The input is the self.requirenments
+        attribute, which specifies what datasets to import.
+
+        [FUNCTIONALITY]
+        Loop over each particle type at a time and for each do:
+            - Check all particles with groupnumber > 0 (bound particles)
+            - OPTIONAL: only retain groupnumber == 1 (Central FOF)
+            - Import all fields required, filtering by groupnumber already
+            - Filter the particle data by EoS and clean radius
+            - Over write the particle field with the filtered dataset
+
+        If the dataset belongs to the gas particle type, filter out the equation
+        of state.
+
+        [TODO]
+        Implement specific equation of states for each simulation, since they all
+        use different models.
+        Implement booleans for switching the filtering conditions on and off.
+
+        :return: None
+            Assigns new datasets to the cluster objects. These can be easily and
+            quickly accessed from the RAM.
+        -------------------------------------------------------------------------
+        """
         for part_type in self.requires.keys():
 
-            group_number_index = np.where(self.group_number_part(part_type[-1]) > 0)[0]
-
+            group_number_index = np.where(self.group_number_part(part_type[-1]) == 1)[0]
 
             for field in self.requires[part_type]:
 
