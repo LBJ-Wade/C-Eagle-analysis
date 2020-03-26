@@ -2,6 +2,7 @@ import unittest
 import h5py as h5
 import numpy as np
 import os
+from import_toolkit import Cluster
 np.set_printoptions(suppress=True)
 
 class TestMixin(unittest.TestCase):
@@ -103,6 +104,13 @@ class TestMixin(unittest.TestCase):
             collection_exists_file.append(exists_file)
             print(f"Data file {file_index:03d} exists: {exists_file}.")
             file_index += 1
+
+        print(f"{' SOFTWARE TEST ':=^60}")
+        for sim in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
+            cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
+            print(f"\n{ sim, ' | halo 0 | z=0 ':-^60}")
+            print("cluster.groups_filePaths", cluster.groups_filePaths(), sep='\n')
+            print("cluster.partdata_filePaths", cluster.partdata_filePaths(), sep='\n')
 
 
 

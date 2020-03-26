@@ -99,7 +99,7 @@ class Mixin:
                 kwargs['file_dir'] = file_dir
                 kwargs['file_list'] = [x for x in file_list if x.startswith(prefix)]
                 kwargs['file_list_sorted'] = sorted([os.path.join(file_dir, file) for file in kwargs['file_list']])
-                # print(kwargs['file_list_sorted'])
+                print(kwargs['file_list_sorted'])
 
                 return f(self, *args, **kwargs)
 
