@@ -1,2 +1,2 @@
-import sys
-sys.path.append("..")
+from . import cluster
+from . import simulation
