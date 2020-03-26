@@ -1,9 +1,13 @@
-import unittest
-import h5py as h5
-import numpy as np
 import os
-print(os.getcwd())
-from ..import_toolkit.cluster import Cluster
+import sys
+import unittest
+import numpy as np
+import h5py as h5
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
+from import_toolkit.cluster import Cluster
+
 np.set_printoptions(suppress=True)
 
 class TestMixin(unittest.TestCase):
