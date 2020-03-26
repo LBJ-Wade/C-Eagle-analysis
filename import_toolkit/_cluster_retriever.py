@@ -18,7 +18,7 @@ import os
 import h5py as h5
 import numpy as np
 from .memory import free_memory
-import .progressbar
+from .progressbar import ProgressBar
 
 
 def redshift_str2num(z: str):
@@ -507,7 +507,7 @@ class Mixin:
             sub_group_number = np.concatenate((sub_group_number, sub_gn), axis=0)
         return sub_group_number
 
-    @progressbar.ProgressBar()
+    @ProgressBar()
     @data_subject(subject="particledata")
     def particle_coordinates(self, part_type, *args, **kwargs):
         """
@@ -534,7 +534,7 @@ class Mixin:
             pos = self.comoving_length(pos)
         return pos
 
-    @progressbar.ProgressBar()
+    @ProgressBar()
     @data_subject(subject="particledata")
     def particle_velocity(self, part_type, *args, **kwargs):
         """
@@ -561,7 +561,7 @@ class Mixin:
             part_vel = self.comoving_velocity(part_vel)
         return part_vel
 
-    @progressbar.ProgressBar()
+    @ProgressBar()
     @data_subject(subject="particledata")
     def particle_masses(self, part_type, *args, **kwargs):
         """
@@ -593,7 +593,7 @@ class Mixin:
 
         return part_mass
 
-    @progressbar.ProgressBar()
+    @ProgressBar()
     @data_subject(subject="particledata")
     def particle_temperature(self, *args, **kwargs):
         """
@@ -616,7 +616,7 @@ class Mixin:
         assert temperature.__len__() > 0, "Array is empty."
         return temperature
 
-    @progressbar.ProgressBar()
+    @ProgressBar()
     @data_subject(subject="particledata")
     def particle_SPH_density(self, *args, **kwargs):
         """
@@ -642,7 +642,7 @@ class Mixin:
 
         return densitySPH
 
-    @progressbar.ProgressBar()
+    @ProgressBar()
     @data_subject(subject="particledata")
     def particle_SPH_smoothinglength(self, *args, **kwargs):
         """
@@ -668,7 +668,7 @@ class Mixin:
 
         return smoothinglength
 
-    @progressbar.ProgressBar()
+    @ProgressBar()
     @data_subject(subject="particledata")
     def particle_metallicity(self, *args, **kwargs):
         """
