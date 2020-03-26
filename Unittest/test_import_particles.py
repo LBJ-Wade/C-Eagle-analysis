@@ -2,6 +2,7 @@ import unittest
 import h5py as h5
 import numpy as np
 import os
+print(os.getcwd())
 from import_toolkit.cluster import Cluster
 np.set_printoptions(suppress=True)
 
