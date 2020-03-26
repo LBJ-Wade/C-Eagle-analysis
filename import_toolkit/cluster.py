@@ -4,8 +4,8 @@ import os
 import numpy as np
 
 from .simulation import Simulation
-import ._cluster_retriever
-import ._cluster_profiler
+from . import _cluster_retriever
+from . import _cluster_profiler
 
 class Cluster(Simulation,
               _cluster_retriever.Mixin,
