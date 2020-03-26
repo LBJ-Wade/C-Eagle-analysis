@@ -5,6 +5,7 @@ import os
 np.set_printoptions(suppress=True)
 
 class TestMixin(unittest.TestCase):
+
     def test_particle_group_number(self):
         # Read in celr_e | halo 0 | z=0
         path = '/cosma5/data/dp004/dc-pear3/data/eagle/halo_00/data/particledata_029_z000p000'
@@ -55,6 +56,59 @@ class TestMixin(unittest.TestCase):
         print(f"Particles with group number < 0: {len(np.where(group_number < 0)[0])} particles found.")
         print(f"Particles with group number = 0: {len(np.where(group_number == 0)[0])} particles found.")
         print(f"Particles with group number = 1: {len(np.where(group_number == 1)[0])} particles found.")
+
+    def test_filenames(self):
+        # Read in celr_e | halo 0 | z=0
+        path = '/cosma5/data/dp004/dc-pear3/data/eagle'
+        exists_dir = os.path.isdir(os.path.join(path, 'halo_00/data/particledata_029_z000p000'))
+        exists_file = os.path.isfile(os.path.join(path, 'halo_00/data/particledata_029_z000p000',
+                                                  'eagle_subfind_particles_029_z000p000.0.hdf5'))
+
+            print(f"\n{' celr_e | halo 0 | z=0 ':-^60}")
+            print(f"Data directory exists: {exists_dir}.")
+            print(f"Data file exists: {exists_file}.")
+
+        # Read in celr_b | halo 0 | z=0
+        path = '/cosma5/data/dp004/dc-pear3/data/bahamas'
+        exists_dir = os.path.isdir(os.path.join(path, 'halo_00/data/particledata_029'))
+        exists_file = os.path.isfile(os.path.join(path, 'halo_00/data/particledata_029',
+                                                  'eagle_subfind_particles_029.0.hdf5'))
+
+        print(f"\n{' celr_b | halo 0 | z=0 ':-^60}")
+        print(f"Data directory exists: {exists_dir}.")
+        print(f"Data file exists: {exists_file}.")
+
+        # Read in macsis | halo 0 | z=0
+        path = '/cosma5/data/dp004/dc-hens1/macsis/macsis_gas'
+        exists_dir = os.path.isdir(os.path.join(path, 'halo_0000/data/particledata_022'))
+        exists_file = os.path.isfile(os.path.join(path, 'halo_0000/data/particledata_022',
+                                                  'eagle_subfind_particles_022.0.hdf5'))
+
+        print(f"\n{' macsis | halo 0 | z=0 ':-^60}")
+        print(f"Data directory exists: {exists_dir}.")
+        print(f"Data file exists: {exists_file}.")
+
+        # Read in ceagle | halo 0 | z=0
+        path = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
+        exists_dir = os.path.isdir(os.path.join(path, 'CE_00/data/particledata_029_z000p000'))
+        print(f"\n{' ceagle | halo 0 | z=0 ':-^60}")
+        print(f"Data directory exists: {exists_dir}.")
+        collection_exists_file = []
+        file_index = 0
+        exists_file = True
+
+        while exists_file:
+
+            exists_file = os.path.isfile(os.path.join(path, f'CE_00/data/particledata_029_z000p000',
+                                                      f'eagle_subfind_particles_029_z000p000.{str(file_index)}.hdf5'))
+
+            collection_exists_file.append(exists_file)
+            print(f"Data file {file_index:03d} exists: {exists_file}.")
+            file_index += 1
+
+
+
+
 
 if __name__ == '__main__':
     unittest.main()
