@@ -276,7 +276,7 @@ if __name__ == '__main__':
 
         def cluster_imports(self):
             print(inspect.stack()[0][3])
-            cluster = Cluster(simulation_name='ceagle',
+            cluster = Cluster(simulation_name='celr_b',
                               clusterID=0,
                               redshift='z000p000',
                               comovingframe=False,
