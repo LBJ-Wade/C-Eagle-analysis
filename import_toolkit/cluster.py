@@ -48,7 +48,8 @@ class Cluster(simulation.Simulation,
         self.NumOfSubhalos = self.NumOfSubhalos(central_FOF = self.centralFOF_groupNumber)
 
         # Import particle datasets
-        self.import_requires()
+        if requires is not None:
+            self.import_requires()
 
     def set_simulation_name(self, simulation_name: str) -> None:
         """
