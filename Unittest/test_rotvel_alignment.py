@@ -207,8 +207,8 @@ class TestRotVel(unittest.TestCase):
             # cluster.info()
 
             print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
-            pec_velocity = cluster.group_zero_momentum_frame(aperture_radius=cluster.r200)
-            ang_momentum = cluster.group_angular_momentum(aperture_radius=cluster.r200)
+            pec_velocity = cluster.group_zero_momentum_frame()
+            ang_momentum = cluster.group_angular_momentum()
             angle = cluster.angle_between_vectors(pec_velocity, ang_momentum)
             print(f"pec_velocity = {pec_velocity}")
             print(f"ang_momentum = {ang_momentum}")
