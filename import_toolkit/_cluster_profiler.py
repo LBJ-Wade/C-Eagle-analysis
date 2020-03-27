@@ -252,8 +252,8 @@ class Mixin:
                 free_memory(['radial_dist'])
                 _mass   = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
-                if _mass.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _coords.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 centre_of_mass = self.centre_of_mass(_mass, _coords)
                 CoM_PartTypes = np.concatenate((CoM_PartTypes, centre_of_mass), axis=0)
@@ -273,8 +273,8 @@ class Mixin:
                 free_memory(['radial_dist'])
                 _mass   = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
-                if _mass.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _coords.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 mass   = np.concatenate((mass, _mass), axis=0)
                 coords = np.concatenate((coords, _coords), axis=0)
 
@@ -315,8 +315,8 @@ class Mixin:
                 free_memory(['radial_dist'])
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
-                if _mass.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _velocity.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 zmf = self.zero_momentum_frame(_mass, _velocity)
                 ZMF_PartTypes = np.concatenate((ZMF_PartTypes, zmf), axis=0)
@@ -337,8 +337,8 @@ class Mixin:
                 free_memory(['radial_dist'])
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
-                if _mass.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _velocity.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 mass     = np.concatenate((mass, _mass), axis=0)
                 velocity = np.concatenate((velocity, _velocity), axis=0)
 
@@ -381,9 +381,9 @@ class Mixin:
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 _coords   = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
                 _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
-                if _mass.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _coords.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _velocity.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 # Rescale coordinates and velocity
                 _coords   = np.subtract(_coords, self.centre_of_potential)
@@ -409,9 +409,9 @@ class Mixin:
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 _coords   = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
                 _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
-                if _mass.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _coords.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
-                if _velocity.__len__() == 0: warnings.warn(f"Array{part_type} is empty - check filtering.")
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 mass     = np.concatenate((mass, _mass), axis=0)
                 coords   = np.concatenate((coords, _coords), axis=0)
                 velocity = np.concatenate((velocity, _velocity), axis=0)
