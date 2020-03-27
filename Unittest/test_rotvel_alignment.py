@@ -189,30 +189,30 @@ class TestRotVel(unittest.TestCase):
         print(f"ang_momentum = {ang_momentum}")
         print(f"delta_theta = {delta_theta}")
 
-    # def test_software_rotvel_alignment_GAS(self):
-    #     print(f"{' SOFTWARE TEST ':*^60}")
-    #     data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-    #                      'partType1': ['mass', 'coordinates', 'velocity'],
-    #                      'partType4': ['mass', 'coordinates', 'velocity'],
-    #                      'partType5': ['mass', 'coordinates', 'velocity']}
-    #
-    #     for sim in ['celr_e', 'celr_b', 'macsis']:
-    #
-    #         cluster = Cluster(simulation_name=sim,
-    #                           clusterID=0,
-    #                           redshift='z000p000',
-    #                           comovingframe=False,
-    #                           requires=data_required)
-    #
-    #         cluster.info()
-    #
-    #         print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
-    #         pec_velocity = cluster.group_zero_momentum_frame(aperture_radius=cluster.r200)
-    #         ang_momentum = cluster.group_angular_momentum(aperture_radius=cluster.r200)
-    #         angle = cluster.angle_between_vectors(pec_velocity, ang_momentum)
-    #         print(f"pec_velocity = {pec_velocity}")
-    #         print(f"ang_momentum = {ang_momentum}")
-    #         print(f"angle = {angle}")
+    def test_software_rotvel_alignment_GAS(self):
+        print(f"{' SOFTWARE TEST ':*^60}")
+        data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                         'partType1': ['mass', 'coordinates', 'velocity'],
+                         'partType4': ['mass', 'coordinates', 'velocity'],
+                         'partType5': ['mass', 'coordinates', 'velocity']}
+
+        for sim in ['celr_e', 'celr_b', 'macsis']:
+
+            cluster = Cluster(simulation_name=sim,
+                              clusterID=0,
+                              redshift='z000p000',
+                              comovingframe=False,
+                              requires=data_required)
+
+            # cluster.info()
+
+            print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
+            pec_velocity = cluster.group_zero_momentum_frame(aperture_radius=cluster.r200)
+            ang_momentum = cluster.group_angular_momentum(aperture_radius=cluster.r200)
+            angle = cluster.angle_between_vectors(pec_velocity, ang_momentum)
+            print(f"pec_velocity = {pec_velocity}")
+            print(f"ang_momentum = {ang_momentum}")
+            print(f"angle = {angle}")
 
 
 
