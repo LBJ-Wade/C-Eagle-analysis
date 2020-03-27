@@ -27,7 +27,6 @@ class Cluster(Simulation,
         self.set_redshift(redshift)
         self.comovingframe = comovingframe
         self.requires = requires
-        self.import_requires()
 
         # Set additional cosmoloy attributes from methods
         self.hubble_param = self.file_hubble_param()
@@ -47,6 +46,9 @@ class Cluster(Simulation,
         self.M500  = self.group_M500()
         self.M2500 = self.group_M2500()
         self.NumOfSubhalos = self.NumOfSubhalos(central_FOF = self.centralFOF_groupNumber)
+
+        # Import particle datasets
+        self.import_requires()
 
     def set_simulation_name(self, simulation_name: str) -> None:
         """
@@ -280,9 +282,9 @@ if __name__ == '__main__':
                               comovingframe=False,
                               requires=self.data_required)
 
-            cluster.import_requires()
 
-            # cluster.info()
+
+            cluster.info()
 
     test = TEST()
     test.cluster_imports()
