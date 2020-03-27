@@ -3,9 +3,9 @@ from typing import List, Dict, Tuple
 import os
 import numpy as np
 
-from . import simulation
-from . import _cluster_retriever
-from . import _cluster_profiler
+import simulation
+import _cluster_retriever
+import _cluster_profiler
 
 class Cluster(simulation.Simulation,
               _cluster_retriever.Mixin,
