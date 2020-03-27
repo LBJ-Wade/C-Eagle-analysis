@@ -79,9 +79,10 @@ def main():
                           comovingframe=False,
                           requires=data_required)
 
-        cluster.info()
+        # cluster.info()
 
         print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
+        print(cluster.r200)
         pec_velocity = cluster.group_zero_momentum_frame(aperture_radius=cluster.r200)
         ang_momentum = cluster.group_angular_momentum(aperture_radius=cluster.r200)
         angle = cluster.angle_between_vectors(pec_velocity, ang_momentum)
