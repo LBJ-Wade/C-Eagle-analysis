@@ -15,6 +15,7 @@ They working principle is based on OOP class inheritance.
 """
 
 import numpy as np
+from typing import List, Dict, Tuple
 from .memory import free_memory
 
 
@@ -45,21 +46,6 @@ class Mixin:
         return angle * 180 / np.pi
 
     @staticmethod
-    def mass(mass, coords):
-        """
-        AIM: reads the FoF group central of mass from the path and file given
-        RETURNS: type = np.array of 3 doubles
-        ACCESS DATA: e.g. group_CoM[0] for getting the x value
-        """
-        assert mass.__len__() > 0, "Array is empty."
-        assert coords.__len__() > 0, "Array is empty."
-        assert mass.__len__() == coords.__len__(), "Mass and coords arrays do not have same size."
-
-        sum_of_masses = np.sum(mass)
-        free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
-        return sum_of_masses
-
-    @staticmethod
     def kinetic_energy(mass, vel):
         ke = 0.5 * mass * np.linalg.norm(vel, axis = 1)**2
         return np.sum(ke)
@@ -85,43 +71,43 @@ class Mixin:
         return dynamic_index
 
     @staticmethod
-    def angular_momentum(mass, velocity, position):
-        """Defined as L = m(r CROSS v)"""
-        rxv = np.cross(position, velocity)
-        assert (type(rxv) == np.ndarray) and (type(mass) == np.ndarray)
-        ang_mom = rxv * mass[:, None]
-        return np.sum(ang_mom, axis = 0), np.sum(mass)
-
-    @staticmethod
     def centre_of_mass(mass, coords):
         """
         AIM: reads the FoF group central of mass from the path and file given
         RETURNS: type = np.array of 3 doubles
         ACCESS DATA: e.g. group_CoM[0] for getting the x value
         """
-        assert mass.__len__() > 0, "Array is empty."
-        assert coords.__len__() > 0, "Array is empty."
-        assert mass.__len__() == coords.__len__(), "Mass and coords arrays do not have same size."
-
-        sum_of_masses = np.sum(mass)
-        centre_of_mass = np.average(coords, axis=0, weights=np.divide(mass, sum_of_masses))
-        free_memory(['centre_of_mass', 'sum_of_masses'], invert=True)
-        return centre_of_mass, sum_of_masses
+        mass   = np.asarray(mass)
+        coords = np.asarray(coords)
+        return np.sum(coords*mass[:, None], axis = 0)/np.sum(mass)
 
     @staticmethod
-    def zero_momentum_frame(mass, vel):
+    def zero_momentum_frame(mass, velocity):
         """
         AIM: reads the FoF group central of mass from the path and file given
         RETURNS: type = np.array of 3 doubles
         """
-        assert mass.__len__() > 0, "Array is empty."
-        assert vel.__len__() > 0, "Array is empty."
-        assert mass.__len__() == vel.__len__(), "Mass and vel arrays do not have same size."
+        mass     = np.asarray(mass)
+        velocity = np.asarray(velocity)
+        return np.sum(velocity*mass[:, None], axis = 0)/np.sum(mass)
 
-        sum_of_masses = np.sum(mass)
-        zero_momentum = np.average(vel, axis=0, weights=np.divide(mass, sum_of_masses))
-        free_memory(['zero_momentum', 'sum_of_masses'], invert=True)
-        return zero_momentum, sum_of_masses
+    @staticmethod
+    def angular_momentum(mass, coords, velocity):
+        """
+        Compute angular momentum as r [cross] mv.
+
+        :param mass: the mass array of the particles
+        :param coords: the coordinates of the particles, rescaled to the origin of reference
+            Usually, coords are rescaled with respect to the centre of potential.
+        :param velocity:  the velocity array of the particles, rescaled to the cluster's
+            rest frame. I/e/ take out the bulk peculiar velocity to isolate the rotation.
+        :return: np.array with the 3D components of the angular momentum vector.
+        """
+        mass = np.asarray(mass)
+        coords = np.asarray(coords)
+        velocity = np.asarray(velocity)
+        linear_momentum_r = velocity * mass[:, None]
+        return np.sum(np.cross(coords, linear_momentum_r), axis=0) / np.sum(mass)
 
     def group_kinetic_energy(self, out_allPartTypes=False, aperture_radius=None):
         """
@@ -221,158 +207,221 @@ class Mixin:
         else:
             return np.sum(Mtot_PartTypes)
 
-    def group_centre_of_mass(self, out_allPartTypes=False, aperture_radius = None):
+    def group_centre_of_mass(self,
+                             out_allPartTypes: bool =False,
+                             aperture_radius: float = None) -> np.ndarray:
         """
-        out_allPartTypes = (bool)
-            if True outputs the centre of mass and sum of masses of each
-            partType separately in arrays
+        Method that computes the centre of mass of particles within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the centre of mass using the relative
+        static method in this Mixin class.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        It also has the option of combining all the particles of different types and computing
+        the overall centre of mass, ot return the centre of mass of each particle type separately.
+        This toggle is controlled by a boolean.
 
-            if False outputs the overall CoM and sum of masses of the whole
-            cluster.
-
-        Returns the centre of mass of the cluster for a ALL particle types,
-        except for lowres_DM (2, 3).
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
         """
-        CoM_PartTypes = np.zeros((0, 3), dtype=np.float)
-        Mtot_PartTypes = np.zeros(0, dtype=np.float)
-
-        for part_type in ['0', '1', '4', '5']:
-
-            # Import data
-            mass = self.particle_masses(part_type)
-            coords = self.particle_coordinates(part_type)
-            group_num = self.group_number_part(part_type)
-
-            # Filter the particles belonging to the
-            # GroupNumber FOF == 1, which by definition is centred in the
-            # Centre of Potential and is disconnected from other FoF groups.
-            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis = 1)
-
-            if aperture_radius is None:
-                aperture_radius = self.group_r500()
-                print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
-
-            # print('centralFOF_groupNumber:', self.centralFOF_groupNumber)
-            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
-            mass = mass[index]
-            coords = coords[index]
-            assert mass.__len__() > 0, "Array is empty - check filtering."
-            assert coords.__len__() > 0, "Array is empty - check filtering."
-            # print('Computing CoM ==> PartType {0} ok! {1} particles selected.'.format(part_type, mass.__len__()))
-
-            # Compute CoM for each particle type
-            centre_of_mass, sum_of_masses = self.centre_of_mass(mass, coords)
-            CoM_PartTypes = np.append(CoM_PartTypes, [centre_of_mass], axis=0)
-            Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
 
         if out_allPartTypes:
-            return CoM_PartTypes, Mtot_PartTypes
+
+            CoM_PartTypes = np.zeros((0, 3), dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f"partType{part_type}_coordinates")
+                assert hasattr(self, f"partType{part_type}_mass")
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                                                         self.centre_of_potential), axis=1)
+
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass   = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
+                _coords = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
+                assert _mass.__len__() > 0,   "Array is empty - check filtering."
+                assert _coords.__len__() > 0, "Array is empty - check filtering."
+
+                centre_of_mass = self.centre_of_mass(_mass, _coords)
+                CoM_PartTypes = np.append(CoM_PartTypes, [centre_of_mass], axis=0)
+
+            return CoM_PartTypes
+
         else:
-            return self.centre_of_mass(Mtot_PartTypes, CoM_PartTypes)
 
-    def group_zero_momentum_frame(self, out_allPartTypes=False, aperture_radius = None):
+            mass   = np.zeros(0, dtype=np.float)
+            coords = np.zeros((0, 3), dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f"partType{part_type}_coordinates")
+                assert hasattr(self, f"partType{part_type}_mass")
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                                                         self.centre_of_potential), axis=1)
+
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass   = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
+                _coords = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
+                assert _mass.__len__() > 0,   "Array is empty - check filtering."
+                assert _coords.__len__() > 0, "Array is empty - check filtering."
+                mass   = np.append(mass, [_mass], axis=0)
+                coords = np.append(coords, [_coords], axis=0)
+
+            return self.centre_of_mass(mass, coords)
+
+    def group_zero_momentum_frame(self,
+                             out_allPartTypes: bool = False,
+                             aperture_radius: float = None) -> np.ndarray:
         """
-        out_allPartTypes = (bool)
-            if True outputs the zero_momentum_frame and sum of masses of each
-            partType separately in arrays
+        Method that computes the cluster's rest frame of particles within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the rest frame using the relative
+        static method in this Mixin class.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        It also has the option of combining all the particles of different types and computing
+        the overall bulk velocity, ot return the bulk velocity of each particle type separately.
+        This toggle is controlled by a boolean.
 
-            if False outputs the overall zero_momentum_frame and sum of masses
-            of the whole cluster.
-
-        Returns the zero_momentum_frame of the cluster for a ALL particle types,
-        except for lowres_DM (2, 3).
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
         """
-        ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
-        Mtot_PartTypes = np.zeros(0, dtype=np.float)
-
-        for part_type in ['0', '1', '4', '5']:
-
-            # Import data
-            mass = self.particle_masses(part_type)
-            vel = self.particle_velocity(part_type)
-            coords = self.particle_coordinates(part_type)
-            group_num = self.group_number_part(part_type)
-
-            # Filter the particles belonging to the
-            # GroupNumber FOF == 1, which by definition is centred in the
-            # Centre of Potential and is disconnected from other FoF groups.
-            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis=1)
-
-            if aperture_radius is None:
-                aperture_radius = self.group_r500()
-                print('[ ZERO MOMENTUM ]\t==>\tAperture radius set to default R500 true.')
-
-            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
-            mass = mass[index]
-            vel = vel[index]
-            assert mass.__len__() > 0, "Array is empty - check filtering.."
-            assert vel.__len__() > 0, "Array is empty - check filtering."
-            # print('Computing ZMF ==> PartType {} ok!'.format(part_type))
-
-            # Compute *local* ZMF for each particle type
-            zero_momentum, sum_of_masses = self.zero_momentum_frame(mass, vel)
-            ZMF_PartTypes = np.append(ZMF_PartTypes, [zero_momentum], axis=0)
-            Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ ZERO MOMENTUM FRAME ]\t==>\tAperture radius set to default R500 true.')
 
         if out_allPartTypes:
-            return ZMF_PartTypes, Mtot_PartTypes
+
+            ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f"partType{part_type}_coordinates")
+                assert hasattr(self, f"partType{part_type}_velocity")
+                assert hasattr(self, f"partType{part_type}_mass")
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                                                         self.centre_of_potential), axis=1)
+
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
+                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                assert _mass.__len__() > 0,     "Array is empty - check filtering."
+                assert _velocity.__len__() > 0, "Array is empty - check filtering."
+
+                zmf = self.zero_momentum_frame(_mass, _velocity)
+                ZMF_PartTypes = np.append(ZMF_PartTypes, [zmf], axis=0)
+
+            return ZMF_PartTypes
+
         else:
-            return self.zero_momentum_frame(Mtot_PartTypes, ZMF_PartTypes)
 
-    def group_angular_momentum(self, out_allPartTypes=False, aperture_radius = None):
+            mass     = np.zeros(0, dtype=np.float)
+            velocity = np.zeros((0, 3), dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f"partType{part_type}_coordinates")
+                assert hasattr(self, f"partType{part_type}_velocity")
+                assert hasattr(self, f"partType{part_type}_mass")
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                                                         self.centre_of_potential), axis=1)
+
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
+                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                assert _mass.__len__() > 0,     "Array is empty - check filtering."
+                assert _velocity.__len__() > 0, "Array is empty - check filtering."
+                mass     = np.append(mass, [_mass], axis=0)
+                velocity = np.append(velocity, [_velocity], axis=0)
+
+            return self.zero_momentum_frame(mass, velocity)
+
+
+    def group_angular_momentum(self,
+                             out_allPartTypes: bool = False,
+                             aperture_radius: float = None) -> np.ndarray:
         """
-        out_allPartTypes = (bool)
-            if True outputs the zero_momentum_frame and sum of masses of each
-            partType separately in arrays
+        Method that computes the cluster's angular momentum from particles within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the angular momentum using the relative
+        static method in this Mixin class.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        It also has the option of combining all the particles of different types and computing
+        the overall angular momentum, or return the angular momentum of each particle type separately.
+        This toggle is controlled by a boolean.
 
-            if False outputs the overall zero_momentum_frame and sum of masses
-            of the whole cluster.
-
-        Returns the zero_momentum_frame of the cluster for a ALL particle types,
-        except for lowres_DM (2, 3).
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
         """
-        angular_momentum_PartTypes = np.zeros((0, 3), dtype=np.float)
-        Mtot_PartTypes = np.zeros(0, dtype=np.float)
-
-        CoP_coords = self.group_centre_of_potential()
-
-        for part_type in ['0', '1', '4', '5']:
-            # Import data
-            mass = self.particle_masses(part_type)
-            vel = self.particle_velocity(part_type)
-            coords = self.particle_coordinates(part_type)
-            group_num = self.group_number_part(part_type)
-
-
-            # Filter the particles belonging to the
-            # GroupNumber FOF == 1, which by definition is centred in the
-            # Centre of Mass and is disconnected from other FoF groups.
-            # NOTE: the CoM is only present here since the rotation of the
-            # cluster occurs about the CoM.
-            radial_dist = np.linalg.norm(np.subtract(coords, CoP_coords), axis=1)
-
-            if aperture_radius is None:
-                aperture_radius = self.group_r500()
-                print('[ ANG MOMENTUM ]\t==>\tAperture radius set to default R500 true.')
-
-            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
-            mass = mass[index]
-            coords = coords[index]
-            vel = vel[index]
-            assert mass.__len__() > 0, "Array is empty - check filtering.."
-            assert vel.__len__() > 0, "Array is empty - check filtering."
-            assert coords.__len__() > 0, "Array is empty - check filtering."
-            # print('Computing angular_momentum ==> PartType {} ok!'.format(part_type))
-
-            # Compute *local* angular momentum for each particle type
-            zero_ang_momentum, sum_of_masses = self.angular_momentum(mass, vel, coords)
-            angular_momentum_PartTypes = np.append(angular_momentum_PartTypes, [zero_ang_momentum], axis=0)
-            Mtot_PartTypes = np.append(Mtot_PartTypes, [sum_of_masses], axis=0)
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ ZERO MOMENTUM FRAME ]\t==>\tAperture radius set to default R500 true.')
 
         if out_allPartTypes:
-            return angular_momentum_PartTypes, Mtot_PartTypes
+
+            ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f"partType{part_type}_coordinates")
+                assert hasattr(self, f"partType{part_type}_velocity")
+                assert hasattr(self, f"partType{part_type}_mass")
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                                                         self.centre_of_potential), axis=1)
+
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
+                _coords   = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
+                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                assert _mass.__len__() > 0,     "Array is empty - check filtering."
+                assert _coords.__len__() > 0,   "Array is empty - check filtering."
+                assert _velocity.__len__() > 0, "Array is empty - check filtering."
+
+                # Rescale coordinates and velocity
+                _coords   = np.subtract(_coords, self.centre_of_potential)
+                _velocity = np.subtract(_velocity, self.group_zero_momentum_frame(aperture_radius=aperture_radius))
+                zmf = self.angular_momentum(_mass, _coords, _velocity)
+                ZMF_PartTypes = np.append(ZMF_PartTypes, [zmf], axis=0)
+
+            return ZMF_PartTypes
+
         else:
-            return np.sum(angular_momentum_PartTypes, axis = 0), np.sum(Mtot_PartTypes)
+
+            mass     = np.zeros(0, dtype=np.float)
+            coords   = np.zeros((0, 3), dtype=np.float)
+            velocity = np.zeros((0, 3), dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f"partType{part_type}_coordinates")
+                assert hasattr(self, f"partType{part_type}_velocity")
+                assert hasattr(self, f"partType{part_type}_mass")
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                                                         self.centre_of_potential), axis=1)
+
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
+                _coords   = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
+                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                assert _mass.__len__() > 0,     "Array is empty - check filtering."
+                assert _coords.__len__() > 0,   "Array is empty - check filtering."
+                assert _velocity.__len__() > 0, "Array is empty - check filtering."
+                mass     = np.append(mass, [_mass], axis=0)
+                coords   = np.append(coords, [_coords], axis=0)
+                velocity = np.append(velocity, [_velocity], axis=0)
+
+            # Rescale coordinates and velocity
+            coords   = np.subtract(coords, self.centre_of_potential)
+            velocity = np.subtract(velocity, self.group_zero_momentum_frame(aperture_radius=aperture_radius))
+            return self.angular_momentum(mass, coords, velocity)
+
 
 
     def generate_apertures(self):
