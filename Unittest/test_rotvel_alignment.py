@@ -204,6 +204,8 @@ class TestRotVel(unittest.TestCase):
                               comovingframe=False,
                               requires=data_required)
 
+            cluster.import_requires()
+
             print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
             pec_velocity = cluster.group_zero_momentum_frame()
             ang_momentum = cluster.group_angular_momentum()
