@@ -82,13 +82,12 @@ def main():
         # cluster.info()
 
         print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
-        print(cluster.r200)
         pec_velocity = cluster.group_zero_momentum_frame(aperture_radius=cluster.r200)
         ang_momentum = cluster.group_angular_momentum(aperture_radius=cluster.r200)
         angle = cluster.angle_between_vectors(pec_velocity, ang_momentum)
         print(f"pec_velocity = {pec_velocity}")
         print(f"ang_momentum = {ang_momentum}")
-        print(f"angle = {angle}")
+        print(f"angle = {angle}\n\n--------------------------------------------")
 
 if __name__ == "__main__":
 
