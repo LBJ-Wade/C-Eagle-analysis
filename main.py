@@ -64,7 +64,7 @@ def time_func(function):
 @time_func
 def main():
 
-    from import_toolkit import cluster
+    from import_toolkit.cluster import Cluster
 
     data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
                      'partType1': ['mass', 'coordinates', 'velocity'],
@@ -73,7 +73,7 @@ def main():
 
     for sim in ['celr_e', 'celr_b', 'macsis']:
 
-        cluster = cluster.Cluster(simulation_name=sim,
+        cluster = Cluster(simulation_name=sim,
                           clusterID=0,
                           redshift='z000p000',
                           comovingframe=False,
