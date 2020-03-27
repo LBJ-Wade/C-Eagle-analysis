@@ -45,6 +45,16 @@ class Mixin:
         # Return the result in degrees
         return angle * 180 / np.pi
 
+    def radial_distance_CoP(self, coords):
+        coords = np.asarray(coords)
+        coordinates_radial = np.sqrt(
+            (coords[:, 0] - self.centre_of_potential[0]) ** 2 +
+            (coords[:, 1] - self.centre_of_potential[1]) ** 2 +
+            (coords[:, 2] - self.centre_of_potential[2]) ** 2
+        )
+        return coordinates_radial
+
+
     @staticmethod
     def kinetic_energy(mass, vel):
         ke = 0.5 * mass * np.linalg.norm(vel, axis = 1)**2
@@ -236,9 +246,7 @@ class Mixin:
             for part_type in ['0', '1', '4', '5']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_mass')
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
-                                                         self.centre_of_potential), axis=1)
-
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
                 _mass   = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
@@ -259,9 +267,7 @@ class Mixin:
             for part_type in ['0', '1', '4', '5']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_mass')
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
-                                                         self.centre_of_potential), axis=1)
-
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
                 _mass   = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
@@ -303,9 +309,7 @@ class Mixin:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
-                                                         self.centre_of_potential), axis=1)
-
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
@@ -327,9 +331,7 @@ class Mixin:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
-                                                         self.centre_of_potential), axis=1)
-
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
@@ -372,9 +374,7 @@ class Mixin:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
-                                                         self.centre_of_potential), axis=1)
-
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
@@ -402,9 +402,7 @@ class Mixin:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
-                                                         self.centre_of_potential), axis=1)
-
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
                 _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
