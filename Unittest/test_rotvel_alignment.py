@@ -193,7 +193,8 @@ class TestRotVel(unittest.TestCase):
         print(f"{' SOFTWARE TEST ':=^60}")
         data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
                          'partType1': ['mass', 'coordinates', 'velocity'],
-                         'partType4': ['mass', 'coordinates', 'velocity']}
+                         'partType4': ['mass', 'coordinates', 'velocity'],
+                         'partType5': ['mass', 'coordinates', 'velocity']}
 
         for sim in ['celr_e', 'celr_b', 'macsis']:
 
