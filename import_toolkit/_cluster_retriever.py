@@ -128,14 +128,12 @@ class Mixin:
         RETURNS: type = np.array of 3 doubles
         ACCESS DATA: e.g. group_CoP[0] for getting the x value
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        hd5set = h5file['/FOF/GroupCentreOfPotential']
-        sub_CoP = hd5set[...]
-        h5file.close()
-        pos = sub_CoP[0]
-        if not self.comovingframe:
-            pos = self.comoving_length(pos)
-        free_memory(['pos'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+            hd5set = h5file['/FOF/GroupCentreOfPotential']
+            pos = hd5set[...][0]
+            if not self.comovingframe:
+                pos = self.comoving_length(pos)
+            free_memory(['pos'], invert=True)
         return pos
 
     @data_subject(subject="groups")
@@ -144,14 +142,12 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        h5dset = h5file["/FOF/Group_R_Crit200"]
-        temp = h5dset[...]
-        h5file.close()
-        r200c = temp[0]
-        if not self.comovingframe:
-            r200c = self.comoving_length(r200c)
-        free_memory(['r200c'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+            h5dset = h5file["/FOF/Group_R_Crit200"]
+            r200c = h5dset[...][0]
+            if not self.comovingframe:
+                r200c = self.comoving_length(r200c)
+            free_memory(['r200c'], invert=True)
         return r200c
 
     @data_subject(subject="groups")
@@ -160,14 +156,13 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        h5dset = h5file["/FOF/Group_R_Crit500"]
-        temp = h5dset[...]
-        h5file.close()
-        r500c = temp[0]
-        if not self.comovingframe:
-            r500c = self.comoving_length(r500c)
-        free_memory(['r500c'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+            h5dset = h5file["/FOF/Group_R_Crit500"]
+            r500c = h5dset[...][0]
+
+            if not self.comovingframe:
+                r500c = self.comoving_length(r500c)
+            free_memory(['r500c'], invert=True)
         return r500c
 
     @data_subject(subject="groups")
