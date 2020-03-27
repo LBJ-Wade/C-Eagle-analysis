@@ -24,7 +24,7 @@ class TestRotVel(unittest.TestCase):
             hd5set = f['/FOF/GroupCentreOfPotential']
             CoP = hd5set[...][0]
 
-        path = '/cosma5/data/dp004/dc-pear3/data/bahamas/halo_00/data/particledata_029_z000p000'
+        path = '/cosma5/data/dp004/dc-pear3/data/eagle/halo_00/data/particledata_029_z000p000'
         with h5.File(os.path.join(path, 'eagle_subfind_particles_029_z000p000.0.hdf5'), 'r') as f:
 
             hd5set = f['/PartType0/GroupNumber']

@@ -64,29 +64,30 @@ def time_func(function):
 @time_func
 def main():
 
-    from save import fof_output as fof
-    from save import save
+    from import_toolkit import cluster
 
-    _SIM_NAME_ = 'CELR-eagle'
+    data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                     'partType1': ['mass', 'coordinates', 'velocity'],
+                     'partType4': ['mass', 'coordinates', 'velocity'],
+                     'partType5': ['mass', 'coordinates', 'velocity']}
 
-    save.create_files_set(simulation_name=_SIM_NAME_)
-    fof.MPI_decorator_test(simulation_name=_SIM_NAME_, out_allPartTypes=False)
-    # fof.push_FOFapertures(simulation_name=_SIM_NAME_, out_allPartTypes=False)
-    # fof.push_FOFcentre_of_mass(simulation_name=_SIM_NAME_, out_allPartTypes=False)
-    # fof.push_FOFangular_momentum_n_mass(simulation_name=_SIM_NAME_, out_allPartTypes=False)
-    # fof.push_FOFangmom_alignment_matrix(simulation_name=_SIM_NAME_, out_allPartTypes=False)
-    # fof.push_FOFmerging_indices(simulation_name=_SIM_NAME_, out_allPartTypes=False)
+    for sim in ['celr_e', 'celr_b', 'macsis']:
 
-    # plotpar.set_defaults_plot()
+        cluster = cluster.Cluster(simulation_name=sim,
+                          clusterID=0,
+                          redshift='z000p000',
+                          comovingframe=False,
+                          requires=data_required)
 
-    # sim = Simulation()
-    # z_catalogue = sim.get_redshiftAllowed(dtype = str)
-    # from _cluster_retriever import halo_Num, redshift_str2num, redshift_num2str
-    #
-    # halo = Cluster(clusterID = 3, redshift = 0.)
-    # angle_off = angular_momentum_PartType_alignment_matrix(halo)
-    # print(angle_off)
+        cluster.info()
 
+        print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
+        pec_velocity = cluster.group_zero_momentum_frame(aperture_radius=cluster.r200)
+        ang_momentum = cluster.group_angular_momentum(aperture_radius=cluster.r200)
+        angle = cluster.angle_between_vectors(pec_velocity, ang_momentum)
+        print(f"pec_velocity = {pec_velocity}")
+        print(f"ang_momentum = {ang_momentum}")
+        print(f"angle = {angle}")
 
 if __name__ == "__main__":
 
