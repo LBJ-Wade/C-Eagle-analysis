@@ -234,15 +234,15 @@ class Mixin:
             CoM_PartTypes = np.zeros((0, 3), dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
-                assert hasattr(self, f"partType{part_type}_coordinates")
-                assert hasattr(self, f"partType{part_type}_mass")
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
                                                          self.centre_of_potential), axis=1)
 
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
-                _mass   = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
-                _coords = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
+                _mass   = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
                 assert _mass.__len__() > 0,   "Array is empty - check filtering."
                 assert _coords.__len__() > 0, "Array is empty - check filtering."
 
@@ -257,15 +257,15 @@ class Mixin:
             coords = np.zeros((0, 3), dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
-                assert hasattr(self, f"partType{part_type}_coordinates")
-                assert hasattr(self, f"partType{part_type}_mass")
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
                                                          self.centre_of_potential), axis=1)
 
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
-                _mass   = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
-                _coords = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
+                _mass   = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
                 assert _mass.__len__() > 0,   "Array is empty - check filtering."
                 assert _coords.__len__() > 0, "Array is empty - check filtering."
                 mass   = np.append(mass, [_mass], axis=0)
@@ -300,16 +300,16 @@ class Mixin:
             ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
-                assert hasattr(self, f"partType{part_type}_coordinates")
-                assert hasattr(self, f"partType{part_type}_velocity")
-                assert hasattr(self, f"partType{part_type}_mass")
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_velocity')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
                                                          self.centre_of_potential), axis=1)
 
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
-                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
-                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
                 assert _mass.__len__() > 0,     "Array is empty - check filtering."
                 assert _velocity.__len__() > 0, "Array is empty - check filtering."
 
@@ -324,16 +324,16 @@ class Mixin:
             velocity = np.zeros((0, 3), dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
-                assert hasattr(self, f"partType{part_type}_coordinates")
-                assert hasattr(self, f"partType{part_type}_velocity")
-                assert hasattr(self, f"partType{part_type}_mass")
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_velocity')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
                                                          self.centre_of_potential), axis=1)
 
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
-                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
-                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
                 assert _mass.__len__() > 0,     "Array is empty - check filtering."
                 assert _velocity.__len__() > 0, "Array is empty - check filtering."
                 mass     = np.append(mass, [_mass], axis=0)
@@ -369,17 +369,17 @@ class Mixin:
             ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
-                assert hasattr(self, f"partType{part_type}_coordinates")
-                assert hasattr(self, f"partType{part_type}_velocity")
-                assert hasattr(self, f"partType{part_type}_mass")
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_velocity')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
                                                          self.centre_of_potential), axis=1)
 
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
-                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
-                _coords   = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
-                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _coords   = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
+                _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
                 assert _mass.__len__() > 0,     "Array is empty - check filtering."
                 assert _coords.__len__() > 0,   "Array is empty - check filtering."
                 assert _velocity.__len__() > 0, "Array is empty - check filtering."
@@ -399,17 +399,17 @@ class Mixin:
             velocity = np.zeros((0, 3), dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
-                assert hasattr(self, f"partType{part_type}_coordinates")
-                assert hasattr(self, f"partType{part_type}_velocity")
-                assert hasattr(self, f"partType{part_type}_mass")
-                radial_dist = np.linalg.norm(np.subtract(getattr(self, f"partType{part_type}_coordinates"),
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_velocity')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = np.linalg.norm(np.subtract(getattr(self, f'partType{part_type}_coordinates'),
                                                          self.centre_of_potential), axis=1)
 
                 aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
                 free_memory(['radial_dist'])
-                _mass     = getattr(self, f"partType{part_type}_mass")[aperture_radius_index]
-                _coords   = getattr(self, f"partType{part_type}_coordinates")[aperture_radius_index]
-                _velocity = getattr(self, f"partType{part_type}_velocity")[aperture_radius_index]
+                _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _coords   = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
+                _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
                 assert _mass.__len__() > 0,     "Array is empty - check filtering."
                 assert _coords.__len__() > 0,   "Array is empty - check filtering."
                 assert _velocity.__len__() > 0, "Array is empty - check filtering."
