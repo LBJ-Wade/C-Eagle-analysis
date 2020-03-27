@@ -231,6 +231,7 @@ class Cluster(simulation.Simulation,
 
 
             radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
+            print(radial_dist)
             clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
 
             if (part_type == 'partType0' and
