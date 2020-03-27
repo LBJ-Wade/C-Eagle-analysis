@@ -27,6 +27,7 @@ class Cluster(Simulation,
         self.set_redshift(redshift)
         self.comovingframe = comovingframe
         self.requires = requires
+        self.import_requires()
 
         # Set additional cosmoloy attributes from methods
         self.hubble_param = self.file_hubble_param()

@@ -190,7 +190,7 @@ class TestRotVel(unittest.TestCase):
         print(f"delta_theta = {delta_theta}")
 
     def test_software_rotvel_alignment_GAS(self):
-        print(f"{' SOFTWARE TEST ':=^60}")
+        print(f"{' SOFTWARE TEST ':*^60}")
         data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
                          'partType1': ['mass', 'coordinates', 'velocity'],
                          'partType4': ['mass', 'coordinates', 'velocity'],
@@ -203,8 +203,6 @@ class TestRotVel(unittest.TestCase):
                               redshift='z000p000',
                               comovingframe=False,
                               requires=data_required)
-
-            cluster.import_requires()
 
             print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
             pec_velocity = cluster.group_zero_momentum_frame()
