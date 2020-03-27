@@ -114,15 +114,15 @@ class TestMixin(unittest.TestCase):
         for sim in ['celr_e', 'celr_b', 'macsis']:
             cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
             print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
-            print("cluster.groups_filePaths", cluster.groups_filePaths(), sep='\n')
+            # print("cluster.groups_filePaths", cluster.groups_filePaths(), sep='\n')
             # Check the files exist
             for file in cluster.groups_filePaths():
-                print(os.path.isfile(file))
+                print(os.path.isfile(file), file)
 
-            print("cluster.partdata_filePaths", cluster.partdata_filePaths(), sep='\n')
+            # print("cluster.partdata_filePaths", cluster.partdata_filePaths(), sep='\n')
             # Check the files exist
             for file in cluster.partdata_filePaths():
-                print(os.path.isfile(file))
+                print(os.path.isfile(file), file)
 
 
 
