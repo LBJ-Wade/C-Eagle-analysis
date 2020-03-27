@@ -111,7 +111,7 @@ class TestMixin(unittest.TestCase):
             file_index += 1
 
         print(f"{' SOFTWARE TEST ':=^60}")
-        for sim in ['celr_e', 'celr_b', 'macsis']:
+        for sim in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
             cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
             print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
             # print("cluster.groups_filePaths", cluster.groups_filePaths(), sep='\n')
