@@ -1,7 +1,12 @@
-import unittest
-import h5py as h5
-import numpy as np
 import os
+import sys
+import unittest
+import numpy as np
+import h5py as h5
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
+from import_toolkit.cluster import Cluster
 
 np.set_printoptions(suppress=True)
 
@@ -184,6 +189,25 @@ class TestRotVel(unittest.TestCase):
         print(f"ang_momentum = {ang_momentum}")
         print(f"delta_theta = {delta_theta}")
 
+    def test_software_rotvel_alignment_GAS(self):
+        print(f"{' SOFTWARE TEST ':=^60}")
+        data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                         'partType1': ['mass', 'coordinates', 'velocity'],
+                         'partType4': ['mass', 'coordinates', 'velocity']}
+
+        for sim in ['celr_e', 'celr_b', 'macsis']:
+
+            cluster = Cluster(simulation_name=sim,
+                              clusterID=0,
+                              redshift='z000p000',
+                              comovingframe=False,
+                              requires=data_required)
+
+            print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
+            pec_velocity = cluster.group_zero_momentum_frame()[0]
+            ang_momentum = cluster.group_angular_momentum()[0]
+            print("cluster.angle_between_vectors(pec_velocity, ang_momentum)",
+                  cluster.angle_between_vectors(pec_velocity, ang_momentum))
 
 
 if __name__ == '__main__':
