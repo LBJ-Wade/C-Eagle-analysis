@@ -117,12 +117,12 @@ class TestMixin(unittest.TestCase):
             print("cluster.groups_filePaths", cluster.groups_filePaths(), sep='\n')
             # Check the files exist
             for file in cluster.groups_filePaths():
-                print(os.path.isfile())
+                print(os.path.isfile(file))
 
             print("cluster.partdata_filePaths", cluster.partdata_filePaths(), sep='\n')
             # Check the files exist
             for file in cluster.partdata_filePaths():
-                print(os.path.isfile())
+                print(os.path.isfile(file))
 
 
 
