@@ -16,7 +16,7 @@ They working principle is based on OOP class inheritance.
 
 import numpy as np
 from typing import List, Dict, Tuple
-from .memory import free_memory
+from memory import free_memory
 
 
 class Mixin:

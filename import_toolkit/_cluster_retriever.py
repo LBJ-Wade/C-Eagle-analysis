@@ -17,8 +17,8 @@ from functools import wraps
 import os
 import h5py as h5
 import numpy as np
-from .memory import free_memory
-from .progressbar import ProgressBar
+from memory import free_memory
+from progressbar import ProgressBar
 
 
 def redshift_str2num(z: str):
