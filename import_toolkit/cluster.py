@@ -231,7 +231,6 @@ class Cluster(simulation.Simulation,
 
 
             radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
-            print(radial_dist)
             clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
 
             if (part_type == 'partType0' and
@@ -250,11 +249,6 @@ class Cluster(simulation.Simulation,
 
             else:
                 intersected_index = clean_radius_index
-
-            print(self.simulation_name, part_type, sep='\n')
-            a = len(self.group_number_part(part_type[-1]))
-            b = len(intersected_index)
-            print(a, b, b/a, sep='\n')
 
             for field in self.requires[part_type]:
                 filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
