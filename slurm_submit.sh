@@ -1,9 +1,9 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 30                                           # The number of cores you need...
+#SBATCH --ntasks 96                                           # The number of cores you need...
 #SBATCH -J Ceagle                                            # Give it something meaningful.
-#SBATCH -o standard_output_file.%J.out
-#SBATCH -e standard_error_file.%J.err
+#SBATCH -o ~/standard_output_file.%J.out
+#SBATCH -e ~/standard_error_file.%J.err
 #SBATCH -p cosma6                                              # or some other partition, e.g. cosma, cosma6, etc.
 #SBATCH -A dp004                                               # e.g. dp004
 #SBATCH --exclusive
@@ -21,9 +21,9 @@ module load openmpi
 module load hdf5
 
 # Run the program
-mpiexec -n $SLURM_NTASKS python3 ./visualisation/phasediagram.py
+mpiexec -n $SLURM_NTASKS python3 ./save/fof_output.py
 
 
 
-# Multiples of 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 480, 512, 544, 576, 608
-# Multiples of 28, 56, 84, 112, 140, 168, 196, 224, 252, 280, 308, 336, 364, 392, 420, 448, 476, 504, 532
+### Multiples of 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 480, 512, 544, 576, 608
+### Multiples of 28, 56, 84, 112, 140, 168, 196, 224, 252, 280, 308, 336, 364, 392, 420, 448, 476, 504, 532
