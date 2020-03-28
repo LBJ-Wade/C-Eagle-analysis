@@ -47,8 +47,8 @@ class PhaseDiagram(Simulation, rendering.Map):
         self.cluster = cluster
         self.resolution = resolution
         self.aperture = 5*cluster.r200 if aperture == None else aperture
-        self.density_bounds = [1e-9, 1e5] if density_bounds == None else density_bounds
-        self.temperature_bounds = [1e3, 1e12] if temperature_bounds == None else temperature_bounds
+        self.density_bounds = [1e-8, 1e5] if density_bounds == None else density_bounds
+        self.temperature_bounds = [1e3, 1e11] if temperature_bounds == None else temperature_bounds
 
 
     def make_panel(self, axes: plt.Axes.axes) -> plt.pcolormesh:
@@ -97,7 +97,7 @@ class PhaseDiagram(Simulation, rendering.Map):
                   horizontalalignment='left',
                   verticalalignment='top',
                   transform=axes.transAxes,
-                  size = 20)
+                  size = 15)
 
 
     def setup_plot(self):
@@ -188,7 +188,7 @@ def test_loop_redshifts(i):
 if __name__ == '__main__':
     # test_simple()
     exec(open('visualisation/light_mode.py').read())
-    for sim in ['celr_e', 'celr_b', 'macsis']:
+    for sim in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
 
         cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
         t_rho_diagram = PhaseDiagram(cluster)
