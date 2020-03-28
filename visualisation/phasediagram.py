@@ -115,7 +115,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         axes.set_ylabel(r"$T\ \mathrm{[K]}$")
 
         # Plot selection boundary
-        axes.plot([1e4, 1e4, 1e5], [1e-8, 1e-1, 1e2], marker = None, linestyle = '-', color = 'orange', lw = 1.5)
+        axes.plot([1e-8, 1e-1, 1e2], [1e4, 1e4, 1e5], marker = None, linestyle = '-', color = 'orange', lw = 2)
 
         # Colorbar adjustments
         ax2_divider = make_axes_locatable(axes)
@@ -187,6 +187,7 @@ def test_loop_redshifts(i):
 
 if __name__ == '__main__':
     # test_simple()
+    exec(open('visualisation/light_mode.py').read())
     for sim in ['celr_e', 'celr_b', 'macsis']:
 
         cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
