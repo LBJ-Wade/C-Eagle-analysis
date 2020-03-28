@@ -89,7 +89,7 @@ class PhaseDiagram(Simulation, rendering.Map):
         axes = fig.add_subplot(111)
 
         image = self.make_panel(axes)
-        axes.set_title(r"$%s ~ halo~%d ~ %s ~Aperture: ~ %5.2f ~ Mpc$"  %  (self.cluster.simulation_name,
+        axes.set_title(r"$\mathrm{%s\ halo\ %d\ %s \ Aperture: \ %5.2f \ Mpc}$"  %  (self.cluster.simulation_name,
                                                                                     self.cluster.clusterID,
                                                                                     self.cluster.redshift,
                                                                                     self.aperture))
@@ -100,7 +100,7 @@ class PhaseDiagram(Simulation, rendering.Map):
 
         # Colorbar adjustments
         ax2_divider = make_axes_locatable(axes)
-        cax2 = ax2_divider.append_axes("right", size="3%", pad="2%")
+        cax2 = ax2_divider.append_axes("right", size="3%", pad="1%")
         cbar = plt.colorbar(image, cax=cax2, orientation='vertical')
         cbar.set_label(r"$M\ \mathrm{[M_\odot]}$", labelpad=17)
         # cax2.xaxis.set_tick_labels(['0',' ','0.5',' ','1',' ', '1.5',' ','2'])
@@ -114,6 +114,8 @@ class PhaseDiagram(Simulation, rendering.Map):
             os.makedirs(self.pathSave + '/phasediagrams/' + self.cluster.simulation_name)
 
         aperture = ("%05.2f" % self.aperture).replace('.', 'p')
+        plt.tight_layout()
+
         plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
 
 
