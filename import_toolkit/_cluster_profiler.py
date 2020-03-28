@@ -217,7 +217,7 @@ class Mixin:
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 sum_of_masses = np.sum(_mass)
-                mass_PartTypes = np.concatenate((mass_PartTypes, sum_of_masses), axis=0)
+                mass_PartTypes = np.append(mass_PartTypes, sum_of_masses)
 
             return mass_PartTypes
 
@@ -233,7 +233,7 @@ class Mixin:
                 free_memory(['radial_dist'])
                 _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-                mass = np.concatenate((mass, _mass), axis=0)
+                mass = np.append(mass, _mass)
 
             return np.sum(mass)
 
