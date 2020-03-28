@@ -46,9 +46,9 @@ class PhaseDiagram(Simulation, rendering.Map):
         # Initialise the KSZ map fields
         self.cluster = cluster
         self.resolution = resolution
-        self.aperture = cluster.r500 if aperture == None else aperture
-        self.density_bounds = [1e-8, 1e5] if density_bounds == None else density_bounds
-        self.temperature_bounds = [1e3, 1e10] if temperature_bounds == None else temperature_bounds
+        self.aperture = 5*cluster.r200 if aperture == None else aperture
+        self.density_bounds = [1e-9, 1e5] if density_bounds == None else density_bounds
+        self.temperature_bounds = [1e3, 1e12] if temperature_bounds == None else temperature_bounds
 
 
     def make_panel(self, axes: plt.Axes.axes) -> plt.pcolormesh:
