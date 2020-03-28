@@ -338,7 +338,7 @@ class Mixin:
                 if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 zmf = self.zero_momentum_frame(_mass, _velocity)
-                ZMF_PartTypes = np.concatenate((ZMF_PartTypes, zmf), axis=0)
+                ZMF_PartTypes = np.concatenate((ZMF_PartTypes, [zmf]), axis=0)
 
             return ZMF_PartTypes
 
@@ -388,7 +388,7 @@ class Mixin:
 
         if out_allPartTypes:
 
-            ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
+            ANG_PartTypes = np.zeros((0, 3), dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
@@ -407,10 +407,10 @@ class Mixin:
                 # Rescale coordinates and velocity
                 _coords   = np.subtract(_coords, self.centre_of_potential)
                 _velocity = np.subtract(_velocity, self.group_zero_momentum_frame(aperture_radius=aperture_radius))
-                zmf = self.angular_momentum(_mass, _coords, _velocity)
-                ZMF_PartTypes = np.concatenate((ZMF_PartTypes, zmf), axis=0)
+                ang = self.angular_momentum(_mass, _coords, _velocity)
+                ANG_PartTypes = np.concatenate((ANG_PartTypes, [ang]), axis=0)
 
-            return ZMF_PartTypes
+            return ANG_PartTypes
 
         else:
 
