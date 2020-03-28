@@ -217,7 +217,7 @@ class Mixin:
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 sum_of_masses = np.sum(_mass)
-                mass_PartTypes = np.concatenate((mass_PartTypes, sum_of_masses), axis=0)
+                mass_PartTypes = np.row_stack((mass_PartTypes, sum_of_masses))
 
             return mass_PartTypes
 
@@ -233,7 +233,7 @@ class Mixin:
                 free_memory(['radial_dist'])
                 _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-                mass = np.concatenate((mass, _mass), axis=0)
+                mass = np.row_stack((mass, _mass))
 
             return np.sum(mass)
 
@@ -275,7 +275,7 @@ class Mixin:
                 if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 centre_of_mass = self.centre_of_mass(_mass, _coords)
-                CoM_PartTypes = np.concatenate((CoM_PartTypes, centre_of_mass), axis=0)
+                CoM_PartTypes = np.row_stack((CoM_PartTypes, centre_of_mass))
 
             return CoM_PartTypes
 
@@ -294,8 +294,8 @@ class Mixin:
                 _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-                mass   = np.concatenate((mass, _mass), axis=0)
-                coords = np.concatenate((coords, _coords), axis=0)
+                mass   = np.row_stack((mass, _mass))
+                coords = np.row_stack((coords, _coords))
 
             return self.centre_of_mass(mass, coords)
 
@@ -338,7 +338,7 @@ class Mixin:
                 if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 zmf = self.zero_momentum_frame(_mass, _velocity)
-                ZMF_PartTypes = np.concatenate((ZMF_PartTypes, zmf), axis=0)
+                ZMF_PartTypes = np.row_stack((ZMF_PartTypes, zmf))
 
             return ZMF_PartTypes
 
@@ -358,8 +358,8 @@ class Mixin:
                 _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-                mass     = np.concatenate((mass, _mass), axis=0)
-                velocity = np.concatenate((velocity, _velocity), axis=0)
+                mass     = np.row_stack((mass, _mass))
+                velocity = np.row_stack((velocity, _velocity))
 
             return self.zero_momentum_frame(mass, velocity)
 
@@ -408,7 +408,7 @@ class Mixin:
                 _coords   = np.subtract(_coords, self.centre_of_potential)
                 _velocity = np.subtract(_velocity, self.group_zero_momentum_frame(aperture_radius=aperture_radius))
                 zmf = self.angular_momentum(_mass, _coords, _velocity)
-                ZMF_PartTypes = np.concatenate((ZMF_PartTypes, zmf), axis=0)
+                ZMF_PartTypes = np.row_stack((ZMF_PartTypes, zmf))
 
             return ZMF_PartTypes
 
@@ -431,9 +431,9 @@ class Mixin:
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-                mass     = np.concatenate((mass, _mass), axis=0)
-                coords   = np.concatenate((coords, _coords), axis=0)
-                velocity = np.concatenate((velocity, _velocity), axis=0)
+                mass     = np.row_stack((mass, _mass))
+                coords   = np.row_stack((coords, _coords))
+                velocity = np.row_stack((velocity, _velocity))
 
             # Rescale coordinates and velocity
             coords   = np.subtract(coords, self.centre_of_potential)
