@@ -123,7 +123,7 @@ class PhaseDiagram(Simulation, rendering.Map):
 def test_simple():
 
     # Create a cluster object
-    cluster = Cluster(simulation_name='ceagle', clusterID=0, redshift='z000p000')
+    cluster = Cluster(simulation_name='macsis', clusterID=0, redshift='z000p000')
     # cluster.info()
 
     # Create a PhaseDiagram object and link it to the cluster object
