@@ -1,15 +1,15 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 96                                           # The number of cores you need...
-#SBATCH -J Ceagle                                            # Give it something meaningful.
-#SBATCH -o ~/standard_output_file.%J.out
-#SBATCH -e ~/standard_error_file.%J.err
+#SBATCH --ntasks 64                                           # The number of cores you need...
+#SBATCH -J celre                                            # Give it something meaningful.
+#SBATCH -o standard_output_file.%J.out
+#SBATCH -e standard_error_file.%J.err
 #SBATCH -p cosma6                                              # or some other partition, e.g. cosma, cosma6, etc.
 #SBATCH -A dp004                                               # e.g. dp004
 #SBATCH --exclusive
 #SBATCH -t 72:00:00
 #SBATCH --mail-type=END                                        # notifications for job done & fail
-#SBATCH --mail-user=<edoardo.altamura@manchester.ac.uk>        #PLEASE PUT YOUR EMAIL ADDRESS HERE (without the <>)
+#SBATCH --mail-user=edoardo.altamura@manchester.ac.uk        #PLEASE PUT YOUR EMAIL ADDRESS HERE (without the <>)
 
 module purge
 #load the modules used to build your program.
