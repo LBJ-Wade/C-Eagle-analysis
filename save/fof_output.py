@@ -639,7 +639,7 @@ if __name__ == '__main__':
 
         # Set-up the MPI allocation schedule
         process = 0
-        sim = Simulation(simulation_name='ceagle')
+        sim = Simulation(simulation_name='celr_b')
         iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
 
         for halo_id, halo_z in iterator:
