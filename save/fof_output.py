@@ -640,7 +640,7 @@ if __name__ == '__main__':
         # Set-up the MPI allocation schedule
         process = 0
         sim = Simulation(simulation_name='celr_e')
-        iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+        iterator = itertools.product(sim.clusterIDAllowed[0], sim.redshiftAllowed[0])
 
         for halo_id, halo_z in iterator:
             if process % size == rank:
