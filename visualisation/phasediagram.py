@@ -9,7 +9,8 @@ from mpl_toolkits.axes_grid1.axes_divider import make_axes_locatable
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from import_toolkit.cluster import Cluster, Simulation
+from import_toolkit.cluster import Cluster
+from import_toolkit.simulation import Simulation
 from visualisation import rendering
 
 
@@ -56,20 +57,11 @@ class PhaseDiagram(Simulation, rendering.Map):
         :param projection:
         :return:
         """
+        radial_dist = self.cluster.radial_distance_CoP(self.cluster.partType0_coordinates)
+        spatial_filter = np.where(radial_dist < self.aperture)[0]
 
-        # Filter particles
-        radial_dist = np.linalg.norm(np.subtract(self.cluster.partType0_coordinates,
-                                                 self.cluster.centre_of_potential), axis=1)
-        spatial_filter = np.where((self.cluster.partType0_temperature > 1e4) &
-                                  (np.log10(self.cluster.partType0_temperature) > np.log10(
-                                      self.cluster.density_units(self.cluster.partType0_sphdensity,
-                                                                 unit_system='nHcgs'))/3 + 4.7) &
-                                  (radial_dist < self.aperture))[0]
-
-
-
-        mass = self.cluster.mass_units(self.cluster.partType0_mass[spatial_filter], unit_system='astro')
-        density = self.cluster.density_units(self.cluster.partType0_sphdensity[spatial_filter], unit_system='nHcgs')
+        mass        = self.cluster.mass_units(self.cluster.partType0_mass[spatial_filter], unit_system='astro')
+        density     = self.cluster.density_units(self.cluster.partType0_sphdensity[spatial_filter], unit_system='nHcgs')
         temperature = self.cluster.partType0_temperature[spatial_filter]
 
         x_bins = np.logspace(np.log10(self.density_bounds[0]), np.log10(self.density_bounds[1]), self.resolution)
@@ -123,14 +115,6 @@ class PhaseDiagram(Simulation, rendering.Map):
 
         aperture = ("%05.2f" % self.aperture).replace('.', 'p')
         plt.savefig(filename_out + "_aperture" + aperture + "_bins" + str(self.resolution) + ".png", dpi=300)
-        # i = 0
-        # while True:
-        #     if not os.path.exists(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png"):
-        #         plt.savefig(filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png", dpi = 200)
-        #         print('[ PhaseDiagram ]\t==> Saved: ', filename_out + f"_{i}_aperture{self.aperture}_bins{self.resolution}.png")
-        #         break
-        #     else:
-        #         i += 1
 
 
 
@@ -181,12 +165,12 @@ def test_loop_redshifts(i):
 
 
 if __name__ == '__main__':
-    # test_simple()
+    test_simple()
 
-    from mpi4py import MPI
-
-    comm = MPI.COMM_WORLD
-    size = comm.Get_size()
-    rank = comm.Get_rank()
-    test_loop_apertures(rank)
-    test_loop_redshifts(rank)
+    # from mpi4py import MPI
+    #
+    # comm = MPI.COMM_WORLD
+    # size = comm.Get_size()
+    # rank = comm.Get_rank()
+    # test_loop_apertures(rank)
+    # test_loop_redshifts(rank)
