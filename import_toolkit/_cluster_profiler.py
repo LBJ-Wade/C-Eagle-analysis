@@ -275,7 +275,7 @@ class Mixin:
                 if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 centre_of_mass = self.centre_of_mass(_mass, _coords)
-                CoM_PartTypes = np.concatenate((CoM_PartTypes, centre_of_mass[:, None]), axis=0)
+                CoM_PartTypes = np.concatenate((CoM_PartTypes, [centre_of_mass]), axis=0)
 
             return CoM_PartTypes
 
@@ -294,8 +294,8 @@ class Mixin:
                 _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-                mass   = np.concatenate((mass, _mass[:, None]), axis=0)
-                coords = np.concatenate((coords, _coords[:, None]), axis=0)
+                mass   = np.concatenate((mass, [_mass]), axis=0)
+                coords = np.concatenate((coords, [_coords]), axis=0)
 
             return self.centre_of_mass(mass, coords)
 
