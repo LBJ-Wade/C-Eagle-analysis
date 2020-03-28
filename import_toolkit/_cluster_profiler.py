@@ -294,8 +294,8 @@ class Mixin:
                 _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-                mass   = np.concatenate((mass, [_mass]), axis=0)
-                coords = np.concatenate((coords, [_coords]), axis=0)
+                mass   = np.concatenate((mass, _mass), axis=0)
+                coords = np.concatenate((coords, _coords), axis=0)
 
             return self.centre_of_mass(mass, coords)
 
