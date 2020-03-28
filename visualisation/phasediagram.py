@@ -98,6 +98,9 @@ class PhaseDiagram(Simulation, rendering.Map):
         axes.set_xlabel(r"$\rho\ \mathrm{[n_H\ cm^{-3}]}$")
         axes.set_ylabel(r"$T\ \mathrm{[K]}$")
 
+        # Plot selection boundary
+        axes.plot([1e4, 1e4, 1e5], [1e-8, 1e-1, 1e2], marker = None, linestyle = '-', color = 'orange', lw = 1.5)
+
         # Colorbar adjustments
         ax2_divider = make_axes_locatable(axes)
         cax2 = ax2_divider.append_axes("right", size="3%", pad="1%")
