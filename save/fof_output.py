@@ -318,7 +318,7 @@ class FOFDatagen(save.SimulationOutput):
             part_mass = np.row_stack((part_mass, part_mass_aperture))
 
             tot_mass_aperture = np.sum(part_mass_aperture)
-            total_mass = np.row_stack((total_mass, tot_mass_aperture))
+            total_mass = np.append(total_mass, tot_mass_aperture)
 
         data = {'/Total_mass': np.array(total_mass),
                 '/ParType0_mass' : np.array(part_mass)[:,0],
