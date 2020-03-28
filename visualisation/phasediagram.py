@@ -81,6 +81,24 @@ class PhaseDiagram(Simulation, rendering.Map):
 
         return image
 
+    def make_cluster_label(self, axes: plt.Axes.axes):
+        items_labels = r"""THERMODYNAMIC PHASE SPACE
+                        Cluster {:s}\ {:d}
+                        $z$ = {:.3f}
+                        $R_{{500\ true}}$ = {:.2f} Mpc
+                        Aperture radius = {:.2f} Mpc""".format(self.cluster.simulation,
+                                                              self.cluster.clusterID,
+                                                              self.cluster.z,
+                                                              self.cluster.r500,
+                                                              self.aperture)
+
+        print(items_labels)
+        axes.text(0.03, 0.97, items_labels,
+                  horizontalalignment='left',
+                  verticalalignment='top',
+                  transform=axes.transAxes,
+                  size = 20)
+
 
     def setup_plot(self):
         plt.clf()
@@ -89,10 +107,8 @@ class PhaseDiagram(Simulation, rendering.Map):
         axes = fig.add_subplot(111)
 
         image = self.make_panel(axes)
-        axes.set_title(r"$\mathrm{%s\ halo\ %d\ %s \ Aperture: \ %5.2f \ Mpc}$"  %  (self.cluster.simulation_name,
-                                                                                    self.cluster.clusterID,
-                                                                                    self.cluster.redshift,
-                                                                                    self.aperture))
+        self.make_cluster_label(axes)
+
         axes.set_xscale('log')
         axes.set_yscale('log')
         axes.set_xlabel(r"$\rho\ \mathrm{[n_H\ cm^{-3}]}$")
@@ -170,7 +186,12 @@ def test_loop_redshifts(i):
 
 
 if __name__ == '__main__':
-    test_simple()
+    # test_simple()
+    for sim in ['celr_e', 'celr_b', 'macsis']:
+
+        cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
+        t_rho_diagram = PhaseDiagram(cluster)
+        t_rho_diagram.setup_plot()
 
     # from mpi4py import MPI
     #
