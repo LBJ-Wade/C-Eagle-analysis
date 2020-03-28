@@ -17,7 +17,7 @@ import os
 import itertools
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from import_toolkit.cluster import Simulation
+from import_toolkit.simulation import Simulation
 
 
 class SimulationOutput(Simulation):

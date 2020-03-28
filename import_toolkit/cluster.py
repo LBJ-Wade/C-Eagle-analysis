@@ -192,11 +192,6 @@ class Cluster(simulation.Simulation,
         If the dataset belongs to the gas particle type, filter out the equation
         of state.
 
-        [TODO]
-        Implement specific equation of states for each simulation, since they all
-        use different models.
-        Implement booleans for switching the filtering conditions on and off.
-
         :return: None
             Assigns new datasets to the cluster objects. These can be easily and
             quickly accessed from the RAM.
