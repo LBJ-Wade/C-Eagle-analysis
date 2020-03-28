@@ -21,7 +21,8 @@ import h5py
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from import_toolkit.cluster import Simulation, Cluster
+from import_toolkit.cluster import Cluster
+from import_toolkit.simulation import Simulation
 from import_toolkit._cluster_retriever import redshift_str2num
 import save
 
@@ -343,13 +344,13 @@ class FOFDatagen(save.SimulationOutput):
 
         for r in self.cluster.generate_apertures():
 
-            part_CoM_aperture, _mass = self.cluster.group_centre_of_mass(aperture_radius=r, out_allPartTypes=True)
+            part_CoM_aperture = self.cluster.group_centre_of_mass(aperture_radius=r, out_allPartTypes=True)
             ParType0_CoM = np.concatenate((ParType0_CoM, [part_CoM_aperture[0]]), axis = 0)
             ParType1_CoM = np.concatenate((ParType1_CoM, [part_CoM_aperture[1]]), axis = 0)
             ParType4_CoM = np.concatenate((ParType4_CoM, [part_CoM_aperture[2]]), axis = 0)
             ParType5_CoM = np.concatenate((ParType5_CoM, [part_CoM_aperture[3]]), axis = 0)
 
-            Total_CoM_aperture, _totmass = self.cluster.centre_of_mass(_mass, part_CoM_aperture)
+            Total_CoM_aperture = self.cluster.group_centre_of_mass(aperture_radius=r, out_allPartTypes=False)
             Total_CoM = np.concatenate((Total_CoM, [Total_CoM_aperture]), axis=0)
 
         data = {'/Total_CoM'    : np.array(Total_CoM),
@@ -376,13 +377,13 @@ class FOFDatagen(save.SimulationOutput):
 
         for r in self.cluster.generate_apertures():
 
-            part_ZMF_aperture, _mass = self.cluster.group_zero_momentum_frame(aperture_radius=r, out_allPartTypes=True)
+            part_ZMF_aperture = self.cluster.group_zero_momentum_frame(aperture_radius=r, out_allPartTypes=True)
             ParType0_ZMF = np.concatenate((ParType0_ZMF, [part_ZMF_aperture[0]]), axis = 0)
             ParType1_ZMF = np.concatenate((ParType1_ZMF, [part_ZMF_aperture[1]]), axis = 0)
             ParType4_ZMF = np.concatenate((ParType4_ZMF, [part_ZMF_aperture[2]]), axis = 0)
             ParType5_ZMF = np.concatenate((ParType5_ZMF, [part_ZMF_aperture[3]]), axis = 0)
 
-            Total_ZMF_aperture, _totmass = self.cluster.zero_momentum_frame(_mass, part_ZMF_aperture)
+            Total_ZMF_aperture = self.cluster.group_zero_momentum_frame(aperture_radius=r, out_allPartTypes=False)
             Total_ZMF = np.concatenate((Total_ZMF, [Total_ZMF_aperture]), axis=0)
 
         data = {'/Total_ZMF'    : np.array(Total_ZMF),
@@ -399,6 +400,7 @@ class FOFDatagen(save.SimulationOutput):
         out = FOFOutput(self.cluster, filename='peculiar_velocity.hdf5', data=data, attrs=attributes)
         out.makefile()
 
+    # TODO
     def push_kinetic_energy(self):
         
         part_kin_energy = np.zeros((0, 4), dtype=np.float)
@@ -456,13 +458,13 @@ class FOFDatagen(save.SimulationOutput):
         ParType5_angmom = np.zeros((0, 3), dtype=np.float)
 
         for r in self.cluster.generate_apertures():
-            part_angmom_aperture, _mass = self.cluster.group_angular_momentum(aperture_radius=r, out_allPartTypes=True)
+            part_angmom_aperture = self.cluster.group_angular_momentum(aperture_radius=r, out_allPartTypes=True)
             ParType0_angmom = np.concatenate((ParType0_angmom, [part_angmom_aperture[0]]), axis=0)
             ParType1_angmom = np.concatenate((ParType1_angmom, [part_angmom_aperture[1]]), axis=0)
             ParType4_angmom = np.concatenate((ParType4_angmom, [part_angmom_aperture[2]]), axis=0)
             ParType5_angmom = np.concatenate((ParType5_angmom, [part_angmom_aperture[3]]), axis=0)
 
-            Total_angmom_aperture = np.sum(part_angmom_aperture, axis=0)
+            Total_angmom_aperture = self.cluster.group_angular_momentum(aperture_radius=r, out_allPartTypes=False)
             Total_angmom = np.concatenate((Total_angmom, [Total_angmom_aperture]), axis=0)
 
         data = {'/Total_angmom'   : np.array(Total_angmom),
@@ -629,17 +631,28 @@ if __name__ == '__main__':
             out.push_peculiar_velocity()
             out.push_angular_momentum()
         """
+
+        # Set-up the MPI allocation schedule
+        process = 0
         sim = Simulation(simulation_name='celr_e')
         iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+
         for halo_id, halo_z in iterator:
-            cluster = Cluster(simulation_name=sim.simulation_name, clusterID=halo_id, redshift=halo_z)
-            out = FOFDatagen(cluster)
-            out.push_R_crit()
-            out.push_apertures()
-            out.push_mass()
-            out.push_centre_of_mass()
-            out.push_peculiar_velocity()
-            out.push_angular_momentum()
+            if process % size == rank:
+
+                cluster = Cluster(simulation_name=sim.simulation_name, clusterID=halo_id, redshift=halo_z)
+                out = FOFDatagen(cluster)
+                out.push_R_crit()
+                out.push_apertures()
+                out.push_mass()
+                out.push_centre_of_mass()
+                out.push_peculiar_velocity()
+                out.push_angular_momentum()
+
+                print(f"CPU ({rank}/{size}) is processing halo {halo_id} @ z = {halo_z} ------ process ID: "
+                      f"{process}")
+            process += 1
+
 
     mining()
 
