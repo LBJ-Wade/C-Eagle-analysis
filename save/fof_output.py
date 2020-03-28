@@ -604,6 +604,11 @@ class FOFDatagen(save.SimulationOutput):
 
 if __name__ == '__main__':
 
+    data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                     'partType1': ['mass', 'coordinates', 'velocity'],
+                     'partType4': ['mass', 'coordinates', 'velocity'],
+                     'partType5': ['mass', 'coordinates', 'velocity']}
+
     def test():
         cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
         out = FOFDatagen(cluster)
@@ -640,7 +645,12 @@ if __name__ == '__main__':
         for halo_id, halo_z in iterator:
             if process % size == rank:
 
-                cluster = Cluster(simulation_name=sim.simulation_name, clusterID=halo_id, redshift=halo_z)
+                cluster = Cluster(simulation_name=sim.simulation_name,
+                                  clusterID=halo_id,
+                                  redshift=halo_z,
+                                  comovingframe=False,
+                                  requires=data_required)
+
                 out = FOFDatagen(cluster)
                 out.push_R_crit()
                 out.push_apertures()
