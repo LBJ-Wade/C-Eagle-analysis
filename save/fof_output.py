@@ -289,8 +289,8 @@ class FOFDatagen(save.SimulationOutput):
                                          f'halo{self.halo_Num(cluster.clusterID)}_{cluster.redshift}')
 
     def push_R_crit(self):
-        data = {'/R_200_crit' : np.array([self.cluster.r200]),
-                '/R_500_crit' : np.array([self.cluster.r500]),
+        data = {'/R_200_crit'  : np.array([self.cluster.r200]),
+                '/R_500_crit'  : np.array([self.cluster.r500]),
                 '/R_2500_crit' : np.array([self.cluster.r2500])}
         attributes = {'Description' : 'R_crits',
                       'Units' : 'Mpc'}
@@ -315,10 +315,10 @@ class FOFDatagen(save.SimulationOutput):
         for r in self.cluster.generate_apertures():
 
             part_mass_aperture = self.cluster.group_mass_aperture(out_allPartTypes=True, aperture_radius=r)
-            part_mass = np.concatenate((part_mass, [part_mass_aperture]), axis=0)
+            part_mass = np.row_stack((part_mass, part_mass_aperture))
 
             tot_mass_aperture = np.sum(part_mass_aperture)
-            total_mass = np.concatenate((total_mass, [tot_mass_aperture]), axis=0)
+            total_mass = np.row_stack((total_mass, tot_mass_aperture))
 
         data = {'/Total_mass': np.array(total_mass),
                 '/ParType0_mass' : np.array(part_mass)[:,0],
@@ -345,13 +345,13 @@ class FOFDatagen(save.SimulationOutput):
         for r in self.cluster.generate_apertures():
 
             part_CoM_aperture = self.cluster.group_centre_of_mass(aperture_radius=r, out_allPartTypes=True)
-            ParType0_CoM = np.concatenate((ParType0_CoM, [part_CoM_aperture[0]]), axis = 0)
-            ParType1_CoM = np.concatenate((ParType1_CoM, [part_CoM_aperture[1]]), axis = 0)
-            ParType4_CoM = np.concatenate((ParType4_CoM, [part_CoM_aperture[2]]), axis = 0)
-            ParType5_CoM = np.concatenate((ParType5_CoM, [part_CoM_aperture[3]]), axis = 0)
+            ParType0_CoM = np.row_stack((ParType0_CoM, part_CoM_aperture[0]))
+            ParType1_CoM = np.row_stack((ParType1_CoM, part_CoM_aperture[1]))
+            ParType4_CoM = np.row_stack((ParType4_CoM, part_CoM_aperture[2]))
+            ParType5_CoM = np.row_stack((ParType5_CoM, part_CoM_aperture[3]))
 
             Total_CoM_aperture = self.cluster.group_centre_of_mass(aperture_radius=r, out_allPartTypes=False)
-            Total_CoM = np.concatenate((Total_CoM, [Total_CoM_aperture]), axis=0)
+            Total_CoM = np.row_stack((Total_CoM, Total_CoM_aperture))
 
         data = {'/Total_CoM'    : np.array(Total_CoM),
                 '/ParType0_CoM' : np.array(ParType0_CoM),
@@ -378,13 +378,13 @@ class FOFDatagen(save.SimulationOutput):
         for r in self.cluster.generate_apertures():
 
             part_ZMF_aperture = self.cluster.group_zero_momentum_frame(aperture_radius=r, out_allPartTypes=True)
-            ParType0_ZMF = np.concatenate((ParType0_ZMF, [part_ZMF_aperture[0]]), axis = 0)
-            ParType1_ZMF = np.concatenate((ParType1_ZMF, [part_ZMF_aperture[1]]), axis = 0)
-            ParType4_ZMF = np.concatenate((ParType4_ZMF, [part_ZMF_aperture[2]]), axis = 0)
-            ParType5_ZMF = np.concatenate((ParType5_ZMF, [part_ZMF_aperture[3]]), axis = 0)
+            ParType0_ZMF = np.row_stack((ParType0_ZMF, part_ZMF_aperture[0]))
+            ParType1_ZMF = np.row_stack((ParType1_ZMF, part_ZMF_aperture[1]))
+            ParType4_ZMF = np.row_stack((ParType4_ZMF, part_ZMF_aperture[2]))
+            ParType5_ZMF = np.row_stack((ParType5_ZMF, part_ZMF_aperture[3]))
 
             Total_ZMF_aperture = self.cluster.group_zero_momentum_frame(aperture_radius=r, out_allPartTypes=False)
-            Total_ZMF = np.concatenate((Total_ZMF, [Total_ZMF_aperture]), axis=0)
+            Total_ZMF = np.row_stack((Total_ZMF, Total_ZMF_aperture))
 
         data = {'/Total_ZMF'    : np.array(Total_ZMF),
                 '/ParType0_ZMF' : np.array(ParType0_ZMF),
@@ -459,13 +459,13 @@ class FOFDatagen(save.SimulationOutput):
 
         for r in self.cluster.generate_apertures():
             part_angmom_aperture = self.cluster.group_angular_momentum(aperture_radius=r, out_allPartTypes=True)
-            ParType0_angmom = np.concatenate((ParType0_angmom, [part_angmom_aperture[0]]), axis=0)
-            ParType1_angmom = np.concatenate((ParType1_angmom, [part_angmom_aperture[1]]), axis=0)
-            ParType4_angmom = np.concatenate((ParType4_angmom, [part_angmom_aperture[2]]), axis=0)
-            ParType5_angmom = np.concatenate((ParType5_angmom, [part_angmom_aperture[3]]), axis=0)
+            ParType0_angmom = np.row_stack((ParType0_angmom, part_angmom_aperture[0]))
+            ParType1_angmom = np.row_stack((ParType1_angmom, part_angmom_aperture[1]))
+            ParType4_angmom = np.row_stack((ParType4_angmom, part_angmom_aperture[2]))
+            ParType5_angmom = np.row_stack((ParType5_angmom, part_angmom_aperture[3]))
 
             Total_angmom_aperture = self.cluster.group_angular_momentum(aperture_radius=r, out_allPartTypes=False)
-            Total_angmom = np.concatenate((Total_angmom, [Total_angmom_aperture]), axis=0)
+            Total_angmom = np.row_stack((Total_angmom, Total_angmom_aperture))
 
         data = {'/Total_angmom'   : np.array(Total_angmom),
                 '/ParType0_angmom': np.array(ParType0_angmom),
