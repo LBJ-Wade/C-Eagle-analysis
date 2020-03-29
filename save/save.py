@@ -112,7 +112,7 @@ class SimulationOutput(Simulation):
         timestr = time.strftime("%d%m%Y-%H%M%S")
 
 
-        fig = plt.figure(figsize=(8, 7))
+        fig = plt.figure(figsize=(11, 17))
         ax = fig.add_subplot(111)
 
         ax.set_title('{:s}    Output status record    {:s}'.format(self.simulation, timestr))
