@@ -115,9 +115,9 @@ class SimulationOutput(Simulation):
         fig = plt.figure(figsize=(8, 7))
         ax = fig.add_subplot(111)
 
-        ax.set_title(r'{:s}\quad Output status record\quad{:s}'.format(self.simulation, timestr))
-        ax.set_xlabel(r'$redshift$')
-        ax.set_ylabel(r'$ClusterID$')
+        ax.set_title('{:s}\quad Output status record\quad{:s}'.format(self.simulation, timestr))
+        ax.set_xlabel('redshift')
+        ax.set_ylabel('ClusterID')
 
         for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
 
