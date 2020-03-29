@@ -108,8 +108,7 @@ class SimulationOutput(Simulation):
         return ax
 
     def status_plot(self):
-        os.chdir(os.path.dirname(os.path.abspath(__file__)))
-        exec(open('../visualisation/light_mode.py').read())
+
         timestr = time.strftime("%d%m%Y-%H%M%S")
 
 
