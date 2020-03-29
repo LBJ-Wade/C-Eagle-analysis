@@ -89,21 +89,21 @@ class SimulationOutput(Simulation):
                  size,
                  ax=None):
         if ax is None:
-            fig, ax = plt.subplots(figsize=(10, 8))
+            fig, ax = plt.subplots(figsize=(11, 12))
 
         # for incremental pie slices
         cumsum = np.cumsum(dist)
         cumsum = cumsum / cumsum[-1]
         pie = [0] + cumsum.tolist()
-
-        for r1, r2 in zip(pie[:-1], pie[1:]):
+        colors = ['aqua', 'red']
+        for r1, r2, c in zip(pie[:-1], pie[1:], colors):
             angles = np.linspace(2 * np.pi * r1, 2 * np.pi * r2)
             x = [0] + np.cos(angles).tolist()
             y = [0] + np.sin(angles).tolist()
 
             xy = np.column_stack([x, y])
 
-            ax.scatter([xpos], [ypos], marker=xy, s=size)
+            ax.scatter([xpos], [ypos], marker=xy, s=size, facecolor=c)
 
         return ax
 
