@@ -15,9 +15,13 @@ or MB and it is possible to transfer it locally for further analysis.
 import sys
 import os
 import itertools
+import time
+import numpy as np
+from matplotlib import pyplot as plt
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from import_toolkit.simulation import Simulation
+from import_toolkit._cluster_retriever import redshift_str2num
 
 
 class SimulationOutput(Simulation):
@@ -76,7 +80,61 @@ class SimulationOutput(Simulation):
             tree.update({f: file_token for f in files})
             return tree  # note we discontinue iteration trough os.walk
 
+    @staticmethod
+    def draw_pie(dist,
+                 xpos,
+                 ypos,
+                 size,
+                 ax=None):
+        if ax is None:
+            fig, ax = plt.subplots(figsize=(10, 8))
 
+        # for incremental pie slices
+        cumsum = np.cumsum(dist)
+        cumsum = cumsum / cumsum[-1]
+        pie = [0] + cumsum.tolist()
+
+        for r1, r2 in zip(pie[:-1], pie[1:]):
+            angles = np.linspace(2 * np.pi * r1, 2 * np.pi * r2)
+            x = [0] + np.cos(angles).tolist()
+            y = [0] + np.sin(angles).tolist()
+
+            xy = np.column_stack([x, y])
+
+            ax.scatter([xpos], [ypos], marker=xy, s=size)
+
+        return ax
+
+    def status_plot(self):
+        exec(open('../visualisation/light_mode.py').read())
+        timestr = time.strftime("%d%m%Y-%H%M%S")
+
+
+        fig = plt.figure(figsize=(8, 7))
+        ax = fig.add_subplot(111)
+
+        ax.set_title(r'{:s}\quad Output status record\quad{:s}'.format(self.simulation, timestr))
+        ax.set_xlabel(r'$redshift$')
+        ax.set_ylabel(r'$ClusterID$')
+
+        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
+
+            out_path = os.path.join(self.pathSave,
+                                    self.simulation_name,
+                                    f'halo{self.halo_Num(cluster_number)}',
+                                    f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
+
+
+            num_of_files_expected = 6
+            num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
+            self.draw_pie([num_of_files, num_of_files_expected - num_of_files],
+                          redshift_str2num(cluster_redshift), cluster_number, 1000, ax=ax)
+
+        plt.tight_layout()
+
+        plt.savefig(os.path.join(self.pathSave,
+                                 self.simulation_name,
+                                 f"{self.simulation_name}_OutputStatusReport_{timestr}.png"), dpi=300)
 
 if __name__ == '__main__':
     for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
