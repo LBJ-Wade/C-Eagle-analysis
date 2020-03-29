@@ -115,7 +115,7 @@ class SimulationOutput(Simulation):
         fig = plt.figure(figsize=(8, 7))
         ax = fig.add_subplot(111)
 
-        ax.set_title('{:s}\quad Output status record\quad{:s}'.format(self.simulation, timestr))
+        ax.set_title('{:s}    Output status record    {:s}'.format(self.simulation, timestr))
         ax.set_xlabel('redshift')
         ax.set_ylabel('ClusterID')
 
@@ -130,7 +130,7 @@ class SimulationOutput(Simulation):
             num_of_files_expected = 6
             num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
             self.draw_pie([num_of_files, num_of_files_expected - num_of_files],
-                          redshift_str2num(cluster_redshift), cluster_number, 1000, ax=ax)
+                          redshift_str2num(cluster_redshift), cluster_number, 100, ax=ax)
 
         plt.tight_layout()
 
