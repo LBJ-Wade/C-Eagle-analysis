@@ -95,7 +95,7 @@ class SimulationOutput(Simulation):
         cumsum = np.cumsum(dist)
         cumsum = cumsum / cumsum[-1]
         pie = [0] + cumsum.tolist()
-        colors = ['aqua', 'red']
+        colors = ['lime', 'red']
         for r1, r2, c in zip(pie[:-1], pie[1:], colors):
             angles = np.linspace(2 * np.pi * r1, 2 * np.pi * r2)
             x = [0] + np.cos(angles).tolist()
