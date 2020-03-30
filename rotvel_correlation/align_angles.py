@@ -19,8 +19,9 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from import_toolkit.simulation import Simulation
+
 from import_toolkit.cluster import Cluster
+from import_toolkit.simulation import Simulation
 from read import pull
 
 class CorrelationMatrix(pull.FOFRead):
