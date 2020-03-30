@@ -81,7 +81,7 @@ class CorrelationMatrix(pull.FOFRead):
                 text = ax.text(j, i, r"${:.2f}\pm{:.2f}$".format(angle_matrix[i, j], std_matrix[i, j]),
                                ha="center", va="center", color="k", size = 15)
 
-        ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"$R_{500\ true}$", size = 14)
+        ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"$R_{500\ true}$", size = 9)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
 
         ax.tick_params(which='minor', length=0, color='w')
