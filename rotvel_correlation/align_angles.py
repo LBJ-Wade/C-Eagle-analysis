@@ -83,9 +83,9 @@ class CorrelationMatrix(pull.FOFRead):
                                     angle_matrix[i, j],
                                     std1_matrix[i, j] - angle_matrix[i, j],
                                     angle_matrix[i, j] - std0_matrix[i, j]),
-                                    ha="center", va="center", color="k", size = 13)
+                                    ha="center", va="center", color="k", size = 12)
 
-        ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"\ $R_{500\ true}$", size = 20)
+        ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"\ $R_{500\ true}$", size = 25)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
 
         ax.tick_params(which='minor', length=0, color='w')
@@ -118,7 +118,7 @@ if __name__ == '__main__':
         aperture_list = []
         aperture_self_similar = []
         for id in simulation.clusterIDAllowed:
-            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p000')
+            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p543')
             print(f'Analysing cluster {cluster.clusterID}')
             matrix = CorrelationMatrix(cluster)
             data = matrix.get_data()[apertureidx]
