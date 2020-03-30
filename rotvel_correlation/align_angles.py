@@ -78,10 +78,11 @@ class CorrelationMatrix(pull.FOFRead):
         # Loop over data dimensions and create text annotations.
         for i in range(len(x_labels)):
             for j in range(len(x_labels)):
-                text = ax.text(j, i, r"${:.2f}^{+{:.2f}}_{-{:.2f}}$".format(angle_matrix[i, j],
-                                                                 std1_matrix[i, j] - angle_matrix[i, j],
-                                                                 angle_matrix[i, j] - std0_matrix[i, j]),
-                               ha="center", va="center", color="k", size = 15)
+                text = ax.text(j, i, r"${:.2f}^{{+{:.2f}}}_{{-{:.2f}}}$".format(
+                                angle_matrix[i, j],
+                                std1_matrix[i, j] - angle_matrix[i, j],
+                                angle_matrix[i, j] - std0_matrix[i, j]),
+                                ha="center", va="center", color="k", size = 15)
 
         ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"\ $R_{500\ true}$", size = 8)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
