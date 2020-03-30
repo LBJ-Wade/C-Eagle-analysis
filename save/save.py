@@ -103,7 +103,7 @@ class SimulationOutput(Simulation):
 
             xy = np.column_stack([x, y])
 
-            ax.scatter([xpos], [ypos], marker=xy, s=size, facecolor=c)
+            ax.scatter([xpos], [ypos], marker=xy, s=size, facecolor=c, alpha = 0.5)
 
         return ax
 
@@ -112,7 +112,7 @@ class SimulationOutput(Simulation):
         timestr = time.strftime("%d%m%Y-%H%M%S")
 
 
-        fig = plt.figure(figsize=(11, 17))
+        fig = plt.figure(figsize=(11, 20))
         ax = fig.add_subplot(111)
 
         ax.set_title('{:s}    Output status record    {:s}'.format(self.simulation, timestr))
