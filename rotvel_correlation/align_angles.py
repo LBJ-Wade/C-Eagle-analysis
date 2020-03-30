@@ -133,7 +133,7 @@ if __name__ == '__main__':
         std0_matrix = np.percentile(matrix_list, 15.9, axis=0)
         std1_matrix = np.percentile(matrix_list, 84.1, axis=0)
 
-        matrix.plot_matrix(average_matrix, std_matrix, average_aperture)
+        matrix.plot_matrix(average_matrix, std0_matrix, std1_matrix, average_aperture)
         print(f"Saving matrix | aperture {apertureidx} | redshift {cluster.redshift}")
         plt.savefig(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation',
                                  f'meanPMstd_{cluster.redshift}_aperture_{apertureidx}.png'))
