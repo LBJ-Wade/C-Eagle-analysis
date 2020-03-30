@@ -39,7 +39,7 @@ class CorrelationMatrix(pull.FOFRead):
         return self.pull_apertures()
 
     @staticmethod
-    def plot_matrix(angle_matrix, apertures):
+    def plot_matrix(angle_matrix, std_matrix, apertures):
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
@@ -78,10 +78,10 @@ class CorrelationMatrix(pull.FOFRead):
         # Loop over data dimensions and create text annotations.
         for i in range(len(x_labels)):
             for j in range(len(x_labels)):
-                text = ax.text(j, i, r"{:.2f}".format(angle_matrix[i, j]),
+                text = ax.text(j, i, r"${:.2f}\pm{:.2f}$".format(angle_matrix[i, j], std_matrix[i, j]),
                                ha="center", va="center", color="k", size = 15)
 
-        ax.set_title(r"Aperture = {:.2f} Mpc".format(apertures), size = 20)
+        ax.set_title(r"Aperture = {:.2f} $R_{500\ true}$".format(apertures), size = 20)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
 
         ax.tick_params(which='minor', length=0, color='w')
@@ -112,6 +112,7 @@ if __name__ == '__main__':
         simulation = Simulation(simulation_name='celr_e')
         matrix_list = []
         aperture_list = []
+        aperture_self_similar = []
         for id in simulation.clusterIDAllowed:
             cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p000')
             print(f'Analysing cluster {cluster.clusterID}')
@@ -120,23 +121,21 @@ if __name__ == '__main__':
             aperture = matrix.get_apertures()[apertureidx]
             matrix_list.append(data)
             aperture_list.append(aperture)
+            aperture_self_similar.append(aperture/cluster.r500)
 
         if not os.path.exists(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation')):
             os.makedirs(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation'))
 
-        average_aperture = np.mean(aperture_list, axis=0)
-
+        average_aperture = np.mean(aperture_self_similar, axis=0)
         average_matrix = np.mean(matrix_list, axis=0)
-        matrix.plot_matrix(average_matrix, average_aperture)
-        print(f"Saving mean matrix | aperture {apertureidx} | redshift {cluster.redshift}")
-        plt.savefig(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation',
-                                 f'mean_{cluster.redshift}_aperture_{apertureidx}.png'))
-
         std_matrix = np.std(matrix_list, axis=0)
-        matrix.plot_matrix(std_matrix, average_aperture)
-        print(f"Saving std matrix | aperture {apertureidx} | redshift {cluster.redshift}")
+
+        matrix.plot_matrix(average_matrix, std_matrix, average_aperture)
+        print(f"Saving matrix | aperture {apertureidx} | redshift {cluster.redshift}")
         plt.savefig(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation',
-                                 f'std_{cluster.redshift}_aperture_{apertureidx}.png'))
+                                 f'meanPMstd_{cluster.redshift}_aperture_{apertureidx}.png'))
+
+
 
     for i in range(20):
         all_clusters(i)
