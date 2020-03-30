@@ -120,6 +120,8 @@ if __name__ == '__main__':
             matrix_list.append(data)
             aperture_list.append(aperture)
 
+        if not os.path.exists(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation')):
+            os.makedirs(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation'))
 
         average_aperture = np.mean(aperture_list, axis=0)
 
