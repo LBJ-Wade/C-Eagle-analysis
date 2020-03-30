@@ -19,7 +19,8 @@ import h5py
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
-from import_toolkit.cluster import Simulation, Cluster
+from import_toolkit.cluster import Cluster
+from import_toolkit.simulation import Simulation
 
 
 class FOFRead(Simulation):
