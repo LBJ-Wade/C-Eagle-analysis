@@ -118,7 +118,7 @@ if __name__ == '__main__':
         aperture_list = []
         aperture_self_similar = []
         for id in simulation.clusterIDAllowed:
-            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p543')
+            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z001p017')
             print(f'Analysing cluster {cluster.clusterID}')
             matrix = CorrelationMatrix(cluster)
             data = matrix.get_data()[apertureidx]
