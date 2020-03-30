@@ -1,1 +1,2 @@
-from . import light_mode, dark_mode
+from visualisation import *
+exec(open('visualisation/light_mode.py').read())

@@ -95,7 +95,7 @@ class CorrelationMatrix(pull.FOFRead):
 
 
 if __name__ == '__main__':
-    exec(open('visualisation/light_mode.py').read())
+
 
     def test():
         cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
