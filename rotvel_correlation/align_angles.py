@@ -19,8 +19,8 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-
-from import_toolkit.cluster import Simulation, Cluster
+from import_toolkit.simulation import Simulation
+from import_toolkit.cluster import Cluster
 from read import pull
 
 class CorrelationMatrix(pull.FOFRead):
@@ -109,7 +109,7 @@ if __name__ == '__main__':
         matrix_list = []
         aperture_list = []
         for id in simulation.clusterIDAllowed:
-            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z001p017')
+            cluster = Cluster(simulation_name='celr_e', clusterID=id, redshift='z000p000')
             print(f'Analysing cluster {cluster.clusterID}')
             matrix = CorrelationMatrix(cluster)
             data = matrix.get_data()[apertureidx]
