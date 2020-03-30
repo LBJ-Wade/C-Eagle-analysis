@@ -39,7 +39,7 @@ class CorrelationMatrix(pull.FOFRead):
         return self.pull_apertures()
 
     @staticmethod
-    def plot_matrix(angle_matrix, std_matrix, apertures):
+    def plot_matrix(angle_matrix, std0_matrix, std1_matrix, apertures):
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
@@ -78,10 +78,12 @@ class CorrelationMatrix(pull.FOFRead):
         # Loop over data dimensions and create text annotations.
         for i in range(len(x_labels)):
             for j in range(len(x_labels)):
-                text = ax.text(j, i, r"${:.2f}\pm{:.2f}$".format(angle_matrix[i, j], std_matrix[i, j]),
+                text = ax.text(j, i, r"${:.2f}^{+{:.2f}}_{-{:.2f}}$".format(angle_matrix[i, j],
+                                                                 std1_matrix[i, j] - angle_matrix[i, j],
+                                                                 angle_matrix[i, j] - std0_matrix[i, j]),
                                ha="center", va="center", color="k", size = 15)
 
-        ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"$R_{500\ true}$", size = 9)
+        ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"\ $R_{500\ true}$", size = 8)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
 
         ax.tick_params(which='minor', length=0, color='w')
@@ -127,8 +129,9 @@ if __name__ == '__main__':
             os.makedirs(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation'))
 
         average_aperture = np.mean(aperture_self_similar, axis=0)
-        average_matrix = np.mean(matrix_list, axis=0)
-        std_matrix = np.std(matrix_list, axis=0)
+        average_matrix = np.percentile(matrix_list, 50, axis=0)
+        std0_matrix = np.percentile(matrix_list, 15.9, axis=0)
+        std1_matrix = np.percentile(matrix_list, 84.1, axis=0)
 
         matrix.plot_matrix(average_matrix, std_matrix, average_aperture)
         print(f"Saving matrix | aperture {apertureidx} | redshift {cluster.redshift}")
