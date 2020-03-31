@@ -175,7 +175,7 @@ class TrendZ:
         print(f"{aperture_id_str:^100s}\n")
         print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 
-        angle_master = np.zeros((len(sim.redshiftAllowed), len(sim.clusterIDAllowed)), dtype=np.float)
+        angle_master = np.zeros(( len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
         print(angle_master.shape)
         print(angle_master)
         z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
