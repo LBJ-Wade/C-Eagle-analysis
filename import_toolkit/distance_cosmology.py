@@ -1,12 +1,12 @@
 from astropy.cosmology import FlatLambdaCDM
-import clusters_retriever as extract
 import numpy as np
+from matplotlib import pyplot as plt
+from numpy import logspace
+
 
 def cosmo_params():
-	path = extract.path_from_cluster_name(0, simulation_type = 'gas')
-	file = extract.file_name_hdf5(subject = 'particledata', redshift = extract.redshift_floatTostr(0.57))
-	h = extract.file_hubble_param(path, file)
-	Omega_matter = extract.file_Omega0(path, file)
+	h = 0.6777
+	Omega_matter = 0.16
 	return h*100, Omega_matter
 
 
@@ -73,15 +73,11 @@ def test():
 
 
 def plots():
-	from matplotlib import pyplot as plt
-    from visualisation import map_plot_parameters as plotpar
-    from numpy import logspace
 
 	z = logspace(-5, 3.2, 100)
 	D_l = luminosity_D(z)
 	D_a = angular_diameter_D(z)
 
-	plotpar.set_defaults_plot()
 	fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(10, 4))
 	axes[0].set_xscale('log')
 	axes[0].set_yscale('log')
