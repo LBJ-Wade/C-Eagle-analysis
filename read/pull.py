@@ -313,7 +313,7 @@ class FOFRead(Simulation):
         angle_apertures = np.zeros(len(apertures), dtype=np.float)
 
         for m, _ in np.ndenumerate(apertures):
-            angle_apertures[m] = self.cluster.angle_between_vectors(vector1, vector2)
+            angle_apertures[m] = self.cluster.angle_between_vectors(vector1[m], vector2[m])
 
         return angle_apertures
 
