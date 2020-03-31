@@ -19,12 +19,11 @@ import sys
 import os.path
 import h5py
 
-# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from import_toolkit.cluster import Cluster
 from import_toolkit.simulation import Simulation
 from import_toolkit._cluster_retriever import redshift_str2num
-import visualisation
 import save
 
 __HDF5_SUBFOLDER__ = 'FOF'

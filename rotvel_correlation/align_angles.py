@@ -133,11 +133,11 @@ class CorrelationMatrix(pull.FOFRead):
         for i in range(len(x_labels)):
             for j in range(len(x_labels)):
                 if i is not j:
-                    text = ax.text(j, i, r"${:.2f}^{{+{:.2f}}}_{{-{:.2f}}}$".format(
-                                    median50[i, j],
-                                    percent84[i, j] - median50[i, j],
-                                    median50[i, j] - percent16[i, j]),
-                                    ha="center", va="center", color="k", size = 12)
+                     ax.text(j, i, r"${:.2f}^{{+{:.2f}}}_{{-{:.2f}}}$".format(
+                                median50[i, j],
+                                percent84[i, j] - median50[i, j],
+                                median50[i, j] - percent16[i, j]),
+                                ha="center", va="center", color="k", size = 12)
 
         ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"\ $R_{500\ true}$", size = 25)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
@@ -148,7 +148,6 @@ class CorrelationMatrix(pull.FOFRead):
             ax.spines[pos].set_edgecolor('w')
 
         fig.tight_layout()
-        # plt.show()
 
 
 
