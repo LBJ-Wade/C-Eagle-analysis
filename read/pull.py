@@ -261,6 +261,62 @@ class FOFRead(Simulation):
         with h5py.File(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5'), 'r') as input_file:
             Total_ZMF = np.array(input_file.get('Total_ZMF'))
 
+    def pull_rot_vel_angle_between(self, vector1_str: str, vector2_str: str) -> np.ndarray:
+        """
+        Pull a specific angle between a pair of vectors. Example implementation:
+
+            self.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')
+
+        :param vector1_str: expect string with the variable name
+        :param vector2_str: expect string with the variable name
+        :return: angle between vector 1 and vector 2 in degrees
+        """
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
+                                                                                           f"found in {self.FOFDirectory}."
+                                                                                           "Check that they have "
+                                                                                           "already been computed "
+                                                                                           "for this cluster and "
+                                                                                           "this redshift.")
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
+                                                                                   f"found in {self.FOFDirectory}."
+                                                                                   "Check that they have "
+                                                                                   "already been computed for this "
+                                                                                   "cluster and this redshift.")
+
+        assert os.path.isfile(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5')), ("Angular momentum data not "
+                                                                                          f"found in {self.FOFDirectory}."
+                                                                                          "Check that they have "
+                                                                                          "already been computed for "
+                                                                                          "this cluster and this redshift.")
+
+        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
+            apertures = np.array(input_file.get('Apertures'))
+
+        if vector1_str.endswith('angmom'):
+            with h5py.File(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5'), 'r') as input_file:
+                vector1 = np.array(input_file.get(vector1_str))
+
+        elif vector1_str.endswith('ZMF'):
+            with h5py.File(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5'), 'r') as input_file:
+                vector1 = np.array(input_file.get(vector1_str))
+
+        if vector2_str.endswith('angmom'):
+            with h5py.File(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5'), 'r') as input_file:
+                vector2 = np.array(input_file.get(vector2_str))
+
+        elif vector2_str.endswith('ZMF'):
+            with h5py.File(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5'), 'r') as input_file:
+                vector2 = np.array(input_file.get(vector2_str))
+
+        angle_apertures = np.zeros(len(apertures), dtype=np.float)
+
+        for m, _ in np.ndenumerate(apertures):
+            angle_apertures[m] = self.cluster.angle_between_vectors(vector1, vector2)
+
+        return angle_apertures
+
 
 
 

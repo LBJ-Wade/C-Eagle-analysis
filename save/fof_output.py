@@ -672,7 +672,7 @@ if __name__ == '__main__':
                 out.push_angular_momentum()
 
                 rank_str = '(' + str(rank) + '/' + str(size) + ')'
-                print(f"{rank_str:^30s} | {process_n:^25s} | {halo_id:^15s} | {halo_z:^20s}\n")
+                print(f"{rank_str:^30s} | {process_n:^25s} | {halo_id:^15s} | {halo_z:^20s}")
 
 
     mining()

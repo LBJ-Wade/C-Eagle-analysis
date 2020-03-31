@@ -20,12 +20,15 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from sklearn.utils import resample
 from typing import List, Dict, Tuple
+import itertools
+
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from import_toolkit.cluster import Cluster
 from import_toolkit.simulation import Simulation
+from import_toolkit._cluster_retriever import redshift_str2num
 from read import pull
 
 class CorrelationMatrix(pull.FOFRead):
@@ -148,6 +151,76 @@ class CorrelationMatrix(pull.FOFRead):
             ax.spines[pos].set_edgecolor('w')
 
         fig.tight_layout()
+
+class TrendZ:
+
+    # Inherit methods from the CorrelationMatrix class
+    get_percentiles = staticmethod(CorrelationMatrix.get_percentiles)
+    bootstrap = CorrelationMatrix.bootstrap
+
+    def __init__(self):
+        pass
+
+    def get_apertures(self, cluster: Cluster):
+        read = pull.FOFRead(cluster)
+        return read.pull_apertures()
+
+    def plot_z_trends(self,
+                      simulation_name: str = None,
+                      aperture_id: int = 10):
+
+        sim = Simulation(simulation_name=simulation_name)
+        print(f"{sim.simulation:=^100s}")
+        aperture_id_str = f'Aperture {aperture_id}'
+        print(f"{aperture_id_str:^100s}")
+        print(f"{'  ':<30s} | {' process ID ':^25s} | {' halo ID ':^15s} | "
+              f"{' halo redshift ':^20s}\n")
+
+        angle_master = np.zeros((sim.redshiftAllowed, sim.clusterIDAllowed), dtype=np.float)
+        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
+
+        iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+            print(f"{'Processing...':<30s} | {process_n:^25s} | {halo_id:^15s} | {halo_z:^20s}")
+            cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
+            read = pull.FOFRead(cluster)
+            angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
+            angle_master[sim.redshiftAllowed.index(halo_z)][halo_id] = angle
+
+            if process_n is 0:
+                aperture_float = self.get_apertures(cluster)[aperture_id]/cluster.r500
+
+        fig = plt.figure(figsize=(12, 12))
+        ax = fig.add_subplot(111)
+
+        percentiles = self.get_percentiles(angle_master)
+        for percentile in percentiles:
+            ax.plot(z_master, percentile)
+
+        items_labels = r"""$(\mathbf{\widehat{{L,v_{{pec}}}}})$ REDSHIFT TRENDS
+                                Simulations: {:s}
+                                Number of clusters: {:d}
+                                $z$ = {:.2f} - {:.2f}
+                                Aperture radius = {:.2f} Mpc""".format(sim.simulation,
+                                                                       sim.totalClusters,
+                                                                       redshift_str2num(sim.redshiftAllowed[0]),
+                                                                       redshift_str2num(sim.redshiftAllowed[-1]),
+                                                                       aperture_float)
+
+        print(items_labels)
+        ax.text(0.03, 0.97, items_labels,
+                  horizontalalignment='left',
+                  verticalalignment='top',
+                  transform=ax.transAxes,
+                  size=15)
+
+        if not os.path.exists(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')):
+            os.makedirs(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation'))
+
+        plt.savefig(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation',
+                                 f'redshift_rotTvelT_aperture_{aperture_id}.png'))
+
+
 
 
 
