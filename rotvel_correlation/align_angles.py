@@ -176,7 +176,7 @@ class TrendZ:
         print(f"{aperture_id_str:^100s}\n")
         print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 
-        angle_master = np.zeros(( len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
+        angle_master = np.zeros(( len(sim.redshiftAllowed), len(sim.clusterIDAllowed)), dtype=np.float)
         z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
 
         iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
@@ -196,9 +196,9 @@ class TrendZ:
         print(angle_master.shape)
         print(angle_master)
 
-        percent16 = np.percentile(angle_master, 15.9, axis=0)
-        median50  = np.percentile(angle_master, 50,   axis=0)
-        percent84 = np.percentile(angle_master, 84.1, axis=0)
+        percent16 = np.percentile(angle_master, 15.9, axis=1)
+        median50  = np.percentile(angle_master, 50,   axis=1)
+        percent84 = np.percentile(angle_master, 84.1, axis=1)
         print(percent16, median50, percent84, sep='\n')
 
         ax.plot(z_master, percent16, color='red', lw=1)
