@@ -179,7 +179,7 @@ class TrendZ:
         angle_master = np.zeros((sim.redshiftAllowed, sim.clusterIDAllowed), dtype=np.float)
         z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
 
-        iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+        iterator = itertools.product(len(sim.clusterIDAllowed), len(sim.redshiftAllowed))
         for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
             print(f"{'Processing...':<30s} | {process_n:^25s} | {halo_id:^15s} | {halo_z:^20s}")
             cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
