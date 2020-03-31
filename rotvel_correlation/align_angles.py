@@ -196,9 +196,9 @@ class TrendZ:
         print(angle_master.shape)
         print(angle_master)
 
-        percent16 = np.percentile(angle_master, 15.9, axis=1)
-        median50  = np.percentile(angle_master, 50,   axis=1)
-        percent84 = np.percentile(angle_master, 84.1, axis=1)
+        percent16 = np.percentile(angle_master, 15.9, axis=0)
+        median50  = np.percentile(angle_master, 50,   axis=0)
+        percent84 = np.percentile(angle_master, 84.1, axis=0)
         print(percent16, median50, percent84, sep='\n')
 
         ax.plot(z_master, percent16, color='red', lw=1)
