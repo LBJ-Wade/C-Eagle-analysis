@@ -171,6 +171,7 @@ class TrendZ:
 
         sim = Simulation(simulation_name=simulation_name)
         aperture_id_str = f'Aperture {aperture_id}'
+        aperture_float = aperture_id
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
         print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
@@ -198,15 +199,15 @@ class TrendZ:
         for percentile in percentiles:
             ax.plot(z_master, percentile)
 
-        items_labels = r"""$(\mathbf{\widehat{{L,v_{{pec}}}}})$ REDSHIFT TRENDS
-                                Simulations: {:s}
-                                Number of clusters: {:d}
-                                $z$ = {:.2f} - {:.2f}
-                                Aperture radius = {:.2f} Mpc""".format(sim.simulation,
-                                                                       sim.totalClusters,
-                                                                       redshift_str2num(sim.redshiftAllowed[0]),
-                                                                       redshift_str2num(sim.redshiftAllowed[-1]),
-                                                                       aperture_float)
+        items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
+                            Simulations: {:s}
+                            Number of clusters: {:d}
+                            $z$ = {:.2f} - {:.2f}
+                            Aperture radius = {:.2f} $R_{{500\ true}}$""".format(sim.simulation,
+                                                                   sim.totalClusters,
+                                                                   redshift_str2num(sim.redshiftAllowed[0]),
+                                                                   redshift_str2num(sim.redshiftAllowed[-1]),
+                                                                   aperture_float)
 
         print(items_labels)
         ax.text(0.03, 0.97, items_labels,
