@@ -181,7 +181,7 @@ class TrendZ:
 
         iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
         for process_n, (halo_id, halo_z) in enumerate(list(iterator)[0:40]):
-            print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
+            print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^200s}")
             cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
             read = pull.FOFRead(cluster)
             angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
