@@ -2,7 +2,7 @@ import clusters_retriever as extract
 from visualisation import map_plot_parameters as plotpar
 import cluster_profiler as profile
 from obsolete import map_synthetizer as mapgen, plot_metadata as meta
-import distance_cosmology as cosmo
+from import_toolkit import distance_cosmology as cosmo
 
 import numpy as np
 import matplotlib.pyplot as plt

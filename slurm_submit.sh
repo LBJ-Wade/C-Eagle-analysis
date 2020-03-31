@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 192                                           # The number of cores you need...
+#SBATCH --ntasks 96                                           # The number of cores you need...
 #SBATCH -J celrb                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
