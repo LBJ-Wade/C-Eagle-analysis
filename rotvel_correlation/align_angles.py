@@ -196,8 +196,13 @@ class TrendZ:
         ax = fig.add_subplot(111)
 
         percentiles = self.get_percentiles(angle_master)
-        for percentile in percentiles:
-            ax.plot(z_master, percentile)
+        percent16 = percentiles[0]
+        median50 = percentiles[1]
+        percent84 = percentiles[2]
+
+        ax.plot(z_master, percent16, color='red', lw=1)
+        ax.plot(z_master, median50, color='red', lw=2.5)
+        ax.plot(z_master, percent84, color='red', lw=1)
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
@@ -215,6 +220,9 @@ class TrendZ:
                   verticalalignment='top',
                   transform=ax.transAxes,
                   size=15)
+
+        ax.set_xlabel(r"$z$")
+        ax.set_ylabel(r"$\Delta \theta$ \quad [degrees]")
 
         if not os.path.exists(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')):
             os.makedirs(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation'))
