@@ -195,6 +195,8 @@ class TrendZ:
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
 
+        print(angle_master.shape)
+        print(angle_master)
         percentiles = self.get_percentiles(angle_master)
         percent16 = percentiles[0]
         median50 = percentiles[1]
@@ -228,7 +230,7 @@ class TrendZ:
             os.makedirs(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation'))
 
         plt.savefig(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation',
-                                 f'redshift_rotTvelT_aperture_{aperture_id}.png'))
+                                 f'redshift_rotTvelT_aperture_{aperture_id}.png'), dpi=300)
 
 
 
