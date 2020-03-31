@@ -298,6 +298,15 @@ class FOFDatagen(save.SimulationOutput):
         out = FOFOutput(self.cluster, filename = 'rcrit.hdf5', data = data, attrs = attributes)
         out.makefile()
 
+    def push_M_crit(self):
+        data = {'/M_200_crit'  : np.array([self.cluster.M200]),
+                '/M_500_crit'  : np.array([self.cluster.M500]),
+                '/M_2500_crit' : np.array([self.cluster.M2500])}
+        attributes = {'Description' : 'M_crits',
+                      'Units' : '10^10 M_Sun'}
+        out = FOFOutput(self.cluster, filename = 'mcrit.hdf5', data = data, attrs = attributes)
+        out.makefile()
+
     def push_apertures(self):
 
         data = {'/Apertures': np.array(self.cluster.generate_apertures())}
@@ -639,12 +648,14 @@ if __name__ == '__main__':
         """
 
         # Set-up the MPI allocation schedule
-        process = 0
         sim = Simulation(simulation_name='celr_b')
         iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+        print(f"{sim.simulation:=^100s}")
+        print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
+              f"{' halo redshift ':^20s}\n")
 
-        for halo_id, halo_z in iterator:
-            if process % size == rank:
+        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+            if process_n % size == rank:
 
                 cluster = Cluster(simulation_name=sim.simulation_name,
                                   clusterID=halo_id,
@@ -654,15 +665,15 @@ if __name__ == '__main__':
 
                 out = FOFDatagen(cluster)
                 out.push_R_crit()
+                out.push_M_crit()
                 out.push_apertures()
                 out.push_mass()
                 out.push_centre_of_mass()
                 out.push_peculiar_velocity()
                 out.push_angular_momentum()
 
-                print(f"CPU ({rank}/{size}) is processing halo {halo_id} @ z = {halo_z} ------ process ID: "
-                      f"{process}")
-            process += 1
+                rank_str = '(' + str(rank) + '/' + str(size) + ')'
+                print(f"{rank_str:^30s} | {process_n:^25s} | {halo_id:^15s} | {halo_z:^20s}\n")
 
 
     mining()

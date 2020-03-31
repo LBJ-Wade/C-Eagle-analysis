@@ -18,6 +18,8 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from sklearn.utils import resample
+from typing import List, Dict, Tuple
 
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
@@ -39,7 +41,54 @@ class CorrelationMatrix(pull.FOFRead):
         return self.pull_apertures()
 
     @staticmethod
-    def plot_matrix(angle_matrix, std0_matrix, std1_matrix, apertures):
+    def get_percentiles(data: np.ndarray, percentiles: list = [15.9, 50, 84.1]) -> np.ndarray:
+        data = np.asarray(data)
+        return np.array([np.percentile(data, percent, axis=0) for percent in percentiles])
+
+    def bootstrap(self, data: np.ndarray, n_iterations: int = 1e3) -> Dict[str, Tuple[float, float]]:
+        """
+        Class method to compute the median/percentile statistics of a 1D dataset using the
+        bootstrap resampling. The bootstrap allows to compute the dispersion of values in the
+        computed median/percentiles.
+        The method checks for the input dimensionality, then creates many realisations of the
+        initial dataset while resampling & replacing elements. The random seed is controlled
+        by a for loop of n_iterations (default 1000) iterations. It then computes the percentiles
+        for each realisation of the dataset and pushes the percentile results into a master stats
+        array.
+        From this master array of shape (n_iterations, 3), where all percentiles are gathered,
+        the mean and standard deviations are computed for each type of percentile and returned
+        in the form of a dictionary: the 3 percentiles with quoted mean and std.
+
+        :param data: expect 1D numpy array
+            Lists are also handled, provided they make it though the static typing condition.
+
+        :param n_iterations: expect int (default det to 1000)
+            The number of realisations for the bootstrap resampling. Recommended to be > 1e3.
+
+        :return:  Dict[str, Tuple[float, float]]
+            The mean and standard deviation (from the bootstrap sample), quoted for each
+            percentile and median.
+        """
+        data = np.asarray(data)
+        assert data.ndim is 1, f"Expected `data` to have dimensionality 1, got {data.ndim}."
+        stats_resampled = np.zeros((0, 3), dtype=np.float)
+
+        for seed in range(n_iterations):
+            data_resampled = resample(data, replace=True, n_samples=len(data), random_state=seed)
+            stats = self.get_percentiles(data_resampled, percentiles=[15.9, 50, 84.1])
+            stats_resampled = np.concatenate((stats_resampled, [stats]), axis=0)
+
+        stats_resampled_MEAN = np.mean(stats_resampled, axis=0)
+        stats_resampled_STD  = np.std(stats_resampled, axis=0)
+        bootstrap_stats = {
+            'percent16': (stats_resampled_MEAN[0], stats_resampled_STD[0]),
+            'median50' : (stats_resampled_MEAN[1], stats_resampled_STD[1]),
+            'percent84': (stats_resampled_MEAN[2], stats_resampled_STD[2])
+        }
+
+        return bootstrap_stats
+
+    def plot_matrix(self, angle_matrix, apertures):
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
@@ -74,15 +123,20 @@ class CorrelationMatrix(pull.FOFRead):
         ax.set_xticklabels(x_labels, rotation = 90)
         ax.set_yticklabels(x_labels)
 
+        # Compute percentiles
+        percentiles = self.get_percentiles(angle_matrix)
+        percent16 = percentiles[0]
+        median50 = percentiles[1]
+        percent84 = percentiles[2]
 
         # Loop over data dimensions and create text annotations.
         for i in range(len(x_labels)):
             for j in range(len(x_labels)):
                 if i is not j:
                     text = ax.text(j, i, r"${:.2f}^{{+{:.2f}}}_{{-{:.2f}}}$".format(
-                                    angle_matrix[i, j],
-                                    std1_matrix[i, j] - angle_matrix[i, j],
-                                    angle_matrix[i, j] - std0_matrix[i, j]),
+                                    median50[i, j],
+                                    percent84[i, j] - median50[i, j],
+                                    median50[i, j] - percent16[i, j]),
                                     ha="center", va="center", color="k", size = 12)
 
         ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"\ $R_{500\ true}$", size = 25)
@@ -131,11 +185,8 @@ if __name__ == '__main__':
             os.makedirs(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation'))
 
         average_aperture = np.mean(aperture_self_similar, axis=0)
-        average_matrix = np.percentile(matrix_list, 50, axis=0)
-        std0_matrix = np.percentile(matrix_list, 15.9, axis=0)
-        std1_matrix = np.percentile(matrix_list, 84.1, axis=0)
 
-        matrix.plot_matrix(average_matrix, std0_matrix, std1_matrix, average_aperture)
+        matrix.plot_matrix(matrix_list, average_aperture)
         print(f"Saving matrix | aperture {apertureidx} | redshift {cluster.redshift}")
         plt.savefig(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation',
                                  f'meanPMstd_{cluster.redshift}_aperture_{apertureidx}.png'))
