@@ -185,7 +185,7 @@ class TrendZ:
             cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
             read = pull.FOFRead(cluster)
             angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
-            angle_master[halo_id][sim.redshiftAllowed.index(halo_z)] = angle
+            angle_master[sim.redshiftAllowed.index(halo_z)][halo_id] = angle
 
             if process_n is 0:
                 aperture_float = self.get_apertures(cluster)[aperture_id]/cluster.r500
