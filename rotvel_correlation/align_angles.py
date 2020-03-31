@@ -177,8 +177,6 @@ class TrendZ:
         print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 
         angle_master = np.zeros(( len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
-        print(angle_master.shape)
-        print(angle_master)
         z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
 
         iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
@@ -198,12 +196,13 @@ class TrendZ:
         print(angle_master.shape)
         print(angle_master)
         percentiles = self.get_percentiles(angle_master)
+        print(percentiles)
         percent16 = percentiles[0]
         median50 = percentiles[1]
         percent84 = percentiles[2]
 
         ax.plot(z_master, percent16, color='red', lw=1)
-        ax.plot(z_master, median50, color='red', lw=2.5)
+        ax.plot(z_master, median50, color='red', lw=2.5, marker='o')
         ax.plot(z_master, percent84, color='red', lw=1)
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
