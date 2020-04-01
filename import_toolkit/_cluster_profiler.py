@@ -16,6 +16,7 @@ They working principle is based on OOP class inheritance.
 
 import numpy as np
 from typing import List, Dict, Tuple
+from unyt import hydrogen_mass, boltzmann_constant
 from .memory import free_memory
 import warnings
 
@@ -55,31 +56,19 @@ class Mixin:
         )
         return coordinates_radial
 
-
     @staticmethod
     def kinetic_energy(mass, vel):
+        mass = np.asarray(mass)
+        vel = np.asarray(vel)
         ke = 0.5 * mass * np.linalg.norm(vel, axis = 1)**2
         return np.sum(ke)
 
     @staticmethod
     def thermal_energy(mass, temperature):
-        k_B = 1.38064852 * np.power(10, -23.)
-        te = 1.5 * k_B * temperature * mass * 0.88 / (1.6735575* np.power(10, -27.))
+        mass = np.asarray(mass)
+        temperature = np.asarray(temperature)
+        te = 1.5 * boltzmann_constant * temperature * mass / (hydrogen_mass * 1.16)
         return np.sum(te)
-
-    @staticmethod
-    def dynamical_merging_index(CoP, CoM, aperture):
-        """
-        Computed as dynamical_merging_index = || CoM(r) - CoP(r) || / r
-
-        :param CoP: The centre of potential of the cluster
-        :param CoM: The centre of mass of the cluster
-        :param aperture: The aperture radius (from the CoP) for the particle selection
-        :return: float within [0,1]
-        """
-        displacement = np.linalg.norm(np.subtract(CoM, CoP), axis=1)
-        dynamic_index = np.divide(displacement, aperture)
-        return dynamic_index
 
     @staticmethod
     def centre_of_mass(mass, coords):
@@ -132,55 +121,119 @@ class Mixin:
         assert self.r2500 > 0. and self.r200 > 0., f"Issue encountered at {self.clusterID}, {self.redshift}"
         return np.logspace(np.log10(self.r200 / 4), np.log10(5 * self.r200), 20)
 
-    def group_kinetic_energy(self, out_allPartTypes=False, aperture_radius=None):
+
+    def group_thermal_energy(self,
+                             aperture_radius: float = None) -> np.ndarray:
         """
-        Compute the kinetic energy of the particles within a given aperture radius,
-        considered from the centre of potential. The function calculates the kinetic energy
-        from particle data according to
+        Method that computes the thermal_energy of particles within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the total thermal_energy.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        It also has the option of combining all the particles of different types and computing
+        the overall thermal_energy, or return the of each particle type separately.
+        This toggle is controlled by a boolean.
+
+        The thermal_energy is computed after converting the datasets from Gadget units to
+        SI units ([mass] = kg, [velocity] = km/s). The output is given in units of
+        (10**46) Joules.
+
+        thermal_energy = 3/2 * k_B * T * (number of H atoms)
+        number of H atoms = mass
+
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
+        """
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+        part_type = '0'
+        assert hasattr(self, f'partType{part_type}_coordinates')
+        assert hasattr(self, f'partType{part_type}_temperature')
+        assert hasattr(self, f'partType{part_type}_mass')
+        radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+        aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+        free_memory(['radial_dist'])
+        mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+        temperature = getattr(self, f'partType{part_type}_temperature')[aperture_radius_index]
+        if mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+        if temperature.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+        mass = self.mass_units(mass, unit_system='SI')
+        return self.thermal_energy(mass, temperature)*np.power(10, -46)
+    
+    def group_kinetic_energy(self,
+                             out_allPartTypes: bool =False,
+                             aperture_radius: float = None) -> np.ndarray:
+        """
+        Method that computes the kinetic_energy of particles within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the total kinetic_energy.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        It also has the option of combining all the particles of different types and computing
+        the overall kinetic_energy, or return the of each particle type separately.
+        This toggle is controlled by a boolean.
+
+        The kinetic_energy is computed after converting the datasets from Gadget units to
+        SI units ([mass] = kg, [velocity] = km/s). The output is given in units of
+        (10**46) Joules.
+
         kinetic_energy = 1/2 * mass * || velocity ||^2.
 
-        :param out_allPartTypes: expect boolean
-            Default = False -> returns the total combined kinetic energy from all particle
-            types. If set to True, it returns a numpy.ndarray with the total kinetic energy
-            of the 4 individual particle types.
-
-        :param aperture_radius: expect float
-            The aperture radius is the distance from the centre of potential of the cluster,
-            used to select the particles for the calculation. Everything outside the aperture
-            sphere is filtered out.
-            The units should be physical Mpc.
-
-        :return: float or np.array(dtype = np.float)
-            Returns the kinetic energy of the particles within the aperture sphere.
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
         """
-
-        Mtot_PartTypes = np.zeros(4, dtype=np.float)
-
-        for idx, part_type in enumerate(['0', '1', '4', '5']):
-
-            # Import data
-            mass = self.particle_masses(part_type)
-            coords = self.particle_coordinates(part_type)
-            group_num = self.group_number_part(part_type)
-
-            # Filter the particles belonging to the
-            # GroupNumber FOF == 1, which by definition is centred in the
-            # Centre of Potential and is disconnected from other FoF groups.
-            radial_dist = np.linalg.norm(np.subtract(coords, self.group_centre_of_potential()), axis=1)
-
-            if aperture_radius is None:
-                aperture_radius = self.group_r500()
-                print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
-
-            index = np.where((group_num == self.centralFOF_groupNumber) & (radial_dist < aperture_radius))[0]
-            mass = mass[index]
-            assert mass.__len__() > 0, "Array is empty - check filtering."
-            Mtot_PartTypes[idx] = np.sum(mass)
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
 
         if out_allPartTypes:
-            return Mtot_PartTypes
+
+            kinetic_energy_PartTypes = np.zeros(0, dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_velocity')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+
+                _mass     = self.mass_units(_mass, unit_system='SI')
+                _velocity = self.velocity_units(_velocity, unit_system='SI')
+                kinetic_energy = self.kinetic_energy(_mass, _velocity)
+                kinetic_energy_PartTypes = np.append(kinetic_energy_PartTypes, kinetic_energy)
+
+            return kinetic_energy_PartTypes*np.power(10, -46)
+
         else:
-            return np.sum(Mtot_PartTypes)
+
+            mass = np.zeros(0, dtype=np.float)
+            velocity = np.zeros((0, 3), dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_velocity')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+                aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+                free_memory(['radial_dist'])
+                _mass     = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                mass = np.concatenate((mass, _mass), axis=0)
+                velocity = np.concatenate((velocity, _velocity), axis=0)
+
+            mass     = self.mass_units(mass, unit_system='SI')
+            velocity = self.velocity_units(velocity, unit_system='SI')
+            return self.kinetic_energy(mass, velocity)*np.power(10, -46)
 
     def group_mass_aperture(self,
                              out_allPartTypes: bool =False,
@@ -298,6 +351,39 @@ class Mixin:
                 coords = np.concatenate((coords, _coords), axis=0)
 
             return self.centre_of_mass(mass, coords)
+
+    def group_dynamical_merging_index(self,
+                             out_allPartTypes: bool = False,
+                             aperture_radius: float = None) -> np.ndarray:
+        """
+        Method that computes the group_dynamical_merging_index of particles within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the merging index using the relative
+        static method in this Mixin class.
+
+        group_dynamical_merging_index = || CoM(aperture) - CoP || / aperture
+
+        It also has the option of combining all the particles of different types and computing
+        the overall centre of mass, ot return the centre of mass of each particle type separately.
+        This toggle is controlled by a boolean.
+
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
+        """
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+        centre_of_mass = self.group_centre_of_mass(out_allPartTypes=out_allPartTypes,
+                                                   aperture_radius=aperture_radius)
+        if out_allPartTypes:
+            dynamical_merging_index = self.radial_distance_CoP(centre_of_mass)/aperture_radius
+        else:
+            dynamical_merging_index = self.radial_distance_CoP(centre_of_mass[:, None].T)/aperture_radius
+
+        return dynamical_merging_index
 
     def group_zero_momentum_frame(self,
                              out_allPartTypes: bool = False,
@@ -440,6 +526,27 @@ class Mixin:
             velocity = np.subtract(velocity, self.group_zero_momentum_frame(aperture_radius=aperture_radius))
             return self.angular_momentum(mass, coords, velocity)
 
+    def group_thermodynamic_merging_index(self,
+                                      aperture_radius: float = None) -> np.ndarray:
+        """
+        Method that computes the group_thermodynamic_merging_index of particles within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the merging index using the relative
+        static method in this Mixin class.
+
+        group_thermodynamic_merging_index = kinetic_energy / thermal_energy
+
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
+        """
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+        kinetic_energy = self.group_kinetic_energy(out_allPartTypes=True, aperture_radius=aperture_radius)[0]
+        thermal_energy = self.group_thermal_energy(aperture_radius=aperture_radius)
+        return kinetic_energy / thermal_energy
 
     @staticmethod
     def rotation_matrix_from_vectors(vec1, vec2):

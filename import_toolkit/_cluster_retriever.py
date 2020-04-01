@@ -474,21 +474,6 @@ class Mixin:
 
     @data_subject(subject="particledata")
     def subgroup_number_part(self, part_type, *args, **kwargs):
-        _warning_ = """
-        +---------------------------------------------------------------------+
-        |                               WARNING                               |
-        +---------------------------------------------------------------------+
-        The following method
-        
-        cluster.Cluster.subgroup_number_part(self, part_type, *args, **kwargs)
-        
-        is fully implemented in the _cluster_retriever mainframe, but the
-        particle data array only contains overflown values. The results are 
-        therefore unusable for any purposes. Please, use a different method for 
-        isolating a specific subgroup number.    
-        +---------------------------------------------------------------------+
-        """
-        raise ValueError(_warning_)
 
         if len(part_type) > 1:
             part_type = self.particle_type_conversion[part_type]

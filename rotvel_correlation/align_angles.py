@@ -22,13 +22,15 @@ from sklearn.utils import resample
 from typing import List, Dict, Tuple
 import itertools
 
-
+exec(open(os.path.abspath(os.path.join(
+        os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
 from import_toolkit.cluster import Cluster
 from import_toolkit.simulation import Simulation
 from import_toolkit._cluster_retriever import redshift_str2num
+from import_toolkit.progressbar import ProgressBar
 from read import pull
 
 class CorrelationMatrix(pull.FOFRead):
@@ -48,6 +50,7 @@ class CorrelationMatrix(pull.FOFRead):
         data = np.asarray(data)
         return np.array([np.percentile(data, percent, axis=0) for percent in percentiles])
 
+    @ProgressBar()
     def bootstrap(self, data: np.ndarray, n_iterations: int = 1e3) -> Dict[str, Tuple[float, float]]:
         """
         Class method to compute the median/percentile statistics of a 1D dataset using the
@@ -76,10 +79,13 @@ class CorrelationMatrix(pull.FOFRead):
         assert data.ndim is 1, f"Expected `data` to have dimensionality 1, got {data.ndim}."
         stats_resampled = np.zeros((0, 3), dtype=np.float)
 
+        counter = 0
         for seed in range(n_iterations):
             data_resampled = resample(data, replace=True, n_samples=len(data), random_state=seed)
             stats = self.get_percentiles(data_resampled, percentiles=[15.9, 50, 84.1])
             stats_resampled = np.concatenate((stats_resampled, [stats]), axis=0)
+            yield ((counter + 1) / n_iterations)
+            counter += 1
 
         stats_resampled_MEAN = np.mean(stats_resampled, axis=0)
         stats_resampled_STD  = np.std(stats_resampled, axis=0)
@@ -238,8 +244,7 @@ class TrendZ:
 
 
 if __name__ == '__main__':
-    exec(open(os.path.abspath(os.path.join(
-        os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
+
 
     def test():
         cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')

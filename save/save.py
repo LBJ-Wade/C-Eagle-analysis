@@ -21,6 +21,9 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 
+exec(open(os.path.abspath(os.path.join(
+        os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from import_toolkit.simulation import Simulation
 from import_toolkit._cluster_retriever import redshift_str2num
@@ -115,7 +118,7 @@ class SimulationOutput(Simulation):
         fig = plt.figure(figsize=(11, 20))
         ax = fig.add_subplot(111)
 
-        ax.set_title('{:s}    Output status record    {:s}'.format(self.simulation, timestr))
+        ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr))
         ax.set_xlabel('redshift')
         ax.set_ylabel('ClusterID')
 
@@ -139,8 +142,7 @@ class SimulationOutput(Simulation):
                                  f"{self.simulation_name}_OutputStatusReport_{timestr}.png"), dpi=300)
 
 if __name__ == '__main__':
-    exec(open(os.path.abspath(os.path.join(
-        os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
+
     for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
         out = SimulationOutput(simulation_name = sim)
         out.status_plot()

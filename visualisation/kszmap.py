@@ -12,7 +12,8 @@ from losgeometry import LosGeometry
 from unyt import hydrogen_mass, speed_of_light, thompson_cross_section
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from import_toolkit.cluster import Cluster, Simulation
+from import_toolkit.cluster import Cluster
+from import_toolkit.simulation import Simulation
 from testing import angular_momentum
 
 
