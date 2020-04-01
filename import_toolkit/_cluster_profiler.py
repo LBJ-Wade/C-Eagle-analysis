@@ -20,6 +20,9 @@ from unyt import hydrogen_mass, boltzmann_constant
 from .memory import free_memory
 import warnings
 
+# Delete the units from Unyt constants
+hydrogen_mass = float(hydrogen_mass.value)
+boltzmann_constant = float(boltzmann_constant.value)
 
 class Mixin:
 
@@ -146,7 +149,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         part_type = '0'
         assert hasattr(self, f'partType{part_type}_coordinates')
@@ -187,10 +190,11 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         if out_allPartTypes:
 
+            bulk_velocity = self.group_zero_momentum_frame(aperture_radius=aperture_radius)
             kinetic_energy_PartTypes = np.zeros(0, dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
@@ -204,7 +208,7 @@ class Mixin:
                 _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
-
+                _velocity = np.subtract(_velocity, bulk_velocity)
                 _mass     = self.mass_units(_mass, unit_system='SI')
                 _velocity = self.velocity_units(_velocity, unit_system='SI')
                 kinetic_energy = self.kinetic_energy(_mass, _velocity)
@@ -213,7 +217,7 @@ class Mixin:
             return kinetic_energy_PartTypes*np.power(10., -46)
 
         else:
-
+            bulk_velocity = self.group_zero_momentum_frame(aperture_radius=aperture_radius)
             mass = np.zeros(0, dtype=np.float)
             velocity = np.zeros((0, 3), dtype=np.float)
 
@@ -231,6 +235,7 @@ class Mixin:
                 mass = np.concatenate((mass, _mass), axis=0)
                 velocity = np.concatenate((velocity, _velocity), axis=0)
 
+            velocity = np.subtract(velocity, bulk_velocity)
             mass     = self.mass_units(mass, unit_system='SI')
             velocity = self.velocity_units(velocity, unit_system='SI')
             return self.kinetic_energy(mass, velocity)*np.power(10., -46)
@@ -254,7 +259,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         if out_allPartTypes:
 
@@ -315,7 +320,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         if out_allPartTypes:
 
@@ -384,7 +389,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         if out_allPartTypes:
 
@@ -448,7 +453,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         if out_allPartTypes:
 
@@ -512,7 +517,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         centre_of_mass = self.group_centre_of_mass(out_allPartTypes=out_allPartTypes,
                                                    aperture_radius=aperture_radius)
@@ -543,7 +548,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ ZERO MOMENTUM FRAME ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         if out_allPartTypes:
 
@@ -608,7 +613,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ ZERO MOMENTUM FRAME ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         if out_allPartTypes:
 
@@ -680,7 +685,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
 
         kinetic_energy = self.group_kinetic_energy(out_allPartTypes=True, aperture_radius=aperture_radius)[0]
         thermal_energy = self.group_thermal_energy(aperture_radius=aperture_radius)
