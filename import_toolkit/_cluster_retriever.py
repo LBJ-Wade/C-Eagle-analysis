@@ -477,6 +477,8 @@ class Mixin:
         if len(part_type) > 1:
             part_type = self.particle_type_conversion[part_type]
 
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         sub_group_number = np.zeros(0, dtype=np.int)
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
@@ -484,6 +486,9 @@ class Mixin:
             sub_gn = hd5set[...]
             h5file.close()
             sub_group_number = np.concatenate((sub_group_number, sub_gn), axis=0)
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
+
         return sub_group_number
 
     @ProgressBar()
