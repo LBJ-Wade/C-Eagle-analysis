@@ -77,8 +77,15 @@ class TestMixin(unittest.TestCase):
 
     def test_substructure_mass(self):
         print(f"{' SOFTWARE TEST ':=^60}")
+
+        data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'subgroupnumber', 'temperature',
+                                       'sphdensity'],
+                         'partType1': ['mass', 'coordinates', 'velocity', 'subgroupnumber'],
+                         'partType4': ['mass', 'coordinates', 'velocity', 'subgroupnumber'],
+                         'partType5': ['mass', 'coordinates', 'velocity', 'subgroupnumber']}
+
         for sim in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
-            cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
+            cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000', requires=data_required)
             print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
 
             print("cluster.group_thermal_energy", cluster.group_thermal_energy())
