@@ -525,6 +525,7 @@ class Mixin:
             dynamical_merging_index = self.radial_distance_CoP(centre_of_mass)/aperture_radius
         else:
             dynamical_merging_index = self.radial_distance_CoP(centre_of_mass[:, None].T)/aperture_radius
+            dynamical_merging_index = dynamical_merging_index[0]
 
         return dynamical_merging_index
 

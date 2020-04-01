@@ -88,7 +88,7 @@ class TestMixin(unittest.TestCase):
 
         for sim in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
             cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000', requires=data_required)
-            print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
+            print(f"\n {sim} {' | halo 0 | z=0 ':->60}")
             warnings.filterwarnings("ignore")
             print("cluster.group_thermal_energy", cluster.group_thermal_energy())
             print("cluster.group_kinetic_energy", cluster.group_kinetic_energy())
@@ -96,6 +96,7 @@ class TestMixin(unittest.TestCase):
             print("cluster.group_dynamical_merging_index", cluster.group_dynamical_merging_index())
             print("cluster.group_thermodynamic_merging_index", cluster.group_thermodynamic_merging_index())
             print("cluster.group_substructure_fraction", cluster.group_substructure_fraction())
+            print('\n\n')
 
 
 if __name__ == '__main__':
