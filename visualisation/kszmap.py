@@ -91,7 +91,7 @@ class KSZMAP(Simulation):
         mass       = self.cluster.partType0_mass[spatial_filter]
         SPH_kernel = self.cluster.partType0_sphkernel[spatial_filter]
 
-        constant_factor = (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass * 1.16)
+        constant_factor = (-1) * thompson_cross_section / (speed_of_light * hydrogen_mass / 1.16)
         kSZ = np.multiply((vel.T * mass).T, constant_factor)
 
         x = np.asarray(rescale(coords[:, 0], 0, 1), dtype=np.float64)
