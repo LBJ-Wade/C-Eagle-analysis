@@ -722,7 +722,7 @@ if __name__ == '__main__':
                     out.push_thermodynamic_merging_index()
                     out.push_substructure_fraction()
 
-                    rank_str = '(' + str(rank) + '/' + str(size) + ')'
+                    rank_str = '(' + str(rank+1) + '/' + str(size) + ')'
                     print(f"{rank_str:^30s} | {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
     mining()
