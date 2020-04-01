@@ -325,7 +325,7 @@ class Mixin:
         if out_allPartTypes:
 
             total_mass = self.group_mass_aperture(out_allPartTypes=True, aperture_radius=aperture_radius)
-            fuzz_mass_PartTypes = np.zeros(0, dtype=np.float)
+            substructure_mass_PartTypes = np.zeros(0, dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
@@ -339,10 +339,10 @@ class Mixin:
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 fuzz_mass = np.sum(_mass)
-                fuzz_mass_PartTypes = np.append(fuzz_mass_PartTypes, fuzz_mass)
+                substructure_mass = total_mass[['0', '1', '4', '5'].index(part_type)] - fuzz_mass
+                substructure_mass_PartTypes = np.append(substructure_mass_PartTypes, substructure_mass)
 
-            substructure_mass = total_mass - fuzz_mass
-            return substructure_mass
+            return substructure_mass_PartTypes
 
         else:
 
@@ -394,7 +394,7 @@ class Mixin:
         if out_allPartTypes:
 
             total_mass = self.group_mass_aperture(out_allPartTypes=True, aperture_radius=aperture_radius)
-            fuzz_mass_PartTypes = np.zeros(0, dtype=np.float)
+            substructure_frac_PartTypes = np.zeros(0, dtype=np.float)
 
             for part_type in ['0', '1', '4', '5']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
@@ -408,10 +408,10 @@ class Mixin:
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 fuzz_mass = np.sum(_mass)
-                fuzz_mass_PartTypes = np.append(fuzz_mass_PartTypes, fuzz_mass)
+                substructure_mass = 1 - (fuzz_mass/total_mass[['0', '1', '4', '5'].index(part_type)])
+                substructure_frac_PartTypes = np.append(substructure_frac_PartTypes, substructure_mass)
 
-            substructure_fraction = (total_mass - fuzz_mass)/total_mass
-            return substructure_fraction
+            return substructure_frac_PartTypes
 
         else:
 
