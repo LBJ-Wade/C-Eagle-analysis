@@ -89,7 +89,7 @@ class TestMixin(unittest.TestCase):
         for sim in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
             cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000', requires=data_required)
             print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
-
+            warnings.filterwarnings("ignore")
             print("cluster.group_thermal_energy", cluster.group_thermal_energy())
             print("cluster.group_kinetic_energy", cluster.group_kinetic_energy())
             print("cluster.group_substructure_mass", cluster.group_substructure_mass())
@@ -99,7 +99,6 @@ class TestMixin(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    warnings.filterwarnings("ignore")
     unittest.main()
 
 
