@@ -91,11 +91,11 @@ class TestMixin(unittest.TestCase):
             print(f"\n {sim} {' | halo 0 | z=0 ':->60}")
             warnings.filterwarnings("ignore")
             print("cluster.group_thermal_energy", cluster.group_thermal_energy())
-            print("cluster.group_kinetic_energy", cluster.group_kinetic_energy())
-            print("cluster.group_substructure_mass", cluster.group_substructure_mass())
-            print("cluster.group_dynamical_merging_index", cluster.group_dynamical_merging_index())
+            print("cluster.group_kinetic_energy", cluster.group_kinetic_energy(out_allPartTypes=True))
+            print("cluster.group_substructure_mass", cluster.group_substructure_mass(out_allPartTypes=True))
+            print("cluster.group_dynamical_merging_index", cluster.group_dynamical_merging_index(out_allPartTypes=True))
             print("cluster.group_thermodynamic_merging_index", cluster.group_thermodynamic_merging_index())
-            print("cluster.group_substructure_fraction", cluster.group_substructure_fraction())
+            print("cluster.group_substructure_fraction", cluster.group_substructure_fraction(out_allPartTypes=True))
             print('\n\n')
 
 
