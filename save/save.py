@@ -139,6 +139,8 @@ class SimulationOutput(Simulation):
                                  f"{self.simulation_name}_OutputStatusReport_{timestr}.png"), dpi=300)
 
 if __name__ == '__main__':
+    exec(open(os.path.abspath(os.path.join(
+        os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
     for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
         out = SimulationOutput(simulation_name = sim)
         out.status_plot()
