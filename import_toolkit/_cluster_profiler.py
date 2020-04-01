@@ -149,7 +149,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         part_type = '0'
         assert hasattr(self, f'partType{part_type}_coordinates')
@@ -190,7 +190,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         if out_allPartTypes:
 
@@ -259,7 +259,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         if out_allPartTypes:
 
@@ -320,7 +320,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         if out_allPartTypes:
 
@@ -389,7 +389,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         if out_allPartTypes:
 
@@ -453,7 +453,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         if out_allPartTypes:
 
@@ -517,7 +517,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         centre_of_mass = self.group_centre_of_mass(out_allPartTypes=out_allPartTypes,
                                                    aperture_radius=aperture_radius)
@@ -548,7 +548,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         if out_allPartTypes:
 
@@ -613,7 +613,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         if out_allPartTypes:
 
@@ -685,7 +685,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f}.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
 
         kinetic_energy = self.group_kinetic_energy(out_allPartTypes=True, aperture_radius=aperture_radius)[0]
         thermal_energy = self.group_thermal_energy(aperture_radius=aperture_radius)

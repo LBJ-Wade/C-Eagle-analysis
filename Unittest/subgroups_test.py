@@ -3,6 +3,9 @@ import sys
 import unittest
 import numpy as np
 import h5py as h5
+import warnings
+warnings.filterwarnings("ignore")
+
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
