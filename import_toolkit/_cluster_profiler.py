@@ -70,7 +70,7 @@ class Mixin:
     def thermal_energy(mass, temperature):
         mass = np.asarray(mass)
         temperature = np.asarray(temperature)
-        te = 1.5 * boltzmann_constant * temperature * mass / (hydrogen_mass * 1.16)
+        te = 1.5 * boltzmann_constant * temperature * mass / (hydrogen_mass / 1.16)
         return np.sum(te)
 
     @staticmethod
@@ -430,7 +430,7 @@ class Mixin:
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
                 fuzz_mass = np.append(fuzz_mass, _mass)
 
-            substructure_fraction = (total_mass - np.sum(fuzz_mass))/total_mass
+            substructure_fraction = 1 - (np.sum(fuzz_mass)/total_mass)
             return substructure_fraction
 
     def group_centre_of_mass(self,
