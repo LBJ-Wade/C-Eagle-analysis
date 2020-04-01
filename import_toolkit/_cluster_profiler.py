@@ -290,6 +290,144 @@ class Mixin:
 
             return np.sum(mass)
 
+    def group_substructure_mass(self,
+                             out_allPartTypes: bool =False,
+                             aperture_radius: float = None) -> np.ndarray:
+        """
+        Method that computes the mass of particles within a specified aperture and belonging to
+        subgroups.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the total particle subgroups mass.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        It also has the option of combining all the particles of different types and computing
+        the overall substructure mass, ot return the of each particle type separately.
+        This toggle is controlled by a boolean.
+
+        substructure_mass = total mass - fuzz mass
+
+        N.B.: The Fuzz mass is given by subgroupnumber = 0.
+        N.B.: The aperture radius could cut subgroups at the outer edge.
+
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
+        """
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+        if out_allPartTypes:
+
+            total_mass = self.group_mass_aperture(out_allPartTypes=True, aperture_radius=aperture_radius)
+            fuzz_mass_PartTypes = np.zeros(0, dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_subgroupnumber')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+                subgroupnumber = getattr(self, f'partType{part_type}_subgroupnumber')
+                aperture_radius_index = np.where((radial_dist < aperture_radius) && (subgroupnumber == 0))[0]
+                free_memory(['radial_dist', 'subgroupnumber'])
+                _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+
+                fuzz_mass = np.sum(_mass)
+                fuzz_mass_PartTypes = np.append(fuzz_mass_PartTypes, fuzz_mass)
+
+            substructure_mass = total_mass - fuzz_mass
+            return substructure_mass
+
+        else:
+
+            total_mass = self.group_mass_aperture(out_allPartTypes=False, aperture_radius=aperture_radius)
+            fuzz_mass = np.zeros(0, dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_subgroupnumber')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+                subgroupnumber = getattr(self, f'partType{part_type}_subgroupnumber')
+                aperture_radius_index = np.where((radial_dist < aperture_radius) && (subgroupnumber == 0))[0]
+                free_memory(['radial_dist', 'subgroupnumber'])
+                _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                fuzz_mass = np.append(fuzz_mass, _mass)
+
+            substructure_mass = total_mass - np.sum(fuzz_mass)
+            return substructure_mass
+
+    def group_substructure_fraction(self,
+                             out_allPartTypes: bool =False,
+                             aperture_radius: float = None) -> np.ndarray:
+        """
+        Method that computes the fraction of mass constituting substructures, taking particles
+        within a specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the total particle substructure fraction.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        It also has the option of combining all the particles of different types and computing
+        the overall substructure mass fraction, ot return the of each particle type separately.
+        This toggle is controlled by a boolean.
+
+        substructure_fraction = (total mass - fuzz mass) / total mass
+
+        N.B.: The Fuzz mass is given by subgroupnumber = 0.
+        N.B.: The aperture radius could cut subgroups at the outer edge.
+
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
+        """
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            print('[ CENTRE OF MASS ]\t==>\tAperture radius set to default R500 true.')
+
+        if out_allPartTypes:
+
+            total_mass = self.group_mass_aperture(out_allPartTypes=True, aperture_radius=aperture_radius)
+            fuzz_mass_PartTypes = np.zeros(0, dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_subgroupnumber')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+                subgroupnumber = getattr(self, f'partType{part_type}_subgroupnumber')
+                aperture_radius_index = np.where((radial_dist < aperture_radius) && (subgroupnumber == 0))[0]
+                free_memory(['radial_dist', 'subgroupnumber'])
+                _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+
+                fuzz_mass = np.sum(_mass)
+                fuzz_mass_PartTypes = np.append(fuzz_mass_PartTypes, fuzz_mass)
+
+            substructure_fraction = (total_mass - fuzz_mass)/total_mass
+            return substructure_fraction
+
+        else:
+
+            total_mass = self.group_mass_aperture(out_allPartTypes=False, aperture_radius=aperture_radius)
+            fuzz_mass = np.zeros(0, dtype=np.float)
+
+            for part_type in ['0', '1', '4', '5']:
+                assert hasattr(self, f'partType{part_type}_coordinates')
+                assert hasattr(self, f'partType{part_type}_subgroupnumber')
+                assert hasattr(self, f'partType{part_type}_mass')
+                radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+                subgroupnumber = getattr(self, f'partType{part_type}_subgroupnumber')
+                aperture_radius_index = np.where((radial_dist < aperture_radius) && (subgroupnumber == 0))[0]
+                free_memory(['radial_dist', 'subgroupnumber'])
+                _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+                if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+                fuzz_mass = np.append(fuzz_mass, _mass)
+
+            substructure_fraction = (total_mass - np.sum(fuzz_mass))/total_mass
+            return substructure_fraction
+
     def group_centre_of_mass(self,
                              out_allPartTypes: bool =False,
                              aperture_radius: float = None) -> np.ndarray:

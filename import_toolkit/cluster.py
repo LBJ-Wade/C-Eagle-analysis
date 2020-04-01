@@ -224,6 +224,9 @@ class Cluster(simulation.Simulation,
                 elif field == 'metallicity' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1])[group_number_index])
 
+                elif field == 'subgroupnumber' and not hasattr(self, part_type+'_'+field):
+                    setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1])[group_number_index])
+
 
             radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
             clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
