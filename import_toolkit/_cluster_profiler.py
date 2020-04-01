@@ -397,7 +397,7 @@ class Mixin:
                 assert hasattr(self, f'partType{part_type}_mass')
                 radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 subgroupnumber = getattr(self, f'partType{part_type}_subgroupnumber')
-                aperture_radius_index = np.where((radial_dist < aperture_radius) && (subgroupnumber == 0))[0]
+                aperture_radius_index = np.where((radial_dist < aperture_radius) & (subgroupnumber == 0))[0]
                 free_memory(['radial_dist', 'subgroupnumber'])
                 _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
@@ -419,7 +419,7 @@ class Mixin:
                 assert hasattr(self, f'partType{part_type}_mass')
                 radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
                 subgroupnumber = getattr(self, f'partType{part_type}_subgroupnumber')
-                aperture_radius_index = np.where((radial_dist < aperture_radius) && (subgroupnumber == 0))[0]
+                aperture_radius_index = np.where((radial_dist < aperture_radius) & (subgroupnumber == 0))[0]
                 free_memory(['radial_dist', 'subgroupnumber'])
                 _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
