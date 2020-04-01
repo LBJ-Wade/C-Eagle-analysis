@@ -75,8 +75,18 @@ class TestMixin(unittest.TestCase):
             print(f"Particles with subgroup number = 0: {len(np.where(subgroup_number == 0)[0])} particles found.")
             print(f"Particles with subgroup number = 1: {len(np.where(subgroup_number == 1)[0])} particles found.")
 
+    def test_substructure_mass(self):
+        print(f"{' SOFTWARE TEST ':=^60}")
+        for sim in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
+            cluster = Cluster(simulation_name=sim, clusterID=0, redshift='z000p000')
+            print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
 
-
+            print("cluster.group_thermal_energy", cluster.group_thermal_energy())
+            print("cluster.group_kinetic_energy", cluster.group_kinetic_energy())
+            print("cluster.group_substructure_mass", cluster.group_substructure_mass())
+            print("cluster.group_dynamical_merging_index", cluster.group_dynamical_merging_index())
+            print("cluster.group_thermodynamic_merging_index", cluster.group_thermodynamic_merging_index())
+            print("cluster.group_substructure_fraction", cluster.group_substructure_fraction())
 
 
 if __name__ == '__main__':
