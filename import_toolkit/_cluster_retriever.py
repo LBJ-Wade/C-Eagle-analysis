@@ -452,8 +452,6 @@ class Mixin:
             free_memory(['therm_energy'], invert=True)
         return therm_energy
 
-
-
     @data_subject(subject="particledata")
     def group_number_part(self, part_type, *args, **kwargs):
         """
@@ -472,6 +470,7 @@ class Mixin:
             assert group_number.__len__() > 0, "Array is empty."
         return group_number
 
+    @ProgressBar()
     @data_subject(subject="particledata")
     def subgroup_number_part(self, part_type, *args, **kwargs):
 
