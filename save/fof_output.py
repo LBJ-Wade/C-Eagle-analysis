@@ -409,7 +409,6 @@ class FOFDatagen(save.SimulationOutput):
         out = FOFOutput(self.cluster, filename='peculiar_velocity.hdf5', data=data, attrs=attributes)
         out.makefile()
 
-    # TODO
     def push_kinetic_energy(self):
         
         part_kin_energy = np.zeros((0, 4), dtype=np.float)
@@ -419,40 +418,41 @@ class FOFDatagen(save.SimulationOutput):
             part_kin_energy_aperture = self.cluster.group_kinetic_energy(out_allPartTypes=True, aperture_radius=r)
             part_kin_energy = np.concatenate((part_kin_energy, [part_kin_energy_aperture]), axis=0)
 
-            tot_kin_energy_aperture = np.sum(part_kin_energy_aperture)
+            tot_kin_energy_aperture = self.cluster.group_kinetic_energy(aperture_radius=r)
             total_kin_energy = np.concatenate((total_kin_energy, [tot_kin_energy_aperture]), axis=0)
 
-        data = {'/Total_kin_energy': np.array(total_kin_energy),
+        data = {'/Total_kin_energy'   : np.array(total_kin_energy),
                 '/ParType0_kin_energy': np.array(part_kin_energy)[:, 0],
                 '/ParType1_kin_energy': np.array(part_kin_energy)[:, 1],
                 '/ParType4_kin_energy': np.array(part_kin_energy)[:, 2],
                 '/ParType5_kin_energy': np.array(part_kin_energy)[:, 3]}
 
-        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
-                for each particle type (in the order 0, 1, 4, 5).
-                The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
-                      'Units': '10^10 M_sun'}
+        attributes = {'Description': """The ParType0_kin_energy array contains the kinetic energy of particles enclosed 
+                within a given aperture, for each particle type (in the order 0, 1, 4, 5).
+                The Total_kin_energy array gives the total kinetic energy within an aperture of all partTypes summed 
+                together.""",
+                      'Units': '10^46 J'}
 
         out = FOFOutput(self.cluster, filename='kinetic_energy.hdf5', data=data, attrs=attributes)
         out.makefile()
 
-    # TODO
     def push_thermal_energy(self):
         
         part_th_energy = np.zeros((0,), dtype=np.float)
 
         for r in self.cluster.generate_apertures():
-            part_th_energy_aperture = self.cluster.thermal_energy(out_allPartTypes=True, aperture_radius=r)
+            part_th_energy_aperture = self.cluster.group_thermal_energy(aperture_radius=r)
             part_th_energy = np.concatenate((part_th_energy, [part_th_energy_aperture]), axis=0)
 
 
         data = {'/Total_th_energy': np.array(part_th_energy),
                 '/ParType0_th_energy': np.array(part_th_energy)}
 
-        attributes = {'Description': """The ParType_mass array contains the mass enclosed within a given aperture, 
-                for each particle type (in the order 0, 1, 4, 5).
-                The Total-mass array gives the total mass within an aperture of all partTypes summed together.""",
-                      'Units': '10^10 M_sun'}
+        attributes = {'Description': """The ParType0_th_energy array contains the thermal energy of gas particles 
+                enclosed within a given aperture, for particle type 0 only.
+                The Total_th_energy array gives the total thermal energy within an aperture of all partTypes summed 
+                together.""",
+                      'Units': '10^46 J'}
 
         out = FOFOutput(self.cluster, filename='thermal_energy.hdf5', data=data, attrs=attributes)
         out.makefile()
@@ -498,48 +498,31 @@ class FOFDatagen(save.SimulationOutput):
 
         dynamical_merging_index = || CoM(r) - CoP(r) || / r
 
-        The calculation of the dynamical_merging_index assumes the CoM and aperture data are already generated as
-        partial results.
-
         :return: None
         """
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'centre_of_mass.hdf5')), ("Centre of mass data not "
-                                                                                          f"found in {self.FOFDirectory}."
-                                                                                          "Check that they have "
-                                                                                        "already been computed for "
-                                                                                        "this cluster and this "
-                                                                                        "redshift")
+        Total_dyn_mergindex    = np.zeros((0,), dtype=np.float)
+        ParType0_dyn_mergindex = np.zeros((0,), dtype=np.float)
+        ParType1_dyn_mergindex = np.zeros((0,), dtype=np.float)
+        ParType4_dyn_mergindex = np.zeros((0,), dtype=np.float)
+        ParType5_dyn_mergindex = np.zeros((0,), dtype=np.float)
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
-                                                                                   f"found in {self.FOFDirectory}."
-                                                                                   "Check that they have already been "
-                                                                                   "computed for this cluster and this redshift.")
+        for r in self.cluster.generate_apertures():
+            part_dyn_mergindex_aperture = self.cluster.group_dynamical_merging_index(aperture_radius=r, 
+                                                                                     out_allPartTypes=True)
+            ParType0_dyn_mergindex = np.concatenate((ParType0_dyn_mergindex, [part_dyn_mergindex_aperture[0]]), axis=0)
+            ParType1_dyn_mergindex = np.concatenate((ParType1_dyn_mergindex, [part_dyn_mergindex_aperture[1]]), axis=0)
+            ParType4_dyn_mergindex = np.concatenate((ParType4_dyn_mergindex, [part_dyn_mergindex_aperture[2]]), axis=0)
+            ParType5_dyn_mergindex = np.concatenate((ParType5_dyn_mergindex, [part_dyn_mergindex_aperture[3]]), axis=0)
 
-        # Read aperture data
-        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
-            apertures = np.array(input_file.get('Apertures'))
+            Total_dyn_mergindex_apertur = self.cluster.group_dynamical_merging_index(aperture_radius=r, 
+                                                                                     out_allPartTypes=False)
+            Total_dyn_mergindex = np.concatenate((Total_dyn_mergindex, [Total_dyn_mergindex_apertur]), axis=0)
 
-        # Read centre_of_mass data
-        with h5py.File(os.path.join(self.FOFDirectory, 'centre_of_mass.hdf5'), 'r') as input_file:
-            Total_CoM    = np.array(input_file.get('Total_CoM'))
-            ParType0_CoM = np.array(input_file.get('ParType0_CoM'))
-            ParType1_CoM = np.array(input_file.get('ParType1_CoM'))
-            ParType4_CoM = np.array(input_file.get('ParType4_CoM'))
-            ParType5_CoM = np.array(input_file.get('ParType5_CoM'))
-
-        CoP = np.ones((len(apertures), 3)) * self.cluster.group_centre_of_potential().reshape((1,3))
-
-        Total_dynindex    = self.cluster.dynamical_merging_index(CoP, Total_CoM, apertures)
-        ParType0_dynindex = self.cluster.dynamical_merging_index(CoP, ParType0_CoM, apertures)
-        ParType1_dynindex = self.cluster.dynamical_merging_index(CoP, ParType1_CoM, apertures)
-        ParType4_dynindex = self.cluster.dynamical_merging_index(CoP, ParType4_CoM, apertures)
-        ParType5_dynindex = self.cluster.dynamical_merging_index(CoP, ParType5_CoM, apertures)
-
-        data = {'/Total_dynindex'   : np.array(Total_dynindex),
-                '/ParType0_dynindex': np.array(ParType0_dynindex),
-                '/ParType1_dynindex': np.array(ParType1_dynindex),
-                '/ParType4_dynindex': np.array(ParType4_dynindex),
-                '/ParType5_dynindex': np.array(ParType5_dynindex)}
+        data = {'/Total_dyn_mergindex'   : np.array(Total_dyn_mergindex),
+                '/ParType0_dyn_mergindex': np.array(ParType0_dyn_mergindex),
+                '/ParType1_dyn_mergindex': np.array(ParType1_dyn_mergindex),
+                '/ParType4_dyn_mergindex': np.array(ParType4_dyn_mergindex),
+                '/ParType5_dyn_mergindex': np.array(ParType5_dyn_mergindex)}
 
         attributes = {'Description': """Datasets with the dynamical merging index of the cluster, calculated 
                 from particles within a specific aperture radius from the Centre of Potential. Individual datasets contain 
@@ -560,40 +543,19 @@ class FOFDatagen(save.SimulationOutput):
 
     def push_thermodynamic_merging_index(self):
         """
-        Computes the dynamical index based on the centre of potential coordinates, the centre of mass coordinates
-        and the aperture radius.
-
-        dynamical_merging_index = || CoM(r) - CoP(r) || / r
-
-        The calculation of the dynamical_merging_index assumes the CoM and aperture data are already generated as
-        partial results.
-
+        Computes the group_thermodynamic_merging_index based on the kinetic and thermal energy of the 
+        cluster's gas component.
+        group_thermodynamic_merging_index = kinetic_energy / thermal_energy
         :return: None
         """
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'kinetic_energy.hdf5')), ("Kinetic energy data not "
-                                                                                        f"found in {self.FOFDirectory}."
-                                                                                        "Check that they have "
-                                                                                        "already been computed for "
-                                                                                        "this cluster and this "
-                                                                                        "redshift")
+        part_therm_mergindex = np.zeros((0,), dtype=np.float)
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'thermal_energy.hdf5')), ("Thermal energy data not "
-                                                                                   f"found in {self.FOFDirectory}."
-                                                                                   "Check that they have already been "
-                                                                                   "computed for this cluster and this redshift.")
+        for r in self.cluster.generate_apertures():
+            part_therm_mergindex_aperture = self.cluster.group_thermodynamic_merging_index(aperture_radius=r)
+            part_therm_mergindex = np.concatenate((part_therm_mergindex, [part_therm_mergindex_aperture]), axis=0)
 
-        # Read kinetic_energy data
-        with h5py.File(os.path.join(self.FOFDirectory, 'kinetic_energy.hdf5'), 'r') as input_file:
-            Total_kin_energy = np.array(input_file.get('Total_kin_energy'))
-
-        # Read thermal_energy data
-        with h5py.File(os.path.join(self.FOFDirectory, 'thermal_energy.hdf5'), 'r') as input_file:
-            Total_th_energy = np.array(input_file.get('Total_th_energy'))
-
-        thermindex = Total_kin_energy/Total_th_energy
-
-        data = {'/Total_thermindex': np.array(thermindex),
-                '/ParType0_thermindex': np.array(thermindex)}
+        data = {'/Total_therm_mergindex'   : np.array(part_therm_mergindex),
+                '/ParType0_therm_mergindex': np.array(part_therm_mergindex)}
 
         attributes = {'Description': """Datasets with the thermodynamic merging index of the cluster, calculated 
                 from particles within a specific aperture radius from the Centre of Potential. As the thermal energy 
@@ -603,31 +565,113 @@ class FOFDatagen(save.SimulationOutput):
                 """,
                       'Units': '[None]'}
 
-        out = FOFOutput(self.cluster, filename='thermal_energy.hdf5', data=data, attrs=attributes)
+        out = FOFOutput(self.cluster, filename='thermodynamic_merging_index.hdf5', data=data, attrs=attributes)
         out.makefile()
 
-    def push_substructure_merging_index(self):
-        pass
+    def push_substructure_mass(self):
+        """
+        The substructure fraction can also be used as an indicator for a merging index.
+        substructure_fraction = (total mass - fuzz mass) / total mass
+        :return: None
+        """
+        Total_sub_mass = np.zeros((0,), dtype=np.float)
+        ParType0_sub_mass = np.zeros((0,), dtype=np.float)
+        ParType1_sub_mass = np.zeros((0,), dtype=np.float)
+        ParType4_sub_mass = np.zeros((0,), dtype=np.float)
+        ParType5_sub_mass = np.zeros((0,), dtype=np.float)
+
+        for r in self.cluster.generate_apertures():
+            part_sub_mass_aperture = self.cluster.group_substructure_mass(aperture_radius=r, out_allPartTypes=True)
+            ParType0_sub_mass = np.concatenate((ParType0_sub_mass, [part_sub_mass_aperture[0]]), axis=0)
+            ParType1_sub_mass = np.concatenate((ParType1_sub_mass, [part_sub_mass_aperture[1]]), axis=0)
+            ParType4_sub_mass = np.concatenate((ParType4_sub_mass, [part_sub_mass_aperture[2]]), axis=0)
+            ParType5_sub_mass = np.concatenate((ParType5_sub_mass, [part_sub_mass_aperture[3]]), axis=0)
+            Total_sub_mass_aperture = self.cluster.group_substructure_mass(aperture_radius=r, out_allPartTypes=False)
+            Total_sub_mass = np.concatenate((Total_sub_mass, [Total_sub_mass_aperture]), axis=0)
+
+        data = {'/Total_substructure_mass'   : np.array(Total_sub_mass),
+                '/ParType0_substructure_mass': np.array(ParType0_sub_mass),
+                '/ParType1_substructure_mass': np.array(ParType1_sub_mass),
+                '/ParType4_substructure_mass': np.array(ParType4_sub_mass),
+                '/ParType5_substructure_mass': np.array(ParType5_sub_mass)}
+
+        attributes = {'Description': """Datasets with the mass bound to subhalos of the cluster, calculated 
+                from particles within a specific aperture radius from the Centre of Potential. Individual datasets contain 
+                substructure mass information about each particle type separately, as well as one with combined 
+                total contribution.
+                The substructure mass is computed according to the equation:
+                substructure_mass = (total mass - fuzz mass).
+
+                Note: The substructure mass and the substructure fraction can also be used as indicators for a 
+                merging index.
+                """,
+                      'Units': '[None]'}
+
+        out = FOFOutput(self.cluster, filename='substructure_mass.hdf5', data=data, attrs=attributes)
+        out.makefile()
+
+    def push_substructure_fraction(self):
+        """
+        The substructure fraction can also be used as an indicator for a merging index.
+        substructure_fraction = (total mass - fuzz mass) / total mass
+        :return: None
+        """
+        Total_sub_fraction = np.zeros((0,), dtype=np.float)
+        ParType0_sub_fraction = np.zeros((0,), dtype=np.float)
+        ParType1_sub_fraction = np.zeros((0,), dtype=np.float)
+        ParType4_sub_fraction = np.zeros((0,), dtype=np.float)
+        ParType5_sub_fraction = np.zeros((0,), dtype=np.float)
+
+        for r in self.cluster.generate_apertures():
+            part_sub_fraction_aperture = self.cluster.group_substructure_fraction(aperture_radius=r, 
+                                                                                  out_allPartTypes=True)
+            ParType0_sub_fraction = np.concatenate((ParType0_sub_fraction, [part_sub_fraction_aperture[0]]), axis=0)
+            ParType1_sub_fraction = np.concatenate((ParType1_sub_fraction, [part_sub_fraction_aperture[1]]), axis=0)
+            ParType4_sub_fraction = np.concatenate((ParType4_sub_fraction, [part_sub_fraction_aperture[2]]), axis=0)
+            ParType5_sub_fraction = np.concatenate((ParType5_sub_fraction, [part_sub_fraction_aperture[3]]), axis=0)
+            Total_sub_fraction_aperture = self.cluster.group_substructure_fraction(aperture_radius=r, 
+                                                                                   out_allPartTypes=False)
+            Total_sub_fraction = np.concatenate((Total_sub_fraction, [Total_sub_fraction_aperture]), axis=0)
+
+        data = {'/Total_substructure_fraction'   : np.array(Total_sub_fraction),
+                '/ParType0_substructure_fraction': np.array(ParType0_sub_fraction),
+                '/ParType1_substructure_fraction': np.array(ParType1_sub_fraction),
+                '/ParType4_substructure_fraction': np.array(ParType4_sub_fraction),
+                '/ParType5_substructure_fraction': np.array(ParType5_sub_fraction)}
+
+        attributes = {'Description': """Datasets with the fraction of mass bound to subhalos of the cluster, calculated 
+                from particles within a specific aperture radius from the Centre of Potential. Individual datasets contain 
+                substructure fraction information about each particle type separately, as well as one with combined 
+                total contribution.
+                The substructure fraction is computed according to the equation:
+                substructure_fraction = (total mass - fuzz mass) / total mass.
+
+                Note: The substructure fraction can also be used as an indicator for a merging index.
+                """,
+                      'Units': '[None]'}
+
+        out = FOFOutput(self.cluster, filename='substructure_fraction.hdf5', data=data, attrs=attributes)
+        out.makefile()
 
 
 
 if __name__ == '__main__':
 
-    data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                     'partType1': ['mass', 'coordinates', 'velocity'],
-                     'partType4': ['mass', 'coordinates', 'velocity'],
-                     'partType5': ['mass', 'coordinates', 'velocity']}
+    data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'subgroupnumber', 'temperature', 'sphdensity'],
+                     'partType1': ['mass', 'coordinates', 'velocity', 'subgroupnumber'],
+                     'partType4': ['mass', 'coordinates', 'velocity', 'subgroupnumber'],
+                     'partType5': ['mass', 'coordinates', 'velocity', 'subgroupnumber']}
 
     def test():
         cluster = Cluster(simulation_name = 'celr_e', clusterID = 0, redshift = 'z000p000')
         out = FOFDatagen(cluster)
-        # out.push_R_crit()
-        # out.push_apertures()
-        # out.push_mass()
-        # out.push_centre_of_mass()
-        # out.push_peculiar_velocity()
-        # out.push_angular_momentum()
-        # out.push_dynamical_merging_index()
+        out.push_R_crit()
+        out.push_apertures()
+        out.push_mass()
+        out.push_centre_of_mass()
+        out.push_peculiar_velocity()
+        out.push_angular_momentum()
+        out.push_dynamical_merging_index()
         out.push_kinetic_energy()
         out.push_thermal_energy()
         out.push_thermodynamic_merging_index()
@@ -645,37 +689,40 @@ if __name__ == '__main__':
             out.push_peculiar_velocity()
             out.push_angular_momentum()
         """
+        for sim_name in ['celr_e', 'celr_b', 'macsis', 'ceagle']:
 
-        # Set-up the MPI allocation schedule
-        sim = Simulation(simulation_name='celr_b')
-        iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
-        print(f"{sim.simulation:=^100s}")
-        print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
-              f"{' halo redshift ':^20s}\n")
+            # Set-up the MPI allocation schedule
+            sim = Simulation(simulation_name=sim_name)
+            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+            print(f"{sim.simulation:=^100s}")
+            print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
+                  f"{' halo redshift ':^20s}\n")
 
-        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-            if process_n % size == rank:
+            for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+                if process_n % size == rank:
 
-                cluster = Cluster(simulation_name=sim.simulation_name,
-                                  clusterID=halo_id,
-                                  redshift=halo_z,
-                                  comovingframe=False,
+                    cluster = Cluster(simulation_name=sim.simulation_name,
+                                      clusterID=halo_id,
+                                      redshift=halo_z,
+                                      comovingframe=False,
                                       requires=data_required)
 
-                out = FOFDatagen(cluster)
-                out.push_R_crit()
-                out.push_M_crit()
-                out.push_apertures()
-                out.push_mass()
-                out.push_centre_of_mass()
-                out.push_peculiar_velocity()
-                out.push_angular_momentum()
+                    out = FOFDatagen(cluster)
+                    out.push_R_crit()
+                    out.push_M_crit()
+                    out.push_apertures()
+                    out.push_mass()
+                    out.push_centre_of_mass()
+                    out.push_peculiar_velocity()
+                    out.push_angular_momentum()
+                    out.push_kinetic_energy()
+                    out.push_thermal_energy()
+                    out.push_substructure_mass()
+                    out.push_dynamical_merging_index()
+                    out.push_thermodynamic_merging_index()
+                    out.push_substructure_fraction()
 
-                rank_str = '(' + str(rank) + '/' + str(size) + ')'
-                print(f"{rank_str:^30s} | {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
-
+                    rank_str = '(' + str(rank) + '/' + str(size) + ')'
+                    print(f"{rank_str:^30s} | {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
     mining()
-
-
-
