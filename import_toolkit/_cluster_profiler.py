@@ -160,7 +160,7 @@ class Mixin:
         if mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
         if temperature.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
         mass = self.mass_units(mass, unit_system='SI')
-        return self.thermal_energy(mass, temperature)*np.power(10, -46)
+        return self.thermal_energy(mass, temperature)*np.power(10., -46)
     
     def group_kinetic_energy(self,
                              out_allPartTypes: bool =False,
@@ -210,7 +210,7 @@ class Mixin:
                 kinetic_energy = self.kinetic_energy(_mass, _velocity)
                 kinetic_energy_PartTypes = np.append(kinetic_energy_PartTypes, kinetic_energy)
 
-            return kinetic_energy_PartTypes*np.power(10, -46)
+            return kinetic_energy_PartTypes*np.power(10., -46)
 
         else:
 
@@ -233,7 +233,7 @@ class Mixin:
 
             mass     = self.mass_units(mass, unit_system='SI')
             velocity = self.velocity_units(velocity, unit_system='SI')
-            return self.kinetic_energy(mass, velocity)*np.power(10, -46)
+            return self.kinetic_energy(mass, velocity)*np.power(10., -46)
 
     def group_mass_aperture(self,
                              out_allPartTypes: bool =False,

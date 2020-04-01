@@ -660,7 +660,7 @@ if __name__ == '__main__':
                                   clusterID=halo_id,
                                   redshift=halo_z,
                                   comovingframe=False,
-                                  requires=data_required)
+                                      requires=data_required)
 
                 out = FOFDatagen(cluster)
                 out.push_R_crit()
