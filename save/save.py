@@ -17,6 +17,7 @@ import os
 import itertools
 import time
 import numpy as np
+import warnings
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
@@ -115,7 +116,7 @@ class SimulationOutput(Simulation):
 
     @ProgressBar()
     def status_plot(self):
-
+        warnings.filterwarnings("ignore")
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
 
