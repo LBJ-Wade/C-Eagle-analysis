@@ -145,33 +145,34 @@ class SimulationOutput(Simulation):
         cmap   = colors.ListedColormap(['black', 'red', 'orange', 'lime'])
         bounds = [0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
-        img = ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
-                        aspect = report_matrix.shape[1]/report_matrix.shape[0],
-                        extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
-                                -0.1*self.totalClusters, 1.1*self.totalClusters))
+        ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
+                  aspect = report_matrix.shape[1]/report_matrix.shape[0],
+                  extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
+                          -0.1*self.totalClusters, 1.1*self.totalClusters))
 
         patch_1 = Patch(color='black', label='0 files')
         patch_2 = Patch(color='red', label='1 - 3 files')
         patch_3 = Patch(color='orange', label=f'4 - {expected_total_files - 1} files')
         patch_4 = Patch(color='lime', label=f'{expected_total_files} files')
+        ax.legend(handles=[patch_4, patch_3, patch_2, patch_1],
+                  loc='upper right',
+                  labelspacing=1.5,
+                  handlelength=1,
+                  fontsize=20,
+                  markeredgecolor = 'k',
+                  bbox_to_anchor=(1.25, 0.75))
 
-        # add legends
-        leg = ax.legend(handles=[patch_4, patch_3, patch_2, patch_1],
-                        loc='upper right',
-                        labelspacing=1.5,
-                        handlelength=1,
-                        fontsize=20,
-                        bbox_to_anchor=(1.25, 0.5))
-
-        ax.set_title(r'{:s}\qquad Output status: {:.0f}\% complete \qquad{:s}'.format(self.simulation,
-                                                                                      fraction_complete,
-                                                                                      timestr), size=20)
+        ax.set_title(f'{self.simulation:s}\qquad Output status: {fraction_complete:.0f}\% complete \qquad{timestr:s}', size=20)
         ax.set_xlabel(r'redshift', size=25)
         ax.set_ylabel(r'Cluster ID', size=25)
+        ax.set_xticks(list(range(0, 20, 4)))
+        redhifts_ticks = np.asarray(self.redshiftAllowed[ax.get_xticks()])
+        redhifts_ticks = [f"{redshift_str2num(z):.1f}" for z in redhifts_ticks]
+        ax.set_xticklabels(redhifts_ticks)
         plt.tight_layout()
         plt.savefig(os.path.join(self.pathSave,
                                  self.simulation_name,
-                                 f"{self.simulation_name}_OutputStatusReport_{timestr}.png"), dpi=300)
+                                 f"{self.simulation_name}_OutputStatusReport_{timestr}.png"), dpi=400)
 
 if __name__ == '__main__':
     for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
