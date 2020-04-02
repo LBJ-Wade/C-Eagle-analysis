@@ -150,7 +150,7 @@ class SimulationOutput(Simulation):
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
         cax = divider.append_axes("right", size="3%", pad=0.05)
-        cbar = fig.colorbar(img, cmap=cmap, cax=cax, norm=norm, boundaries=bounds, ticks=[0, 1, 2, 3, 4, 8, 12, 13])
+        cbar = plt.colorbar(img, cmap=cmap, cax=cax, norm=norm, boundaries=bounds, ticks=[0, 1, 2, 3, 4, 8, 12, 13])
         cbar.ax.minorticks_off()
         cbar.ax.set_ylabel(r'Number of files in directory', rotation=270, size=25, labelpad=40)
 
