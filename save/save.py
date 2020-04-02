@@ -140,8 +140,8 @@ class SimulationOutput(Simulation):
         cmap   = colors.ListedColormap(['black', 'red', 'orange', 'lime'])
         bounds = [0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
-        img    = ax.imshow(report_matrix, interpolation='nearest', origin='upper', cmap=cmap, norm=norm)
-        ax.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=np.arange(0, expected_total_files + 1))
+        img    = plt.imshow(report_matrix, interpolation='nearest', origin='upper', cmap=cmap, norm=norm)
+        plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=np.arange(0, expected_total_files + 1))
         ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr))
         ax.set_xlabel('redshift')
         ax.set_ylabel('ClusterID')
