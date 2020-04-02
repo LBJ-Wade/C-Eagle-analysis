@@ -149,8 +149,8 @@ class SimulationOutput(Simulation):
                         extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                                 -0.1*self.totalClusters, 1.1*self.totalClusters))
 
-        patch_1 = Patch(fill='black', label='\nHatch 1')
-        patch_2 = Patch(fill='red', label='\nHatch 2')
+        patch_1 = Patch(fill='black', label='a')
+        patch_2 = Patch(fill='red', label='a')
 
         # add legends
         leg = ax.legend(handles=[patch_1, patch_2], loc='upper right', labelspacing=1.5, handlelength=4)
