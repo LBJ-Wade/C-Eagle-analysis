@@ -161,7 +161,7 @@ class SimulationOutput(Simulation):
                         labelspacing=1.5,
                         handlelength=1,
                         fontsize=20,
-                        bbox_to_anchor=(1.2, 0.5))
+                        bbox_to_anchor=(1.25, 0.5))
 
         ax.set_title(r'{:s}\qquad Output status: {:.0f}\% complete \qquad{:s}'.format(self.simulation,
                                                                                       fraction_complete,
