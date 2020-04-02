@@ -115,6 +115,12 @@ class SimulationOutput(Simulation):
 
         return ax
 
+    @staticmethod
+    def forceAspect(ax, ax_target, aspect):
+        im = ax.get_images()
+        extent = im[0].get_extent()
+        ax_target.set_aspect(abs((extent[1] - extent[0]) / (extent[3] - extent[2])) / aspect)
+
     @ProgressBar()
     def status_plot(self):
         warnings.filterwarnings("ignore")
@@ -145,8 +151,10 @@ class SimulationOutput(Simulation):
         bounds = [0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
         img = ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
-                        aspect = report_matrix.shape[1]/report_matrix.shape[0])
-
+                        aspect = report_matrix.shape[1]/report_matrix.shape[0],
+                        extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
+                                -0.1*self.totalClusters, 1.1*self.totalClusters))
+        self.forceAspect(ax, cax, 1.0)
         cbar = fig.colorbar(img, cmap=cmap, cax=cax, norm=norm, boundaries=bounds, ticks=[0, 1, 2, 3, 4, 8, 12, 13])
         cbar.ax.minorticks_off()
         cbar.ax.set_ylabel(r'Number of files in directory', rotation=270, size=25, labelpad=40)
