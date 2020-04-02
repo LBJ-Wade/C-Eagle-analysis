@@ -150,16 +150,15 @@ class SimulationOutput(Simulation):
                   extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                           -0.1*self.totalClusters, 1.1*self.totalClusters))
 
-        patch_1 = Patch(color='black', label='0 files')
-        patch_2 = Patch(color='red', label='1 - 3 files')
-        patch_3 = Patch(color='orange', label=f'4 - {expected_total_files - 1} files')
-        patch_4 = Patch(color='lime', label=f'{expected_total_files} files')
+        patch_1 = Patch(color='black', label='0 files', edgecolor='k')
+        patch_2 = Patch(color='red', label='1 - 3 files', edgecolor='k')
+        patch_3 = Patch(color='orange', label=f'4 - {expected_total_files - 1} files', edgecolor='k')
+        patch_4 = Patch(color='lime', label=f'{expected_total_files} files', edgecolor='k')
         ax.legend(handles=[patch_4, patch_3, patch_2, patch_1],
                   loc='upper right',
                   labelspacing=1.5,
                   handlelength=1,
                   fontsize=20,
-                  markeredgecolor = 'k',
                   bbox_to_anchor=(1.25, 0.75))
 
         ax.set_title(f'{self.simulation:s}\qquad Output status: {fraction_complete:.0f}\% complete \qquad{timestr:s}', size=20)
