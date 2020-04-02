@@ -116,15 +116,8 @@ class SimulationOutput(Simulation):
     @ProgressBar()
     def status_plot(self):
 
-        fig = plt.figure(figsize=(11, 20))
+        fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
-
-        expected_total_files = 13
-        timestr = time.strftime("%d%m%Y-%H%M%S")
-
-        ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr))
-        ax.set_xlabel('redshift')
-        ax.set_ylabel('ClusterID')
 
         report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
         length_operation = np.product(report_matrix.shape)
@@ -141,17 +134,18 @@ class SimulationOutput(Simulation):
             yield ((counter + 1) / length_operation)  # Give control back to decorator
             counter += 1
 
-        cmap = colors.ListedColormap(['black', 'red', 'orange', 'lime'])
+        expected_total_files = 13
+        timestr = time.strftime("%d%m%Y-%H%M%S")
+
+        cmap   = colors.ListedColormap(['black', 'red', 'orange', 'lime'])
         bounds = [0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
-        norm = colors.BoundaryNorm(bounds, cmap.N)
-
-        # tell imshow about color map so that only set colors are used
-        img = plt.imshow(report_matrix, interpolation='nearest', origin='upper', cmap=cmap, norm=norm)
-
-        # make a color bar
-        plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=[0, 5, 10])
+        norm   = colors.BoundaryNorm(bounds, cmap.N)
+        img    = ax.imshow(report_matrix, interpolation='nearest', origin='upper', cmap=cmap, norm=norm)
+        ax.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=np.arange(0, expected_total_files + 1))
+        ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr))
+        ax.set_xlabel('redshift')
+        ax.set_ylabel('ClusterID')
         plt.tight_layout()
-
         plt.savefig(os.path.join(self.pathSave,
                                  self.simulation_name,
                                  f"{self.simulation_name}_OutputStatusReport_{timestr}.png"), dpi=300)
