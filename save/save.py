@@ -149,24 +149,15 @@ class SimulationOutput(Simulation):
                         extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                                 -0.1*self.totalClusters, 1.1*self.totalClusters))
 
-        patch_1 = Patch(fill=False, label='\nHatch 1')
-        patch_2 = Patch(fill=False, label='\nHatch 2')
+        patch_1 = Patch(fill='black', label='\nHatch 1')
+        patch_2 = Patch(fill='red', label='\nHatch 2')
 
-        # Shrink current axis's height by 10% on the bottom
-        box = ax.get_position()
-        ax.set_position([box.x0, box.y0 + box.height * 0.1,
-                         box.width, box.height * 0.9])
-        leg = plt.legend(handles=[patch_1, patch_2], labelspacing=1.5, handlelength=4,
-                         loc='upper center', bbox_to_anchor=(0.5, -0.05),
-                         fancybox=True, shadow=True, ncol=5)
+        # add legends
+        leg = plt.legend(handles=[patch_1, patch_2], loc='upper right', labelspacing=1.5, handlelength=4)
 
         for patch in leg.get_patches():
             patch.set_height(22)
             patch.set_y(-6)
-
-
-
-
 
         fraction_complete = np.sum(report_matrix)/(np.product(report_matrix.shape)*expected_total_files)*100
 
