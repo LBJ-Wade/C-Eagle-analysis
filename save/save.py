@@ -22,6 +22,7 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 from matplotlib import colors
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 exec(open(os.path.abspath(os.path.join(
         os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
@@ -141,11 +142,20 @@ class SimulationOutput(Simulation):
         cmap   = colors.ListedColormap(['black', 'red', 'orange', 'lime'])
         bounds = [0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
-        img    = plt.imshow(report_matrix, interpolation='nearest', origin='upper', cmap=cmap, norm=norm)
-        plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=np.arange(0, expected_total_files + 1))
-        ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr))
-        ax.set_xlabel('redshift')
-        ax.set_ylabel('ClusterID')
+        img = ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
+                            extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
+                                    -0.1*self.totalClusters, 1.1*self.totalClusters))
+
+        # Manipulate the colorbar on the side
+        divider = make_axes_locatable(ax)
+        cax = divider.append_axes("right", size="3%", pad=0.)
+        cbar = fig.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=np.arange(0, expected_total_files + 1))
+        cbar.ax.minorticks_off()
+        cbar.ax.set_ylabel(r'Number of files in directory', rotation=270, size=25, labelpad=30)
+
+        ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr), size=25)
+        ax.set_xlabel('redshift', size=25)
+        ax.set_ylabel('Cluster ID', size=25)
         plt.tight_layout()
         plt.savefig(os.path.join(self.pathSave,
                                  self.simulation_name,
@@ -155,4 +165,5 @@ if __name__ == '__main__':
     for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
     # for sim in ['ceagle']:
         out = SimulationOutput(simulation_name = sim)
+        print(f"{out.simulation:=^100s}")
         out.status_plot()
