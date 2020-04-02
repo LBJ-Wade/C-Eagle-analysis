@@ -164,8 +164,8 @@ class SimulationOutput(Simulation):
         ax.set_title(f'{self.simulation:s}\qquad Output status: {fraction_complete:.0f}\% complete \qquad{timestr:s}', size=20)
         ax.set_xlabel(r'redshift', size=25)
         ax.set_ylabel(r'Cluster ID', size=25)
-        ax.set_xticks(list(range(0, 25, 4)))
-        redhifts_ticks = [self.redshiftAllowed[::-1][i] for i in range(0, 25, 4)]
+        ax.set_xticks(list(range(0, len(self.redshiftAllowed), 4)))
+        redhifts_ticks = [self.redshiftAllowed[::-1][i] for i in range(0, len(self.redshiftAllowed), 4)]
         redhifts_ticks = [f"{redshift_str2num(z):.1f}" for z in redhifts_ticks]
         ax.set_xticklabels(redhifts_ticks)
         plt.tight_layout()
