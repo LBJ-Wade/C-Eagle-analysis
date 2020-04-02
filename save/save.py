@@ -118,7 +118,7 @@ class SimulationOutput(Simulation):
     @ProgressBar()
     def status_plot(self):
         warnings.filterwarnings("ignore")
-        fig = plt.figure(figsize=(10, 10))
+        fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
 
         report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
@@ -149,12 +149,12 @@ class SimulationOutput(Simulation):
 
         # Manipulate the colorbar on the side
         divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="3%", pad=0.)
+        cax = divider.append_axes("right", size="3%", pad=0.05)
         cbar = fig.colorbar(img, cmap=cmap, cax=cax, norm=norm, boundaries=bounds, ticks=[0, 1, 2, 3, 4, 8, 12, 13])
         cbar.ax.minorticks_off()
-        cbar.ax.set_ylabel(r'Number of files in directory', rotation=270, size=25, labelpad=30)
+        cbar.ax.set_ylabel(r'Number of files in directory', rotation=270, size=25, labelpad=40)
 
-        ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr), size=25)
+        ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr), size=15)
         ax.set_xlabel('redshift', size=25)
         ax.set_ylabel('Cluster ID', size=25)
         plt.tight_layout()
