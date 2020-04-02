@@ -160,12 +160,12 @@ class SimulationOutput(Simulation):
                         loc='upper right',
                         labelspacing=1.5,
                         handlelength=1,
-                        fontsize=15,
-                        bbox_to_anchor=(1.1, 0.5))
+                        fontsize=20,
+                        bbox_to_anchor=(1.2, 0.5))
 
         ax.set_title(r'{:s}\qquad Output status: {:.0f}\% complete \qquad{:s}'.format(self.simulation,
                                                                                       fraction_complete,
-                                                                                      timestr), size=15)
+                                                                                      timestr), size=20)
         ax.set_xlabel(r'redshift', size=25)
         ax.set_ylabel(r'Cluster ID', size=25)
         plt.tight_layout()
