@@ -702,7 +702,7 @@ if __name__ == '__main__':
                 if process_n % size == rank:
 
                     cluster = Cluster(simulation_name=sim.simulation_name,
-                                      clusterID=halo_id,
+                                      clusterID=sim.halo_Num(halo_id),
                                       redshift=halo_z,
                                       comovingframe=False,
                                       requires=data_required)

@@ -20,12 +20,14 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
+from matplotlib import colors
 
 exec(open(os.path.abspath(os.path.join(
         os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from import_toolkit.simulation import Simulation
+from import_toolkit.progressbar import ProgressBar
 from import_toolkit._cluster_retriever import redshift_str2num
 
 
@@ -37,10 +39,11 @@ class SimulationOutput(Simulation):
                         'redshift',
                         'data.hdf5 && other_outputs.*']
 
-    def __init__(self, simulation_name: str = None):
+    def __init__(self, simulation_name: str = None, run_dircheck: bool = False):
 
         super().__init__(simulation_name=simulation_name)
-        self.check_data_structure()
+        if run_dircheck:
+            self.check_data_structure()
 
     def check_data_structure(self):
         print('[ SimulationOutput ]\t==> Checking output data structure...')
@@ -110,18 +113,22 @@ class SimulationOutput(Simulation):
 
         return ax
 
+    @ProgressBar()
     def status_plot(self):
-
-        timestr = time.strftime("%d%m%Y-%H%M%S")
-
 
         fig = plt.figure(figsize=(11, 20))
         ax = fig.add_subplot(111)
+
+        expected_total_files = 13
+        timestr = time.strftime("%d%m%Y-%H%M%S")
 
         ax.set_title('{:s}\qquad Output status record \qquad{:s}'.format(self.simulation, timestr))
         ax.set_xlabel('redshift')
         ax.set_ylabel('ClusterID')
 
+        report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
+        length_operation = np.product(report_matrix.shape)
+        counter = 0
         for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
 
             out_path = os.path.join(self.pathSave,
@@ -129,12 +136,20 @@ class SimulationOutput(Simulation):
                                     f'halo{self.halo_Num(cluster_number)}',
                                     f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
 
-
-            num_of_files_expected = 6
             num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
-            self.draw_pie([num_of_files, num_of_files_expected - num_of_files],
-                          redshift_str2num(cluster_redshift), cluster_number, 100, ax=ax)
+            report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] = num_of_files
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
+        cmap = colors.ListedColormap(['black', 'red', 'orange', 'lime'])
+        bounds = [0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
+        norm = colors.BoundaryNorm(bounds, cmap.N)
+
+        # tell imshow about color map so that only set colors are used
+        img = plt.imshow(report_matrix, interpolation='nearest', origin='upper', cmap=cmap, norm=norm)
+
+        # make a color bar
+        plt.colorbar(img, cmap=cmap, norm=norm, boundaries=bounds, ticks=[0, 5, 10])
         plt.tight_layout()
 
         plt.savefig(os.path.join(self.pathSave,
