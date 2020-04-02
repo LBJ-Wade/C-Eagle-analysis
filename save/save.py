@@ -149,14 +149,15 @@ class SimulationOutput(Simulation):
                         extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                                 -0.1*self.totalClusters, 1.1*self.totalClusters))
 
-        cbar = fig.colorbar(img, cmap=cmap, cax=cax, norm=norm, boundaries=bounds, ticks=[0, 1, 2, 3, 4, 8, 12, 13])
+        cbar = fig.colorbar(img, cmap=cmap, cax=cax, norm=norm, ticks=[0, 1, 2, 3, 4, 8, 12, 13])
         cbar.ax.minorticks_off()
         cbar.ax.set_ylabel(r'Number of files in directory', rotation=270, size=25, labelpad=40)
 
         fraction_complete = np.sum(report_matrix)/(np.product(report_matrix.shape)*expected_total_files)*100
 
         ax.set_title(r'{:s}\qquad Output status: {:.0f}\% complete \qquad{:s}'.format(self.simulation,
-                                                                                     fraction_complete, timestr), size=25)
+                                                                                      fraction_complete,
+                                                                                      timestr), size=15)
         ax.set_xlabel(r'redshift', size=25)
         ax.set_ylabel(r'Cluster ID', size=25)
         plt.tight_layout()
