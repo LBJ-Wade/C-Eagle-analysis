@@ -22,7 +22,7 @@ import matplotlib
 matplotlib.use('Agg')
 from matplotlib import pyplot as plt
 from matplotlib import colors
-from mpl_toolkits.axes_grid1 import make_axes_locatable
+from matplotlib.patches import Patch
 
 exec(open(os.path.abspath(os.path.join(
         os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
@@ -122,9 +122,6 @@ class SimulationOutput(Simulation):
         warnings.filterwarnings("ignore")
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("right", size="3%", pad=0.05)
-        cax.set_aspect(1.0)
 
         report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
         length_operation = np.product(report_matrix.shape)
@@ -151,10 +148,25 @@ class SimulationOutput(Simulation):
                         aspect = report_matrix.shape[1]/report_matrix.shape[0],
                         extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                                 -0.1*self.totalClusters, 1.1*self.totalClusters))
-        # cax.set_aspect(report_matrix.shape[1]/report_matrix.shape[0])
-        # cbar = fig.colorbar(img, cmap=cmap, cax=cax, norm=norm, boundaries=bounds, ticks=[0, 1, 2, 3, 4, 8, 12, 13])
-        # cbar.ax.minorticks_off()
-        # cbar.ax.set_ylabel(r'Number of files in directory', rotation=270, size=25, labelpad=40)
+
+        patch_1 = Patch(fill=False, label='\nHatch 1')
+        patch_2 = Patch(fill=False, label='\nHatch 2')
+
+        # Shrink current axis's height by 10% on the bottom
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0 + box.height * 0.1,
+                         box.width, box.height * 0.9])
+        leg = plt.legend(handles=[patch_1, patch_2], labelspacing=1.5, handlelength=4,
+                         loc='upper center', bbox_to_anchor=(0.5, -0.05),
+                         fancybox=True, shadow=True, ncol=5)
+
+        for patch in leg.get_patches():
+            patch.set_height(22)
+            patch.set_y(-6)
+
+
+
+
 
         fraction_complete = np.sum(report_matrix)/(np.product(report_matrix.shape)*expected_total_files)*100
 
