@@ -149,16 +149,21 @@ class SimulationOutput(Simulation):
                         extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                                 -0.1*self.totalClusters, 1.1*self.totalClusters))
 
-        patch_1 = Patch(color='black', label='a')
-        patch_2 = Patch(color='red', label='a')
+        patch_1 = Patch(color='black', label='0 files')
+        patch_2 = Patch(color='red', label='1 - 3 files')
+        patch_3 = Patch(color='orange', label=f'4 - {expected_total_files - 1} files')
+        patch_4 = Patch(color='lime', label=f'{expected_total_files} files')
 
         # add legends
-        leg = ax.legend(handles=[patch_1, patch_2], loc='upper right', labelspacing=1.5, handlelength=4,
-                        bbox_to_anchor=(1, 0.5))
+        leg = ax.legend(handles=[patch_1, patch_2, patch_3, patch_4],
+                        loc='upper right',
+                        labelspacing=1.5,
+                        handlelength=4,
+                        bbox_to_anchor=(1.2, 0.5))
 
-        for patch in leg.get_patches():
-            patch.set_height(22)
-            patch.set_y(-6)
+        # for patch in leg.get_patches():
+        #     patch.set_height(22)
+        #     patch.set_y(-6)
 
         fraction_complete = np.sum(report_matrix)/(np.product(report_matrix.shape)*expected_total_files)*100
 
