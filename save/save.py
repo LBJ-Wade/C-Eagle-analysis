@@ -155,11 +155,12 @@ class SimulationOutput(Simulation):
         patch_4 = Patch(color='lime', label=f'{expected_total_files} files')
 
         # add legends
-        leg = ax.legend(handles=[patch_1, patch_2, patch_3, patch_4],
+        leg = ax.legend(handles=[patch_4, patch_3, patch_2, patch_1],
                         loc='upper right',
                         labelspacing=1.5,
-                        handlelength=4,
-                        bbox_to_anchor=(1.2, 0.5))
+                        handlelength=1,
+                        size=15,
+                        bbox_to_anchor=(1.1, 0.5))
 
         # for patch in leg.get_patches():
         #     patch.set_height(22)
