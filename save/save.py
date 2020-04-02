@@ -153,7 +153,7 @@ class SimulationOutput(Simulation):
         patch_2 = Patch(fill='red', label='\nHatch 2')
 
         # add legends
-        leg = plt.legend(handles=[patch_1, patch_2], loc='upper right', labelspacing=1.5, handlelength=4)
+        leg = ax.legend(handles=[patch_1, patch_2], loc='upper right', labelspacing=1.5, handlelength=4)
 
         for patch in leg.get_patches():
             patch.set_height(22)
