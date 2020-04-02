@@ -159,7 +159,7 @@ class SimulationOutput(Simulation):
                   labelspacing=1.5,
                   handlelength=1,
                   fontsize=20,
-                  bbox_to_anchor=(1.25, 0.75))
+                  bbox_to_anchor=(1.3, 0.75))
 
         ax.set_title(f'{self.simulation:s}\qquad Output status: {fraction_complete:.0f}\% complete \qquad{timestr:s}', size=20)
         ax.set_xlabel(r'redshift', size=20)
