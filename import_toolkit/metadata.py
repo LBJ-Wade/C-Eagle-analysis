@@ -1,7 +1,7 @@
 import itertools
 import numpy as np
-from .simulation import Simulation
-from .cluster import Cluster
+from simulation import Simulation
+from cluster import Cluster
 
 def check_dirs(self) -> np.ndarray:
     """
