@@ -189,9 +189,9 @@ class TrendZ:
         path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
         aperture_id_str = f'Aperture {aperture_id}'
         aperture_float = aperture_id
+        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
-
 
         if  os.path.isfile(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy') and \
             os.path.isfile(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy') and \
@@ -206,7 +206,6 @@ class TrendZ:
         else:
             print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
             angle_master = np.zeros((len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
-            z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
             iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
             for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
                 print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
