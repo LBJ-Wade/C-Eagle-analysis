@@ -132,11 +132,11 @@ class SimulationOutput(Simulation):
                                     f'halo{self.halo_Num(cluster_number)}',
                                     f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
 
-            if True:
+            if self.sample_completeness[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)]:
                 num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
                 report_matrix[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)] = num_of_files
             else:
-                report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] = -1
+                report_matrix[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)] = -1
             yield ((counter + 1) / length_operation)  # Give control back to decorator
             counter += 1
 
