@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 128                                           # The number of cores you need...
+#SBATCH --ntasks 224                                           # The number of cores you need...
 #SBATCH -J ceagle                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
