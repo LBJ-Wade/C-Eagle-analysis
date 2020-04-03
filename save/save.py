@@ -122,7 +122,7 @@ class SimulationOutput(Simulation):
         warnings.filterwarnings("ignore")
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
-
+        print(self.sample_completeness)
         report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
         length_operation = np.product(report_matrix.shape)
         counter = 0
