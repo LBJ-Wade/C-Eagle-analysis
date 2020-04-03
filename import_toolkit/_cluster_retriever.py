@@ -78,7 +78,10 @@ class Mixin:
                     sbj_string = sbj_string
 
                 file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
-                file_list = os.listdir(file_dir)
+                try:
+                    file_list = os.listdir(file_dir)
+                except:
+                    file_list = []
 
                 if decorator_kwargs['subject'] == 'particledata':
                     prefix = 'eagle_subfind_particles_'
