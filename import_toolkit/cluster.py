@@ -39,7 +39,7 @@ class Cluster(simulation.Simulation,
         # Set FoF attributes
         # self.centre_of_potential = self.group_centre_of_potential()
         # self.r200  = self.group_r200()
-        # self.r500  = self.group_r500()
+        self.r500  = self.group_r500()
         # self.r2500 = self.group_r2500()
         # self.Mtot  = self.group_mass()
         # self.M200  = self.group_M200()
