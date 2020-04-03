@@ -1,7 +1,7 @@
 from __future__ import print_function, division, absolute_import
 import numpy as np
 import itertools
-from .cluster import Cluster
+from . import cluster
 from ._cluster_retriever import redshift_str2num
 
 
@@ -212,11 +212,11 @@ class Simulation:
         iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
         check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
         for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-            cluster = Cluster(simulation_name=self.simulation_name,
+            c = cluster.Cluster(simulation_name=self.simulation_name,
                               clusterID=halo_id,
                               redshift=halo_z)
 
-            test = cluster.is_cluster() * cluster.is_redshift()
+            test = c.is_cluster() * c.is_redshift()
             check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
 
             if not test:
