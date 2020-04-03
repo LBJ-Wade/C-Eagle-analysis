@@ -191,16 +191,20 @@ class TrendZ:
         aperture_float = aperture_id
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
-        print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
+
 
         if  os.path.isfile(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy') and \
             os.path.isfile(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy') and \
             os.path.isfile(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy'):
+
+            print("Retrieving npy files...")
+
             percent16 = np.load(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy')
             median50  = np.load(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy')
             percent84 = np.load(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy')
 
         else:
+            print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
             angle_master = np.zeros((len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
             z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
             iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
