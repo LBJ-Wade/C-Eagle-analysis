@@ -181,6 +181,6 @@ class SimulationOutput(Simulation):
 if __name__ == '__main__':
     for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
     # for sim in ['ceagle']:
-        out = SimulationOutput(simulation_name = sim)
+        out = SimulationOutput(simulation_name = sim, run_dircheck = True)
         print(f"{out.simulation:=^100s}")
         out.status_plot()
