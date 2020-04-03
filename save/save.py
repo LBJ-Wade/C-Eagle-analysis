@@ -122,7 +122,6 @@ class SimulationOutput(Simulation):
         warnings.filterwarnings("ignore")
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
-        print(self.sample_completeness)
         report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
         length_operation = np.product(report_matrix.shape)
         counter = 0
@@ -166,8 +165,7 @@ class SimulationOutput(Simulation):
                   fontsize=20,
                   bbox_to_anchor=(1.3, 0.75))
 
-        ax.set_title(f'$\mathbf{{{self.simulation:s}}}$ output status: {fraction_complete:.0f}\% complete \qqu'
-                     f'ad{timestr:s}',
+        ax.set_title(f'{self.simulation:s} output status: {fraction_complete:.0f}\% complete \qquad{timestr:s}',
                      size=20)
         ax.set_xlabel(r'redshift', size=20)
         ax.set_ylabel(r'Cluster ID', size=20)
