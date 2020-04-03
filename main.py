@@ -74,7 +74,7 @@ def main():
         are present in the simulation archive.
         :return:
         """
-        iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
+        iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed[::-1])
         check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
         for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
             c = Cluster(simulation_name=self.simulation_name,
@@ -82,11 +82,11 @@ def main():
                         redshift=halo_z)
 
             test = c.is_cluster() * c.is_redshift()
-            check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
+            check_matrix[halo_id][self.redshiftAllowed[::-1].index(halo_z)] = test
 
             if not test:
                 print(process_n, halo_id, halo_z)
-        np.save(f'{c.simulation_name}_sample_completeness.npy', check_matrix)
+        np.save(f'import_toolkit/{c.simulation_name}_sample_completeness.npy', check_matrix)
         print(len(np.where(check_matrix == True)[0])/np.product(check_matrix.shape)*100)
         return check_matrix
 
