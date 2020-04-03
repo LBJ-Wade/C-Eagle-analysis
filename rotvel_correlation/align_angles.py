@@ -233,9 +233,9 @@ class TrendZ:
         widths = z_master[1:]-z_master[:-1]
         widths = np.append(widths, widths[0])
 
-        ax.bar(z_master, percent84 - median50, width = widths, bottom = median50, yerr=1, align = 'centre')
-        ax.bar(z_master, median50 - percent16, width = widths, bottom = percent16, yerr=1, align = 'centre')
-        ax.bar(z_master, percent16, width = widths, yerr=1, align = 'centre')
+        ax.bar(z_master, percent84 - median50, width = widths, bottom = median50, yerr=1)
+        ax.bar(z_master, median50 - percent16, width = widths, bottom = percent16, yerr=1)
+        ax.bar(z_master, percent16, width = widths, yerr=1)
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
