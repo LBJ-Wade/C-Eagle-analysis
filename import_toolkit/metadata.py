@@ -25,6 +25,5 @@ def check_dirs(self) -> np.ndarray:
     return check_matrix
 
 
-if __name__ == '__main__':
-    sim = Simulation(simulation_name='ceagle')
-    check_dirs(sim)
+sim = Simulation(simulation_name='ceagle')
+check_dirs(sim)
