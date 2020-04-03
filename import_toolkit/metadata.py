@@ -1,7 +1,7 @@
 import itertools
 import numpy as np
-from . import simulation
-from . import cluster
+from .simulation import Simulation
+from .cluster import Cluster
 
 def check_dirs(self) -> np.ndarray:
     """
@@ -12,7 +12,7 @@ def check_dirs(self) -> np.ndarray:
     iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
     check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
     for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-        c = cluster.Cluster(simulation_name=self.simulation_name,
+        c = Cluster(simulation_name=self.simulation_name,
                           clusterID=halo_id,
                           redshift=halo_z)
 
@@ -26,5 +26,5 @@ def check_dirs(self) -> np.ndarray:
 
 
 if __name__ == '__main__':
-    sim = simulation.Simulation(simulation_name='ceagle')
+    sim = Simulation(simulation_name='ceagle')
     check_dirs(sim)
