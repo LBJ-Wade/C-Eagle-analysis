@@ -144,15 +144,16 @@ class SimulationOutput(Simulation):
 
         expected_total_files = 13
         timestr = time.strftime("%d%m%Y-%H%M%S")
-        fraction_complete = np.sum(report_matrix) / (np.product(report_matrix.shape) * expected_total_files) * 100
+        fraction_complete = np.sum(report_matrix[report_matrix>0]) / (np.product(report_matrix.shape) *
+                                                                     expected_total_files) * 100
 
         cmap   = colors.ListedColormap(['white', 'black', 'red', 'orange', 'lime'])
         bounds = [-1, 0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
         ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='lower',
                   aspect = report_matrix.shape[1]/report_matrix.shape[0],
-                  extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
-                          -0.1*self.totalClusters, 1.1*self.totalClusters))
+                  extent=(len(self.redshiftAllowed), len(self.redshiftAllowed),
+                          self.totalClusters, self.totalClusters))
 
         patch_1 = Patch(color='black', label='0 files', edgecolor='k')
         patch_2 = Patch(color='red', label='1 - 3 files', edgecolor='k')
