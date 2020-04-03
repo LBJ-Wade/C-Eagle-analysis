@@ -63,31 +63,34 @@ def time_func(function):
 
 @time_func
 def main():
-
+    import itertools
+    import numpy as np
+    from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
 
-    data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                     'partType1': ['mass', 'coordinates', 'velocity'],
-                     'partType4': ['mass', 'coordinates', 'velocity'],
-                     'partType5': ['mass', 'coordinates', 'velocity']}
+    def check_dirs(self) -> np.ndarray:
+        """
+        Loops over all listed clusters and redshifts and returns a boolean for what clusters and redshifts
+        are present in the simulation archive.
+        :return:
+        """
+        iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
+        check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
+        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+            c = Cluster(simulation_name=self.simulation_name,
+                        clusterID=halo_id,
+                        redshift=halo_z)
 
-    for sim in ['celr_e', 'celr_b', 'macsis']:
+            test = c.is_cluster() * c.is_redshift()
+            check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
 
-        cluster = Cluster(simulation_name=sim,
-                          clusterID=0,
-                          redshift='z000p000',
-                          comovingframe=False,
-                          requires=data_required)
+            if not test:
+                print(process_n, halo_id, halo_z)
 
-        # cluster.info()
+        return check_matrix
 
-        print(f"\n {sim}{' | halo 0 | z=0 ':-^60}")
-        pec_velocity = cluster.group_zero_momentum_frame(aperture_radius=5*cluster.r200)
-        ang_momentum = cluster.group_angular_momentum(aperture_radius=5*cluster.r200)
-        angle = cluster.angle_between_vectors(pec_velocity, ang_momentum)
-        print(f"pec_velocity = {pec_velocity}")
-        print(f"ang_momentum = {ang_momentum}")
-        print(f"angle = {angle}\n\n--------------------------------------------")
+    sim = Simulation(simulation_name='ceagle')
+    check_dirs(sim)
 
 if __name__ == "__main__":
 
