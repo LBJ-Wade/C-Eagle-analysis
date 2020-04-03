@@ -8,6 +8,8 @@ from ._cluster_retriever import redshift_str2num
 
 class Simulation:
 
+    CURRENT_PATH = os.path.abspath(os.path.dirname(__file__))
+
     def __init__(self, simulation_name = 'celr_b'):
 
         self.simulation_name = simulation_name
@@ -40,7 +42,8 @@ class Simulation:
                      '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+                                                            f'{self.simulation_name}_sample_completeness.npy'))
 
         elif self.simulation_name == 'celr_b':
             self.simulation = 'CELR-bahamas'
@@ -60,7 +63,8 @@ class Simulation:
                      '025', '026', '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+                                                            f'{self.simulation_name}_sample_completeness.npy'))
 
 
         elif self.simulation_name == 'celr_e':
@@ -81,7 +85,8 @@ class Simulation:
                      '025', '026', '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+                                                            f'{self.simulation_name}_sample_completeness.npy'))
 
 
         elif self.simulation_name == 'macsis':
@@ -106,7 +111,8 @@ class Simulation:
                      '014', '015', '016', '017', '018', '019', '020', '021', '022']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+                                                            f'{self.simulation_name}_sample_completeness.npy'))
 
 
             self.halo_num_catalogue_contiguous = [
