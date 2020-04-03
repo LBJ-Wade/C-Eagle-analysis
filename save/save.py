@@ -152,8 +152,8 @@ class SimulationOutput(Simulation):
         norm   = colors.BoundaryNorm(bounds, cmap.N)
         ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='lower',
                   aspect = report_matrix.shape[1]/report_matrix.shape[0],
-                  extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
-                          -0.1*self.totalClusters, 1.1*self.totalClusters))
+                  extent=(0, len(self.redshiftAllowed),
+                          0, self.totalClusters))
 
         patch_1 = Patch(color='black', label='0 files', edgecolor='k')
         patch_2 = Patch(color='red', label='1 - 3 files', edgecolor='k')
