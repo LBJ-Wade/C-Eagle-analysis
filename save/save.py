@@ -124,23 +124,24 @@ class SimulationOutput(Simulation):
         ax = fig.add_subplot(111)
 
         report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
-        length_operation = np.product(report_matrix.shape)
-        counter = 0
-        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
-
-            out_path = os.path.join(self.pathSave,
-                                    self.simulation_name,
-                                    f'halo{self.halo_Num(cluster_number)}',
-                                    f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
-
-            num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
-            report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] = num_of_files
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
-
         # Mask out the clusters/redshifts that are not in the original sample
         incomplete_index = np.where(self.sample_completeness == False)[0]
         report_matrix[incomplete_index] = -1
+        length_operation = np.product(report_matrix.shape)
+        counter = 0
+        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
+            if report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] is not -1:
+                out_path = os.path.join(self.pathSave,
+                                        self.simulation_name,
+                                        f'halo{self.halo_Num(cluster_number)}',
+                                        f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
+
+                num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
+                report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] = num_of_files
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
+
+
 
         expected_total_files = 13
         timestr = time.strftime("%d%m%Y-%H%M%S")
