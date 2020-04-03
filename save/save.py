@@ -149,7 +149,7 @@ class SimulationOutput(Simulation):
         cmap   = colors.ListedColormap(['white', 'black', 'red', 'orange', 'lime'])
         bounds = [-1, 0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
-        ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
+        ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='lower',
                   aspect = report_matrix.shape[1]/report_matrix.shape[0],
                   extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                           -0.1*self.totalClusters, 1.1*self.totalClusters))
@@ -173,10 +173,6 @@ class SimulationOutput(Simulation):
         redhifts_ticks = [self.redshiftAllowed[::-1][i] for i in range(0, len(self.redshiftAllowed), 4)]
         redhifts_ticks = [f"{redshift_str2num(z):.1f}" for z in redhifts_ticks]
         ax.set_xticklabels(redhifts_ticks)
-        ax.set_yticks(list(range(0, len(self.clusterIDAllowed), 5)))
-        clusterid_ticks = [self.clusterIDAllowed[i] for i in range(0, len(self.clusterIDAllowed), 4)]
-        clusterid_ticks = [f"{i:d}" for i in clusterid_ticks]
-        ax.set_yticklabels(clusterid_ticks)
         plt.tight_layout()
         plt.savefig(os.path.join(self.pathSave,
                                  self.simulation_name,
