@@ -230,11 +230,12 @@ class TrendZ:
         ax.plot(z_master, median50, color='red', lw=2.5, marker='o')
         ax.plot(z_master, percent84, color='red', lw=1)
 
-        ax.bar(z_master, percent84 - median50, width = z_master[1:]-z_master[:-1], bottom = median50, yerr=1,
-               align = 'centre')
-        ax.bar(z_master, median50 - percent16, width = z_master[1:]-z_master[:-1], bottom = percent16, yerr=1,
-               align = 'centre')
-        ax.bar(z_master, percent16, width = z_master[1:]-z_master[:-1], yerr=1, align = 'centre')
+        widths = z_master[1:]-z_master[:-1]
+        widths = np.append(widths, widths[0])
+
+        ax.bar(z_master, percent84 - median50, width = widths, bottom = median50, yerr=1, align = 'centre')
+        ax.bar(z_master, median50 - percent16, width = widths, bottom = percent16, yerr=1, align = 'centre')
+        ax.bar(z_master, percent16, width = widths, yerr=1, align = 'centre')
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
