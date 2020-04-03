@@ -27,4 +27,4 @@ def check_dirs(self) -> np.ndarray:
 
 if __name__ == '__main__':
     sim = simulation.Simulation(simulation_name='ceagle')
-    sim.check_dirs(sim)
+    check_dirs(sim)
