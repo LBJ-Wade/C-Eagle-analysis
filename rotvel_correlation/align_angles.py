@@ -186,37 +186,43 @@ class TrendZ:
                       aperture_id: int = 10):
 
         sim = Simulation(simulation_name=simulation_name)
+        path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
         aperture_id_str = f'Aperture {aperture_id}'
         aperture_float = aperture_id
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
         print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 
-        angle_master = np.zeros((len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
-        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
+        if  os.path.isfile(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy') and \
+            os.path.isfile(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy') and \
+            os.path.isfile(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy'):
+            percent16 = np.load(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy')
+            median50  = np.load(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy')
+            percent84 = np.load(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy')
 
-        iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
-        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-            print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
-            cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
-            read = pull.FOFRead(cluster)
-            angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
-            angle_master[halo_id][sim.redshiftAllowed.index(halo_z)] = angle
+        else:
+            angle_master = np.zeros((len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
+            z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
+            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+            for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+                print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
+                cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
+                read = pull.FOFRead(cluster)
+                angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
+                angle_master[halo_id][sim.redshiftAllowed.index(halo_z)] = angle
 
-            if process_n is 0:
-                aperture_float = self.get_apertures(cluster)[aperture_id]/cluster.r500
+                if process_n is 0:
+                    aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r500
+
+            percent16 = np.percentile(angle_master, 15.9, axis=0)
+            median50 = np.percentile(angle_master, 50, axis=0)
+            percent84 = np.percentile(angle_master, 84.1, axis=0)
+            np.save(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy', percent16)
+            np.save(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy', median50)
+            np.save(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy', percent84)
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
-
-        print(angle_master.shape)
-        print(angle_master)
-
-        percent16 = np.percentile(angle_master, 15.9, axis=0)
-        median50  = np.percentile(angle_master, 50,   axis=0)
-        percent84 = np.percentile(angle_master, 84.1, axis=0)
-        print(percent16, median50, percent84, sep='\n')
-
         ax.plot(z_master, percent16, color='red', lw=1)
         ax.plot(z_master, median50, color='red', lw=2.5, marker='o')
         ax.plot(z_master, percent84, color='red', lw=1)
