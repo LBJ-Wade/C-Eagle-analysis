@@ -693,14 +693,13 @@ if __name__ == '__main__':
 
             # Set-up the MPI allocation schedule
             sim = Simulation(simulation_name=sim_name)
-            sample_completeness = sim.sample_completeness
             iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
             print(f"{sim.simulation:=^100s}")
             print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
                   f"{' halo redshift ':^20s}\n")
 
             for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-                if ((sample_completeness[halo_id][sim.redshiftAllowed.index(halo_z)]) and
+                if ((sim.sample_completeness[halo_id, sim.redshiftAllowed[::-1].index(halo_z)]) and
                         (process_n % size is rank)):
 
                     cluster = Cluster(simulation_name=sim.simulation_name,
