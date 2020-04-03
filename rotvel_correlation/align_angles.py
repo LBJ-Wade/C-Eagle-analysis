@@ -186,7 +186,7 @@ class TrendZ:
         z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
 
         iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
-        for process_n, (halo_id, halo_z) in enumerate(list(iterator)[0:400]):
+        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
             print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
             cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
             read = pull.FOFRead(cluster)
