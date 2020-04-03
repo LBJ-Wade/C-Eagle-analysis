@@ -1,5 +1,7 @@
 from __future__ import print_function, division, absolute_import
 import numpy as np
+import os
+os.chdir(os.path.abspath(os.path.dirname(__file__)))
 
 from ._cluster_retriever import redshift_str2num
 
