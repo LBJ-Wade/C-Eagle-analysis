@@ -86,7 +86,7 @@ def main():
 
             if not test:
                 print(process_n, halo_id, halo_z)
-
+        print(check_matrix)
         return check_matrix
 
     sim = Simulation(simulation_name='ceagle')
