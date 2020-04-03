@@ -171,6 +171,16 @@ class TrendZ:
         read = pull.FOFRead(cluster)
         return read.pull_apertures()
 
+    @staticmethod
+    def get_centers_from_bins(bins):
+        """ return centers from bin sequence """
+        return (bins[:-1] + bins[1:]) / 2
+
+    @staticmethod
+    def get_centers_from_log_bins(bins):
+        """ return centers from bin sequence """
+        return np.sqrt(bins[:-1] * bins[1:])
+
     def plot_z_trends(self,
                       simulation_name: str = None,
                       aperture_id: int = 10):
@@ -211,6 +221,12 @@ class TrendZ:
         ax.plot(z_master, median50, color='red', lw=2.5, marker='o')
         ax.plot(z_master, percent84, color='red', lw=1)
 
+        ax.bar(z_master, percent84 - median50, width = z_master[1:]-z_master[:-1], bottom = median50, yerr=1,
+               align = 'centre')
+        ax.bar(z_master, median50 - percent16, width = z_master[1:]-z_master[:-1], bottom = percent16, yerr=1,
+               align = 'centre')
+        ax.bar(z_master, percent16, width = z_master[1:]-z_master[:-1], yerr=1, align = 'centre')
+
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
                             Number of clusters: {:d}
@@ -230,6 +246,7 @@ class TrendZ:
 
         ax.set_xlabel(r"$z$")
         ax.set_ylabel(r"$\Delta \theta$ \quad [degrees]")
+        ax.set_ylim(0, 180)
 
         if not os.path.exists(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')):
             os.makedirs(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation'))
