@@ -149,7 +149,7 @@ class SimulationOutput(Simulation):
         cmap   = colors.ListedColormap(['white', 'black', 'red', 'orange', 'lime'])
         bounds = [-1, 0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
-        ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
+        ax.imshow(report_matrix.T, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
                   aspect = report_matrix.shape[1]/report_matrix.shape[0],
                   extent=(-0.1*len(self.redshiftAllowed), 1.1*len(self.redshiftAllowed),
                           -0.1*self.totalClusters, 1.1*self.totalClusters))
