@@ -38,7 +38,7 @@ class Simulation:
                      '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            # self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
 
         elif self.simulation_name == 'celr_b':
             self.simulation = 'CELR-bahamas'
@@ -58,6 +58,8 @@ class Simulation:
                      '025', '026', '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
+            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+
 
         elif self.simulation_name == 'celr_e':
             self.simulation = 'CELR-eagle'
@@ -77,6 +79,8 @@ class Simulation:
                      '025', '026', '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
+            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+
 
         elif self.simulation_name == 'macsis':
             self.simulation = 'MACSIS'
@@ -100,6 +104,8 @@ class Simulation:
                      '014', '015', '016', '017', '018', '019', '020', '021', '022']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
+            self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
+
 
             self.halo_num_catalogue_contiguous = [
                 '0000', '0001', '0002', '0003', '0004', '0005', '0006', '0007', '0008', '0009', '0010', '0011',

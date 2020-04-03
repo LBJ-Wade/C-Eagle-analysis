@@ -138,12 +138,16 @@ class SimulationOutput(Simulation):
             yield ((counter + 1) / length_operation)  # Give control back to decorator
             counter += 1
 
+        # Mask out the clusters/redshifts that are not in the original sample
+        incomplete_index = np.where(self.sample_completeness == False)[0]
+        report_matrix[incomplete_index] = -1
+
         expected_total_files = 13
         timestr = time.strftime("%d%m%Y-%H%M%S")
         fraction_complete = np.sum(report_matrix) / (np.product(report_matrix.shape) * expected_total_files) * 100
 
-        cmap   = colors.ListedColormap(['black', 'red', 'orange', 'lime'])
-        bounds = [0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
+        cmap   = colors.ListedColormap(['white', 'black', 'red', 'orange', 'lime'])
+        bounds = [-1, 0, 0.5, 3.5, expected_total_files-0.5, expected_total_files]
         norm   = colors.BoundaryNorm(bounds, cmap.N)
         ax.imshow(report_matrix, interpolation='nearest', cmap=cmap, norm=norm, origin='upper',
                   aspect = report_matrix.shape[1]/report_matrix.shape[0],
@@ -161,7 +165,8 @@ class SimulationOutput(Simulation):
                   fontsize=20,
                   bbox_to_anchor=(1.3, 0.75))
 
-        ax.set_title(f'{self.simulation:s}\qquad Output status: {fraction_complete:.0f}\% complete \qquad{timestr:s}', size=20)
+        ax.set_title(f'\bf{{{self.simulation:s}}} output status: {fraction_complete:.0f}\% complete \qquad{timestr:s}',
+                     size=20)
         ax.set_xlabel(r'redshift', size=20)
         ax.set_ylabel(r'Cluster ID', size=20)
         ax.set_xticks(list(range(0, len(self.redshiftAllowed), 4)))
