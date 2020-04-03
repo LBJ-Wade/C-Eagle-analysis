@@ -1,5 +1,6 @@
 from __future__ import print_function, division, absolute_import
 import numpy as np
+from copy import copy
 import os
 
 from ._cluster_retriever import redshift_str2num
@@ -7,7 +8,7 @@ from ._cluster_retriever import redshift_str2num
 
 class Simulation:
 
-    CURRENT_PATH = os.path.abspath(os.path.dirname(__file__))
+    CURRENT_PATH = copy(os.path.abspath(os.path.dirname(__file__)))
 
     def __init__(self, simulation_name = 'celr_b'):
 
