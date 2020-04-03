@@ -104,6 +104,26 @@ class Cluster(simulation.Simulation,
         data_dir = 'data'
         return os.path.join(master_directory, cluster_ID, data_dir)
 
+    def is_cluster(self) -> bool:
+        """
+        Checks that the cluster's data directory exists.
+        :return: Boolean
+            True if exists.
+        """
+        return os.path.isdir(self.path_from_cluster_name())
+
+    def is_redshift(self, dataset: str = None) -> bool:
+        """
+        Checks that the cluster's data directory exists.
+        :return: Boolean
+            True if exists.
+        """
+        if dataset is 'particledata':
+            return os.path.isdir(self.partdata_fileDir())
+        if dataset is 'groups':
+            return os.path.isdir(self.groups_fileDir())
+        if dataset is 'all' or dataset is None:
+            return os.path.isdir(self.partdata_fileDir()) * os.path.isdir(self.groups_fileDir())
 
     def file_hubble_param(self):
         _, attr_value = self.extract_header_attribute_name('HubbleParam')

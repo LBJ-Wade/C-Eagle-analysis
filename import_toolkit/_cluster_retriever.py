@@ -114,6 +114,14 @@ class Mixin:
     #													#
     #####################################################
     @data_subject(subject="groups")
+    def groups_fileDir(self, **kwargs):
+        return kwargs['file_dir']
+
+    @data_subject(subject="particledata")
+    def partdata_fileDir(self, **kwargs):
+        return kwargs['file_dir']
+
+    @data_subject(subject="groups")
     def groups_filePaths(self, **kwargs):
         return kwargs['file_list_sorted']
 

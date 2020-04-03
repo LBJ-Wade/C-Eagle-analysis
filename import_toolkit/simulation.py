@@ -1,6 +1,7 @@
 from __future__ import print_function, division, absolute_import
 import numpy as np
-
+import itertools
+from .cluster import Cluster
 from ._cluster_retriever import redshift_str2num
 
 
@@ -25,12 +26,17 @@ class Simulation:
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
             self.zcat = {
                 'z_value':
-                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
-                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
-                     'z000p073', 'z000p036', 'z000p000'],
+                    ['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825',
+                     'z002p348', 'z001p993', 'z001p716', 'z001p493', 'z001p308',
+                     'z001p151', 'z001p017', 'z000p899', 'z000p795', 'z000p703',
+                     'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366',
+                     'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155',
+                     'z000p113', 'z000p101', 'z000p073', 'z000p036', 'z000p000'],
                 'z_IDNumber':
-                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
-                     '025', '026', '027', '028', '029']}
+                    ['000', '001', '002', '003', '004', '005', '006', '007', '008',
+                     '009', '010', '011', '012', '013', '014', '015', '016', '017',
+                     '018', '019', '020', '021', '022', '023', '024', '025', '026',
+                     '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
 
@@ -195,3 +201,30 @@ class Simulation:
                 return '%03d' % (n,)
             elif self.totalClusters > 1000 and self.totalClusters < 10000:
                 return '%04d' % (n,)
+
+
+    def check_dirs(self) -> np.ndarray:
+        """
+        Loops over all listed clusters and redshifts and returns a boolean for what clusters and redshifts
+        are present in the simulation archive.
+        :return:
+        """
+        iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
+        check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
+        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+            cluster = Cluster(simulation_name=self.simulation_name,
+                              clusterID=halo_id,
+                              redshift=halo_z)
+
+            test = cluster.is_cluster() * cluster.is_redshift()
+            check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
+
+            if not test:
+                print(process_n, halo_id, halo_z)
+
+        return check_matrix
+
+
+if __name__ == '__main__':
+    sim = Simulation(simulation_name='ceagle')
+    sim.check_dirs()

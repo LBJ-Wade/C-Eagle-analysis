@@ -139,14 +139,14 @@ class CorrelationMatrix(pull.FOFRead):
         percent84 = percentiles[2]
 
         # Loop over data dimensions and create text annotations.
-        for i in range(len(x_labels)):
-            for j in range(len(x_labels)):
-                if i is not j:
-                     ax.text(j, i, r"${:.2f}^{{+{:.2f}}}_{{-{:.2f}}}$".format(
-                                median50[i, j],
-                                percent84[i, j] - median50[i, j],
-                                median50[i, j] - percent16[i, j]),
-                                ha="center", va="center", color="k", size = 12)
+        iterator = itertools.product(np.arange(len(x_labels)), repeat=2)
+        for i, j in iterator:
+            if i is not j:
+                 ax.text(j, i, r"${:.2f}^{{+{:.2f}}}_{{-{:.2f}}}$".format(
+                            median50[i, j],
+                            percent84[i, j] - median50[i, j],
+                            median50[i, j] - percent16[i, j]),
+                            ha="center", va="center", color="k", size = 12)
 
         ax.set_title(r"Aperture = {:.2f}".format(apertures) + r"\ $R_{500\ true}$", size = 25)
         ax.grid(b = True, which='minor',color='w', linestyle='-', linewidth=10, alpha = 1)
