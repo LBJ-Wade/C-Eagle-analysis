@@ -127,12 +127,13 @@ class SimulationOutput(Simulation):
         length_operation = np.product(report_matrix.shape)
         counter = 0
         for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
-            if self.sample_completeness[cluster_number, self.redshiftAllowed.index(cluster_redshift)]:
-                out_path = os.path.join(self.pathSave,
-                                        self.simulation_name,
-                                        f'halo{self.halo_Num(cluster_number)}',
-                                        f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
 
+            out_path = os.path.join(self.pathSave,
+                                    self.simulation_name,
+                                    f'halo{self.halo_Num(cluster_number)}',
+                                    f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
+
+            if self.sample_completeness[cluster_number, self.redshiftAllowed.index(cluster_redshift)] is True:
                 num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
                 report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] = num_of_files
             else:
