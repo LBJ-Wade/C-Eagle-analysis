@@ -86,11 +86,13 @@ def main():
 
             if not test:
                 print(process_n, halo_id, halo_z)
-        print(check_matrix)
+        np.save(f'{c.simulation_name}_sample_completeness.npy', check_matrix)
+        print(len(np.where(check_matrix == True)[0])/np.product(check_matrix.shape)*100)
         return check_matrix
 
-    sim = Simulation(simulation_name='ceagle')
-    check_dirs(sim)
+    for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
+        s = Simulation(simulation_name=sim)
+        check_dirs(s)
 
 if __name__ == "__main__":
 

@@ -38,6 +38,7 @@ class Simulation:
                      '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
+            # self.sample_completeness = np.load(f'{self.simulation_name}_sample_completeness.npy')
 
         elif self.simulation_name == 'celr_b':
             self.simulation = 'CELR-bahamas'
