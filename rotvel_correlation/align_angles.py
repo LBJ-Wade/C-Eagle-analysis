@@ -233,10 +233,10 @@ class TrendZ:
         ax.errorbar(z_master, percent84, color='red', lw=1)
 
         widths = z_master[1:]-z_master[:-1]
-        widths = np.append(widths, widths[0])
+        widths = np.append(widths, widths[-1])
 
-        ax.bar(z_master, percent84 - median50, width = widths[::-1], bottom = median50, color = 'lime', alpha = 0.3)
-        ax.bar(z_master, median50 - percent16, width = widths[::-1], bottom = percent16, color = 'lime', alpha = 0.3)
+        ax.bar(z_master, percent84 - median50, width = widths, bottom = median50, color = 'lime', alpha = 0.3)
+        ax.bar(z_master, median50 - percent16, width = widths, bottom = percent16, color = 'lime', alpha = 0.3)
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
