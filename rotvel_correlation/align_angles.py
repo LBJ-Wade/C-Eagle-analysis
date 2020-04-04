@@ -228,12 +228,9 @@ class TrendZ:
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
-        ax.errorbar(z_master, percent16, color='red', lw=1)
-        ax.errorbar(z_master, median50, color='red', lw=2.5, marker='o')
-        ax.errorbar(z_master, percent84, color='red', lw=1)
-
-        widths = z_master[1:]-z_master[:-1]
-        widths = np.append(widths, widths[-1])
+        ax.errorbar(z_master, percent16, yerr = 1, color='red', linestyle = None, lw=1, marker='o')
+        ax.errorbar(z_master, median50,  yerr = 1, color='red', linestyle = None, lw=2.5, marker='o')
+        ax.errorbar(z_master, percent84, yerr = 1, color='red', linestyle = None, lw=1, marker='o')
 
         ax.fill_between(z_master, percent84, median50, color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, median50, percent16, color = 'lime', alpha = 0.3, step='mid')
