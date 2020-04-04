@@ -689,7 +689,7 @@ if __name__ == '__main__':
             out.push_peculiar_velocity()
             out.push_angular_momentum()
         """
-        for sim_name in ['ceagle']:
+        for sim_name in ['macsis']:
 
             # Set-up the MPI allocation schedule
             sim = Simulation(simulation_name=sim_name)
