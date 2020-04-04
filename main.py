@@ -82,7 +82,7 @@ def main():
                         clusterID=halo_id,
                         redshift=halo_z)
 
-            redshift_threshold = redshift_str2num(halo_z) < 1.5
+            redshift_threshold = redshift_str2num(halo_z) < 1.8
             test = c.is_cluster() * c.is_redshift() * redshift_threshold
             check_matrix[halo_id][self.redshiftAllowed[::-1].index(halo_z)] = test
             print(process_n, halo_id, halo_z, test)
