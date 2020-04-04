@@ -228,9 +228,9 @@ class TrendZ:
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
-        ax.errorbar(z_master, percent16, yerr = 5, color='green', linestyle = None, marker='o', capsize=3)
-        ax.errorbar(z_master, median50,  yerr = 5, color='green', linestyle = None, marker='o', capsize=3)
-        ax.errorbar(z_master, percent84, yerr = 5, color='green', linestyle = None, marker='o', capsize=3)
+        ax.errorbar(z_master, percent16, yerr = 5, color='green', linestyle = 'none', marker='o', capsize=3)
+        ax.errorbar(z_master, median50,  yerr = 5, color='green', linestyle = 'none', marker='o', capsize=3)
+        ax.errorbar(z_master, percent84, yerr = 5, color='green', linestyle = 'none', marker='o', capsize=3)
         ax.fill_between(z_master, percent84, median50, color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, median50, percent16, color = 'lime', alpha = 0.3, step='mid')
 
