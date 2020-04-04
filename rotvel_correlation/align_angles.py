@@ -235,8 +235,8 @@ class TrendZ:
         widths = z_master[1:]-z_master[:-1]
         widths = np.append(widths, widths[-1])
 
-        ax.fill_between(z_master, percent84, y0=median50, color = 'lime', alpha = 0.3, step='mid')
-        ax.fill_between(z_master, median50, y0=percent16, color = 'lime', alpha = 0.3, step='mid')
+        ax.fill_between(z_master, percent84, median50, color = 'lime', alpha = 0.3, step='mid')
+        ax.fill_between(z_master, median50, percent16, color = 'lime', alpha = 0.3, step='mid')
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
