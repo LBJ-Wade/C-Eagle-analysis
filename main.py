@@ -85,9 +85,8 @@ def main():
             redshift_threshold = redshift_str2num(halo_z) < 1.5
             test = c.is_cluster() * c.is_redshift() * redshift_threshold
             check_matrix[halo_id][self.redshiftAllowed[::-1].index(halo_z)] = test
+            print(process_n, halo_id, halo_z, test)
 
-            if not test:
-                print(process_n, halo_id, halo_z)
         np.save(f'import_toolkit/{c.simulation_name}_sample_completeness.npy', check_matrix)
         print(len(np.where(check_matrix == True)[0])/np.product(check_matrix.shape)*100)
         return check_matrix
