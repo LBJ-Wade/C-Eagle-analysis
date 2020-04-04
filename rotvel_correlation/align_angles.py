@@ -208,7 +208,7 @@ class TrendZ:
         else:
             print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
             angle_master = np.zeros((len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
-            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed[::-1])
             for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
                 print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
                 cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)

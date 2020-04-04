@@ -689,11 +689,11 @@ if __name__ == '__main__':
             out.push_peculiar_velocity()
             out.push_angular_momentum()
         """
-        for sim_name in ['macsis']:
+        for sim_name in ['celr_e', 'celr_b']:
 
             # Set-up the MPI allocation schedule
             sim = Simulation(simulation_name=sim_name)
-            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed[::-1])
             print(f"{sim.simulation:=^100s}")
             print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
                   f"{' halo redshift ':^20s}\n")

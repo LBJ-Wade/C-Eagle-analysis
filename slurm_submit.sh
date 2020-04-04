@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH --ntasks 224                                           # The number of cores you need...
-#SBATCH -J macsis                                            # Give it something meaningful.
+#SBATCH -J celrs                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
 #SBATCH -p cosma6                                              # or some other partition, e.g. cosma, cosma6, etc.
