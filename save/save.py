@@ -155,11 +155,11 @@ class SimulationOutput(Simulation):
                   extent=(0, len(self.redshiftAllowed),
                           0, self.totalClusters))
 
-        patch_1 = Patch(color='black', label='0 files', edgecolor='k', linewidth=1)
-        patch_2 = Patch(color='red', label='1 - 3 files', edgecolor='k', linewidth=1)
-        patch_3 = Patch(color='orange', label=f'4 - {expected_total_files - 1} files', edgecolor='k', linewidth=1)
-        patch_4 = Patch(color='lime', label=f'{expected_total_files} files', edgecolor='k', linewidth=1)
-        patch_5 = Patch(color='white', label='Excluded', edgecolor='k', linewidth=1)
+        patch_1 = Patch(facecolor='black', label='0 files', edgecolor='k', linewidth=1)
+        patch_2 = Patch(facecolor='red', label='1 - 3 files', edgecolor='k', linewidth=1)
+        patch_3 = Patch(facecolor='orange', label=f'4 - {expected_total_files - 1} files', edgecolor='k', linewidth=1)
+        patch_4 = Patch(facecolor='lime', label=f'{expected_total_files} files', edgecolor='k', linewidth=1)
+        patch_5 = Patch(facecolor='white', label='Excluded', edgecolor='k', linewidth=1)
         ax.legend(handles=[patch_4, patch_3, patch_2, patch_1, patch_5],
                   loc='upper right',
                   labelspacing=1.5,
