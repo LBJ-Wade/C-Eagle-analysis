@@ -42,8 +42,8 @@ class Simulation:
                      '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
+            # self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+            #                                                 f'{self.simulation_name}_sample_completeness.npy'))
 
         elif self.simulation_name == 'celr_b':
             self.simulation = 'CELR-bahamas'
@@ -55,16 +55,21 @@ class Simulation:
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
             self.zcat = {
                 'z_value':
-                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
-                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
-                     'z000p073', 'z000p036', 'z000p000'],
+                    ['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825',
+                     'z002p348', 'z001p993', 'z001p716', 'z001p493', 'z001p308',
+                     'z001p151', 'z001p017', 'z000p899', 'z000p795', 'z000p703',
+                     'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366',
+                     'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155',
+                     'z000p113', 'z000p101', 'z000p073', 'z000p036', 'z000p000'],
                 'z_IDNumber':
-                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
-                     '025', '026', '027', '028', '029']}
+                    ['000', '001', '002', '003', '004', '005', '006', '007', '008',
+                     '009', '010', '011', '012', '013', '014', '015', '016', '017',
+                     '018', '019', '020', '021', '022', '023', '024', '025', '026',
+                     '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
+            # self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+            #                                                 f'{self.simulation_name}_sample_completeness.npy'))
 
 
         elif self.simulation_name == 'celr_e':
@@ -77,16 +82,21 @@ class Simulation:
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
             self.zcat = {
                 'z_value':
-                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
-                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
-                     'z000p073', 'z000p036', 'z000p000'],
+                    ['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825',
+                     'z002p348', 'z001p993', 'z001p716', 'z001p493', 'z001p308',
+                     'z001p151', 'z001p017', 'z000p899', 'z000p795', 'z000p703',
+                     'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366',
+                     'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155',
+                     'z000p113', 'z000p101', 'z000p073', 'z000p036', 'z000p000'],
                 'z_IDNumber':
-                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
-                     '025', '026', '027', '028', '029']}
+                    ['000', '001', '002', '003', '004', '005', '006', '007', '008',
+                     '009', '010', '011', '012', '013', '014', '015', '016', '017',
+                     '018', '019', '020', '021', '022', '023', '024', '025', '026',
+                     '027', '028', '029']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
+            # self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+            #                                                 f'{self.simulation_name}_sample_completeness.npy'))
 
 
         elif self.simulation_name == 'macsis':
@@ -111,8 +121,8 @@ class Simulation:
                      '014', '015', '016', '017', '018', '019', '020', '021', '022']}
             self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
+            # self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
+            #                                                 f'{self.simulation_name}_sample_completeness.npy'))
 
 
             self.halo_num_catalogue_contiguous = [

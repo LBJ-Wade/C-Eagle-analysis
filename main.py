@@ -67,6 +67,7 @@ def main():
     import numpy as np
     from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
+    from import_toolkit._cluster_retriever import redshift_str2num
 
     def check_dirs(self) -> np.ndarray:
         """
@@ -81,7 +82,8 @@ def main():
                         clusterID=halo_id,
                         redshift=halo_z)
 
-            test = c.is_cluster() * c.is_redshift()
+            redshift_threshold = redshift_str2num(halo_z) < 1.6
+            test = c.is_cluster() * c.is_redshift() * redshift_threshold
             check_matrix[halo_id][self.redshiftAllowed[::-1].index(halo_z)] = test
 
             if not test:
