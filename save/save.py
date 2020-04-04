@@ -159,7 +159,8 @@ class SimulationOutput(Simulation):
         patch_2 = Patch(color='red', label='1 - 3 files', edgecolor='k')
         patch_3 = Patch(color='orange', label=f'4 - {expected_total_files - 1} files', edgecolor='k')
         patch_4 = Patch(color='lime', label=f'{expected_total_files} files', edgecolor='k')
-        ax.legend(handles=[patch_4, patch_3, patch_2, patch_1],
+        patch_5 = Patch(color='white', label='Excluded snaps', edgecolor='k')
+        ax.legend(handles=[patch_4, patch_3, patch_2, patch_1, patch_5],
                   loc='upper right',
                   labelspacing=1.5,
                   handlelength=1,
