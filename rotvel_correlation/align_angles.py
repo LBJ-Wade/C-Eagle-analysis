@@ -14,6 +14,7 @@ etc.
 import numpy as np
 import sys
 import os.path
+import warnings
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
@@ -185,6 +186,7 @@ class TrendZ:
                       simulation_name: str = None,
                       aperture_id: int = 10):
 
+        warnings.filterwarnings("ignore")
         sim = Simulation(simulation_name=simulation_name)
         path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
         aperture_id_str = f'Aperture {aperture_id}'
@@ -226,16 +228,15 @@ class TrendZ:
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
-        ax.plot(z_master, percent16, color='red', lw=1)
-        ax.plot(z_master, median50, color='red', lw=2.5, marker='o')
-        ax.plot(z_master, percent84, color='red', lw=1)
+        ax.errorbar(z_master, percent16, color='red', lw=1)
+        ax.errorbar(z_master, median50, color='red', lw=2.5, marker='o')
+        ax.errorbar(z_master, percent84, color='red', lw=1)
 
-        widths = z_master[1:]-z_master[:-1]
+        widths = self.get_centers_from_bins(z_master[1:])-self.get_centers_from_bins(z_master[:-1])
         widths = np.append(widths, widths[0])
 
-        ax.bar(z_master, percent84 - median50, width = widths, bottom = median50, yerr=1)
-        ax.bar(z_master, median50 - percent16, width = widths, bottom = percent16, yerr=1)
-        ax.bar(z_master, percent16, width = widths, yerr=1)
+        ax.bar(z_master, percent84 - median50, width = widths, bottom = median50, color = 'lime', alpha = 0.3)
+        ax.bar(z_master, median50 - percent16, width = widths, bottom = percent16, color = 'lime', alpha = 0.3)
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
