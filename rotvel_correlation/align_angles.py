@@ -189,7 +189,7 @@ class TrendZ:
         path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
         aperture_id_str = f'Aperture {aperture_id}'
         aperture_float = aperture_id
-        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
+        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[::-1]])
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
 
