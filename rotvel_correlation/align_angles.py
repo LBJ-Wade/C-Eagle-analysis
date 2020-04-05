@@ -284,7 +284,7 @@ class TrendZ:
         ax.add_artist(leg2)
 
         items_labels = r""" REDSHIFT TRENDS
-                            $\Delta \theta \equiv (\mathbf{{\widehat{{L,CoP,v_{{pec}}}}}})$
+                            $\Delta \theta \equiv (\mathbf{{L,\widehat{{CoP}},v_{{pec}}}})$
                             Number of clusters: {:d}
                             $z$ = {:.2f} - {:.2f}
                             Aperture radius = {:.2f} $R_{{200\ true}}$""".format(sim.totalClusters,
