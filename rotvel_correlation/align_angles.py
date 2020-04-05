@@ -353,7 +353,7 @@ if __name__ == '__main__':
     trendz = TrendZ()
     # for aperture in range(20):
     #     if aperture % size is rank:
-    trendz.plot_z_trends(simulation_name='celr_e', aperture_id=10)
+    trendz.plot_z_trends(simulation_name='celr_b', aperture_id=10)
 
 
 
