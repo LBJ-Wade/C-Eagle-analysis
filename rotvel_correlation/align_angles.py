@@ -324,7 +324,7 @@ if __name__ == '__main__':
         matrix.plot_matrix(data[15], aperture[15])
 
     def all_clusters(apertureidx):
-        simulation = Simulation(simulation_name='celr_e')
+        simulation = Simulation(simulation_name='celr_b')
         matrix_list = []
         aperture_list = []
         aperture_self_similar = []
