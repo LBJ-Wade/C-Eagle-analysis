@@ -192,7 +192,7 @@ class TrendZ:
         aperture_id_str = f'Aperture {aperture_id}'
         cluster = Cluster(simulation_name=simulation_name, clusterID=0, redshift='z000p000')
         aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r500
-        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[11:][::-1]])
+        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[11:]])
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
 
@@ -209,14 +209,14 @@ class TrendZ:
         else:
             print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
             angle_master = np.zeros((len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
-            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed[::-1])
+            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
             for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
                 print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
-                if sim.sample_completeness[halo_id, sim.redshiftAllowed[::-1].index(halo_z)]:
+                if sim.sample_completeness[halo_id, sim.redshiftAllowed.index(halo_z)]:
                     cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
                     read = pull.FOFRead(cluster)
                     angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
-                    angle_master[halo_id][sim.redshiftAllowed[::-1].index(halo_z)] = angle
+                    angle_master[halo_id][sim.redshiftAllowed.index(halo_z)] = angle
 
             percent16 = np.percentile(angle_master, 15.9, axis=0)
             median50 = np.percentile(angle_master, 50, axis=0)

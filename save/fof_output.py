@@ -677,53 +677,51 @@ if __name__ == '__main__':
         out.push_thermodynamic_merging_index()
         out.push_substructure_merging_index()
 
-    def mining():
-        """
-        RECORD
-        -----------------------
-        celr_e:
+
+    """
+    RECORD
+    -----------------------
+    celr_e:
+        out.push_R_crit()
+        out.push_apertures()
+        out.push_mass()
+        out.push_centre_of_mass()
+        out.push_peculiar_velocity()
+        out.push_angular_momentum()
+    """
+
+
+    # Set-up the MPI allocation schedule
+    sim = Simulation(simulation_name='celr_e')
+    iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
+    print(f"{sim.simulation:=^100s}")
+    print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
+          f"{' halo redshift ':^20s}\n")
+
+    for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+        if ((sim.sample_completeness[halo_id, sim.redshiftAllowed.index(halo_z)]) and
+                (process_n % size is rank)):
+
+            cluster = Cluster(simulation_name=sim.simulation_name,
+                              clusterID=halo_id,
+                              redshift=halo_z,
+                              comovingframe=False,
+                              requires=data_required)
+
+            out = FOFDatagen(cluster)
             out.push_R_crit()
+            out.push_M_crit()
             out.push_apertures()
             out.push_mass()
             out.push_centre_of_mass()
             out.push_peculiar_velocity()
             out.push_angular_momentum()
-        """
-        for sim_name in ['celr_e', 'celr_b']:
+            out.push_kinetic_energy()
+            out.push_thermal_energy()
+            out.push_substructure_mass()
+            out.push_dynamical_merging_index()
+            out.push_thermodynamic_merging_index()
+            out.push_substructure_fraction()
 
-            # Set-up the MPI allocation schedule
-            sim = Simulation(simulation_name=sim_name)
-            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
-            print(f"{sim.simulation:=^100s}")
-            print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
-                  f"{' halo redshift ':^20s}\n")
-
-            for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-                if ((sim.sample_completeness[halo_id, sim.redshiftAllowed.index(halo_z)]) and
-                        (process_n % size is rank)):
-
-                    cluster = Cluster(simulation_name=sim.simulation_name,
-                                      clusterID=halo_id,
-                                      redshift=halo_z,
-                                      comovingframe=False,
-                                      requires=data_required)
-
-                    out = FOFDatagen(cluster)
-                    out.push_R_crit()
-                    out.push_M_crit()
-                    out.push_apertures()
-                    out.push_mass()
-                    out.push_centre_of_mass()
-                    out.push_peculiar_velocity()
-                    out.push_angular_momentum()
-                    out.push_kinetic_energy()
-                    out.push_thermal_energy()
-                    out.push_substructure_mass()
-                    out.push_dynamical_merging_index()
-                    out.push_thermodynamic_merging_index()
-                    out.push_substructure_fraction()
-
-                    rank_str = '(' + str(rank+1) + '/' + str(size) + ')'
-                    print(f"{rank_str:^30s} | {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
-
-    mining()
+            rank_str = '(' + str(rank+1) + '/' + str(size) + ')'
+            print(f"{rank_str:^30s} | {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
