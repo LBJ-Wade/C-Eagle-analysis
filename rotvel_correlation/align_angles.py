@@ -237,7 +237,7 @@ class TrendZ:
 
         # BOOTSTRAP SAMPLING
         for idx, redshift in np.ndenumerate(z_master):
-            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e2)
+            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e5)
             percent16_mean [idx] = boot_stats['percent16'][0]
             median50_mean [idx]  = boot_stats['median50'][0]
             percent84_mean [idx] = boot_stats['percent84'][0]
@@ -352,9 +352,9 @@ if __name__ == '__main__':
 
 
     trendz = TrendZ()
-    # for aperture in range(20):
-    #     if aperture % size is rank:
-    trendz.plot_z_trends(simulation_name='celr_b', aperture_id=10)
+    for aperture in range(20):
+        if aperture % size is rank:
+            trendz.plot_z_trends(simulation_name='celr_b', aperture_id=aperture)
 
 
 
