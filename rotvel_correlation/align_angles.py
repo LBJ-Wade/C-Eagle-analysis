@@ -190,8 +190,9 @@ class TrendZ:
         sim = Simulation(simulation_name=simulation_name)
         path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
         aperture_id_str = f'Aperture {aperture_id}'
-        aperture_float = aperture_id
-        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[11:][::-1]])
+        cluster = Cluster(simulation_name=simulation_name, clusterID=0, redshift='z000p000')
+        aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r500
+        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[::-1]])
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
 
@@ -215,9 +216,6 @@ class TrendZ:
                 read = pull.FOFRead(cluster)
                 angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
                 angle_master[halo_id][sim.redshiftAllowed.index(halo_z)] = angle
-
-                if process_n is 0:
-                    aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r500
 
             percent16 = np.percentile(angle_master, 15.9, axis=0)
             median50 = np.percentile(angle_master, 50, axis=0)

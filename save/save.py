@@ -47,25 +47,25 @@ class SimulationOutput(Simulation):
         if run_dircheck:
             self.check_data_structure()
 
+    @ProgressBar()
     def check_data_structure(self):
-        print('[ SimulationOutput ]\t==> Checking output data structure...')
 
         if not os.path.exists(os.path.join(self.pathSave, self.simulation_name)):
             os.makedirs(os.path.join(self.pathSave, self.simulation_name))
-        print(f'\t{self.directory_levels[0]} checked.')
+        length_operation = len(self.clusterIDAllowed) * len(self.redshiftAllowed[::-1])
+        counter = 0
 
-        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
-
+        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed[::-1]):
             out_path = os.path.join(self.pathSave,
                                     self.simulation_name,
                                     f'halo{self.halo_Num(cluster_number)}',
                                     f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
-            if not os.path.exists(out_path):
+
+            if (not os.path.exists(out_path) and
+                self.sample_completeness[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)]):
                 os.makedirs(out_path)
-
-        print(f'\t{self.directory_levels[1]} checked.')
-        print(f'\t{self.directory_levels[2]} checked.')
-
+            yield ((counter + 1) / length_operation)  # Give control back to decorator
+            counter += 1
 
     @staticmethod
     def list_files(startpath):
