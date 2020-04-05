@@ -65,6 +65,7 @@ def time_func(function):
 def main():
     import itertools
     import numpy as np
+    import os
     from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
@@ -93,9 +94,14 @@ def main():
             print([int(j) for j in i])
         return check_matrix
 
-    for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
-        s = Simulation(simulation_name=sim)
-        check_dirs(s)
+    s = Simulation(simulation_name='macsis')
+    for n in s.clusterIDAllowed:
+        path1 = os.path.join(s.pathSave, s.simulation_name, 'macsis',
+                            f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p014')
+        path2 = os.path.join(s.pathSave, s.simulation_name, 'macsis',
+                             f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p140')
+        os.rename(path1, path2)
+
 
 if __name__ == "__main__":
 
