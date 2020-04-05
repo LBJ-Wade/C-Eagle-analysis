@@ -97,9 +97,9 @@ def main():
     s = Simulation(simulation_name='macsis')
     for n in s.clusterIDAllowed:
         path1 = os.path.join(s.pathSave, s.simulation_name,
-                            f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p014')
+                            f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p024')
         path2 = os.path.join(s.pathSave, s.simulation_name,
-                             f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p140')
+                             f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p240')
         os.rename(path1, path2)
 
 
