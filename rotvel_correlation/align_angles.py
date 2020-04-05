@@ -192,7 +192,7 @@ class TrendZ:
         aperture_id_str = f'Aperture {aperture_id}'
         cluster = Cluster(simulation_name=simulation_name, clusterID=0, redshift='z000p000')
         aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r500
-        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[::-1]])
+        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[11:][::-1]])
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
 
