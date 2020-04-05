@@ -319,7 +319,7 @@ if __name__ == '__main__':
 
 
     trendz = TrendZ()
-    trendz.plot_z_trends(simulation_name='celr_e', aperture_id=10)
+    trendz.plot_z_trends(simulation_name='macsis', aperture_id=10)
 
 
 
