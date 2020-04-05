@@ -78,6 +78,7 @@ class CorrelationMatrix(pull.FOFRead):
             The mean and standard deviation (from the bootstrap sample), quoted for each
             percentile and median.
         """
+        n_iterations = int(n_iterations)
         data = np.asarray(data)
         assert data.ndim is 1, f"Expected `data` to have dimensionality 1, got {data.ndim}."
         stats_resampled = np.zeros((0, 3), dtype=np.float)
