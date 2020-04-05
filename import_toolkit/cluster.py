@@ -16,7 +16,8 @@ class Cluster(simulation.Simulation,
                  clusterID: int = 0,
                  redshift: str = None,
                  comovingframe: bool = False,
-                 requires: Dict[str, List[str]] = None):
+                 requires: Dict[str, List[str]] = None,
+                 fastbrowsing: bool = False):
 
         # Link to the base class by initialising it
         super().__init__(simulation_name = simulation_name)
@@ -28,24 +29,26 @@ class Cluster(simulation.Simulation,
         self.comovingframe = comovingframe
         self.requires = requires
 
-        # Set additional cosmoloy attributes from methods
-        self.hubble_param = self.file_hubble_param()
-        self.comic_time   = self.file_comic_time()
-        self.z            = self.file_redshift()
-        self.OmegaBaryon  = self.file_OmegaBaryon()
-        self.Omega0       = self.file_Omega0()
-        self.OmegaLambda  = self.file_OmegaLambda()
+        if not fastbrowsing:
 
-        # Set FoF attributes
-        self.centre_of_potential = self.group_centre_of_potential()
-        self.r200  = self.group_r200()
-        self.r500  = self.group_r500()
-        self.r2500 = self.group_r2500()
-        self.Mtot  = self.group_mass()
-        self.M200  = self.group_M200()
-        self.M500  = self.group_M500()
-        self.M2500 = self.group_M2500()
-        self.NumOfSubhalos = self.NumOfSubhalos(central_FOF = self.centralFOF_groupNumber)
+            # Set additional cosmoloy attributes from methods
+            self.hubble_param = self.file_hubble_param()
+            self.comic_time   = self.file_comic_time()
+            self.z            = self.file_redshift()
+            self.OmegaBaryon  = self.file_OmegaBaryon()
+            self.Omega0       = self.file_Omega0()
+            self.OmegaLambda  = self.file_OmegaLambda()
+
+            # Set FoF attributes
+            self.centre_of_potential = self.group_centre_of_potential()
+            self.r200  = self.group_r200()
+            self.r500  = self.group_r500()
+            self.r2500 = self.group_r2500()
+            self.Mtot  = self.group_mass()
+            self.M200  = self.group_M200()
+            self.M500  = self.group_M500()
+            self.M2500 = self.group_M2500()
+            self.NumOfSubhalos = self.NumOfSubhalos(central_FOF = self.centralFOF_groupNumber)
 
         # Import particle datasets
         if requires is not None:

@@ -18,6 +18,8 @@ import warnings
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.lines import Line2D
+from matplotlib.patches import Patch
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from sklearn.utils import resample
 from typing import List, Dict, Tuple
@@ -191,39 +193,36 @@ class TrendZ:
         path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
         aperture_id_str = f'Aperture {aperture_id}'
         cluster = Cluster(simulation_name=simulation_name, clusterID=0, redshift='z000p000')
-        aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r500
-        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed[11:]])
+        aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r200
+        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
+        z_master = z_master[z_master < 1.8]
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
 
-        if  os.path.isfile(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy') and \
-            os.path.isfile(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy') and \
-            os.path.isfile(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy'):
-
+        if  os.path.isfile(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy'):
             print("Retrieving npy files...")
-
-            percent16 = np.load(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy')
-            median50  = np.load(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy')
-            percent84 = np.load(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy')
+            angle_master = np.load(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy')
 
         else:
             print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
-            angle_master = np.zeros((len(sim.clusterIDAllowed), len(sim.redshiftAllowed)), dtype=np.float)
+            angle_master = np.zeros((sim.totalClusters, len(z_master)), dtype=np.float)
             iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
             for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
                 print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
                 if sim.sample_completeness[halo_id, sim.redshiftAllowed.index(halo_z)]:
-                    cluster = Cluster(simulation_name=simulation_name, clusterID=halo_id, redshift=halo_z)
+                    cluster = Cluster(simulation_name=simulation_name,
+                                      clusterID=halo_id,
+                                      redshift=halo_z,
+                                      fastbrowsing=True)
                     read = pull.FOFRead(cluster)
                     angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
-                    angle_master[halo_id][sim.redshiftAllowed.index(halo_z)] = angle
+                    angle_master[halo_id, sim.redshiftAllowed.index(halo_z)] = angle
 
-            percent16 = np.percentile(angle_master, 15.9, axis=0)
-            median50 = np.percentile(angle_master, 50, axis=0)
-            percent84 = np.percentile(angle_master, 84.1, axis=0)
-            np.save(path + f'redshift_rotTvelT_percent16_aperture_{aperture_id}.npy', percent16)
-            np.save(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy', median50)
-            np.save(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy', percent84)
+            np.save(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy', angle_master)
+
+        percent16 = np.percentile(angle_master, 15.9, axis=0)
+        median50 = np.percentile(angle_master, 50, axis=0)
+        percent84 = np.percentile(angle_master, 84.1, axis=0)
 
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
@@ -248,14 +247,27 @@ class TrendZ:
         ax.fill_between(z_master, percent16 - error, percent16 + error, color = 'lime', alpha = 0.3, step='mid',
                         edgecolor='none')
 
+        perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
+        perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'$median')
+        perc16 = Line2D([], [], color='k', marker='v', linestyle='-.', markersize=10, label=r'$16^{th}$ percentile')
+        patch_celre = Patch(facecolor='lime', label='CELR-E', edgecolor='k', linewidth=1)
+        patch_celrb = Patch(facecolor='orange', label='CELR-B', edgecolor='k', linewidth=1)
+        patch_macsis = Patch(facecolor='aqua', label='MACSIS', edgecolor='k', linewidth=1)
+
+        leg1 = ax.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=1, fontsize=20)
+        leg2 = ax.legend(handles=[patch_celre, patch_celrb, patch_macsis], loc='lower left', handlelength=1,
+                         fontsize=20)
+        ax.add_artist(leg1)
+        ax.add_artist(leg2)
+
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
                             Number of clusters: {:d}
                             $z$ = {:.2f} - {:.2f}
-                            Aperture radius = {:.2f} $R_{{500\ true}}$""".format(sim.simulation,
+                            Aperture radius = {:.2f} $R_{{200\ true}}$""".format(sim.simulation,
                                                                    sim.totalClusters,
-                                                                   redshift_str2num(sim.redshiftAllowed[0]),
-                                                                   redshift_str2num(sim.redshiftAllowed[-1]),
+                                                                   z_master[0],
+                                                                   z_master[-1],
                                                                    aperture_float)
 
         print(items_labels)
@@ -265,8 +277,8 @@ class TrendZ:
                   transform=ax.transAxes,
                   size=15)
 
-        ax.set_xlabel(r"$z$")
-        ax.set_ylabel(r"$\Delta \theta$ \quad [degrees]")
+        ax.set_xlabel(r"$z$", size=25)
+        ax.set_ylabel(r"$\Delta \theta$ \quad [degrees]", size=25)
         ax.set_ylim(0, 180)
 
         if not os.path.exists(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')):
