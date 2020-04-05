@@ -230,9 +230,10 @@ class TrendZ:
         ax.errorbar(z_master, median50,
                     yerr = [median50 - percent16, percent84 - median50],
                     color='green',
-                    linestyle = 'none',
+                    linestyle = '--',
+                    markersize=5,
                     marker='o',
-                    capsize=3)
+                    capsize=5)
         ax.fill_between(z_master, percent84 - error, percent84 + error, color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, median50 - error,  median50 + error,  color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, percent16 - error, percent16 + error, color = 'lime', alpha = 0.3, step='mid')
