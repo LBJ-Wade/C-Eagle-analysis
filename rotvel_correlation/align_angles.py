@@ -22,7 +22,7 @@ from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from sklearn.utils import resample
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Union
 import itertools
 
 exec(open(os.path.abspath(os.path.join(
@@ -54,7 +54,7 @@ class CorrelationMatrix(pull.FOFRead):
         return np.array([np.percentile(data, percent, axis=0) for percent in percentiles])
 
     @ProgressBar()
-    def bootstrap(self, data: np.ndarray, n_iterations: int = 1e3) -> Dict[str, Tuple[float, float]]:
+    def bootstrap(self, data: np.ndarray, n_iterations: Union[int, float] = 1e3) -> Dict[str, Tuple[float, float]]:
         """
         Class method to compute the median/percentile statistics of a 1D dataset using the
         bootstrap resampling. The bootstrap allows to compute the dispersion of values in the
@@ -230,7 +230,7 @@ class TrendZ:
         percent84_std  = np.zeros_like(z_master)
 
         for idx, redshift in np.ndenumerate(z_master):
-            boot_stats = self.bootstrap(angle_master.T[idx])
+            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e5)
             percent16_mean [idx] = boot_stats['percent16'][0]
             median50_mean [idx]  = boot_stats['median50'][0]
             percent84_mean [idx] = boot_stats['percent84'][0]
@@ -240,6 +240,14 @@ class TrendZ:
 
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
+
+        sim_colors = {
+            'ceagle' : 'pink',
+            'celr_e' : 'lime',
+            'celr_b' : 'orange',
+            'macsis' : 'aqua',
+        }
+
         # ax.errorbar(z_master, median50,
         #             yerr = [median50 - percent16, percent84 - median50],
         #             color='green',
@@ -247,25 +255,32 @@ class TrendZ:
         #             markersize=5,
         #             marker='o',
         #             capsize=5)
-        ax.plot(z_master, percent84_mean, color='lime', alpha=1, linestyle='none', marker='^', markersize=6)
-        ax.plot(z_master, median50_mean, color='lime', alpha=1, linestyle='none', marker='o', markersize=6)
-        ax.plot(z_master, percent16_mean, color='lime', alpha=1, linestyle='none', marker='v', markersize=6)
-        ax.plot(z_master, percent84_mean, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
-        ax.plot(z_master, median50_mean, color = 'lime', alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
-        ax.plot(z_master, percent16_mean, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
+        ax.plot(z_master, percent84_mean, color=sim_colors[sim.simulation_name],
+                alpha=1, linestyle='none', marker='^', markersize=6)
+        ax.plot(z_master, median50_mean, color=sim_colors[sim.simulation_name],
+                alpha=1, linestyle='none', marker='o', markersize=6)
+        ax.plot(z_master, percent16_mean, color=sim_colors[sim.simulation_name],
+                alpha=1, linestyle='none', marker='v', markersize=6)
+        ax.plot(z_master, percent84_mean, color = sim_colors[sim.simulation_name],
+                alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
+        ax.plot(z_master, median50_mean, color = sim_colors[sim.simulation_name],
+                alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
+        ax.plot(z_master, percent16_mean, color = sim_colors[sim.simulation_name],
+                alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
         ax.fill_between(z_master, percent84_mean - percent84_std, percent84_mean + percent84_std,
-                        color = 'lime', alpha = 0.3, step='mid', edgecolor='none')
+                        color = sim_colors[sim.simulation_name], alpha = 0.3, step='mid', edgecolor='none')
         ax.fill_between(z_master, median50_mean - median50_std,  median50_mean + median50_std,
-                        color = 'lime', alpha = 0.3, step='mid', edgecolor='none')
+                        color = sim_colors[sim.simulation_name], alpha = 0.3, step='mid', edgecolor='none')
         ax.fill_between(z_master, percent16_mean - percent16_std, percent16_mean + percent16_std,
-                        color = 'lime', alpha = 0.3, step='mid', edgecolor='none')
+                        color = sim_colors[sim.simulation_name], alpha = 0.3, step='mid', edgecolor='none')
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
         perc16 = Line2D([], [], color='k', marker='v', linestyle='-.', markersize=10, label=r'$16^{th}$ percentile')
-        patch_celre = Patch(facecolor='lime', label='CELR-E', edgecolor='k', linewidth=1)
-        patch_celrb = Patch(facecolor='orange', label='CELR-B', edgecolor='k', linewidth=1)
-        patch_macsis = Patch(facecolor='aqua', label='MACSIS', edgecolor='k', linewidth=1)
+        patch_ceagle = Patch(facecolor=sim_colors[0], label='C-EAGLE', edgecolor='k', linewidth=1)
+        patch_celre = Patch(facecolor=sim_colors[1], label='CELR-E', edgecolor='k', linewidth=1)
+        patch_celrb = Patch(facecolor=sim_colors[2], label='CELR-B', edgecolor='k', linewidth=1)
+        patch_macsis = Patch(facecolor=sim_colors[3], label='MACSIS', edgecolor='k', linewidth=1)
 
         leg1 = ax.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=1, fontsize=20)
         leg2 = ax.legend(handles=[patch_celre, patch_celrb, patch_macsis], loc='lower left', handlelength=1,
