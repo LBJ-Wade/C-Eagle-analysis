@@ -224,7 +224,7 @@ class TrendZ:
             np.save(path + f'redshift_rotTvelT_median50_aperture_{aperture_id}.npy', median50)
             np.save(path + f'redshift_rotTvelT_percent84_aperture_{aperture_id}.npy', percent84)
 
-        fig = plt.figure(figsize=(12, 12))
+        fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
         error = 5
         # ax.errorbar(z_master, median50,
