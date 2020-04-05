@@ -277,10 +277,10 @@ class TrendZ:
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
         perc16 = Line2D([], [], color='k', marker='v', linestyle='-.', markersize=10, label=r'$16^{th}$ percentile')
-        patch_ceagle = Patch(facecolor=sim_colors[0], label='C-EAGLE', edgecolor='k', linewidth=1)
-        patch_celre = Patch(facecolor=sim_colors[1], label='CELR-E', edgecolor='k', linewidth=1)
-        patch_celrb = Patch(facecolor=sim_colors[2], label='CELR-B', edgecolor='k', linewidth=1)
-        patch_macsis = Patch(facecolor=sim_colors[3], label='MACSIS', edgecolor='k', linewidth=1)
+        patch_ceagle = Patch(facecolor=sim_colors['ceagle'], label='C-EAGLE', edgecolor='k', linewidth=1)
+        patch_celre = Patch(facecolor=sim_colors['celr_e'], label='CELR-E', edgecolor='k', linewidth=1)
+        patch_celrb = Patch(facecolor=sim_colors['celr_b'], label='CELR-B', edgecolor='k', linewidth=1)
+        patch_macsis = Patch(facecolor=sim_colors['macsis'], label='MACSIS', edgecolor='k', linewidth=1)
 
         leg1 = ax.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=3, fontsize=20)
         leg2 = ax.legend(handles=[patch_celre, patch_celrb, patch_macsis], loc='lower left', handlelength=1,
