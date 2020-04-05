@@ -220,13 +220,24 @@ class TrendZ:
 
             np.save(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy', angle_master)
 
-        percent16 = np.percentile(angle_master, 15.9, axis=0)
-        median50 = np.percentile(angle_master, 50, axis=0)
-        percent84 = np.percentile(angle_master, 84.1, axis=0)
+        percent16_mean = np.zeros_like(z_master)
+        median50_mean  = np.zeros_like(z_master)
+        percent84_mean = np.zeros_like(z_master)
+        percent16_std  = np.zeros_like(z_master)
+        median50_std   = np.zeros_like(z_master)
+        percent84_std  = np.zeros_like(z_master)
+
+        for idx, redshift in np.ndenumerate(z_master):
+            boot_stats = self.bootstrap(angle_master[:, idx])
+            percent16_mean [idx] = boot_stats['percent16'][0]
+            median50_mean [idx]  = boot_stats['median50'][0]
+            percent84_mean [idx] = boot_stats['percent84'][0]
+            percent16_std[idx]   = boot_stats['percent16'][1]
+            median50_std[idx]    = boot_stats['median50'][1]
+            percent84_std[idx]   = boot_stats['percent84'][1]
 
         fig = plt.figure(figsize=(10, 10))
         ax = fig.add_subplot(111)
-        error = 5
         # ax.errorbar(z_master, median50,
         #             yerr = [median50 - percent16, percent84 - median50],
         #             color='green',
@@ -234,18 +245,18 @@ class TrendZ:
         #             markersize=5,
         #             marker='o',
         #             capsize=5)
-        ax.plot(z_master, percent84, color='lime', alpha=1, linestyle='none', marker='^', markersize=6)
-        ax.plot(z_master, median50, color='lime', alpha=1, linestyle='none', marker='o', markersize=6)
-        ax.plot(z_master, percent16, color='lime', alpha=1, linestyle='none', marker='v', markersize=6)
-        ax.plot(z_master, percent84, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
-        ax.plot(z_master, median50, color = 'lime', alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
-        ax.plot(z_master, percent16, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
-        ax.fill_between(z_master, percent84 - error, percent84 + error, color = 'lime', alpha = 0.3, step='mid',
-                        edgecolor='none')
-        ax.fill_between(z_master, median50 - error,  median50 + error,  color = 'lime', alpha = 0.3, step='mid',
-                        edgecolor='none')
-        ax.fill_between(z_master, percent16 - error, percent16 + error, color = 'lime', alpha = 0.3, step='mid',
-                        edgecolor='none')
+        ax.plot(z_master, percent84_mean, color='lime', alpha=1, linestyle='none', marker='^', markersize=6)
+        ax.plot(z_master, median50_mean, color='lime', alpha=1, linestyle='none', marker='o', markersize=6)
+        ax.plot(z_master, percent16_mean, color='lime', alpha=1, linestyle='none', marker='v', markersize=6)
+        ax.plot(z_master, percent84_mean, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
+        ax.plot(z_master, median50_mean, color = 'lime', alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
+        ax.plot(z_master, percent16_mean, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
+        ax.fill_between(z_master, percent84_mean - percent84_std, percent84_mean + percent84_std,
+                        color = 'lime', alpha = 0.3, step='mid', edgecolor='none')
+        ax.fill_between(z_master, median50_mean - median50_std,  median50_mean + median50_std,
+                        color = 'lime', alpha = 0.3, step='mid', edgecolor='none')
+        ax.fill_between(z_master, percent16_mean - percent16_std, percent16_mean + percent16_std,
+                        color = 'lime', alpha = 0.3, step='mid', edgecolor='none')
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
