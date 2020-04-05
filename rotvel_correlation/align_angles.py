@@ -256,11 +256,11 @@ class TrendZ:
         #             marker='o',
         #             capsize=5)
         ax.plot(z_master, percent84_mean, color=sim_colors[sim.simulation_name],
-                alpha=1, linestyle='none', marker='^', markersize=6)
+                alpha=1, linestyle='none', marker='^', markersize=10)
         ax.plot(z_master, median50_mean, color=sim_colors[sim.simulation_name],
-                alpha=1, linestyle='none', marker='o', markersize=6)
+                alpha=1, linestyle='none', marker='o', markersize=10)
         ax.plot(z_master, percent16_mean, color=sim_colors[sim.simulation_name],
-                alpha=1, linestyle='none', marker='v', markersize=6)
+                alpha=1, linestyle='none', marker='v', markersize=10)
         ax.plot(z_master, percent84_mean, color = sim_colors[sim.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
         ax.plot(z_master, median50_mean, color = sim_colors[sim.simulation_name],
@@ -282,7 +282,7 @@ class TrendZ:
         patch_celrb = Patch(facecolor=sim_colors[2], label='CELR-B', edgecolor='k', linewidth=1)
         patch_macsis = Patch(facecolor=sim_colors[3], label='MACSIS', edgecolor='k', linewidth=1)
 
-        leg1 = ax.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=1, fontsize=20)
+        leg1 = ax.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=3, fontsize=20)
         leg2 = ax.legend(handles=[patch_celre, patch_celrb, patch_macsis], loc='lower left', handlelength=1,
                          fontsize=20)
         ax.add_artist(leg1)
