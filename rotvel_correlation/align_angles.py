@@ -10,6 +10,10 @@ then in a format that can be used for plotting, further processing
 etc.
 -------------------------------------------------------------------
 """
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 
 import numpy as np
 import sys
@@ -192,6 +196,8 @@ class TrendZ:
         warnings.filterwarnings("ignore")
         sim = Simulation(simulation_name=simulation_name)
         path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
+        if not os.path.exists(path):
+            os.makedirs(path)
         aperture_id_str = f'Aperture {aperture_id}'
         cluster = Cluster(simulation_name=simulation_name, clusterID=0, redshift='z000p000')
         aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r200
@@ -200,9 +206,9 @@ class TrendZ:
         print(f"{sim.simulation:=^100s}")
         print(f"{aperture_id_str:^100s}\n")
 
-        if  os.path.isfile(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy'):
+        if  os.path.isfile(os.path.join(path, f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy')):
             print("Retrieving npy files...")
-            angle_master = np.load(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy')
+            angle_master = np.load(os.path.join(path, f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy'))
             angle_master = np.asarray(angle_master)
 
         else:
@@ -220,7 +226,7 @@ class TrendZ:
                     angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
                     angle_master[halo_id, sim.redshiftAllowed.index(halo_z)] = angle
 
-            np.save(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy', angle_master)
+            np.save(os.path.join(path, f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy'), angle_master)
 
         percent16_mean = np.zeros_like(z_master)
         median50_mean  = np.zeros_like(z_master)
@@ -229,8 +235,9 @@ class TrendZ:
         median50_std   = np.zeros_like(z_master)
         percent84_std  = np.zeros_like(z_master)
 
+        # BOOTSTRAP SAMPLING
         for idx, redshift in np.ndenumerate(z_master):
-            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e2)
+            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e5)
             percent16_mean [idx] = boot_stats['percent16'][0]
             median50_mean [idx]  = boot_stats['median50'][0]
             percent84_mean [idx] = boot_stats['percent84'][0]
@@ -302,18 +309,7 @@ class TrendZ:
         ax.set_xlabel(r"$z$", size=25)
         ax.set_ylabel(r"$\Delta \theta$ \quad [degrees]", size=25)
         ax.set_ylim(0, 180)
-
-
-        if not os.path.exists(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')):
-            os.makedirs(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation'))
-
-        plt.savefig(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation',
-                                 f'redshift_rotTvelT_aperture_{aperture_id}.png'), dpi=300)
-
-
-
-
-
+        plt.savefig(os.path.join(path, f'redshift_rotTvelT_aperture_{aperture_id}.png'), dpi=300)
 
 
 if __name__ == '__main__':
@@ -355,7 +351,9 @@ if __name__ == '__main__':
 
 
     trendz = TrendZ()
-    trendz.plot_z_trends(simulation_name='macsis', aperture_id=10)
+    for aperture in range(20):
+        if aperture+1 % size is rank:
+            trendz.plot_z_trends(simulation_name='macsis', aperture_id=aperture)
 
 
 

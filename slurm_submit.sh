@@ -1,7 +1,7 @@
 #!/bin/bash -l
 
 #SBATCH --ntasks 115                                           # The number of cores you need...
-#SBATCH -J celrb                                            # Give it something meaningful.
+#SBATCH -J angles                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
 #SBATCH -p cosma6                                              # or some other partition, e.g. cosma, cosma6, etc.
@@ -21,8 +21,8 @@ module load openmpi
 module load hdf5
 
 # Run the program
-mpiexec -n $SLURM_NTASKS python3 ./save/fof_output.py
-
+#mpiexec -n $SLURM_NTASKS python3 ./save/fof_output.py
+mpiexec -n $SLURM_NTASKS python3 ./rotvel_correlation/align_angles.py
 
 
 ### Multiples of 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 480, 512, 544, 576, 608
