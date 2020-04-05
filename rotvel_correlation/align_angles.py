@@ -346,7 +346,8 @@ if __name__ == '__main__':
         matrix.plot_matrix(matrix_list, average_aperture)
         print(f"Saving matrix | aperture {apertureidx} | redshift {cluster.redshift}")
         plt.savefig(os.path.join(simulation.pathSave, simulation.simulation_name, 'rotvel_correlation',
-                                 f'meanPMstd_{cluster.redshift}_aperture_{apertureidx}.png'))
+                                 f'{simulation.simulation_name}_meanPMstd_{cluster.redshift}_aperture'
+                                 f'_{apertureidx}.png'))
 
 
 

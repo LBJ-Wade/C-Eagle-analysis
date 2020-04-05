@@ -181,7 +181,7 @@ class SimulationOutput(Simulation):
                                  f"{self.simulation_name}_OutputStatusReport_{timestr}.png"), dpi=400)
 
 if __name__ == '__main__':
-    for sim in ['ceagle', 'celr_e', 'celr_b', 'macsis']:
+    for sim in ['celr_b']:
         out = SimulationOutput(simulation_name = sim, run_dircheck = False)
         print(f"{out.simulation:=^100s}")
         out.status_plot()
