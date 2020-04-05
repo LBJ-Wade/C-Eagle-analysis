@@ -52,17 +52,17 @@ class SimulationOutput(Simulation):
 
         if not os.path.exists(os.path.join(self.pathSave, self.simulation_name)):
             os.makedirs(os.path.join(self.pathSave, self.simulation_name))
-        length_operation = len(self.clusterIDAllowed) * len(self.redshiftAllowed[::-1])
+        length_operation = len(self.clusterIDAllowed) * len(self.redshiftAllowed)
         counter = 0
 
-        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed[::-1]):
+        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
             out_path = os.path.join(self.pathSave,
                                     self.simulation_name,
                                     f'halo{self.halo_Num(cluster_number)}',
                                     f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
 
             if (not os.path.exists(out_path) and
-                self.sample_completeness[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)]):
+                self.sample_completeness[cluster_number, self.redshiftAllowed.index(cluster_redshift)]):
                 os.makedirs(out_path)
             yield ((counter + 1) / length_operation)  # Give control back to decorator
             counter += 1
@@ -125,18 +125,18 @@ class SimulationOutput(Simulation):
         report_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.int)
         length_operation = np.product(report_matrix.shape)
         counter = 0
-        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed[::-1]):
+        for cluster_number, cluster_redshift in itertools.product(self.clusterIDAllowed, self.redshiftAllowed):
 
             out_path = os.path.join(self.pathSave,
                                     self.simulation_name,
                                     f'halo{self.halo_Num(cluster_number)}',
                                     f'halo{self.halo_Num(cluster_number)}_{cluster_redshift}')
 
-            if self.sample_completeness[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)]:
+            if self.sample_completeness[cluster_number, self.redshiftAllowed.index(cluster_redshift)]:
                 num_of_files = len([name for name in os.listdir(out_path) if os.path.isfile(os.path.join(out_path, name))])
-                report_matrix[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)] = num_of_files
+                report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] = num_of_files
             else:
-                report_matrix[cluster_number, self.redshiftAllowed[::-1].index(cluster_redshift)] = -1
+                report_matrix[cluster_number, self.redshiftAllowed.index(cluster_redshift)] = -1
             yield ((counter + 1) / length_operation)  # Give control back to decorator
             counter += 1
 
@@ -172,7 +172,7 @@ class SimulationOutput(Simulation):
         ax.set_xlabel(r'redshift', size=20)
         ax.set_ylabel(r'Cluster ID', size=20)
         ax.set_xticks(list(range(0, len(self.redshiftAllowed), 4)))
-        redhifts_ticks = [self.redshiftAllowed[::-1][i] for i in range(0, len(self.redshiftAllowed), 4)]
+        redhifts_ticks = [self.redshiftAllowed[i] for i in range(0, len(self.redshiftAllowed), 4)]
         redhifts_ticks = [f"{redshift_str2num(z):.1f}" for z in redhifts_ticks]
         ax.set_xticklabels(redhifts_ticks)
         plt.tight_layout()

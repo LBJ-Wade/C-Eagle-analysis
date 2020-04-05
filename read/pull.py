@@ -45,7 +45,7 @@ class FOFRead(Simulation):
        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
            apertures = np.array(input_file.get('Apertures'))
 
-        return apertures
+       return apertures
 
     def pull_angmom_alignment_angles(self):
         """
