@@ -227,13 +227,16 @@ class TrendZ:
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
         error = 5
-        ax.errorbar(z_master, median50,
-                    yerr = [median50 - percent16, percent84 - median50],
-                    color='green',
-                    linestyle = '--',
-                    markersize=5,
-                    marker='o',
-                    capsize=5)
+        # ax.errorbar(z_master, median50,
+        #             yerr = [median50 - percent16, percent84 - median50],
+        #             color='green',
+        #             linestyle = '--',
+        #             markersize=5,
+        #             marker='o',
+        #             capsize=5)
+        ax.step(z_master, percent84, color = 'lime', alpha = 1, step='mid', linestyle='--')
+        ax.step(z_master, median50, color = 'lime', alpha = 1, step='mid', linestyle='-')
+        ax.step(z_master, percent16, color = 'lime', alpha = 1, step='mid', linestyle='--.')
         ax.fill_between(z_master, percent84 - error, percent84 + error, color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, median50 - error,  median50 + error,  color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, percent16 - error, percent16 + error, color = 'lime', alpha = 0.3, step='mid')
