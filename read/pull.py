@@ -42,15 +42,8 @@ class FOFRead(Simulation):
 
     def pull_apertures(self):
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
-                                                                                   f"found in {self.FOFDirectory}."
-                                                                                   "Check that they have "
-                                                                                   "already been computed for this "
-                                                                                   "cluster and this redshift.")
-
-        # Read aperture data
-        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
-            apertures = np.array(input_file.get('Apertures'))
+       with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
+           apertures = np.array(input_file.get('Apertures'))
 
         return apertures
 
@@ -60,19 +53,7 @@ class FOFRead(Simulation):
         momentum output. This function therefore requires the angular momentum file to exist.
         :return: None
         """
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5')), ("Angular momentum data not "
-                                                                                          f"found in {self.FOFDirectory}."
-                                                                                          "Check that they have "
-                                                                                          "already been computed for "
-                                                                                          "this cluster and this redshift.")
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
-                                                                                  f"found in {self.FOFDirectory}."
-                                                                                  "Check that they have "
-                                                                                  "already been computed for this "
-                                                                                  "cluster and this redshift.")
-
-        # Read aperture data
         with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
             apertures = np.array(input_file.get('Apertures'))
 
@@ -111,20 +92,7 @@ class FOFRead(Simulation):
         momentum output. This function therefore requires the angular momentum file to exist.
         :return: None
         """
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
-                                                                                          f"found in {self.FOFDirectory}."
-                                                                                          "Check that they have "
-                                                                                           "already been computed "
-                                                                                           "for this cluster and "
-                                                                                           "this redshift.")
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
-                                                                                    f"found in {self.FOFDirectory}."
-                                                                                    "Check that they have "
-                                                                                   "already been computed for this "
-                                                                                   "cluster and this redshift.")
-
-        # Read aperture data
         with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
             apertures = np.array(input_file.get('Apertures'))
 
@@ -159,27 +127,7 @@ class FOFRead(Simulation):
     
     def pull_rot_vel_alignment_angles(self):
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
-                                                                                           f"found in {self.FOFDirectory}."
-                                                                                           "Check that they have "
-                                                                                           "already been computed "
-                                                                                           "for this cluster and "
-                                                                                           "this redshift.")
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
-                                                                                   f"found in {self.FOFDirectory}."
-                                                                                   "Check that they have "
-                                                                                   "already been computed for this "
-                                                                                   "cluster and this redshift.")
-
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5')), ("Angular momentum data not "
-                                                                                          f"found in {self.FOFDirectory}."
-                                                                                          "Check that they have "
-                                                                                          "already been computed for "
-                                                                                          "this cluster and this redshift.")
-
-
-        # Read aperture data
         with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
             apertures = np.array(input_file.get('Apertures'))
 
@@ -229,26 +177,7 @@ class FOFRead(Simulation):
 
     def pull_rot_vel_magnitudes_vectors(self):
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
-                                                                                           f"found in {self.FOFDirectory}."
-                                                                                           "Check that they have "
-                                                                                           "already been computed "
-                                                                                           "for this cluster and "
-                                                                                           "this redshift.")
 
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
-                                                                                   f"found in {self.FOFDirectory}."
-                                                                                   "Check that they have "
-                                                                                   "already been computed for this "
-                                                                                   "cluster and this redshift.")
-
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5')), ("Angular momentum data not "
-                                                                                          f"found in {self.FOFDirectory}."
-                                                                                          "Check that they have "
-                                                                                          "already been computed for "
-                                                                                          "this cluster and this redshift.")
-
-        # Read aperture data
         with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
             apertures = np.array(input_file.get('Apertures'))
 
@@ -271,25 +200,6 @@ class FOFRead(Simulation):
         :param vector2_str: expect string with the variable name
         :return: angle between vector 1 and vector 2 in degrees
         """
-
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5')), ("Angular momentum data not "
-                                                                                           f"found in {self.FOFDirectory}."
-                                                                                           "Check that they have "
-                                                                                           "already been computed "
-                                                                                           "for this cluster and "
-                                                                                           "this redshift.")
-
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'apertures.hdf5')), ("Apertures data not "
-                                                                                   f"found in {self.FOFDirectory}."
-                                                                                   "Check that they have "
-                                                                                   "already been computed for this "
-                                                                                   "cluster and this redshift.")
-
-        assert os.path.isfile(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5')), ("Angular momentum data not "
-                                                                                          f"found in {self.FOFDirectory}."
-                                                                                          "Check that they have "
-                                                                                          "already been computed for "
-                                                                                          "this cluster and this redshift.")
 
         with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
             apertures = np.array(input_file.get('Apertures'))
