@@ -226,11 +226,16 @@ class TrendZ:
 
         fig = plt.figure(figsize=(12, 12))
         ax = fig.add_subplot(111)
-        ax.errorbar(z_master, percent16, yerr = 5, color='green', linestyle = 'none', marker='o', capsize=3)
-        ax.errorbar(z_master, median50,  yerr = 5, color='green', linestyle = 'none', marker='o', capsize=3)
-        ax.errorbar(z_master, percent84, yerr = 5, color='green', linestyle = 'none', marker='o', capsize=3)
-        ax.fill_between(z_master, percent84, median50, color = 'lime', alpha = 0.3, step='mid')
-        ax.fill_between(z_master, median50, percent16, color = 'lime', alpha = 0.3, step='mid')
+        error = 5
+        ax.errorbar(z_master, median50,
+                    yerr = [percent84 - median50, median50 - percent16],
+                    color='green',
+                    linestyle = 'none',
+                    marker='o',
+                    capsize=3)
+        ax.fill_between(z_master, percent84 - error, percent84 - error, color = 'lime', alpha = 0.3, step='mid')
+        ax.fill_between(z_master, median50 - error,  median50 - error,  color = 'lime', alpha = 0.3, step='mid')
+        ax.fill_between(z_master, percent16 - error, percent16 - error, color = 'lime', alpha = 0.3, step='mid')
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
