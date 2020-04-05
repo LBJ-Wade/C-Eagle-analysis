@@ -202,6 +202,7 @@ class TrendZ:
         if  os.path.isfile(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy'):
             print("Retrieving npy files...")
             angle_master = np.load(path + f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy')
+            angle_master = np.asarray(angle_master)
 
         else:
             print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
