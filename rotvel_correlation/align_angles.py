@@ -241,11 +241,11 @@ class TrendZ:
         ax.plot(z_master, median50, color = 'lime', alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
         ax.plot(z_master, percent16, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
         ax.fill_between(z_master, percent84 - error, percent84 + error, color = 'lime', alpha = 0.3, step='mid',
-                        edgecolor=None)
+                        edgecolor='none')
         ax.fill_between(z_master, median50 - error,  median50 + error,  color = 'lime', alpha = 0.3, step='mid',
-                        edgecolor=None)
+                        edgecolor='none')
         ax.fill_between(z_master, percent16 - error, percent16 + error, color = 'lime', alpha = 0.3, step='mid',
-                        edgecolor=None)
+                        edgecolor='none')
 
         items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
                             Simulations: {:s}
