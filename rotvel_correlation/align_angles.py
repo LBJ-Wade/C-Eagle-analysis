@@ -230,7 +230,7 @@ class TrendZ:
         percent84_std  = np.zeros_like(z_master)
 
         for idx, redshift in np.ndenumerate(z_master):
-            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e5)
+            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e2)
             percent16_mean [idx] = boot_stats['percent16'][0]
             median50_mean [idx]  = boot_stats['median50'][0]
             percent84_mean [idx] = boot_stats['percent84'][0]
