@@ -248,7 +248,7 @@ class TrendZ:
                         edgecolor='none')
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
-        perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'$median')
+        perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
         perc16 = Line2D([], [], color='k', marker='v', linestyle='-.', markersize=10, label=r'$16^{th}$ percentile')
         patch_celre = Patch(facecolor='lime', label='CELR-E', edgecolor='k', linewidth=1)
         patch_celrb = Patch(facecolor='orange', label='CELR-B', edgecolor='k', linewidth=1)
