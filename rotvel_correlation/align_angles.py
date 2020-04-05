@@ -234,9 +234,12 @@ class TrendZ:
         #             markersize=5,
         #             marker='o',
         #             capsize=5)
-        ax.plot(z_master, percent84, color = 'lime', alpha = 1, drawstyle='steps-mid', linestyle='--')
-        ax.plot(z_master, median50, color = 'lime', alpha = 1,  drawstyle='steps-mid', linestyle='-')
-        ax.plot(z_master, percent16, color = 'lime', alpha = 1, drawstyle='steps-mid', linestyle='-.')
+        ax.plot(z_master, percent84, color='lime', alpha=1, linestyle='none', marker='^', markersize=6)
+        ax.plot(z_master, median50, color='lime', alpha=1, linestyle='none', marker='o', markersize=6)
+        ax.plot(z_master, percent16, color='lime', alpha=1, linestyle='none', marker='v', markersize=6)
+        ax.plot(z_master, percent84, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='--')
+        ax.plot(z_master, median50, color = 'lime', alpha = 0.8,  drawstyle='steps-mid', linestyle='-')
+        ax.plot(z_master, percent16, color = 'lime', alpha = 0.8, drawstyle='steps-mid', linestyle='-.')
         ax.fill_between(z_master, percent84 - error, percent84 + error, color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, median50 - error,  median50 + error,  color = 'lime', alpha = 0.3, step='mid')
         ax.fill_between(z_master, percent16 - error, percent16 + error, color = 'lime', alpha = 0.3, step='mid')
