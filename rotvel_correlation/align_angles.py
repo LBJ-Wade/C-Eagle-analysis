@@ -247,14 +247,8 @@ class TrendZ:
             'celr_b' : 'orange',
             'macsis' : 'aqua',
         }
+        ax.axhline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
 
-        # ax.errorbar(z_master, median50,
-        #             yerr = [median50 - percent16, percent84 - median50],
-        #             color='green',
-        #             linestyle = '--',
-        #             markersize=5,
-        #             marker='o',
-        #             capsize=5)
         ax.plot(z_master, percent84_mean, color=sim_colors[sim.simulation_name],
                 alpha=1, linestyle='none', marker='^', markersize=10)
         ax.plot(z_master, median50_mean, color=sim_colors[sim.simulation_name],
@@ -283,17 +277,17 @@ class TrendZ:
         patch_macsis = Patch(facecolor=sim_colors['macsis'], label='MACSIS', edgecolor='k', linewidth=1)
 
         leg1 = ax.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=3, fontsize=20)
-        leg2 = ax.legend(handles=[patch_celre, patch_celrb, patch_macsis], loc='lower left', handlelength=1,
+        leg2 = ax.legend(handles=[patch_ceagle, patch_celre, patch_celrb, patch_macsis], loc='lower left',
+                         handlelength=1,
                          fontsize=20)
         ax.add_artist(leg1)
         ax.add_artist(leg2)
 
-        items_labels = r"""$(\mathbf{{\widehat{{L,v_{{pec}}}}}})$ REDSHIFT TRENDS
-                            Simulations: {:s}
+        items_labels = r""" REDSHIFT TRENDS
+                            $\Delta \theta \equiv (\mathbf{{\widehat{{L,CoP,v_{{pec}}}}}})$
                             Number of clusters: {:d}
                             $z$ = {:.2f} - {:.2f}
-                            Aperture radius = {:.2f} $R_{{200\ true}}$""".format(sim.simulation,
-                                                                   sim.totalClusters,
+                            Aperture radius = {:.2f} $R_{{200\ true}}$""".format(sim.totalClusters,
                                                                    z_master[0],
                                                                    z_master[-1],
                                                                    aperture_float)
@@ -308,6 +302,7 @@ class TrendZ:
         ax.set_xlabel(r"$z$", size=25)
         ax.set_ylabel(r"$\Delta \theta$ \quad [degrees]", size=25)
         ax.set_ylim(0, 180)
+
 
         if not os.path.exists(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')):
             os.makedirs(os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation'))
