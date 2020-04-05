@@ -262,11 +262,11 @@ class TrendZ:
         ax.plot(z_master, percent16_mean, color = sim_colors[sim.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
         ax.fill_between(z_master, percent84_mean - percent84_std, percent84_mean + percent84_std,
-                        color = sim_colors[sim.simulation_name], alpha = 0.3, step='mid', edgecolor='none')
+                        color = sim_colors[sim.simulation_name], alpha = 0.2, step='mid', edgecolor='none')
         ax.fill_between(z_master, median50_mean - median50_std,  median50_mean + median50_std,
-                        color = sim_colors[sim.simulation_name], alpha = 0.3, step='mid', edgecolor='none')
+                        color = sim_colors[sim.simulation_name], alpha = 0.2, step='mid', edgecolor='none')
         ax.fill_between(z_master, percent16_mean - percent16_std, percent16_mean + percent16_std,
-                        color = sim_colors[sim.simulation_name], alpha = 0.3, step='mid', edgecolor='none')
+                        color = sim_colors[sim.simulation_name], alpha = 0.2, step='mid', edgecolor='none')
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
