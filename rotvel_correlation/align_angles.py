@@ -179,6 +179,7 @@ class TrendZ:
         self.simulation = None
         self.axes = None
         self.path = None
+        self.bootstrap_niters = 10**4
 
     def set_aperture(self, aperture_id: int):
         self.aperture_id = aperture_id
@@ -194,6 +195,9 @@ class TrendZ:
 
     def set_axes(self, axes: Axes) -> None:
         self.axes = axes
+
+    def set_bootstrap_niters(self, niters: Union[int, float]) -> None:
+        self.bootstrap_niters = int(niters)
 
     def get_apertures(self, cluster: Cluster):
         read = pull.FOFRead(cluster)
@@ -254,7 +258,7 @@ class TrendZ:
         percent84_std = np.zeros_like(z_master)
 
         for idx, redshift in np.ndenumerate(z_master):
-            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e5)
+            boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=self.bootstrap_niters)
             percent16_mean[idx] = boot_stats['percent16'][0]
             median50_mean[idx] = boot_stats['median50'][0]
             percent84_mean[idx] = boot_stats['percent84'][0]
@@ -372,6 +376,7 @@ class TrendZ:
             self = cls()
             self.set_aperture(setup['aperture_id'])
             self.set_simulation(setup['simulation_name'])
+            self.set_bootstrap_niters(setup['bootstrap_niters'])
             self.set_axes(setup['axes'])
             self.plot_z_trends()
             self.save_z_trend()
@@ -380,6 +385,7 @@ class TrendZ:
             self = cls()
             self.set_aperture(setup['aperture_id'])
             self.set_axes(setup['axes'])
+            self.set_bootstrap_niters(setup['bootstrap_niters'])
             for sim in setup['simulation_name']:
                 self.set_simulation(sim)
                 self.plot_z_trends()
@@ -431,6 +437,7 @@ if __name__ == '__main__':
         'run_mode'        : 'single_plot',
         'aperture_id'     : 10,
         'simulation_name' : 'celr_b',
+        'bootstrap_niters': 1e3,
         'axes'            : ax,
     }
     trend_z = TrendZ.run_from_dict(setup)
