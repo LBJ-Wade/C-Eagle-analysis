@@ -24,6 +24,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
+from matplotlib.axes import Axes
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from sklearn.utils import resample
 from typing import List, Dict, Tuple, Union
@@ -173,7 +174,26 @@ class TrendZ:
     bootstrap = CorrelationMatrix.bootstrap
 
     def __init__(self):
-        pass
+        warnings.filterwarnings("ignore")
+        self.aperture_id = 10
+        self.simulation = None
+        self.axes = None
+        self.path = None
+
+    def set_aperture(self, aperture_id: int):
+        self.aperture_id = aperture_id
+        aperture_id_str = f'Aperture {self.aperture_id}'
+        print(f"{aperture_id_str:^100s}\n")
+
+    def set_simulation(self, simulation_name: str = None) -> None:
+        self.simulation = Simulation(simulation_name=simulation_name)
+        self.path = os.path.join(self.simulation.pathSave, self.simulation.simulation_name, 'rotvel_correlation')
+        print(f"{self.simulation.simulation:=^100s}")
+        if not os.path.exists(self.path):
+            os.makedirs(self.path)
+
+    def set_axes(self, axes: Axes) -> None:
+        self.axes = axes
 
     def get_apertures(self, cluster: Cluster):
         read = pull.FOFRead(cluster)
@@ -189,64 +209,98 @@ class TrendZ:
         """ return centers from bin sequence """
         return np.sqrt(bins[:-1] * bins[1:])
 
-    def plot_z_trends(self,
-                      simulation_name: str = None,
-                      aperture_id: int = 10):
-
-        warnings.filterwarnings("ignore")
-        sim = Simulation(simulation_name=simulation_name)
-        path = os.path.join(sim.pathSave, sim.simulation_name, 'rotvel_correlation')
-        if not os.path.exists(path):
-            os.makedirs(path)
-        aperture_id_str = f'Aperture {aperture_id}'
-        cluster = Cluster(simulation_name=simulation_name, clusterID=0, redshift='z000p000')
-        aperture_float = self.get_apertures(cluster)[aperture_id] / cluster.r200
-        z_master = np.array([redshift_str2num(z) for z in sim.redshiftAllowed])
+    def make_simstats(self):
+        assert self.simulation is not None
+        z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
         z_master = z_master[z_master < 1.8]
-        print(f"{sim.simulation:=^100s}")
-        print(f"{aperture_id_str:^100s}\n")
 
-        if  os.path.isfile(os.path.join(path, f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy')):
-            print("Retrieving npy files...")
-            angle_master = np.load(os.path.join(path, f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy'))
-            angle_master = np.asarray(angle_master)
+        print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
+        angle_master = np.zeros((self.simulation.totalClusters, len(z_master)), dtype=np.float)
+        iterator = itertools.product(self.simulation.clusterIDAllowed, self.simulation.redshiftAllowed)
 
-        else:
-            print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
-            angle_master = np.zeros((sim.totalClusters, len(z_master)), dtype=np.float)
-            iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
-            for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-                print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
-                if sim.sample_completeness[halo_id, sim.redshiftAllowed.index(halo_z)]:
-                    cluster = Cluster(simulation_name=simulation_name,
-                                      clusterID=halo_id,
-                                      redshift=halo_z,
-                                      fastbrowsing=True)
-                    read = pull.FOFRead(cluster)
-                    angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[aperture_id]
-                    angle_master[halo_id, sim.redshiftAllowed.index(halo_z)] = angle
+        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+            print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
+            if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
+                cluster = Cluster(simulation_name=self.simulation.simulation_name,
+                                  clusterID=halo_id,
+                                  redshift=halo_z,
+                                  fastbrowsing=True)
+                read = pull.FOFRead(cluster)
+                angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[self.aperture_id]
+                angle_master[halo_id, self.simulation.redshiftAllowed.index(halo_z)] = angle
 
-            np.save(os.path.join(path, f'redshift_rotTvelT_simstats_aperture_{aperture_id}.npy'), angle_master)
+        print(f"Saving npy files: redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy")
+        np.save(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy'), angle_master)
+
+    def make_simbootstrap(self):
+        z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
+        z_master = z_master[z_master < 1.8]
+        print(f"{self.simulation.simulation:=^100s}")
+
+        if not os.path.isfile(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy')):
+            warnings.warn(f"File redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy not found.")
+            print("self.make_simstats() activated.")
+            self.make_simstats()
+
+        print(f"Retrieving npy files: redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy")
+        angle_master = np.load(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy'))
+        angle_master = np.asarray(angle_master)
 
         percent16_mean = np.zeros_like(z_master)
-        median50_mean  = np.zeros_like(z_master)
+        median50_mean = np.zeros_like(z_master)
         percent84_mean = np.zeros_like(z_master)
-        percent16_std  = np.zeros_like(z_master)
-        median50_std   = np.zeros_like(z_master)
-        percent84_std  = np.zeros_like(z_master)
+        percent16_std = np.zeros_like(z_master)
+        median50_std = np.zeros_like(z_master)
+        percent84_std = np.zeros_like(z_master)
 
-        # BOOTSTRAP SAMPLING
         for idx, redshift in np.ndenumerate(z_master):
             boot_stats = self.bootstrap(angle_master.T[idx], n_iterations=1e5)
-            percent16_mean [idx] = boot_stats['percent16'][0]
-            median50_mean [idx]  = boot_stats['median50'][0]
-            percent84_mean [idx] = boot_stats['percent84'][0]
-            percent16_std[idx]   = boot_stats['percent16'][1]
-            median50_std[idx]    = boot_stats['median50'][1]
-            percent84_std[idx]   = boot_stats['percent84'][1]
+            percent16_mean[idx] = boot_stats['percent16'][0]
+            median50_mean[idx] = boot_stats['median50'][0]
+            percent84_mean[idx] = boot_stats['percent84'][0]
+            percent16_std[idx] = boot_stats['percent16'][1]
+            median50_std[idx] = boot_stats['median50'][1]
+            percent84_std[idx] = boot_stats['percent84'][1]
 
-        fig = plt.figure(figsize=(10, 10))
-        ax = fig.add_subplot(111)
+        sim_bootstrap = np.asarray([
+            [percent16_mean.tolist(), percent16_std.tolist()],
+            [median50_mean.tolist(), median50_std.tolist()],
+            [percent84_mean.tolist(), percent84_std.tolist()]
+        ])
+
+        print(f"Saving npy files: redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy")
+        np.save(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy'), sim_bootstrap)
+
+
+
+
+    def plot_z_trends(self):
+
+        if self.axes is None:
+            fig = plt.figure(figsize=(10, 10))
+            ax = fig.add_subplot(111)
+            self.set_axes(ax)
+
+        z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
+        z_master = z_master[z_master < 1.8]
+        cluster = Cluster(simulation_name=self.simulation.simulation_name, clusterID=0, redshift='z000p000')
+        aperture_float = self.get_apertures(cluster)[self.aperture_id] / cluster.r200
+
+        if not os.path.isfile(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy')):
+            warnings.warn(f"File redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy not found.")
+            print("self.make_simbootstrap() activated.")
+            self.make_simbootstrap()
+
+        print(f"Retrieving npy files: redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy")
+        sim_bootstrap = np.load(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy'))
+        sim_bootstrap = np.asarray(sim_bootstrap)
+
+        items_labels = f""" REDSHIFT TRENDS
+                            $\Delta \theta \equiv (\mathbf{{L,\widehat{{CoP}},v_{{pec}}}})$
+                            Number of clusters: {self.simulation.totalClusters:d}
+                            $z$ = {z_master[0]:.2f} - {z_master[-1]:.2f}
+                            Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
+        print(items_labels)
 
         sim_colors = {
             'ceagle' : 'pink',
@@ -254,63 +308,84 @@ class TrendZ:
             'celr_b' : 'orange',
             'macsis' : 'aqua',
         }
-        ax.axhline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
 
-        ax.plot(z_master, percent84_mean, color=sim_colors[sim.simulation_name],
+        self.axes.axhline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
+
+        self.axes.plot(z_master, sim_bootstrap[2,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='^', markersize=10)
-        ax.plot(z_master, median50_mean, color=sim_colors[sim.simulation_name],
+        self.axes.plot(z_master, sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='o', markersize=10)
-        ax.plot(z_master, percent16_mean, color=sim_colors[sim.simulation_name],
+        self.axes.plot(z_master, sim_bootstrap[0,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='v', markersize=10)
-        ax.plot(z_master, percent84_mean, color = sim_colors[sim.simulation_name],
+        self.axes.plot(z_master, sim_bootstrap[2,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
-        ax.plot(z_master, median50_mean, color = sim_colors[sim.simulation_name],
+        self.axes.plot(z_master, sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
-        ax.plot(z_master, percent16_mean, color = sim_colors[sim.simulation_name],
+        self.axes.plot(z_master, sim_bootstrap[0,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
-        ax.fill_between(z_master, percent84_mean - percent84_std, percent84_mean + percent84_std,
-                        color = sim_colors[sim.simulation_name], alpha = 0.2, step='mid', edgecolor='none')
-        ax.fill_between(z_master, median50_mean - median50_std,  median50_mean + median50_std,
-                        color = sim_colors[sim.simulation_name], alpha = 0.2, step='mid', edgecolor='none')
-        ax.fill_between(z_master, percent16_mean - percent16_std, percent16_mean + percent16_std,
-                        color = sim_colors[sim.simulation_name], alpha = 0.2, step='mid', edgecolor='none')
+        self.axes.fill_between(z_master,
+                               sim_bootstrap[2,0] - sim_bootstrap[2,1],
+                               sim_bootstrap[2,0] + sim_bootstrap[2,1],
+                               color = sim_colors[self.simulation.simulation_name],
+                               alpha = 0.2, step='mid', edgecolor='none')
+        self.axes.fill_between(z_master,
+                               sim_bootstrap[1,0] - sim_bootstrap[1,1],
+                               sim_bootstrap[1,0] + sim_bootstrap[1,1],
+                               color = sim_colors[self.simulation.simulation_name],
+                               alpha = 0.2, step='mid', edgecolor='none')
+        self.axes.fill_between(z_master,
+                               sim_bootstrap[0, 0] - sim_bootstrap[0, 1],
+                               sim_bootstrap[0, 0] + sim_bootstrap[0, 1],
+                               color = sim_colors[self.simulation.simulation_name],
+                               alpha = 0.2, step='mid', edgecolor='none')
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
         perc16 = Line2D([], [], color='k', marker='v', linestyle='-.', markersize=10, label=r'$16^{th}$ percentile')
         patch_ceagle = Patch(facecolor=sim_colors['ceagle'], label='C-EAGLE', edgecolor='k', linewidth=1)
-        patch_celre = Patch(facecolor=sim_colors['celr_e'], label='CELR-E', edgecolor='k', linewidth=1)
-        patch_celrb = Patch(facecolor=sim_colors['celr_b'], label='CELR-B', edgecolor='k', linewidth=1)
+        patch_celre  = Patch(facecolor=sim_colors['celr_e'], label='CELR-E', edgecolor='k', linewidth=1)
+        patch_celrb  = Patch(facecolor=sim_colors['celr_b'], label='CELR-B', edgecolor='k', linewidth=1)
         patch_macsis = Patch(facecolor=sim_colors['macsis'], label='MACSIS', edgecolor='k', linewidth=1)
 
-        leg1 = ax.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=3, fontsize=20)
-        leg2 = ax.legend(handles=[patch_ceagle, patch_celre, patch_celrb, patch_macsis], loc='lower left',
-                         handlelength=1,
-                         fontsize=20)
-        ax.add_artist(leg1)
-        ax.add_artist(leg2)
+        leg1 = self.axes.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=3, fontsize=20)
+        leg2 = self.axes.legend(handles=[patch_ceagle, patch_celre, patch_celrb, patch_macsis],
+                                loc='lower left', handlelength=1, fontsize=20)
+        self.axes.add_artist(leg1)
+        self.axes.add_artist(leg2)
+        self.axes.text(0.03, 0.97, items_labels,
+                        horizontalalignment='left',
+                        verticalalignment='top',
+                        transform=self.axes.transAxes,
+                        size=15)
 
-        items_labels = r""" REDSHIFT TRENDS
-                            $\Delta \theta \equiv (\mathbf{{L,\widehat{{CoP}},v_{{pec}}}})$
-                            Number of clusters: {:d}
-                            $z$ = {:.2f} - {:.2f}
-                            Aperture radius = {:.2f} $R_{{200\ true}}$""".format(sim.totalClusters,
-                                                                   z_master[0],
-                                                                   z_master[-1],
-                                                                   aperture_float)
+        self.axes.set_xlabel(r"$z$", size=25)
+        self.axes.set_ylabel(r"$\Delta \theta$ \quad [degrees]", size=25)
+        self.axes.set_ylim(0, 180)
 
-        print(items_labels)
-        ax.text(0.03, 0.97, items_labels,
-                  horizontalalignment='left',
-                  verticalalignment='top',
-                  transform=ax.transAxes,
-                  size=15)
+    def save_z_trend(self):
+        plt.savefig(os.path.join(self.path, f'redshift_rotTvelT_aperture_{self.aperture_id}.png'), dpi=300)
 
-        ax.set_xlabel(r"$z$", size=25)
-        ax.set_ylabel(r"$\Delta \theta$ \quad [degrees]", size=25)
-        ax.set_ylim(0, 180)
-        plt.savefig(os.path.join(path, f'redshift_rotTvelT_aperture_{aperture_id}.png'), dpi=300)
+    @classmethod
+    def run_from_dict(cls, setup: Dict[str, Union[int, str, List[str], Axes]]):
 
+        if setup['run_mode'] is 'single_plot':
+            self = cls()
+            self.set_aperture(setup['aperture_id'])
+            self.set_simulation(setup['simulation_name'])
+            self.set_axes(setup['axes'])
+            self.plot_z_trends()
+            self.save_z_trend()
+
+        elif setup['run_mode'] is 'multi_sim':
+            self = cls()
+            self.set_aperture(setup['aperture_id'])
+            self.set_axes(setup['axes'])
+            for sim in setup['simulation_name']:
+                self.set_simulation(sim)
+                self.plot_z_trends()
+            self.save_z_trend()
+
+        return cls
 
 if __name__ == '__main__':
 
@@ -350,11 +425,15 @@ if __name__ == '__main__':
                                  f'_{apertureidx}.png'))
 
 
-
-    trendz = TrendZ()
-    for aperture in range(20):
-        if aperture % size is rank:
-            trendz.plot_z_trends(simulation_name='macsis', aperture_id=aperture)
+    fig = plt.figure(figsize=(10, 10))
+    ax = fig.add_subplot(111)
+    setup = {
+        'run_mode'        : 'single_plot',
+        'aperture_id'     : 10,
+        'simulation_name' : 'celr_b',
+        'axes'            : ax,
+    }
+    trend_z = TrendZ.run_from_dict(setup)
 
 
 
