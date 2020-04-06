@@ -85,7 +85,7 @@ class CorrelationMatrix(pull.FOFRead):
         """
         n_iterations = int(n_iterations)
         data = np.asarray(data)
-        assert data.ndim is 1, f"Expected `data` to have dimensionality 1, got {data.ndim}."
+        assert data.ndim is 1, f"Expected 'data' to have dimensionality 1, got {data.ndim}."
         stats_resampled = np.zeros((0, 3), dtype=np.float)
 
         counter = 0
@@ -275,9 +275,6 @@ class TrendZ:
         print(f"Saving npy files: redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy")
         np.save(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy'), sim_bootstrap)
 
-
-
-
     def plot_z_trends(self):
 
         if self.axes is None:
@@ -300,7 +297,6 @@ class TrendZ:
         sim_bootstrap = np.asarray(sim_bootstrap)
 
         items_labels = f""" REDSHIFT TRENDS
-                            $\Delta \theta \equiv (\mathbf{{L,\widehat{{CoP}},v_{{pec}}}})$
                             Number of clusters: {self.simulation.totalClusters:d}
                             $z$ = {z_master[0]:.2f} - {z_master[-1]:.2f}
                             Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
@@ -363,7 +359,7 @@ class TrendZ:
                         size=15)
 
         self.axes.set_xlabel(r"$z$", size=25)
-        self.axes.set_ylabel(r"$\Delta \theta$ \quad [degrees]", size=25)
+        self.axes.set_ylabel(r"$\Delta \theta \equiv (\mathbf{L},\widehat{CoP},\mathbf{v_{pec}})$ \quad [degrees]", size=25)
         self.axes.set_ylim(0, 180)
 
     def save_z_trend(self):
@@ -390,6 +386,19 @@ class TrendZ:
                 self.set_simulation(sim)
                 self.plot_z_trends()
             self.save_z_trend()
+            
+        elif setup['run_mode'] is 'multi_bootstrap':
+            self = cls()
+            self.set_axes(setup['axes'])
+            self.set_bootstrap_niters(setup['bootstrap_niters'])
+            if type(setup['aperture_id']) is int:
+                setup['aperture_id'] = [setup['aperture_id']]
+            for aperture in setup['aperture_id']:
+                if int(aperture) % size is rank:
+                    self.set_aperture(aperture)
+                    for sim in setup['simulation_name']:
+                        self.set_simulation(sim)
+                        self.make_simbootstrap()
 
         return cls
 
@@ -434,10 +443,10 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(10, 10))
     ax = fig.add_subplot(111)
     setup = {
-        'run_mode'        : 'single_plot',
-        'aperture_id'     : 10,
-        'simulation_name' : 'celr_b',
-        'bootstrap_niters': 1e3,
+        'run_mode'        : 'multi_bootstrap',
+        'aperture_id'     : [0, 3, 5, 7, 10, 15, 18],
+        'simulation_name' : ['celr_b', 'celr_e', 'macsis'],
+        'bootstrap_niters': 1e6,
         'axes'            : ax,
     }
     trend_z = TrendZ.run_from_dict(setup)
