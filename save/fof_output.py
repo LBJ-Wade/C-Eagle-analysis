@@ -692,7 +692,7 @@ if __name__ == '__main__':
 
 
     # Set-up the MPI allocation schedule
-    sim = Simulation(simulation_name='celr_e')
+    sim = Simulation(simulation_name='ceagle')
     iterator = itertools.product(sim.clusterIDAllowed, sim.redshiftAllowed)
     print(f"{sim.simulation:=^100s}")
     print(f"{' CPU (rank/size) ':^30s} | {' CPU process ID ':^25s} | {' halo ID ':^15s} | "
