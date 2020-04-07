@@ -1,6 +1,9 @@
 import time
 import sys
 import subprocess
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+size = comm.Get_size()
 
 def get_current_console_size():
     rows, columns = subprocess.check_output(['stty', 'size']).decode().split()
@@ -111,19 +114,28 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
     Limitation: It uses yield statements as callbacks for the decorator. That
     means you can't yield your result, meaning this progress bar doesn't
     work if your function is intended to be a generator.
+
+    ADDITION 07/04/2020
+    Trigger ProgressNar only when running on live console, i.e. only when running
+    on single core. MPI jobs with active ProgressBar can over-pollute the log-file.
+    If MPI CPU size is not 1, then the decorator wrapper returns the function
+    itself.
     """
     def decorator(func):
         def wrapper(*args, **kwargs):
-            progress_name = normalise_string_len(func.__name__, 25)
-            pb = ProgressBarPrinter(width, step, stream, progress_name)
-            progress_generator = func(*args, **kwargs)
-            try:
-                while True:
-                    progress = next(progress_generator)
-                    pb.update(progress)
-            except StopIteration as result:
-                pb.end()
-                return result.value
+            if size is 1:
+                progress_name = normalise_string_len(func.__name__, 25)
+                pb = ProgressBarPrinter(width, step, stream, progress_name)
+                progress_generator = func(*args, **kwargs)
+                try:
+                    while True:
+                        progress = next(progress_generator)
+                        pb.update(progress)
+                except StopIteration as result:
+                    pb.end()
+                    return result.value
+            else:
+                func(*args, **kwargs)
         return wrapper
     return decorator
 

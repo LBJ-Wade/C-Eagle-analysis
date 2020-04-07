@@ -379,13 +379,17 @@ class TrendZ:
 
         elif setup['run_mode'] is 'multi_sim':
             self = cls()
-            self.set_aperture(setup['aperture_id'])
             self.set_axes(setup['axes'])
             self.set_bootstrap_niters(setup['bootstrap_niters'])
-            for sim in setup['simulation_name']:
-                self.set_simulation(sim)
-                self.plot_z_trends()
-            self.save_z_trend()
+            if type(setup['aperture_id']) is int:
+                setup['aperture_id'] = [setup['aperture_id']]
+            for aperture in setup['aperture_id']:
+                if int(aperture) % size is rank:
+                    self.set_aperture(aperture)
+                    for sim in setup['simulation_name']:
+                        self.set_simulation(sim)
+                        self.plot_z_trends()
+                    self.save_z_trend()
             
         elif setup['run_mode'] is 'multi_bootstrap':
             self = cls()
