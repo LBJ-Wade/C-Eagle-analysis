@@ -1,6 +1,8 @@
 import time
 import sys
 import subprocess
+import os
+from functools import wraps
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
 size = comm.Get_size()
@@ -63,6 +65,7 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
 # More advanced one
 class ProgressBarPrinter:
     def __init__(self, width, step, stream, fname):
+
         self.width = width
         self.block_progress = 0
         self.current_progress = 0
@@ -122,9 +125,9 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
     itself.
     """
     def decorator(func):
-        if size is 2:
-            def wrapper(*args, **kwargs):
-
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            if size is 1:
                 progress_name = normalise_string_len(func.__name__, 25)
                 pb = ProgressBarPrinter(width, step, stream, progress_name)
                 progress_generator = func(*args, **kwargs)
@@ -135,12 +138,14 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
                 except StopIteration as result:
                     pb.end()
                     return result.value
-
-            return wrapper
-        else:
-
-            func
-
+            else:
+                progress_generator = func(*args, **kwargs)
+                try:
+                    while True:
+                        next(progress_generator)
+                except StopIteration as result:
+                    return result.value
+        return wrapper
     return decorator
 
 
@@ -154,7 +159,7 @@ if __name__ == "__main__":
             time.sleep(0.0001)
             yield ((i + 1) / nb_iter)  # Give control back to decorator
         # returning the real result
-        return "My result"
+        return "||My result||"
 
     res = dummyLoop()  # You can still retrieve the result of your function
     print("result:", res)
