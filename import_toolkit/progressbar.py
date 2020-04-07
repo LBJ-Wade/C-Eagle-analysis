@@ -122,8 +122,9 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
     itself.
     """
     def decorator(func):
-        if size is 1:
+        if size is 2:
             def wrapper(*args, **kwargs):
+
                 progress_name = normalise_string_len(func.__name__, 25)
                 pb = ProgressBarPrinter(width, step, stream, progress_name)
                 progress_generator = func(*args, **kwargs)
@@ -134,9 +135,12 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
                 except StopIteration as result:
                     pb.end()
                     return result.value
+
             return wrapper
         else:
-            return func
+
+            func
+
     return decorator
 
 
@@ -145,7 +149,7 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
 if __name__ == "__main__":
     @ProgressBar()  # Decorate the function with the progress bar
     def dummyLoop():
-        nb_iter = 2000
+        nb_iter = 200
         for i in range(nb_iter):
             time.sleep(0.0001)
             yield ((i + 1) / nb_iter)  # Give control back to decorator
@@ -155,23 +159,23 @@ if __name__ == "__main__":
     res = dummyLoop()  # You can still retrieve the result of your function
     print("result:", res)
 
-    @ProgressBar(width=100, step=0.01, stream=sys.stderr)
-    def yieldNaN():
-        nb_iter = 110
-        for i in range(nb_iter):
-            time.sleep(0.01)
-            yield  # Give control back to decorator and increase by step
-        return None
-
-    print("result:", yieldNaN())
-
-
-    def progressbar():
-        import time, inspect
-        print(inspect.stack()[0][3])
-        items = list(range(0, 2000))
-        l = len(items)
-        printProgressBar(0, l, prefix='TEST.progressbar():', suffix='Complete', length=100)
-        for i, item in enumerate(items):
-            time.sleep(0.001)
-            printProgressBar(i + 1, l, prefix='TEST.progressbar():', suffix='Complete', length=100)
+    # @ProgressBar(width=100, step=0.01, stream=sys.stderr)
+    # def yieldNaN():
+    #     nb_iter = 110
+    #     for i in range(nb_iter):
+    #         time.sleep(0.01)
+    #         yield  # Give control back to decorator and increase by step
+    #     return None
+    #
+    # print("result:", yieldNaN())
+    #
+    #
+    # def progressbar():
+    #     import time, inspect
+    #     print(inspect.stack()[0][3])
+    #     items = list(range(0, 2000))
+    #     l = len(items)
+    #     printProgressBar(0, l, prefix='TEST.progressbar():', suffix='Complete', length=100)
+    #     for i, item in enumerate(items):
+    #         time.sleep(0.001)
+    #         printProgressBar(i + 1, l, prefix='TEST.progressbar():', suffix='Complete', length=100)
