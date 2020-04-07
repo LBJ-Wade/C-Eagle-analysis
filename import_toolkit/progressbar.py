@@ -135,7 +135,7 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
                     pb.end()
                     return result.value
             else:
-                func(*args, **kwargs)
+                return func(*args, **kwargs)
         return wrapper
     return decorator
 
