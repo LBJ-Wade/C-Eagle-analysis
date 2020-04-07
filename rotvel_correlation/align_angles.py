@@ -448,7 +448,7 @@ if __name__ == '__main__':
     ax = fig.add_subplot(111)
     setup = {
         'run_mode'        : 'multi_bootstrap',
-        'aperture_id'     : [1, 2, 4, 6, 8, 9, 11, 12, 13, 14, 16, 17],
+        'aperture_id'     : list(range(20)),
         'simulation_name' : ['celr_b', 'celr_e', 'macsis'],
         'bootstrap_niters': 1e6,
         'axes'            : ax,
