@@ -122,8 +122,8 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
     itself.
     """
     def decorator(func):
-        def wrapper(*args, **kwargs):
-            if size is 1:
+        if size is 1:
+            def wrapper(*args, **kwargs):
                 progress_name = normalise_string_len(func.__name__, 25)
                 pb = ProgressBarPrinter(width, step, stream, progress_name)
                 progress_generator = func(*args, **kwargs)
@@ -134,11 +134,11 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
                 except StopIteration as result:
                     pb.end()
                     return result.value
-            else:
-                progress_generator = func(*args, **kwargs)
-                return progress_generator
-        return wrapper
+            return wrapper
+        else:
+            return func
     return decorator
+
 
 
 # Example usage:
