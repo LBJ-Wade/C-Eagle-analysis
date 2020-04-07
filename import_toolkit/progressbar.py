@@ -105,7 +105,7 @@ class ProgressBarPrinter:
         print(flush=True, file=self.stream)
 
 
-def ProgressBar(width=75, step=0.1, stream=sys.stdout):
+def ProgressBar(width=50, step=0.1, stream=sys.stdout):
     """Decorator, prints a progress bar when a decored function yields it's
     current progress.
     When you want the progress bar to be updated you should yield the progress
@@ -154,7 +154,7 @@ def ProgressBar(width=75, step=0.1, stream=sys.stdout):
 if __name__ == "__main__":
     @ProgressBar()  # Decorate the function with the progress bar
     def dummyLoop():
-        nb_iter = 200
+        nb_iter = 2000
         for i in range(nb_iter):
             time.sleep(0.0001)
             yield ((i + 1) / nb_iter)  # Give control back to decorator
