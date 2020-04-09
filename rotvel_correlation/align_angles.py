@@ -275,7 +275,8 @@ class TrendZ:
 
         for idx in range(len(redshift_data_bin_edges)):
             _angle_data_binned = angle_data[redshift_data_bin_idx == idx+1]
-            boot_stats = self.bootstrap(_angle_data_binned, n_iterations=self.bootstrap_niters)
+            if len(_angle_data_binned) is not 0:
+                boot_stats = self.bootstrap(_angle_data_binned, n_iterations=self.bootstrap_niters)
             percent16_mean[idx] = boot_stats['percent16'][0]
             median50_mean[idx] = boot_stats['median50'][0]
             percent84_mean[idx] = boot_stats['percent84'][0]
