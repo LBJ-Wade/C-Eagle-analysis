@@ -86,7 +86,7 @@ class CorrelationMatrix(pull.FOFRead):
         """
         N_iters = int(n_iterations)
         data = np.asarray(data)
-        assert data.ndim is 1, f"Expected 'data' to have dimensionality 1, got {data.ndim}."
+        assert data.shape is 1, f"Expected 'data' to have dimensionality 1, got {data.ndim}."
         stats_resampled = np.zeros((0, 3), dtype=np.float)
 
         counter = 0
@@ -247,8 +247,8 @@ class TrendZ:
         np.save(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy'), angle_master)
 
     def make_simbootstrap(self):
-        z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
-        z_master = z_master[z_master < 1.8]
+        # z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
+        # z_master = z_master[z_master < 1.8]
 
         if not os.path.isfile(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy')):
             warnings.warn(f"File redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy not found.")
@@ -263,6 +263,7 @@ class TrendZ:
         redshift_data = angle_master[:,:,0].flatten()
         angle_data = angle_master[:,:,1].flatten()
         redshift_data_bin_edges = np.histogram_bin_edges(redshift_data, bins=15)
+        redshift_data_bin_centres = self.get_centers_from_bins(redshift_data_bin_edges)
         redshift_data_bin_idx = np.digitize(redshift_data, redshift_data_bin_edges)
 
         percent16_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
@@ -284,6 +285,7 @@ class TrendZ:
             percent84_std[idx] = boot_stats['percent84'][1]
 
         sim_bootstrap = np.asarray([
+            [redshift_data_bin_centres.tolist(), redshift_data_bin_edges.tolist()],
             [percent16_mean.tolist(), percent16_std.tolist()],
             [median50_mean.tolist(), median50_std.tolist()],
             [percent84_mean.tolist(), percent84_std.tolist()]
@@ -298,8 +300,8 @@ class TrendZ:
             fig = plt.figure(figsize=(10, 10))
             axis = fig.add_subplot(111)
 
-        z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
-        z_master = z_master[z_master < 1.8]
+        # z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
+        # z_master = z_master[z_master < 1.8]
         cluster = Cluster(simulation_name=self.simulation.simulation_name, clusterID=0, redshift='z000p000')
         aperture_float = self.get_apertures(cluster)[self.aperture_id] / cluster.r200
 
@@ -314,7 +316,7 @@ class TrendZ:
 
         items_labels = f""" REDSHIFT TRENDS
                             Number of clusters: {self.simulation.totalClusters:d}
-                            $z$ = {z_master[0]:.2f} - {z_master[-1]:.2f}
+                            $z$ = {sim_bootstrap[0,0,0]:.2f} - {sim_bootstrap[0,0,-1]:.2f}
                             Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
         print(items_labels)
 
@@ -327,31 +329,31 @@ class TrendZ:
 
         axis.axhline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
 
-        axis.plot(z_master, sim_bootstrap[2,0], color=sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='^', markersize=10)
-        axis.plot(z_master, sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[2,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='o', markersize=10)
-        axis.plot(z_master, sim_bootstrap[0,0], color=sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='v', markersize=10)
-        axis.plot(z_master, sim_bootstrap[2,0], color = sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[3,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
-        axis.plot(z_master, sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[2,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
-        axis.plot(z_master, sim_bootstrap[0,0], color = sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
-        axis.fill_between(z_master,
+        axis.fill_between(sim_bootstrap[0,0],
+                               sim_bootstrap[3,0] - sim_bootstrap[3,1],
+                               sim_bootstrap[3,0] + sim_bootstrap[3,1],
+                               color = sim_colors[self.simulation.simulation_name],
+                               alpha = 0.2, step='mid', edgecolor='none')
+        axis.fill_between(sim_bootstrap[0,0],
                                sim_bootstrap[2,0] - sim_bootstrap[2,1],
                                sim_bootstrap[2,0] + sim_bootstrap[2,1],
                                color = sim_colors[self.simulation.simulation_name],
                                alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(z_master,
-                               sim_bootstrap[1,0] - sim_bootstrap[1,1],
-                               sim_bootstrap[1,0] + sim_bootstrap[1,1],
-                               color = sim_colors[self.simulation.simulation_name],
-                               alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(z_master,
-                               sim_bootstrap[0, 0] - sim_bootstrap[0, 1],
-                               sim_bootstrap[0, 0] + sim_bootstrap[0, 1],
+        axis.fill_between(sim_bootstrap[0,0],
+                               sim_bootstrap[1, 0] - sim_bootstrap[1, 1],
+                               sim_bootstrap[1, 0] + sim_bootstrap[1, 1],
                                color = sim_colors[self.simulation.simulation_name],
                                alpha = 0.2, step='mid', edgecolor='none')
 
