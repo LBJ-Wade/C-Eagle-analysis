@@ -84,17 +84,17 @@ class CorrelationMatrix(pull.FOFRead):
             The mean and standard deviation (from the bootstrap sample), quoted for each
             percentile and median.
         """
-        n_iterations = int(n_iterations)
+        N_iters = int(n_iterations)
         data = np.asarray(data)
         assert data.ndim is 1, f"Expected 'data' to have dimensionality 1, got {data.ndim}."
         stats_resampled = np.zeros((0, 3), dtype=np.float)
 
         counter = 0
-        for seed in range(n_iterations):
+        for seed in range(N_iters):
             data_resampled = resample(data, replace=True, n_samples=len(data), random_state=seed)
             stats = self.get_percentiles(data_resampled, percentiles=[15.9, 50, 84.1])
             stats_resampled = np.concatenate((stats_resampled, [stats]), axis=0)
-            yield ((counter + 1) / n_iterations)
+            yield ((counter + 1) /N_iters)
             counter += 1
 
         stats_resampled_MEAN = np.mean(stats_resampled, axis=0)
