@@ -297,8 +297,7 @@ class TrendZ:
     def plot_z_trends(self, axis: Axes = None) -> None:
 
         if axis is None:
-            fig = plt.figure(figsize=(10, 10))
-            axis = fig.add_subplot(111)
+            axis = self.figure.add_subplot(111)
 
         # z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
         # z_master = z_master[z_master < 1.8]
@@ -406,7 +405,6 @@ class TrendZ:
         elif setup['run_mode'] is 'multi_sim':
             self = cls()
             self.set_figure(setup['figure'])
-            ax = self.figure.add_subplot(111)
             self.set_bootstrap_niters(setup['bootstrap_niters'])
             if type(setup['aperture_id']) is int:
                 setup['aperture_id'] = [setup['aperture_id']]
@@ -415,8 +413,8 @@ class TrendZ:
                     self.set_aperture(aperture)
                     for sim in setup['simulation_name']:
                         self.set_simulation(sim)
-                        self.plot_z_trends(axis=ax)
-                self.save_z_trend()
+                        self.plot_z_trends(axis=None)
+                    self.save_z_trend()
             
         elif setup['run_mode'] is 'multi_bootstrap':
             self = cls()
