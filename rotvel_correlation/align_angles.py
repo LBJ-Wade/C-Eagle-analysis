@@ -266,6 +266,8 @@ class TrendZ:
         redshift_data_bin_idx = np.digitize(redshift_data, redshift_data_bin_edges)
         angle_data_binned = [angle_data[redshift_data_bin_idx == i] for i in range(1, len(redshift_data_bin_edges))]
 
+        print(angle_data_binned)
+
 
         percent16_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
         median50_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
