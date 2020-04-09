@@ -1,7 +1,6 @@
 import time
 import sys
 import subprocess
-import os
 from functools import wraps
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
@@ -127,7 +126,7 @@ def ProgressBar(width=50, step=0.1, stream=sys.stdout):
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            if size is 1:
+            if size == 1:
                 progress_name = normalise_string_len(func.__name__, 25)
                 pb = ProgressBarPrinter(width, step, stream, progress_name)
                 progress_generator = func(*args, **kwargs)
@@ -138,7 +137,7 @@ def ProgressBar(width=50, step=0.1, stream=sys.stdout):
                 except StopIteration as result:
                     pb.end()
                     return result.value
-            else:
+            elif size > 1:
                 progress_generator = func(*args, **kwargs)
                 try:
                     while True:
