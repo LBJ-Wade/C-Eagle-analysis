@@ -266,14 +266,14 @@ class TrendZ:
         redshift_data_bin_centres = self.get_centers_from_bins(redshift_data_bin_edges)
         redshift_data_bin_idx = np.digitize(redshift_data, redshift_data_bin_edges)
 
-        percent16_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
-        median50_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
-        percent84_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
-        percent16_std = np.zeros_like(redshift_data_bin_idx, dtype=float)
-        median50_std = np.zeros_like(redshift_data_bin_idx, dtype=float)
-        percent84_std = np.zeros_like(redshift_data_bin_idx, dtype=float)
+        percent16_mean = np.zeros_like(redshift_data_bin_centres, dtype=float)
+        median50_mean = np.zeros_like(redshift_data_bin_centres, dtype=float)
+        percent84_mean = np.zeros_like(redshift_data_bin_centres, dtype=float)
+        percent16_std = np.zeros_like(redshift_data_bin_centres, dtype=float)
+        median50_std = np.zeros_like(redshift_data_bin_centres, dtype=float)
+        percent84_std = np.zeros_like(redshift_data_bin_centres, dtype=float)
 
-        for idx in range(len(redshift_data_bin_edges)):
+        for idx in range(len(redshift_data_bin_centres)):
             _angle_data_binned = angle_data[redshift_data_bin_idx == idx+1]
             if len(_angle_data_binned) is not 0:
                 boot_stats = self.bootstrap(_angle_data_binned, n_iterations=self.bootstrap_niters)
