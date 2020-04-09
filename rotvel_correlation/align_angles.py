@@ -310,7 +310,8 @@ class TrendZ:
             self.make_simbootstrap()
 
         print(f"Retrieving npy files: redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy")
-        sim_bootstrap = np.load(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy'))
+        sim_bootstrap = np.load(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_'
+        f'{self.aperture_id}.npy'), allow_pickle=True)
         sim_bootstrap = np.asarray(sim_bootstrap)
         print(sim_bootstrap.shape)
 
