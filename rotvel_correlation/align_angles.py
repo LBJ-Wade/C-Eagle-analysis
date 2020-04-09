@@ -482,7 +482,7 @@ if __name__ == '__main__':
     setup = {
         'run_mode'        : 'multi_sim',
         'aperture_id'     : 10,
-        'simulation_name' : ['celr_b', 'celr_e', 'macsis'],
+        'simulation_name' : ['celr_b'],
         'bootstrap_niters': 1e3,
         'figure'          : fig,
     }
