@@ -239,7 +239,6 @@ class TrendZ:
     def make_simbootstrap(self):
         z_master = np.array([redshift_str2num(z) for z in self.simulation.redshiftAllowed])
         z_master = z_master[z_master < 1.8]
-        print(f"{self.simulation.simulation:=^100s}")
 
         if not os.path.isfile(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy')):
             warnings.warn(f"File redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy not found.")
@@ -362,6 +361,17 @@ class TrendZ:
         self.axes.set_ylabel(r"$\Delta \theta \equiv (\mathbf{L},\widehat{CoP},\mathbf{v_{pec}})$ \quad [degrees]", size=25)
         self.axes.set_ylim(0, 180)
 
+    def plot_z_trend_histogram(self):
+
+        # Create Fig and gridspec
+        fig = plt.figure(figsize=(16, 10), dpi=80)
+        grid = plt.GridSpec(4, 4, hspace=0.5, wspace=0.2)
+
+        # Define the axes
+        ax_main = fig.add_subplot(grid[:-1, :-1])
+        ax_right = fig.add_subplot(grid[:-1, -1], xticklabels=[], yticklabels=[])
+        ax_bottom = fig.add_subplot(grid[-1, 0:-1], xticklabels=[], yticklabels=[])
+
     def save_z_trend(self):
         plt.savefig(os.path.join(self.path, f'redshift_rotTvelT_aperture_{self.aperture_id}.png'), dpi=300)
 
@@ -450,7 +460,7 @@ if __name__ == '__main__':
         'run_mode'        : 'multi_bootstrap',
         'aperture_id'     : list(range(20)),
         'simulation_name' : ['celr_b', 'celr_e', 'macsis'],
-        'bootstrap_niters': 1e6,
+        'bootstrap_niters': 1e5,
         'axes'            : ax,
     }
     trend_z = TrendZ.run_from_dict(setup)
