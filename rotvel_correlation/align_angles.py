@@ -317,7 +317,7 @@ class TrendZ:
 
         items_labels = f""" REDSHIFT TRENDS
                             Number of clusters: {self.simulation.totalClusters:d}
-                            $z$ = {sim_bootstrap[0,0][0]:.2f} - {sim_bootstrap[0,0][-1]:.2f}
+                            $z$ = {sim_bootstrap[0,1][0]:.2f} - {sim_bootstrap[0,1][-1]:.2f}
                             Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
         print(items_labels)
 
@@ -342,21 +342,21 @@ class TrendZ:
                 alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
-        axis.fill_between(sim_bootstrap[0,0],
-                               sim_bootstrap[3,0] - sim_bootstrap[3,1],
-                               sim_bootstrap[3,0] + sim_bootstrap[3,1],
-                               color = sim_colors[self.simulation.simulation_name],
-                               alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(sim_bootstrap[0,0],
-                               sim_bootstrap[2,0] - sim_bootstrap[2,1],
-                               sim_bootstrap[2,0] + sim_bootstrap[2,1],
-                               color = sim_colors[self.simulation.simulation_name],
-                               alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(sim_bootstrap[0,0],
-                               sim_bootstrap[1, 0] - sim_bootstrap[1, 1],
-                               sim_bootstrap[1, 0] + sim_bootstrap[1, 1],
-                               color = sim_colors[self.simulation.simulation_name],
-                               alpha = 0.2, step='mid', edgecolor='none')
+        axis.fill_between(sim_bootstrap[0][0],
+                           sim_bootstrap[3][0] - sim_bootstrap[3][1],
+                           sim_bootstrap[3][0] + sim_bootstrap[3][1],
+                           color = sim_colors[self.simulation.simulation_name],
+                           alpha = 0.2, step='mid', edgecolor='none')
+        axis.fill_between(sim_bootstrap[0][0],
+                           sim_bootstrap[2][0] - sim_bootstrap[2][1],
+                           sim_bootstrap[2][0] + sim_bootstrap[2][1],
+                           color = sim_colors[self.simulation.simulation_name],
+                           alpha = 0.2, step='mid', edgecolor='none')
+        axis.fill_between(sim_bootstrap[0][0],
+                           sim_bootstrap[1][0] - sim_bootstrap[1][1],
+                           sim_bootstrap[1][0] + sim_bootstrap[1][1],
+                           color = sim_colors[self.simulation.simulation_name],
+                           alpha = 0.2, step='mid', edgecolor='none')
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
