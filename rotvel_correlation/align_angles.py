@@ -285,7 +285,7 @@ class TrendZ:
             percent84_std[idx] = boot_stats['percent84'][1]
 
         sim_bootstrap = np.asarray([
-            [redshift_data_bin_centres.tolist(), redshift_data_bin_edges.tolist()],
+            [redshift_data_bin_centres, redshift_data_bin_edges],
             [percent16_mean.tolist(), percent16_std.tolist()],
             [median50_mean.tolist(), median50_std.tolist()],
             [percent84_mean.tolist(), percent84_std.tolist()]
