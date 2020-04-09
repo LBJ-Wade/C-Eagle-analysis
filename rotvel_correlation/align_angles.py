@@ -273,7 +273,7 @@ class TrendZ:
         percent84_std = np.zeros_like(redshift_data_bin_idx, dtype=float)
 
         for idx in range(len(redshift_data_bin_edges)):
-            _angle_data_binned = angle_data[redshift_data_bin_idx == idx+1]
+            _angle_data_binned = np.asarray(angle_data[redshift_data_bin_idx == idx+1])
             print(_angle_data_binned)
             boot_stats = self.bootstrap(_angle_data_binned[idx], n_iterations=self.bootstrap_niters)
             percent16_mean[idx] = boot_stats['percent16'][0]
