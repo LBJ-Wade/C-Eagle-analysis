@@ -264,10 +264,6 @@ class TrendZ:
         angle_data = angle_master[:,:,1].flatten()
         redshift_data_bin_edges = np.histogram_bin_edges(redshift_data, bins=15)
         redshift_data_bin_idx = np.digitize(redshift_data, redshift_data_bin_edges)
-        angle_data_binned = [angle_data[redshift_data_bin_idx == i] for i in range(1, len(redshift_data_bin_edges))]
-
-        print(angle_data_binned)
-
 
         percent16_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
         median50_mean = np.zeros_like(redshift_data_bin_idx, dtype=float)
@@ -276,7 +272,9 @@ class TrendZ:
         median50_std = np.zeros_like(redshift_data_bin_idx, dtype=float)
         percent84_std = np.zeros_like(redshift_data_bin_idx, dtype=float)
 
-        for idx, _angle_data_binned in enumerate(angle_data_binned):
+        for idx in range(len(redshift_data_bin_edges)):
+            _angle_data_binned = angle_data[redshift_data_bin_idx == idx+1]
+            print(_angle_data_binned)
             boot_stats = self.bootstrap(_angle_data_binned[idx], n_iterations=self.bootstrap_niters)
             percent16_mean[idx] = boot_stats['percent16'][0]
             median50_mean[idx] = boot_stats['median50'][0]
