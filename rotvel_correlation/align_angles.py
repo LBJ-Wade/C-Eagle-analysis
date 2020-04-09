@@ -75,7 +75,7 @@ class CorrelationMatrix(pull.FOFRead):
         in the form of a dictionary: the 3 percentiles with quoted mean and std.
 
         :param data: expect 1D numpy array
-            Lists are also handled, provided they make it though the static typing condition.
+[[            Lists are also handled, provided they make it though the static typing condition.
 
         :param n_iterations: expect int (default det to 1000)
             The number of realisations for the bootstrap resampling. Recommended to be > 1e3.
@@ -275,7 +275,7 @@ class TrendZ:
 
         for idx in range(len(redshift_data_bin_edges)):
             _angle_data_binned = np.asarray(angle_data[redshift_data_bin_idx == idx+1])
-            print(_angle_data_binned)
+            print(_angle_data_binned.shape)
             boot_stats = self.bootstrap(_angle_data_binned[idx], n_iterations=self.bootstrap_niters)
             percent16_mean[idx] = boot_stats['percent16'][0]
             median50_mean[idx] = boot_stats['median50'][0]
