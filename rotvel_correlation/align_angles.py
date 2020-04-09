@@ -86,7 +86,7 @@ class CorrelationMatrix(pull.FOFRead):
         """
         N_iters = int(n_iterations)
         data = np.asarray(data)
-        assert data.shape is 1, f"Expected 'data' to have dimensionality 1, got {data.ndim}."
+        assert data.ndim is 1, f"Expected 'data' to have dimensionality 1, got {data.ndim}."
         stats_resampled = np.zeros((0, 3), dtype=np.float)
 
         counter = 0
