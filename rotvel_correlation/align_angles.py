@@ -389,7 +389,7 @@ class TrendZ:
         plt.savefig(os.path.join(self.path, f'redshift_rotTvelT_aperture_{self.aperture_id}.png'), dpi=300)
 
     @classmethod
-    def run_from_dict(cls, setup: Dict[str, Union[int, str, List[str], Axes]]):
+    def run_from_dict(cls, setup: Dict[str, Union[int, str, List[str], Figure]]):
 
         if setup['run_mode'] is 'single_plot':
             self = cls()
@@ -397,12 +397,14 @@ class TrendZ:
             self.set_simulation(setup['simulation_name'])
             self.set_bootstrap_niters(setup['bootstrap_niters'])
             self.set_figure(setup['figure'])
-            self.plot_z_trends()
+            ax = self.figure.add_subplot(111)
+            self.plot_z_trends(axis=ax)
             self.save_z_trend()
 
         elif setup['run_mode'] is 'multi_sim':
             self = cls()
             self.set_figure(setup['figure'])
+            ax = self.figure.add_subplot(111)
             self.set_bootstrap_niters(setup['bootstrap_niters'])
             if type(setup['aperture_id']) is int:
                 setup['aperture_id'] = [setup['aperture_id']]
@@ -411,7 +413,7 @@ class TrendZ:
                     self.set_aperture(aperture)
                     for sim in setup['simulation_name']:
                         self.set_simulation(sim)
-                        self.plot_z_trends()
+                        self.plot_z_trends(axis=ax)
                     self.save_z_trend()
             
         elif setup['run_mode'] is 'multi_bootstrap':
