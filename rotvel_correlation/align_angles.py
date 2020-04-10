@@ -240,8 +240,8 @@ class TrendZ:
                                   fastbrowsing=True)
                 read = pull.FOFRead(cluster)
                 angle = read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[self.aperture_id]
-                angle_master[halo_id, self.simulation.redshiftAllowed.index(halo_z)][0] = redshift_str2num(halo_z)
-                angle_master[halo_id, self.simulation.redshiftAllowed.index(halo_z)][1] = angle
+                angle_master[halo_id, self.simulation.redshiftAllowed.index(halo_z), 0] = redshift_str2num(halo_z)
+                angle_master[halo_id, self.simulation.redshiftAllowed.index(halo_z), 1] = angle
 
         print(f"Saving npy files: redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy")
         np.save(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy'), angle_master)
@@ -317,7 +317,7 @@ class TrendZ:
 
         items_labels = f""" REDSHIFT TRENDS
                             Number of clusters: {self.simulation.totalClusters:d}
-                            $z$ = {sim_bootstrap[0,1][0]:.2f} - {sim_bootstrap[0,1][-1]:.2f}
+                            $z$ = {sim_bootstrap[0,1,0]:.2f} - {sim_bootstrap[0,1,-1]:.2f}
                             Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
         print(items_labels)
 
@@ -342,19 +342,19 @@ class TrendZ:
                 alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
-        axis.fill_between(sim_bootstrap[0][0],
-                           sim_bootstrap[3][0] - sim_bootstrap[3][1],
-                           sim_bootstrap[3][0] + sim_bootstrap[3][1],
+        axis.fill_between(sim_bootstrap[0,0],
+                           sim_bootstrap[3,0] - sim_bootstrap[3,1],
+                           sim_bootstrap[3,0] + sim_bootstrap[3,1],
                            color = sim_colors[self.simulation.simulation_name],
                            alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(sim_bootstrap[0][0],
-                           sim_bootstrap[2][0] - sim_bootstrap[2][1],
-                           sim_bootstrap[2][0] + sim_bootstrap[2][1],
+        axis.fill_between(sim_bootstrap[0,0],
+                           sim_bootstrap[2,0] - sim_bootstrap[2,1],
+                           sim_bootstrap[2,0] + sim_bootstrap[2,1],
                            color = sim_colors[self.simulation.simulation_name],
                            alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(sim_bootstrap[0][0],
-                           sim_bootstrap[1][0] - sim_bootstrap[1][1],
-                           sim_bootstrap[1][0] + sim_bootstrap[1][1],
+        axis.fill_between(sim_bootstrap[0,0],
+                           sim_bootstrap[1,0] - sim_bootstrap[1,1],
+                           sim_bootstrap[1,0] + sim_bootstrap[1,1],
                            color = sim_colors[self.simulation.simulation_name],
                            alpha = 0.2, step='mid', edgecolor='none')
 
