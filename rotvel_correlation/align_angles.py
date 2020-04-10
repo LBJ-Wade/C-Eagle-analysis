@@ -262,7 +262,7 @@ class TrendZ:
         # Bin data from angle_master
         redshift_data = angle_master[:,:,0].flatten()
         angle_data = angle_master[:,:,1].flatten()
-        redshift_data_bin_edges = np.histogram_bin_edges(redshift_data, bins=15)
+        redshift_data_bin_edges = np.histogram_bin_edges(redshift_data, bins=10)
         redshift_data_bin_centres = self.get_centers_from_bins(redshift_data_bin_edges)
         redshift_data_bin_idx = np.digitize(redshift_data, redshift_data_bin_edges)
 
@@ -277,15 +277,15 @@ class TrendZ:
             _angle_data_binned = angle_data[redshift_data_bin_idx == idx+1]
             if len(_angle_data_binned) is not 0:
                 boot_stats = self.bootstrap(_angle_data_binned, n_iterations=self.bootstrap_niters)
-            percent16_mean[idx] = boot_stats['percent16'][0]
-            median50_mean[idx] = boot_stats['median50'][0]
-            percent84_mean[idx] = boot_stats['percent84'][0]
-            percent16_std[idx] = boot_stats['percent16'][1]
-            median50_std[idx] = boot_stats['median50'][1]
-            percent84_std[idx] = boot_stats['percent84'][1]
+                percent16_mean[idx] = boot_stats['percent16'][0]
+                median50_mean[idx] = boot_stats['median50'][0]
+                percent84_mean[idx] = boot_stats['percent84'][0]
+                percent16_std[idx] = boot_stats['percent16'][1]
+                median50_std[idx] = boot_stats['median50'][1]
+                percent84_std[idx] = boot_stats['percent84'][1]
 
         sim_bootstrap = np.asarray([
-            [redshift_data_bin_centres, redshift_data_bin_edges],
+            [redshift_data_bin_centres.tolist(), redshift_data_bin_edges.tolist()],
             [percent16_mean.tolist(), percent16_std.tolist()],
             [median50_mean.tolist(), median50_std.tolist()],
             [percent84_mean.tolist(), percent84_std.tolist()]
