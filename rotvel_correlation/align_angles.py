@@ -317,7 +317,7 @@ class TrendZ:
 
         items_labels = f""" REDSHIFT TRENDS
                             Number of clusters: {self.simulation.totalClusters:d}
-                            $z$ = {sim_bootstrap[0,1,0]:.2f} - {sim_bootstrap[0,1,-1]:.2f}
+                            $z$ = 0.0 - 1.8
                             Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
         print(items_labels)
 
