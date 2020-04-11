@@ -452,7 +452,7 @@ class TrendZ:
         elif setup['run_mode'] is 'multi_sim':
             self = cls()
             self.set_figure(setup['figure'])
-            axis = cls.figure.add_subplot(111)
+            axis = setup['figure'].add_subplot(111)
             self.set_bootstrap_niters(setup['bootstrap_niters'])
             if type(setup['aperture_id']) is int:
                 setup['aperture_id'] = [setup['aperture_id']]
