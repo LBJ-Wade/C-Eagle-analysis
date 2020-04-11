@@ -332,7 +332,6 @@ class TrendZ:
         sim_bootstrap = np.load(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_'
         f'{self.aperture_id}.npy'), allow_pickle=True)
         sim_bootstrap = np.asarray(sim_bootstrap)
-        print(sim_bootstrap.shape)
 
         items_labels = f""" REDSHIFT TRENDS
                             Number of clusters: {self.simulation.totalClusters:d}
@@ -453,6 +452,7 @@ class TrendZ:
         elif setup['run_mode'] is 'multi_sim':
             self = cls()
             self.set_figure(setup['figure'])
+            axis = cls.figure.add_subplot(111)
             self.set_bootstrap_niters(setup['bootstrap_niters'])
             if type(setup['aperture_id']) is int:
                 setup['aperture_id'] = [setup['aperture_id']]
@@ -461,7 +461,7 @@ class TrendZ:
                     self.set_aperture(aperture)
                     for sim in setup['simulation_name']:
                         self.set_simulation(sim)
-                        self.plot_z_trends(axis=None)
+                        self.plot_z_trends(axis=axis)
                     self.save_z_trend()
             
         elif setup['run_mode'] is 'multi_bootstrap':
@@ -530,8 +530,8 @@ if __name__ == '__main__':
     setup = {
         'run_mode'        : 'multi_sim',
         'aperture_id'     : 10,
-        'simulation_name' : ['celr_b'],
-        'bootstrap_niters': 1e3,
+        'simulation_name' : ['celr_b', 'celr_e', 'macsis'],
+        'bootstrap_niters': 1e4,
         'figure'          : fig,
     }
     trend_z = TrendZ.run_from_dict(setup)
