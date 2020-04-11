@@ -277,7 +277,6 @@ class TrendZ:
         redshift_data_bin_idx = np.digitize(redshift_data, redshift_data_bin_edges)
         redshift_data_bin_widths = self.get_widths_from_bins(redshift_data_bin_edges)
         redshift_data_bin_widths[0] = redshift_data_bin_widths[0]/2
-        redshift_data_bin_widths[-1] = redshift_data_bin_widths[-1]/2
 
         percent16_mean = np.zeros_like(redshift_data_bin_centres, dtype=float)
         median50_mean = np.zeros_like(redshift_data_bin_centres, dtype=float)
@@ -358,28 +357,30 @@ class TrendZ:
                 alpha=1, linestyle='none', marker='v', markersize=10)
 
         for marker_index in range(len(sim_bootstrap[0, 0])):
-            align_toggle = 'center'
-            if marker_index is 0 or marker_index is len(sim_bootstrap[0,0]):
-                align_toggle = 'edge'
 
-            axis.plot([sim_bootstrap[0,0][marker_index]-sim_bootstrap[0,1][marker_index]/2,
-                       sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]/2],
+            if marker_index is 0:
+                align_toggle = 'edge'
+                x_edge_left = sim_bootstrap[0,0][marker_index]
+                x_edge_right = sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]
+            else:
+                align_toggle = 'center'
+                x_edge_left = sim_bootstrap[0,0][marker_index]-sim_bootstrap[0,1][marker_index]/2
+                x_edge_right = sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]/2
+
+            axis.plot([x_edge_left, x_edge_right],
                       [sim_bootstrap[3,0][marker_index], sim_bootstrap[3,0][marker_index]],
                       color = sim_colors[self.simulation.simulation_name],
                       alpha = 0.8, linestyle='--', lw=1.5)
 
-            axis.plot([sim_bootstrap[0,0][marker_index]-sim_bootstrap[0,1][marker_index]/2,
-                       sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]/2],
+            axis.plot([x_edge_left, x_edge_right],
                       [sim_bootstrap[2,0][marker_index], sim_bootstrap[2,0][marker_index]],
                       color = sim_colors[self.simulation.simulation_name],
                       alpha = 0.8, linestyle='-', lw=1.5)
 
-            axis.plot([sim_bootstrap[0,0][marker_index]-sim_bootstrap[0,1][marker_index]/2,
-                       sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]/2],
+            axis.plot([x_edge_left, x_edge_right],
                       [sim_bootstrap[1,0][marker_index], sim_bootstrap[1,0][marker_index]],
                       color = sim_colors[self.simulation.simulation_name],
                       alpha = 0.8, linestyle='-.', lw=1.5)
-
 
             axis.bar(sim_bootstrap[0,0][marker_index], 2*sim_bootstrap[3,1][marker_index],
                      bottom=sim_bootstrap[3,0][marker_index]-sim_bootstrap[3,1][marker_index],
