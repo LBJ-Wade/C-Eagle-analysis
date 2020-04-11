@@ -356,40 +356,52 @@ class TrendZ:
                 alpha=1, linestyle='none', marker='o', markersize=10)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='v', markersize=10)
-        print(sim_bootstrap[0,1])
-        for marker_index in range(len(sim_bootstrap[0, 0])):
 
-            # axis.plot(sim_bootstrap[0,0], sim_bootstrap[3,0], color = sim_colors[self.simulation.simulation_name],
-            #         alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
-            # axis.plot(sim_bootstrap[0,0], sim_bootstrap[2,0], color = sim_colors[self.simulation.simulation_name],
-            #         alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
-            # axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
-            #         alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
+        for marker_index in range(len(sim_bootstrap[0, 0])):
+            align_toggle = 'center'
+            if marker_index is 0 or marker_index is len(sim_bootstrap[0,0]):
+                align_toggle = 'edge'
+
+            axis.plot([sim_bootstrap[0,0][marker_index]-sim_bootstrap[0,1][marker_index]/2,
+                       sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]/2],
+                      [sim_bootstrap[3,0][marker_index], sim_bootstrap[3,0][marker_index]],
+                      color = sim_colors[self.simulation.simulation_name],
+                      alpha = 0.8, linestyle='--', lw=1.5)
+
+            axis.plot([sim_bootstrap[0,0][marker_index]-sim_bootstrap[0,1][marker_index]/2,
+                       sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]/2],
+                      [sim_bootstrap[2,0][marker_index], sim_bootstrap[2,0][marker_index]],
+                      color = sim_colors[self.simulation.simulation_name],
+                      alpha = 0.8, linestyle='-', lw=1.5)
+
+            axis.plot([sim_bootstrap[0,0][marker_index]-sim_bootstrap[0,1][marker_index]/2,
+                       sim_bootstrap[0,0][marker_index]+sim_bootstrap[0,1][marker_index]/2],
+                      [sim_bootstrap[1,0][marker_index], sim_bootstrap[1,0][marker_index]],
+                      color = sim_colors[self.simulation.simulation_name],
+                      alpha = 0.8, linestyle='-.', lw=1.5)
+
 
             axis.bar(sim_bootstrap[0,0][marker_index], 2*sim_bootstrap[3,1][marker_index],
                      bottom=sim_bootstrap[3,0][marker_index]-sim_bootstrap[3,1][marker_index],
                      width=sim_bootstrap[0,1][marker_index],
-                     xerr=sim_bootstrap[0,1][marker_index],
-                     align='center',
+                     align=align_toggle,
                      color = sim_colors[self.simulation.simulation_name],
                      alpha = 0.2,
-                     edgecolor='none')
+                     edgecolor='none', linewidth=0)
             axis.bar(sim_bootstrap[0,0][marker_index], 2*sim_bootstrap[2,1][marker_index],
                      bottom=sim_bootstrap[2,0][marker_index]-sim_bootstrap[2,1][marker_index],
                      width=sim_bootstrap[0,1][marker_index],
-                     xerr=sim_bootstrap[0,1][marker_index],
-                     align='center',
+                     align=align_toggle,
                      color = sim_colors[self.simulation.simulation_name],
                      alpha = 0.2,
-                     edgecolor='none')
+                     edgecolor='none', linewidth=0)
             axis.bar(sim_bootstrap[0,0][marker_index], 2*sim_bootstrap[1,1][marker_index],
                      bottom=sim_bootstrap[1,0][marker_index]-sim_bootstrap[1,1][marker_index],
                      width=sim_bootstrap[0,1][marker_index],
-                     xerr=sim_bootstrap[0,1][marker_index],
-                     align='center',
+                     align=align_toggle,
                      color = sim_colors[self.simulation.simulation_name],
                      alpha = 0.2,
-                     edgecolor='none')
+                     edgecolor='none', linewidth=0)
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
