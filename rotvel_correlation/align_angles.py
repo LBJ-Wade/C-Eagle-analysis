@@ -343,6 +343,7 @@ class TrendZ:
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
 
+        print(type(sim_bootstrap[3,0]), type(sim_bootstrap[3,1]), sep='\n')
         print(sim_bootstrap[3,0], sim_bootstrap[3,1], sep='\n')
         axis.fill_between(sim_bootstrap[0,0],
                            sim_bootstrap[3,0] - sim_bootstrap[3,1],
