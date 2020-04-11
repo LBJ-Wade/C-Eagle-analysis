@@ -344,7 +344,7 @@ class TrendZ:
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
 
         print(type(sim_bootstrap), type(sim_bootstrap[3,1]), sep='\n')
-        print(sim_bootstrap, sim_bootstrap[3,1], sep='\n')
+        print(np.asarray(sim_bootstrap), sim_bootstrap[3,1], sep='\n')
         axis.fill_between(sim_bootstrap[0,0],
                            sim_bootstrap[3,0] - sim_bootstrap[3,1],
                            sim_bootstrap[3,0] + sim_bootstrap[3,1],
