@@ -273,7 +273,7 @@ class TrendZ:
         median50_std = np.zeros_like(redshift_data_bin_centres, dtype=float)
         percent84_std = np.zeros_like(redshift_data_bin_centres, dtype=float)
 
-        for idx in range(len(redshift_data_bin_centres)):
+        for idx in range(len(redshift_data_bin_edges)):
             _angle_data_binned = angle_data[redshift_data_bin_idx == idx+1]
             if len(_angle_data_binned) is not 0:
                 boot_stats = self.bootstrap(_angle_data_binned, n_iterations=self.bootstrap_niters)
