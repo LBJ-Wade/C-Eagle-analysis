@@ -284,7 +284,7 @@ class TrendZ:
                 median50_std[idx] = boot_stats['median50'][1]
                 percent84_std[idx] = boot_stats['percent84'][1]
 
-        sim_bootstrap = np.asarray([
+        sim_bootstrap = np.array([
             [redshift_data_bin_centres.tolist(), redshift_data_bin_edges.tolist()],
             [percent16_mean.tolist(), percent16_std.tolist()],
             [median50_mean.tolist(), median50_std.tolist()],
@@ -342,6 +342,8 @@ class TrendZ:
                 alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
+
+        print(sim_bootstrap[3,0], sim_bootstrap[3,1], sep='\n')
         axis.fill_between(sim_bootstrap[0,0],
                            sim_bootstrap[3,0] - sim_bootstrap[3,1],
                            sim_bootstrap[3,0] + sim_bootstrap[3,1],
