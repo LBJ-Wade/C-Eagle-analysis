@@ -287,6 +287,13 @@ class TrendZ:
                 percent16_std[idx] = boot_stats['percent16'][1]
                 median50_std[idx] = boot_stats['median50'][1]
                 percent84_std[idx] = boot_stats['percent84'][1]
+            else:
+                percent16_mean[idx] = np.nan
+                median50_mean[idx] = np.nan
+                percent84_mean[idx] = np.nan
+                percent16_std[idx] = np.nan
+                median50_std[idx] = np.nan
+                percent84_std[idx] = np.nan
 
         sim_bootstrap = np.array([
             [redshift_data_bin_centres, redshift_data_bin_edges],
