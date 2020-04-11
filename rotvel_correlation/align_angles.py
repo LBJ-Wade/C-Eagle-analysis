@@ -475,14 +475,14 @@ if __name__ == '__main__':
 
 
     fig = plt.figure(figsize=(10, 10))
-    ax = fig.add_subplot(111)
-
-    grid = plt.GridSpec(4, 4, hspace=0.5, wspace=0.2)
-
-    # Define the axes
-    ax_main = fig.add_subplot(grid[:-1, :-1])
-    ax_right = fig.add_subplot(grid[:-1, -1], xticklabels=[], yticklabels=[])
-    ax_bottom = fig.add_subplot(grid[-1, 0:-1], xticklabels=[], yticklabels=[])
+    # ax = fig.add_subplot(111)
+    #
+    # grid = plt.GridSpec(4, 4, hspace=0.5, wspace=0.2)
+    #
+    # # Define the axes
+    # ax_main = fig.add_subplot(grid[:-1, :-1])
+    # ax_right = fig.add_subplot(grid[:-1, -1], xticklabels=[], yticklabels=[])
+    # ax_bottom = fig.add_subplot(grid[-1, 0:-1], xticklabels=[], yticklabels=[])
 
     setup = {
         'run_mode'        : 'multi_sim',
