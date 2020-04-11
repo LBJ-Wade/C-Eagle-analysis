@@ -262,7 +262,7 @@ class TrendZ:
         # Bin data from angle_master
         redshift_data = angle_master[:,:,0].flatten()
         angle_data = angle_master[:,:,1].flatten()
-        redshift_data_bin_centres = np.linspace(np.min(redshift_data), np.max(redshift_data), bins=15)
+        redshift_data_bin_centres = np.linspace(np.min(redshift_data), np.max(redshift_data), 15)
         redshift_data_bin_edges = self.get_centers_from_bins(redshift_data_bin_centres)
         pre_redshift_extension = redshift_data_bin_centres[0] - abs(redshift_data_bin_centres[0] - redshift_data_bin_edges[0])
         post_redshift_extension = redshift_data_bin_centres[-1] + abs(redshift_data_bin_centres[-1] - redshift_data_bin_edges[-1])
