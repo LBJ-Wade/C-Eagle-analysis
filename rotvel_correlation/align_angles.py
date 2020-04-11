@@ -220,8 +220,8 @@ class TrendZ:
     @staticmethod
     def get_widths_from_bins(bins):
         """ return centers from bin sequence """
-        return bins[1:] - bins[:-1]
-
+        # return bins[1:] - bins[:-1]
+        return np.array([bins[i+1] - bins[i] for i in range(len(bins)-1)])
     @staticmethod
     def get_centers_from_log_bins(bins):
         """ return centers from bin sequence """
