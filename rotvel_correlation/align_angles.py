@@ -218,6 +218,11 @@ class TrendZ:
         return (bins[:-1] + bins[1:]) / 2
 
     @staticmethod
+    def get_widths_from_bins(bins):
+        """ return centers from bin sequence """
+        return bins[1:] - bins[:-1]
+
+    @staticmethod
     def get_centers_from_log_bins(bins):
         """ return centers from bin sequence """
         return np.sqrt(bins[:-1] * bins[1:])
@@ -269,6 +274,9 @@ class TrendZ:
         redshift_data_bin_edges = np.insert(redshift_data_bin_edges, 0, pre_redshift_extension)
         redshift_data_bin_edges = np.insert(redshift_data_bin_edges, len(redshift_data_bin_edges), post_redshift_extension)
         redshift_data_bin_idx = np.digitize(redshift_data, redshift_data_bin_edges)
+        redshift_data_bin_widths = self.get_widths_from_bins(redshift_data_bin_edges)
+        redshift_data_bin_widths[0] = redshift_data_bin_widths[0]/2
+        redshift_data_bin_widths[-1] = redshift_data_bin_widths[-1]/2
 
         percent16_mean = np.zeros_like(redshift_data_bin_centres, dtype=float)
         median50_mean = np.zeros_like(redshift_data_bin_centres, dtype=float)
@@ -296,7 +304,7 @@ class TrendZ:
                 percent84_std[idx] = np.nan
 
         sim_bootstrap = np.array([
-            [redshift_data_bin_centres, redshift_data_bin_edges],
+            [redshift_data_bin_centres, redshift_data_bin_widths],
             [percent16_mean, percent16_std],
             [median50_mean, median50_std],
             [percent84_mean, percent84_std]
@@ -348,28 +356,39 @@ class TrendZ:
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='v', markersize=10)
 
-        axis.plot(sim_bootstrap[0,0], sim_bootstrap[3,0], color = sim_colors[self.simulation.simulation_name],
-                alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
-        axis.plot(sim_bootstrap[0,0], sim_bootstrap[2,0], color = sim_colors[self.simulation.simulation_name],
-                alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
-        axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
-                alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
+        for marker_index in range(len(sim_bootstrap[0, 0])):
 
-        axis.fill_between(sim_bootstrap[0,0],
-                           sim_bootstrap[3,0] - sim_bootstrap[3,1],
-                           sim_bootstrap[3,0] + sim_bootstrap[3,1],
-                           color = sim_colors[self.simulation.simulation_name],
-                           alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(sim_bootstrap[0,0],
-                           sim_bootstrap[2,0] - sim_bootstrap[2,1],
-                           sim_bootstrap[2,0] + sim_bootstrap[2,1],
-                           color = sim_colors[self.simulation.simulation_name],
-                           alpha = 0.2, step='mid', edgecolor='none')
-        axis.fill_between(sim_bootstrap[0,0],
-                           sim_bootstrap[1,0] - sim_bootstrap[1,1],
-                           sim_bootstrap[1,0] + sim_bootstrap[1,1],
-                           color = sim_colors[self.simulation.simulation_name],
-                           alpha = 0.2, step='mid', edgecolor='none')
+            # axis.plot(sim_bootstrap[0,0], sim_bootstrap[3,0], color = sim_colors[self.simulation.simulation_name],
+            #         alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
+            # axis.plot(sim_bootstrap[0,0], sim_bootstrap[2,0], color = sim_colors[self.simulation.simulation_name],
+            #         alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
+            # axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
+            #         alpha = 0.8, drawstyle='steps-mid', linestyle='-.', lw=1.5)
+
+            axis.bar(sim_bootstrap[0,0, marker_index], 2*sim_bootstrap[3,1, marker_index],
+                     bottom=sim_bootstrap[3,0, marker_index]-sim_bootstrap[3,1, marker_index],
+                     width=sim_bootstrap[0,1, marker_index],
+                     xerr=sim_bootstrap[0,1, marker_index],
+                     align='center',
+                     color = sim_colors[self.simulation.simulation_name],
+                     alpha = 0.2,
+                     edgecolor='none')
+            axis.bar(sim_bootstrap[0,0, marker_index], 2*sim_bootstrap[2,1, marker_index],
+                     bottom=sim_bootstrap[2,0, marker_index]-sim_bootstrap[2,1, marker_index],
+                     width=sim_bootstrap[0,1, marker_index],
+                     xerr=sim_bootstrap[0,1, marker_index],
+                     align='center',
+                     color = sim_colors[self.simulation.simulation_name],
+                     alpha = 0.2,
+                     edgecolor='none')
+            axis.bar(sim_bootstrap[0,0, marker_index], 2*sim_bootstrap[1,1, marker_index],
+                     bottom=sim_bootstrap[1,0, marker_index]-sim_bootstrap[1,1, marker_index],
+                     width=sim_bootstrap[0,1, marker_index],
+                     xerr=sim_bootstrap[0,1, marker_index],
+                     align='center',
+                     color = sim_colors[self.simulation.simulation_name],
+                     alpha = 0.2,
+                     edgecolor='none')
 
         perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
         perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
