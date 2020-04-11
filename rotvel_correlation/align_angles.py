@@ -330,14 +330,14 @@ class TrendZ:
 
         axis.axhline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
 
-        axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[3,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='^', markersize=10)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[2,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='o', markersize=10)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='v', markersize=10)
 
-        axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color = sim_colors[self.simulation.simulation_name],
+        axis.plot(sim_bootstrap[0,0], sim_bootstrap[3,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8, drawstyle='steps-mid', linestyle='--', lw=1.5)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[2,0], color = sim_colors[self.simulation.simulation_name],
                 alpha = 0.8,  drawstyle='steps-mid', linestyle='-', lw=1.5)
