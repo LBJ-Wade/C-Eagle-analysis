@@ -355,7 +355,7 @@ class TrendZ:
                 alpha=1, linestyle='none', marker='o', markersize=10)
         axis.plot(sim_bootstrap[0,0], sim_bootstrap[1,0], color=sim_colors[self.simulation.simulation_name],
                 alpha=1, linestyle='none', marker='v', markersize=10)
-
+        print(sim_bootstrap[0,1])
         for marker_index in range(len(sim_bootstrap[0, 0])):
 
             # axis.plot(sim_bootstrap[0,0], sim_bootstrap[3,0], color = sim_colors[self.simulation.simulation_name],
