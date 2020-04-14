@@ -503,7 +503,7 @@ class TrendZ:
 		axis.step(sim_hist[0], sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='mid')
 		axis.fill_between(sim_hist[0], sim_hist[2]+sim_hist[3], sim_hist[2]-sim_hist[3],
 		                  where=sim_hist[2]!=0,
-		                  step='mid',
+		                  step='pre',
 		                  color=sim_colors[self.simulation.simulation_name],
 		                  alpha=0.2,
 		                  edgecolor='none',
