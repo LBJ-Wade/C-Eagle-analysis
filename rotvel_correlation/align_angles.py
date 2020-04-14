@@ -342,7 +342,7 @@ class TrendZ:
 		counter = 0
 		for seed in range(N_iters):
 			data_resampled = resample(angle_data, replace=True, n_samples=len(angle_data), random_state=seed)
-			_, _angle_data_bin_count = np.histogram(data_resampled, bins=angle_data_bin_edges)
+			_angle_data_bin_count = np.histogram(data_resampled, bins=angle_data_bin_edges)[0]
 			stats_resampled = np.concatenate((stats_resampled, [_angle_data_bin_count]), axis=0)
 			yield ((counter + 1) / N_iters)
 			counter += 1
