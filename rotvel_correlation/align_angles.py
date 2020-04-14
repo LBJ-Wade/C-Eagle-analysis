@@ -338,12 +338,11 @@ class TrendZ:
 
 		# Bootstrap the histograms and compute stats
 		N_iters = int(self.bootstrap_niters)
-		stats_resampled = np.zeros_like(angle_data_bin_count, dtype=np.float)
+		stats_resampled = np.zeros((N_iters, len(angle_data_bin_count)), dtype=np.float)
 		counter = 0
 		for seed in range(N_iters):
 			data_resampled = resample(angle_data, replace=True, n_samples=len(angle_data), random_state=seed)
-			_angle_data_bin_count = np.histogram(data_resampled, bins=angle_data_bin_edges)[0]
-			stats_resampled = np.concatenate((stats_resampled, [_angle_data_bin_count]), axis=0)
+			stats_resampled[seed] = np.histogram(data_resampled, bins=angle_data_bin_edges)[0]
 			yield ((counter + 1) / N_iters)
 			counter += 1
 
