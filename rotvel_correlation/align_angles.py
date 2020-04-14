@@ -330,8 +330,9 @@ class TrendZ:
 		# Bin data from angle_master
 		# Use bins which are spaced according to a np.sin-normalisation
 		angle_data = angle_master[:,:,1].flatten()
-		_bin_linear_range = np.linspace(-1, 1, 41)
-		angle_data_bin_edges = (np.arcsin(_bin_linear_range)/np.pi+0.5)*180
+		# _bin_linear_range = np.linspace(-1, 1, 41)
+		# angle_data_bin_edges = (np.arcsin(_bin_linear_range)/np.pi+0.5)*180
+		angle_data_bin_edges = np.linspace(0, 180, 26)
 		angle_data_bin_count = np.histogram(angle_data, bins=angle_data_bin_edges)[0]
 		angle_data_bin_centres = self.get_centers_from_bins(angle_data_bin_edges)
 		angle_data_bin_widths = self.get_widths_from_bins(angle_data_bin_edges)
