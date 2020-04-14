@@ -502,7 +502,6 @@ class TrendZ:
 		axis.axvline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
 		axis.step(sim_hist[0], sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='pre')
 		axis.fill_between(sim_hist[0], sim_hist[2]+sim_hist[3], sim_hist[2]-sim_hist[3],
-		                  where=sim_hist[2]!=0,
 		                  step='pre',
 		                  color=sim_colors[self.simulation.simulation_name],
 		                  alpha=0.2,
