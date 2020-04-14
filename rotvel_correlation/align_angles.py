@@ -552,7 +552,7 @@ class TrendZ:
 			ax = self.figure.add_subplot(111)
 			self.plot_z_trends(axis=ax)
 			self.save_z_trend()
-			plt.clf()
+			plt.cla()
 			self.plot_z_trend_histogram(axis=ax)
 			self.save_z_trend_hist()
 
