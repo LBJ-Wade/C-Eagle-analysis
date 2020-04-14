@@ -315,6 +315,49 @@ class TrendZ:
 		print(f"Saving npy files: redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy")
 		np.save(os.path.join(self.path, f'redshift_rotTvelT_bootstrap_aperture_{self.aperture_id}.npy'), sim_bootstrap)
 
+	@ProgressBar()
+	def make_simhist(self):
+
+		if not os.path.isfile(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy')):
+			warnings.warn(f"File redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy not found.")
+			print("self.make_simstats() activated.")
+			self.make_simstats()
+
+		print(f"Retrieving npy files: redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy")
+		angle_master = np.load(os.path.join(self.path, f'redshift_rotTvelT_simstats_aperture_{self.aperture_id}.npy'))
+		angle_master = np.asarray(angle_master)
+
+		# Bin data from angle_master
+		# Use bins which are spaced according to a np.sin-normalisation
+		angle_data = angle_master[:,:,1].flatten()
+		_bin_linear_range = np.linspace(-1, 1, 41)
+		angle_data_bin_edges = (np.arcsin(_bin_linear_range)/np.pi+0.5)*180
+		angle_data_bin_count = np.histogram(angle_data, bins=angle_data_bin_edges)[0]
+		angle_data_bin_centres = self.get_centers_from_bins(angle_data_bin_edges)
+		angle_data_bin_widths = self.get_widths_from_bins(angle_data_bin_edges)
+
+		# Bootstrap the histograms and compute stats
+		N_iters = int(self.bootstrap_niters)
+		stats_resampled = np.zeros_like(angle_data_bin_count, dtype=np.float)
+		counter = 0
+		for seed in range(N_iters):
+			data_resampled = resample(angle_data, replace=True, n_samples=len(angle_data), random_state=seed)
+			_, _angle_data_bin_count = np.histogram(data_resampled, bins=angle_data_bin_edges)
+			stats_resampled = np.concatenate((stats_resampled, [_angle_data_bin_count]), axis=0)
+			yield ((counter + 1) / N_iters)
+			counter += 1
+
+		stats_resampled_MEAN = np.mean(stats_resampled, axis=0)
+		stats_resampled_STD = np.std(stats_resampled, axis=0)
+
+		sim_bootstrap = np.array([
+			angle_data_bin_centres, angle_data_bin_widths,
+			stats_resampled_MEAN, stats_resampled_STD,
+		])
+
+		print(f"Saving npy files: redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy")
+		np.save(os.path.join(self.path, f'redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy'), sim_bootstrap)
+
 	def plot_z_trends(self, axis: Axes = None) -> None:
 
 		if axis is None:
@@ -426,29 +469,77 @@ class TrendZ:
 		axis.set_ylabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_ylim(0, 180)
 
+	def plot_z_trend_histogram(self, axis: Axes = None) -> None:
 
+		if axis is None:
+			axis = self.figure.add_subplot(111)
+
+		cluster = Cluster(simulation_name=self.simulation.simulation_name, clusterID=0, redshift='z000p000')
+		aperture_float = self.get_apertures(cluster)[self.aperture_id] / cluster.r200
+
+		if not os.path.isfile(os.path.join(self.path, f'redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy')):
+			warnings.warn(f"File redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy not found.")
+			print("self.make_simhist() activated.")
+			self.make_simhist()
+
+		print(f"Retrieving npy files: redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy")
+		sim_hist = np.load(os.path.join(self.path, f'redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy'), allow_pickle=True)
+		sim_hist = np.asarray(sim_hist)
+
+		items_labels = f""" REDSHIFT TRENDS
+							Number of clusters: {self.simulation.totalClusters:d}
+							$z$ = 0.0 - 1.8
+							Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
+		print(items_labels)
+
+		sim_colors = {
+				'ceagle': 'pink',
+				'celr_e': 'lime',
+				'celr_b': 'orange',
+				'macsis': 'aqua',
+		}
+
+		axis.axvline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
+		axis.steo(sim_hist[0], sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='mid')
+		axis.fill_between(sim_hist[0], sim_hist[2]+sim_hist[3], sim_hist[2]-sim_hist[3],
+		                  where=sim_hist[2]!=0,
+		                  step='mid',
+		                  color=sim_colors[self.simulation.simulation_name],
+		                  alpha=0.2,
+		                  edgecolor='none',
+		                  linewidth=0
+		                  )
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
-		extension = "png"
+		extension = "pdf"
 
 		if common_folder:
 			common_path = os.path.join(self.simulation.pathSave, 'rotvel_correlation')
 			if not os.path.exists(common_path):
 				os.makedirs(common_path)
 			print(f"Saving {extension} figure: redshift_rotTvelT_aperture_{self.aperture_id}.{extension}")
-			plt.savefig(os.path.join(common_path, f'redshift_rotTvelT_aperture_{self.aperture_id}.{extension}'), dpi=300)
+			plt.savefig(os.path.join(common_path, f'redshift_rotTvelT_aperture_{self.aperture_id}.{extension}'))
 
 		else:
 			print(f"Saving {extension} figure: {self.simulation.simulation_name}_redshift_rotTvelT_aperture_{self.aperture_id}.{extension}")
 			plt.savefig(os.path.join(self.path, f'{self.simulation.simulation_name}_redshift_rotTvelT_aperture_{self.aperture_id}.{extension}'), dpi=300)
 
 
+	def save_z_trend_hist(self, common_folder: bool = False) -> None:
+		extension = "pdf"
+
+		if common_folder:
+			common_path = os.path.join(self.simulation.pathSave, 'rotvel_correlation')
+			if not os.path.exists(common_path):
+				os.makedirs(common_path)
+			print(f"Saving {extension} figure: redshift_rotTvelT_histogram_aperture_{self.aperture_id}.{extension}")
+			plt.savefig(os.path.join(common_path, f'redshift_rotTvelT_histogram_aperture_{self.aperture_id}.{extension}'))
+
+		else:
+			print(f"Saving {extension} figure: {self.simulation.simulation_name}_redshift_rotTvelT_histogram_aperture_{self.aperture_id}.{extension}")
+			plt.savefig(os.path.join(self.path, f'{self.simulation.simulation_name}_redshift_rotTvelT_histogram_aperture_{self.aperture_id}.{extension}'), dpi=300)
 
 
-	def plot_z_trend_histogram(self, axis: Axes = None) -> None:
-
-		if axis is None:
-			axis = self.figure.add_subplot(111)
 
 	@classmethod
 	def run_from_dict(cls, setup: Dict[str, Union[int, str, List[str], Figure]]):
@@ -462,6 +553,10 @@ class TrendZ:
 			ax = self.figure.add_subplot(111)
 			self.plot_z_trends(axis=ax)
 			self.save_z_trend()
+			plt.clf()
+			self.plot_z_trend_histogram(axis=ax)
+			self.save_z_trend_hist()
+
 
 		elif setup['run_mode'] is 'multi_sim':
 			self = cls()
@@ -542,9 +637,9 @@ if __name__ == '__main__':
 	# ax_bottom = fig.add_subplot(grid[-1, 0:-1], xticklabels=[], yticklabels=[])
 
 	setup = {
-		'run_mode'        : 'multi_sim',
+		'run_mode'        : 'single_plot',
 		'aperture_id'     : 10,
-		'simulation_name' : ['celr_b', 'celr_e', 'macsis'],
+		'simulation_name' : 'macsis',
 		'bootstrap_niters': 1e4,
 		'figure'          : fig,
 	}
