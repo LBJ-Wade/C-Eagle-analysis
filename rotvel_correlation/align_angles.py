@@ -671,7 +671,7 @@ if __name__ == '__main__':
 	setup = {
 		'run_mode'        : 'single_plot',
 		'aperture_id'     : 10,
-		'simulation_name' : 'macsis',
+		'simulation_name' : 'celr_b',
 		'bootstrap_niters': 5e4,
 		'figure'          : fig,
 	}
