@@ -466,7 +466,7 @@ class TrendZ:
 		axis.set_ylabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_ylim(0, 180)
 
-	def plot_z_trend_histogram(self, axis: Axes = None) -> None:
+	def plot_z_trend_histogram(self, axis: Axes = None, polar: bool = True) -> None:
 
 		if axis is None:
 			axis = self.figure.add_subplot(111)
@@ -515,6 +515,22 @@ class TrendZ:
 		          verticalalignment='top',
 		          transform=axis.transAxes,
 		          size=15)
+
+		if polar:
+			inset_axis = self.figure.add_axes([0.60, 0.62, 0.25, 0.25], projection='polar')
+			inset_axis.patch.set_alpha(0)  # Transparent background
+			inset_axis.set_theta_zero_location('N')
+			inset_axis.set_thetamin(0)
+			inset_axis.set_thetamax(180)
+			inset_axis.step(sim_hist[0]/180*np.pi, sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='mid')
+			inset_axis.fill_between(sim_hist[0]/180*np.pi, sim_hist[2] + sim_hist[3], sim_hist[2] - sim_hist[3],
+			                  step='mid',
+			                  color=sim_colors[self.simulation.simulation_name],
+			                  alpha=0.2,
+			                  edgecolor='none',
+			                  linewidth=0
+			                  )
+
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
 		extension = "pdf"
