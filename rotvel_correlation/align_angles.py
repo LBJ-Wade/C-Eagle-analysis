@@ -330,9 +330,9 @@ class TrendZ:
 		# Bin data from angle_master
 		# Use bins which are spaced according to a np.sin-normalisation
 		angle_data = angle_master[:,:,1].flatten()
-		# _bin_linear_range = np.linspace(-1, 1, 41)
-		# angle_data_bin_edges = (np.arcsin(_bin_linear_range)/np.pi+0.5)*180
-		angle_data_bin_edges = np.linspace(0, 180, 21)
+		_bin_linear_range = np.linspace(-1, 1, 41)
+		angle_data_bin_edges = (np.arcsin(_bin_linear_range)/np.pi+0.5)*180
+		# angle_data_bin_edges = np.linspace(0, 180, 21)
 		angle_data_bin_count = np.histogram(angle_data, bins=angle_data_bin_edges)[0]
 		print(len(angle_data))
 		print(angle_data_bin_count)
@@ -354,7 +354,7 @@ class TrendZ:
 
 		sim_bootstrap = np.array([
 			angle_data_bin_centres, angle_data_bin_widths,
-			angle_data_bin_count, stats_resampled_STD,
+			stats_resampled_MEAN, stats_resampled_STD,
 		])
 
 		print(f"Saving npy files: redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy")
@@ -488,9 +488,10 @@ class TrendZ:
 		sim_hist = np.load(os.path.join(self.path, f'redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy'), allow_pickle=True)
 		sim_hist = np.asarray(sim_hist)
 
-		items_labels = f""" REDSHIFT TRENDS
+		items_labels = f""" REDSHIFT TRENDS - HISTOGRAM
 							Number of clusters: {self.simulation.totalClusters:d}
 							$z$ = 0.0 - 1.8
+							Total samples: {np.sum(self.simulation.sample_completeness)}
 							Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
 		print(items_labels)
 
@@ -514,6 +515,11 @@ class TrendZ:
 		axis.set_ylabel(r"Number of clusters", size=25)
 		axis.set_xlabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_xlim(0, 180)
+		axis.text(0.03, 0.97, items_labels,
+		          horizontalalignment='left',
+		          verticalalignment='top',
+		          transform=axis.transAxes,
+		          size=15)
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
 		extension = "pdf"
@@ -645,7 +651,7 @@ if __name__ == '__main__':
 		'run_mode'        : 'single_plot',
 		'aperture_id'     : 10,
 		'simulation_name' : 'macsis',
-		'bootstrap_niters': 1e4,
+		'bootstrap_niters': 5e4,
 		'figure'          : fig,
 	}
 	trend_z = TrendZ.run_from_dict(setup)
