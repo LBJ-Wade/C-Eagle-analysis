@@ -334,6 +334,8 @@ class TrendZ:
 		# angle_data_bin_edges = (np.arcsin(_bin_linear_range)/np.pi+0.5)*180
 		angle_data_bin_edges = np.linspace(0, 180, 21)
 		angle_data_bin_count = np.histogram(angle_data, bins=angle_data_bin_edges)[0]
+		print(len(angle_data))
+		print(angle_data_bin_count)
 		angle_data_bin_centres = self.get_centers_from_bins(angle_data_bin_edges)
 		angle_data_bin_widths = self.get_widths_from_bins(angle_data_bin_edges)
 
@@ -508,6 +510,10 @@ class TrendZ:
 		                  edgecolor='none',
 		                  linewidth=0
 		                  )
+
+		axis.set_ylabel(r"Number of clusters", size=25)
+		axis.set_xlabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
+		axis.set_xlim(0, 180)
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
 		extension = "pdf"
