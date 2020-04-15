@@ -522,7 +522,8 @@ class TrendZ:
 			inset_axis.set_theta_zero_location('N')
 			inset_axis.set_thetamin(0)
 			inset_axis.set_thetamax(180)
-			inset_axis.set_thetaticks()
+			inset_axis.set_xticks(np.pi/180. * np.linspace(0,  180, 5, endpoint=True))
+			inset_axis.set_yticks([])
 			inset_axis.step(sim_hist[0]/180*np.pi, sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='mid')
 			inset_axis.fill_between(sim_hist[0]/180*np.pi, sim_hist[2] + sim_hist[3], sim_hist[2] - sim_hist[3],
 			                  step='mid',
