@@ -466,7 +466,7 @@ class TrendZ:
 		axis.set_ylabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_ylim(0, 180)
 
-	def plot_z_trend_histogram(self, axis: Axes = None, polar: bool = True) -> None:
+	def plot_z_trend_histogram(self, axis: Axes = None, polar: bool = True, normed: bool = True) -> None:
 
 		if axis is None:
 			axis = self.figure.add_subplot(111)
@@ -482,6 +482,14 @@ class TrendZ:
 		print(f"Retrieving npy files: redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy")
 		sim_hist = np.load(os.path.join(self.path, f'redshift_rotTvelT_histogram_aperture_{self.aperture_id}.npy'), allow_pickle=True)
 		sim_hist = np.asarray(sim_hist)
+
+		if normed:
+			norm_factor = np.sum(self.simulation.sample_completeness)
+			sim_hist[2] /= norm_factor
+			sim_hist[3] /= norm_factor
+			y_label = r"Sample fraction"
+		else:
+			y_label = r"Number of samples"
 
 		items_labels = f""" REDSHIFT TRENDS - HISTOGRAM
 							Number of clusters: {self.simulation.totalClusters:d}
@@ -507,7 +515,7 @@ class TrendZ:
 		                  linewidth=0
 		                  )
 
-		axis.set_ylabel(r"Number of samples", size=25)
+		axis.set_ylabel(y_label, size=25)
 		axis.set_xlabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_xlim(0, 180)
 		axis.text(0.03, 0.97, items_labels,
@@ -533,12 +541,21 @@ class TrendZ:
 			                  linewidth=0
 			                  )
 
-			arrow_radius = np.max(sim_hist[2])/1.5
-			vpec_direction = np.average(sim_hist[0], weights=sim_hist[2]/np.max(sim_hist[2]))/180*np.pi
-			kw = dict(arrowstyle="<|-", color='k', lw=1.5)
-			inset_axis.annotate(r"$\mathbf{L}$", xytext=(np.pi/2, arrow_radius), xy=(0, 0), xycoords='polar', arrowprops=kw, ha="center", va="center")
-			inset_axis.annotate(r"$\mathbf{v_{pec}}$", xytext=(vpec_direction, arrow_radius), xy=(vpec_direction, 0), xycoords='polar', arrowprops=kw,
-			                    ha="center", va="center")
+		patch_ceagle = Patch(facecolor=sim_colors['ceagle'], label='C-EAGLE', edgecolor='k', linewidth=1)
+		patch_celre = Patch(facecolor=sim_colors['celr_e'], label='CELR-E', edgecolor='k', linewidth=1)
+		patch_celrb = Patch(facecolor=sim_colors['celr_b'], label='CELR-B', edgecolor='k', linewidth=1)
+		patch_macsis = Patch(facecolor=sim_colors['macsis'], label='MACSIS', edgecolor='k', linewidth=1)
+
+		leg2 = axis.legend(handles=[patch_ceagle, patch_celre, patch_celrb, patch_macsis],
+		                   loc='lower center', handlelength=1, fontsize=20)
+		axis.add_artist(leg2)
+
+			# arrow_radius = np.max(sim_hist[2])/1.5
+			# vpec_direction = np.average(sim_hist[0], weights=sim_hist[2]/np.max(sim_hist[2]))/180*np.pi
+			# kw = dict(arrowstyle="<|-", color='k', lw=1.5)
+			# inset_axis.annotate(r"$\mathbf{L}$", xytext=(np.pi/2, arrow_radius), xy=(0, 0), xycoords='polar', arrowprops=kw, ha="center", va="center")
+			# inset_axis.annotate(r"$\mathbf{v_{pec}}$", xytext=(vpec_direction, arrow_radius), xy=(vpec_direction, 0), xycoords='polar', arrowprops=kw,
+			#                     ha="center", va="center")
 
 			# inset_axis.arrow(0, 0, 0, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
 			# inset_axis.arrow(0, 0, np.pi/2, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
