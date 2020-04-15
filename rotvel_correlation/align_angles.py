@@ -534,8 +534,9 @@ class TrendZ:
 			                  )
 
 			arrow_radius = np.max(sim_hist[2])/2
-			inset_axis.annotate(r"$\mathbf{L}$", xy=(0, arrow_radius), xytext=(0, 0), arrowstyle="->", color='k')
-			inset_axis.annotate(r"$\mathbf{v_{pec}}$", xy=(np.pi/2, arrow_radius), xytext=(0, 0), arrowstyle="->", color='k')
+			kw = dict(arrowstyle="->", color='k')
+			inset_axis.annotate(r"$\mathbf{L}$", xy=(0, arrow_radius), xytext=(0, 0), arrowprops=kw)
+			inset_axis.annotate(r"$\mathbf{v_{pec}}$", xy=(np.pi/2, arrow_radius), xytext=(0, 0), arrowprops=kw)
 
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
