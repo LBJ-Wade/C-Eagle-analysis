@@ -517,11 +517,12 @@ class TrendZ:
 		          size=15)
 
 		if polar:
-			inset_axis = self.figure.add_axes([0.60, 0.62, 0.25, 0.25], projection='polar')
+			inset_axis = self.figure.add_axes([0.75, 0.65, 0.25, 0.25], projection='polar')
 			inset_axis.patch.set_alpha(0)  # Transparent background
 			inset_axis.set_theta_zero_location('N')
 			inset_axis.set_thetamin(0)
 			inset_axis.set_thetamax(180)
+			inset_axis.set_thetaticks()
 			inset_axis.step(sim_hist[0]/180*np.pi, sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='mid')
 			inset_axis.fill_between(sim_hist[0]/180*np.pi, sim_hist[2] + sim_hist[3], sim_hist[2] - sim_hist[3],
 			                  step='mid',
@@ -530,6 +531,12 @@ class TrendZ:
 			                  edgecolor='none',
 			                  linewidth=0
 			                  )
+			arr1 = plt.arrow(0, 0.5, 0, 1, alpha=1, width=0.005,
+			                 edgecolor='black', facecolor='black', lw=2, zorder=5)
+
+			# arrow at 45 degree
+			arr2 = plt.arrow(45 / 180. * np.pi, 0.5, 0, 1, alpha=0.5, width=0.015,
+			                 edgecolor='black', facecolor='green', lw=2, zorder=5)
 
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
