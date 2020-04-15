@@ -486,7 +486,7 @@ class TrendZ:
 		items_labels = f""" REDSHIFT TRENDS - HISTOGRAM
 							Number of clusters: {self.simulation.totalClusters:d}
 							$z$ = 0.0 - 1.8
-							Total samples: {np.sum(self.simulation.sample_completeness)}
+							Total samples: {np.sum(self.simulation.sample_completeness)} $\equiv N_\mathrm{{clusters}}\times N_\mathrm{{redshifts}}$
 							Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
 		print(items_labels)
 
@@ -498,16 +498,16 @@ class TrendZ:
 		}
 
 		axis.axvline(90, linestyle='--', color='k', alpha=0.5, linewidth=2)
-		axis.step(sim_hist[0], sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='pre')
+		axis.step(sim_hist[0], sim_hist[2], color=sim_colors[self.simulation.simulation_name], where='mid')
 		axis.fill_between(sim_hist[0], sim_hist[2]+sim_hist[3], sim_hist[2]-sim_hist[3],
-		                  step='pre',
+		                  step='mid',
 		                  color=sim_colors[self.simulation.simulation_name],
 		                  alpha=0.2,
 		                  edgecolor='none',
 		                  linewidth=0
 		                  )
 
-		axis.set_ylabel(r"Number of clusters", size=25)
+		axis.set_ylabel(r"Number of samples", size=25)
 		axis.set_xlabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_xlim(0, 180)
 		axis.text(0.03, 0.97, items_labels,
