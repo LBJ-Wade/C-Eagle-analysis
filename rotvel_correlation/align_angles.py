@@ -610,7 +610,7 @@ class TrendZ:
 					for sim in setup['simulation_name']:
 						self.set_simulation(sim)
 						self.plot_z_trend_histogram(axis=axis)
-					self.save_z_trend_hist()
+					self.save_z_trend_hist(common_folder=True)
 
 		elif setup['run_mode'] is 'multi_bootstrap':
 			self = cls()
