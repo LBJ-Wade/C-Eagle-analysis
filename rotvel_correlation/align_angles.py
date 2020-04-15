@@ -606,6 +606,11 @@ class TrendZ:
 						self.set_simulation(sim)
 						self.plot_z_trends(axis=axis)
 					self.save_z_trend(common_folder=True)
+					plt.cla()
+					for sim in setup['simulation_name']:
+						self.set_simulation(sim)
+						self.plot_z_trend_histogram(axis=axis)
+					self.save_z_trend_hist()
 
 		elif setup['run_mode'] is 'multi_bootstrap':
 			self = cls()
@@ -671,9 +676,9 @@ if __name__ == '__main__':
 	# ax_bottom = fig.add_subplot(grid[-1, 0:-1], xticklabels=[], yticklabels=[])
 
 	setup = {
-		'run_mode'        : 'single_plot',
+		'run_mode'        : 'multi_sim',
 		'aperture_id'     : 10,
-		'simulation_name' : 'macsis',
+		'simulation_name' : ['celr_b', 'celr_e', 'macsis'],
 		'bootstrap_niters': 5e4,
 		'figure'          : fig,
 	}
