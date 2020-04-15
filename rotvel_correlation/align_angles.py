@@ -486,8 +486,7 @@ class TrendZ:
 		items_labels = f""" REDSHIFT TRENDS - HISTOGRAM
 							Number of clusters: {self.simulation.totalClusters:d}
 							$z$ = 0.0 - 1.8
-							Total samples: {np.sum(self.simulation.sample_completeness)} $\equiv N_\mathrm{{clusters}} \cdot N_\mathrm{{
-							redshifts}}$
+							Total samples: {np.sum(self.simulation.sample_completeness)} $\equiv N_\mathrm{{clusters}} \cdot N_\mathrm{{redshifts}}$
 							Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
 		print(items_labels)
 
