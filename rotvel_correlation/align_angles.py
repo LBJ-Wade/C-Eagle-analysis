@@ -490,7 +490,7 @@ class TrendZ:
 			y_label = r"Sample fraction"
 		else:
 			y_label = r"Number of samples"
-			axis.set_ylim(0, 1)
+
 
 		items_labels = f""" REDSHIFT TRENDS - HISTOGRAM
 							Number of clusters: {self.simulation.totalClusters:d}
@@ -519,6 +519,7 @@ class TrendZ:
 		axis.set_ylabel(y_label, size=25)
 		axis.set_xlabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_xlim(0, 180)
+		axis.set_ylim(0, np.max(sim_hist[2])+np.max(sim_hist[3]))
 		axis.text(0.03, 0.97, items_labels,
 		          horizontalalignment='left',
 		          verticalalignment='top',
