@@ -543,7 +543,7 @@ class TrendZ:
 
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
-		extension = "pdf"
+		extension = "png"
 
 		if common_folder:
 			common_path = os.path.join(self.simulation.pathSave, 'rotvel_correlation')
@@ -558,7 +558,7 @@ class TrendZ:
 
 
 	def save_z_trend_hist(self, common_folder: bool = False) -> None:
-		extension = "pdf"
+		extension = "png"
 
 		if common_folder:
 			common_path = os.path.join(self.simulation.pathSave, 'rotvel_correlation')
