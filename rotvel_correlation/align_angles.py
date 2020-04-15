@@ -533,10 +533,11 @@ class TrendZ:
 			                  linewidth=0
 			                  )
 
-			arrow_radius = np.max(sim_hist[2])/2
-			kw = dict(arrowstyle="<-", color='k', lw=1.5)
-			inset_axis.annotate(r"$\mathbf{L}$", xytext=(0, arrow_radius), xy=(0, 1), arrowprops=kw)
-			inset_axis.annotate(r"$\mathbf{v_{pec}}$", xytext=(np.pi/2, arrow_radius), xy=(np.pi/2, 10), arrowprops=kw)
+			arrow_radius = np.max(sim_hist[2])/1.5
+			kw = dict(arrowstyle="<|-", color='k', lw=1.5)
+			inset_axis.annotate(r"$\mathbf{L}$", xytext=(0., arrow_radius), xy=(0, 0), xycoords='polar', arrowprops=kw, ha="center", va="center")
+			inset_axis.annotate(r"$\mathbf{v_{pec}}$", xytext=(np.pi/2, arrow_radius), xy=(np.pi/2, 0), xycoords='polar', arrowprops=kw,
+			                    ha="center", va="center")
 
 			# inset_axis.arrow(0, 0, 0, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
 			# inset_axis.arrow(0, 0, np.pi/2, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
