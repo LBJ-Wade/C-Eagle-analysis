@@ -490,6 +490,7 @@ class TrendZ:
 			y_label = r"Sample fraction"
 		else:
 			y_label = r"Number of samples"
+			axis.set_xlim(0, 1)
 
 		items_labels = f""" REDSHIFT TRENDS - HISTOGRAM
 							Number of clusters: {self.simulation.totalClusters:d}
