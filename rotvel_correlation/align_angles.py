@@ -532,12 +532,10 @@ class TrendZ:
 			                  edgecolor='none',
 			                  linewidth=0
 			                  )
-			arr1 = plt.arrow(0, 0.5, 0, 1, alpha=1, width=0.005,
-			                 edgecolor='black', facecolor='black', lw=2, zorder=5)
 
-			# arrow at 45 degree
-			arr2 = plt.arrow(45 / 180. * np.pi, 0.5, 0, 1, alpha=0.5, width=0.015,
-			                 edgecolor='black', facecolor='green', lw=2, zorder=5)
+			arrow_radius = np.max(sim_hist[2])/2
+			inset_axis.annotate(r"$\mathbf{L}$", xy=(0, arrow_radius), xytext=(0, 0), arrowstyle="->", color='k')
+			inset_axis.annotate(r"$\mathbf{v_{pec}}$", xy=(np.pi/2, arrow_radius), xytext=(0, 0), arrowstyle="->", color='k')
 
 
 	def save_z_trend(self, common_folder: bool = False) -> None:
