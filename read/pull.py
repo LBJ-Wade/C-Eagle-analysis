@@ -228,7 +228,12 @@ class FOFRead(Simulation):
         return angle_apertures
 
 
+    def pull_dynamical_merging_index(self, partype: str):
 
+       with h5py.File(os.path.join(self.FOFDirectory, 'dynamical_merging_index.hdf5'), 'r') as input_file:
+           dyn_mergindex = np.array(input_file.get(partype))
+
+       return dyn_mergindex
 
 
 
