@@ -122,7 +122,7 @@ class TrendDynMerg:
 								  fastbrowsing=True)
 				read = pull.FOFRead(cluster)
 				angle = read.pull_rot_vel_angle_between('ParType0_angmom', 'ParType4_angmom')[self.aperture_id]
-				dyn_mergindex = read.pull_dynamical_merging_index('Total_dyn_mergindex')
+				dyn_mergindex = read.pull_dynamical_merging_index('Total_dyn_mergindex')[self.aperture_id]
 				angle_master[halo_id, self.simulation.redshiftAllowed.index(halo_z), 0] = dyn_mergindex
 				angle_master[halo_id, self.simulation.redshiftAllowed.index(halo_z), 1] = angle
 
@@ -250,7 +250,7 @@ class TrendDynMerg:
 		f'{self.aperture_id}.npy'), allow_pickle=True)
 		sim_bootstrap = np.asarray(sim_bootstrap)
 
-		items_labels = f""" REDSHIFT TRENDS
+		items_labels = f""" DYNAMICAL MERGING INDEX TRENDS
 							Number of clusters: {self.simulation.totalClusters:d}
 							$z$ = 0.0 - 1.8
 							Aperture radius = {aperture_float:.2f} $R_{{200\ true}}$"""
@@ -339,7 +339,7 @@ class TrendDynMerg:
 						transform=axis.transAxes,
 						size=15)
 
-		axis.set_xlabel(r"$z$", size=25)
+		axis.set_xlabel(r"Dynamical merging index", size=25)
 		axis.set_ylabel(r"$\Delta \theta \equiv (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]", size=25)
 		axis.set_ylim(0, 180)
 
@@ -369,7 +369,7 @@ class TrendDynMerg:
 			y_label = r"Number of samples"
 
 
-		items_labels = f""" REDSHIFT TRENDS - HISTOGRAM
+		items_labels = f""" DYNAMICAL MERGING INDEX TRENDS - HISTOGRAM
 							Number of clusters: {self.simulation.totalClusters:d}
 							$z$ = 0.0 - 1.8
 							Total samples: {np.sum(self.simulation.sample_completeness):d} $\equiv N_\mathrm{{clusters}} \cdot N_\mathrm{{redshifts}}$
