@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-#SBATCH --ntasks 20                                           # The number of cores you need...
+#SBATCH --ntasks 4                                           # The number of cores you need...
 #SBATCH -J bootstrap                                            # Give it something meaningful.
 #SBATCH -o standard_output_file.%J.out
 #SBATCH -e standard_error_file.%J.err
@@ -22,7 +22,7 @@ module load hdf5
 
 # Run the program
 #mpiexec -n $SLURM_NTASKS python3 ./save/fof_output.py
-mpiexec -n $SLURM_NTASKS python3 ./rotvel_correlation/align_angles.py
+mpiexec -n $SLURM_NTASKS python3 ./rotvel_correlation/trendz.py
 
 
 ### Multiples of 32, 64, 96, 128, 160, 192, 224, 256, 288, 320, 352, 384, 416, 448, 480, 512, 544, 576, 608
