@@ -500,7 +500,7 @@ class TrendZ:
 					for sim in setup['simulation_name']:
 						self.set_simulation(sim)
 						self.plot_z_trends(axis=axis)
-					self.save_z_trend(common_folder=True)
+					self.save_z_trend(common_folder=False)
 					plt.cla()
 					for sim in setup['simulation_name']:
 						self.set_simulation(sim)
