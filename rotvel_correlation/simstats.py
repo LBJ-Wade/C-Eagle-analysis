@@ -85,7 +85,7 @@ class Simstats:
 
 	def make_simstats(self, save2hdf5: bool = True) -> pd.DataFrame:
 		assert self.simulation is not None
-		iterator = itertools.product(self.simulation.clusterIDAllowed, self.simulation.redshiftAllowed)
+		iterator = itertools.product(self.simulation.clusterIDAllowed[:2], self.simulation.redshiftAllowed)
 		columns = [
 				'cluster_id',
 				'redshift_float',
