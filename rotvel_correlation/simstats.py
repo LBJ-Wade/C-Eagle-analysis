@@ -231,4 +231,4 @@ if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
 	stats_out = simstats.make_simstats(save2hdf5=True)
-	# print(stats_out.loc[:5, 'redshift_float', 'M_200_crit', 'vel0vel1'])
+	print(stats_out.loc[:5, 'redshift_float', 'M_200_crit', 'vel0vel1'])
