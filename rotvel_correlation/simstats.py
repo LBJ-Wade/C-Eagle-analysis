@@ -227,14 +227,14 @@ class Simstats:
 			else:
 				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
-		df.metadata = metadata
+		# df.metadata = metadata
 		print(df.info())
 
 		if save2hdf5:
 			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.h5"
 			df.to_hdf(os.path.join(self.path + filename), mode='w', key='simstats')
 			if os.path.isfile(os.path.join(self.path + filename)):
-				print(f"Saved\n\tPath: {self.path}\n\tFile: {filename}")
+				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 
 		return df
 
