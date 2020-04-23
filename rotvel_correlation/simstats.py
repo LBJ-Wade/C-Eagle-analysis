@@ -220,7 +220,7 @@ class Simstats:
 		print(df.info())
 
 		if save2hdf5:
-			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.h5"
+			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.hdf5"
 			df.to_hdf(os.path.join(self.path + filename), key=f'aperture{self.aperture_id}', mode='w')
 			if os.path.isfile(os.path.join(self.path + filename)):
 				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
@@ -233,5 +233,5 @@ if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
 	simstats.make_simstats(save2hdf5=True)
-	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.h5'), key='aperture10')
+	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.hdf5'), key='aperture10')
 	print(stats_out)
