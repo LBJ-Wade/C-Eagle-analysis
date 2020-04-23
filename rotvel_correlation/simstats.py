@@ -21,6 +21,7 @@ import sys
 import os
 import warnings
 import itertools
+from typing import Union
 
 exec(open(os.path.abspath(os.path.join(
 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
@@ -83,7 +84,7 @@ class Simstats:
 		""" return centers from bin sequence """
 		return np.sqrt(bins[:-1] * bins[1:])
 
-	def make_simstats(self, save2hdf5: bool = True) -> pd.DataFrame:
+	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 
 		cols = [
 				'cluster_id',
@@ -168,7 +169,7 @@ class Simstats:
 		}
 
 		df = pd.DataFrame(columns=cols)
-		iterator = itertools.product(self.simulation.clusterIDAllowed[:2], self.simulation.redshiftAllowed)
+		iterator = itertools.product(self.simulation.clusterIDAllowed[:1], self.simulation.redshiftAllowed)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
@@ -224,12 +225,13 @@ class Simstats:
 			if os.path.isfile(os.path.join(self.path + filename)):
 				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 
-		return df
+		else:
+			return df
 
 
 if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
-	# stats_out = simstats.make_simstats(save2hdf5=True)
-	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.h5'), key='simstats')
-	print(stats_out.loc[:5, 'redshift_float':'vel0vel1'])
+	stats_out = simstats.make_simstats(save2hdf5=True)
+	# stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.h5'), key='simstats')
+	print(stats_out.loc['redshift_float':'vel0vel1'])
