@@ -177,10 +177,11 @@ class Simstats:
 		}
 
 
-		df = pd.DataFrame(columns=columns)
-		df.metadata = metadata
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+
+			if process_n is 0:
+				df = pd.DataFrame()
 
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
 				print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
@@ -231,7 +232,8 @@ class Simstats:
 			else:
 				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
-		print("DATAFRAME SUMMARY", df.info(), sep='\n')
+		df.metadata = metadata
+		print(df.info())
 
 		if save2hdf5:
 			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.h5"
