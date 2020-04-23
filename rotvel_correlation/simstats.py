@@ -183,8 +183,7 @@ class Simstats:
 				print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 				cluster = Cluster(simulation_name=self.simulation.simulation_name,
 								  clusterID=halo_id,
-								  redshift=halo_z,
-								  fastbrowsing=False)
+								  redshift=halo_z)
 				read = pull.FOFRead(cluster)
 				df = df.append({
 					'cluster_id' : cluster.clusterID,
@@ -244,4 +243,4 @@ if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
 	stats_out = simstats.make_simstats(save2hdf5=True)
-	print(stats_out.loc[:5, 'redshift_float', 'M_200_crit', 'vel0vel1'])
+	# print(stats_out.loc[:5, 'redshift_float', 'M_200_crit', 'vel0vel1'])
