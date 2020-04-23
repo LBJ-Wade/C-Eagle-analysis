@@ -221,7 +221,7 @@ class Simstats:
 
 		if save2hdf5:
 			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.hdf5"
-			df.to_hdf(os.path.join(self.path + filename), key=f'aperture{self.aperture_id}', mode='w')
+			df.to_hdf(os.path.join(self.path, filename), key=f'aperture{self.aperture_id}', mode='w')
 			if os.path.isfile(os.path.join(self.path + filename)):
 				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 
