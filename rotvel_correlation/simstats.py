@@ -68,24 +68,7 @@ class Simstats:
 		a_equality = (omega_matter/omega_lambda/2)**(1/3)
 		return 1/a_equality -1
 
-	@staticmethod
-	def get_centers_from_bins(bins):
-		""" return centers from bin sequence """
-		return (bins[:-1] + bins[1:]) / 2
-
-	@staticmethod
-	def get_widths_from_bins(bins):
-		""" return centers from bin sequence """
-		# return bins[1:] - bins[:-1]
-		return np.array([np.abs(bins[i+1] - bins[i]) for i in range(len(bins)-1)])
-
-	@staticmethod
-	def get_centers_from_log_bins(bins):
-		""" return centers from bin sequence """
-		return np.sqrt(bins[:-1] * bins[1:])
-
-	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
-
+	def make_metadata(self):
 		cols = [
 				'cluster_id',
 				'redshift_float',
@@ -157,16 +140,36 @@ class Simstats:
 				r'Substructure fraction'
 		]
 		metadata = {
-				'Simulation' : self.simulation.simulation,
-				'Number of clusters' : self.simulation.totalClusters,
-				'Redshift bounds' : '0 - 1.8',
-				'Sample completeness' : np.sum(self.simulation.sample_completeness)/np.product(self.simulation.sample_completeness.shape),
-				'Aperture radius'   : self.aperture_id,
-				'z mL equality' : self.get_matterLambda_equality_z(),
-				'Cluster centre reference' : 'Centre of potential',
-				'Pipeline stage' : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
-				'Columns/labels' : dict(zip(cols, labels_tex))
+				'Simulation'              : self.simulation.simulation,
+				'Number of clusters'      : self.simulation.totalClusters,
+				'Redshift bounds'         : '0 - 1.8',
+				'Sample completeness'     : np.sum(self.simulation.sample_completeness) / np.product(self.simulation.sample_completeness.shape),
+				'z mL equality'           : self.get_matterLambda_equality_z(),
+				'Cluster centre reference': 'Centre of potential',
+				'Pipeline stage'          : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
+				'Columns/labels'          : dict(zip(cols, labels_tex))
 		}
+
+		df = pd.DataFrame.from_dict(metadata)
+		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
+		df.to_hdf(os.path.join(self.path, filename), key='attributes', mode='w')
+		if os.path.isfile(os.path.join(self.path + filename)):
+			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
+
+	def read_metadata(self):
+		path2file = os.path.join(self.path, f"simstats_{self.simulation.simulation_name}.hdf5")
+		return pd.read_hdf(path2file, 'attributes')
+
+	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
+		try:
+			self.read_metadata()
+		except:
+			print('[+] Metadata file not found. Generating attributes...')
+			self.make_metadata()
+		finally:
+			attributes = self.read_metadata()
+			cols = attributes['Columns/labels'].keys()
+			print(cols)
 
 		df = pd.DataFrame(columns=cols)
 		iterator = itertools.product(self.simulation.clusterIDAllowed[:1], self.simulation.redshiftAllowed)
@@ -216,7 +219,6 @@ class Simstats:
 			else:
 				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
-		df.metadata = metadata
 		print(df.info())
 		if save2hdf5:
 			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.hdf5"
@@ -230,8 +232,7 @@ class Simstats:
 	def read_simstats(self) -> pd.DataFrame:
 		key = f'aperture{self.aperture_id}'
 		path2file = os.path.join(self.path, f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.hdf5")
-		stats_out = pd.read_hdf(path2file, key)
-		return stats_out
+		return pd.read_hdf(path2file, key)
 
 
 if __name__ == '__main__':
