@@ -86,7 +86,7 @@ class Simstats:
 	def make_simstats(self, save2hdf5: bool = True) -> pd.DataFrame:
 		assert self.simulation is not None
 		iterator = itertools.product(self.simulation.clusterIDAllowed, self.simulation.redshiftAllowed)
-		columns = [
+		cols = [
 				'cluster_id',
 				'redshift_float',
 
@@ -173,10 +173,10 @@ class Simstats:
 				'z mL equality' : self.get_matterLambda_equality_z(),
 				'Cluster centre reference' : 'Centre of potential',
 				'Pipeline stage' : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
-				'Columns/labels' : dict(zip(columns, labels_tex))
+				'Columns/labels' : dict(zip(cols, labels_tex))
 		}
 
-		df = pd.DataFrame()
+		df = pd.DataFrame(columns=cols)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
