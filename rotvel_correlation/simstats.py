@@ -168,7 +168,7 @@ class Simstats:
 		}
 
 		df = pd.DataFrame(columns=cols)
-		iterator = itertools.product(self.simulation.clusterIDAllowed, self.simulation.redshiftAllowed)
+		iterator = itertools.product(self.simulation.clusterIDAllowed[:2], self.simulation.redshiftAllowed)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
@@ -215,7 +215,7 @@ class Simstats:
 			else:
 				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
-		# df.metadata = metadata
+		df.metadata = metadata
 		print(df.info())
 
 		if save2hdf5:
