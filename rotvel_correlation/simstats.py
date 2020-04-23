@@ -20,12 +20,6 @@ import pandas as pd
 import sys
 import os
 import warnings
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from sklearn.utils import resample
-from typing import Dict, Tuple, Union
 import itertools
 
 exec(open(os.path.abspath(os.path.join(
@@ -35,13 +29,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 
 from import_toolkit.cluster import Cluster
 from import_toolkit.simulation import Simulation
-from import_toolkit._cluster_retriever import redshift_str2num
-
 from import_toolkit.progressbar import ProgressBar
 from read import pull
-
-def esc(code):
-    return f'\e[{code}m'
 
 
 class Simstats:
@@ -240,9 +229,9 @@ class Simstats:
 					'substructure_fraction_T' : read.pull_substructure_merging_index('Total_substructure_fraction')[self.aperture_id],
 				}, ignore_index=True)
 			else:
-				print(esc(2)+f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}"+esc(0))
+				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
-		print(f"{esc(4)}{' DATAFRAME SUMMARY ':^-40s}{esc(0)}{esc(36)}\n{df.info()}{esc(0)}")
+		print(f"{' DATAFRAME SUMMARY ':^-40s}\n{df.info()}")
 
 		if save2hdf5:
 			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.h5"
