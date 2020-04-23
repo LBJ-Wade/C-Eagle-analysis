@@ -119,7 +119,7 @@ class Simstats:
 				'substructure_mass_T',
 				'dynamical_merging_index_T',
 				'thermodynamic_merging_index_T',
-				'substructure_fraction_T',
+				'substructure_fraction_T'
 		]
 		labels_tex = [
 				r'Cluster ID',
@@ -155,7 +155,7 @@ class Simstats:
 				r'$M_\mathrm{sub}$\quad[$M_\odot$]',
 				r'Dynamical merging index',
 				r'Thermoynamic merging index',
-				r'Substructure fraction',
+				r'Substructure fraction'
 		]
 		metadata = {
 				'Simulation' : self.simulation.simulation,
@@ -211,8 +211,8 @@ class Simstats:
 					'substructure_mass_T' : cluster.mass_units(read.pull_substructure_mass('Total_substructure_mass')[self.aperture_id], unit_system='astro'),
 					'dynamical_merging_index_T' : read.pull_dynamical_merging_index('Total_dyn_mergindex')[self.aperture_id],
 					'thermodynamic_merging_index_T' : read.pull_thermodynamic_merging_index('Total_therm_mergindex')[self.aperture_id],
-					'substructure_fraction_T' : read.pull_substructure_merging_index('Total_substructure_fraction')[self.aperture_id],
-				}, ignore_index=False)
+					'substructure_fraction_T' : read.pull_substructure_merging_index('Total_substructure_fraction')[self.aperture_id]
+				}, ignore_index=True)
 			else:
 				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
