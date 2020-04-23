@@ -178,7 +178,7 @@ class Simstats:
 
 
 		df = pd.DataFrame(columns=columns)
-		pd.metadata = metadata
+		df.metadata = metadata
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
 
