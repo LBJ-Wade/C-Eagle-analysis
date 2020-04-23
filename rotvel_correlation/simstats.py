@@ -89,7 +89,6 @@ class Simstats:
 		cols = [
 				'cluster_id',
 				'redshift_float',
-
 				'R_2500_crit',
 				'R_500_crit',
 				'R_200_crit',
@@ -101,12 +100,10 @@ class Simstats:
 				'M_aperture_0',
 				'M_aperture_1',
 				'M_aperture_4',
-
 				'rotTvelT',
 				'rot0rot4',
 				'rot1rot4',
 				'vel0vel1',
-
 				'peculiar_velocity_T_magnitude',
 				'peculiar_velocity_0_magnitude',
 				'peculiar_velocity_1_magnitude',
@@ -120,7 +117,6 @@ class Simstats:
 				'kinetic_energy_1',
 				'thermal_energy',
 				'substructure_mass_T',
-
 				'dynamical_merging_index_T',
 				'thermodynamic_merging_index_T',
 				'substructure_fraction_T',
@@ -140,12 +136,10 @@ class Simstats:
 				r'$M_\mathrm{aperture}^\mathrm{(gas)}$\quad[$M_\odot$]',
 				r'$M_\mathrm{aperture}^\mathrm{(DM)}$\quad[$M_\odot$]',
 				r'$M_\mathrm{aperture}^\mathrm{(stars)}$\quad[$M_\odot$]',
-
 				r'$\theta (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]',
 				r'$theta (\mathbf{L^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
 				r'$theta (\mathbf{L^\mathrm{(DM)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
 				r'$theta (\mathbf{v_\mathrm{pec}^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{v_\mathrm{pec}^\mathrm{(gas)}})$\quad[degrees]$',
-
 				r'$\mathbf{v_\mathrm{pec}}$\quad[km/s]',
 				r'$\mathbf{v_\mathrm{pec}^\mathrm{(gas)}}$\quad[km/s]',
 				r'$\mathbf{v_\mathrm{pec}^\mathrm{(DM)}}$\quad[km/s]',
@@ -159,7 +153,6 @@ class Simstats:
 				r'Kinetic energy (DM)\quad[J]',
 				r'Thermal energy\quad[J]',
 				r'$M_\mathrm{sub}$\quad[$M_\odot$]',
-
 				r'Dynamical merging index',
 				r'Thermoynamic merging index',
 				r'Substructure fraction',
@@ -188,7 +181,6 @@ class Simstats:
 				df = df.append({
 					'cluster_id' : cluster.clusterID,
 					'redshift_float' : cluster.z,
-
 					'R_2500_crit'  : cluster.r2500,
 					'R_500_crit'   : cluster.r500,
 					'R_200_crit'   : cluster.r200,
@@ -200,12 +192,10 @@ class Simstats:
 					'M_aperture_0' : cluster.mass_units(read.pull_mass_aperture('ParType0_mass')[self.aperture_id], unit_system='astro'),
 					'M_aperture_1' : cluster.mass_units(read.pull_mass_aperture('ParType1_mass')[self.aperture_id], unit_system='astro'),
 					'M_aperture_4' : cluster.mass_units(read.pull_mass_aperture('ParType4_mass')[self.aperture_id], unit_system='astro'),
-
 					'rotTvelT' : read.pull_rot_vel_angle_between('Total_angmom', 'Total_ZMF')[self.aperture_id],
 					'rot0rot4' : read.pull_rot_vel_angle_between('ParType0_angmom', 'ParType4_angmom')[self.aperture_id],
 					'rot1rot4' : read.pull_rot_vel_angle_between('ParType1_angmom', 'ParType4_angmom')[self.aperture_id],
 					'vel0vel1' : read.pull_rot_vel_angle_between('ParType0_ZMF', 'ParType1_ZMF')[self.aperture_id],
-
 					'peculiar_velocity_T_magnitude' : read.pull_peculiar_velocity_magnitude('Total_ZMF')[self.aperture_id],
 					'peculiar_velocity_0_magnitude' : read.pull_peculiar_velocity_magnitude('ParType0_ZMF')[self.aperture_id],
 					'peculiar_velocity_1_magnitude' : read.pull_peculiar_velocity_magnitude('ParType1_ZMF')[self.aperture_id],
@@ -219,7 +209,6 @@ class Simstats:
 					'kinetic_energy_1' : cluster.energy_units(read.pull_kinetic_energy('ParType1_kin_energy')[self.aperture_id], unit_system='SI'),
 					'thermal_energy'   : cluster.energy_units(read.pull_thermal_energy('Total_th_energy')[self.aperture_id], unit_system='SI'),
 					'substructure_mass_T' : cluster.mass_units(read.pull_substructure_mass('Total_substructure_mass')[self.aperture_id], unit_system='astro'),
-
 					'dynamical_merging_index_T' : read.pull_dynamical_merging_index('Total_dyn_mergindex')[self.aperture_id],
 					'thermodynamic_merging_index_T' : read.pull_thermodynamic_merging_index('Total_therm_mergindex')[self.aperture_id],
 					'substructure_fraction_T' : read.pull_substructure_merging_index('Total_substructure_fraction')[self.aperture_id],
