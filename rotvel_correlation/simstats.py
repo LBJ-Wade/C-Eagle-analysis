@@ -231,5 +231,5 @@ if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
 	# stats_out = simstats.make_simstats(save2hdf5=True)
-	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.h5'), key=simstats)
+	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.h5'), key='simstats')
 	print(stats_out.loc[:5, 'redshift_float':'vel0vel1'])
