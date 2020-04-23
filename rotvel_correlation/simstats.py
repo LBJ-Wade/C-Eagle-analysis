@@ -234,4 +234,4 @@ if __name__ == '__main__':
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
 	simstats.make_simstats(save2hdf5=True)
 	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.hdf5'), 'aperture10')
-	print(stats_out)
+	print(stats_out.quert('cluster_id == 0 and redshift_float < 0.1')['cluster_id':'redshift_float'])
