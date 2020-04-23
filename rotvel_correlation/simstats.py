@@ -172,6 +172,7 @@ class Simstats:
 		df = pd.DataFrame(columns=cols)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+			print('k')
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
 				print(f"{'Processing...':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 				cluster = Cluster(simulation_name=self.simulation.simulation_name,
