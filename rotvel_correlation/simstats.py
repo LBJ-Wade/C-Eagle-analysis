@@ -231,7 +231,7 @@ class Simstats:
 			else:
 				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
-		print(f"{' DATAFRAME SUMMARY ':^-40s}\n{df.info()}")
+		print("DATAFRAME SUMMARY", df.info(), sep='\n')
 
 		if save2hdf5:
 			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.h5"
