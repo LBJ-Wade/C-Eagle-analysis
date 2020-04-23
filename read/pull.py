@@ -175,21 +175,6 @@ class FOFRead(Simulation):
         return alignment_matrix
 
 
-    def pull_rot_vel_magnitudes_vectors(self):
-
-
-        with h5py.File(os.path.join(self.FOFDirectory, 'apertures.hdf5'), 'r') as input_file:
-            apertures = np.array(input_file.get('Apertures'))
-
-        # Read angular momentum data
-        with h5py.File(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5'), 'r') as input_file:
-            Total_angmom = np.array(input_file.get('Total_angmom'))
-
-
-        # Read peculiar valocity data
-        with h5py.File(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5'), 'r') as input_file:
-            Total_ZMF = np.array(input_file.get('Total_ZMF'))
-
     def pull_rot_vel_angle_between(self, vector1_str: str, vector2_str: str) -> np.ndarray:
         """
         Pull a specific angle between a pair of vectors. Example implementation:
@@ -227,14 +212,59 @@ class FOFRead(Simulation):
 
         return angle_apertures
 
+    def pull_mass_aperture(self, datasetName: str):
+       with h5py.File(os.path.join(self.FOFDirectory, 'mass.hdf5'), 'r') as input_file:
+           mass = np.array(input_file.get(datasetName))
+       return mass
 
-    def pull_dynamical_merging_index(self, partype: str):
-
+    def pull_dynamical_merging_index(self, datasetName: str):
        with h5py.File(os.path.join(self.FOFDirectory, 'dynamical_merging_index.hdf5'), 'r') as input_file:
-           dyn_mergindex = np.array(input_file.get(partype))
-
+           dyn_mergindex = np.array(input_file.get(datasetName))
        return dyn_mergindex
 
+    def pull_thermodynamic_merging_index(self, datasetName: str):
+       with h5py.File(os.path.join(self.FOFDirectory, 'thermodynamic_merging_index.hdf5'), 'r') as input_file:
+           thermodynamic_merging_index = np.array(input_file.get(datasetName))
+       return thermodynamic_merging_index
+
+    def pull_substructure_merging_index(self, datasetName: str):
+       with h5py.File(os.path.join(self.FOFDirectory, 'substructure_fraction.hdf5'), 'r') as input_file:
+           substructure_fraction = np.array(input_file.get(datasetName))
+       return substructure_fraction
+
+    def pull_substructure_mass(self, datasetName: str):
+       with h5py.File(os.path.join(self.FOFDirectory, 'substructure_mass.hdf5'), 'r') as input_file:
+           substructure_mass = np.array(input_file.get(datasetName))
+       return substructure_mass
+
+    def pull_peculiar_velocity_magnitude(self, datasetName: str):
+        with h5py.File(os.path.join(self.FOFDirectory, 'peculiar_velocity.hdf5'), 'r') as input_file:
+            peculiar_velocity = np.array(input_file.get(datasetName))
+
+        return np.sqrt(
+            peculiar_velocity[:, 0] ** 2 +
+            peculiar_velocity[:, 1] ** 2 +
+            peculiar_velocity[:, 2] ** 2
+        )
+
+    def pull_angular_momentum_magnitude(self, datasetName: str):
+        with h5py.File(os.path.join(self.FOFDirectory, 'angular_momentum.hdf5'), 'r') as input_file:
+            angular_momentum = np.array(input_file.get(datasetName))
+        return np.sqrt(
+            angular_momentum[:, 0] ** 2 +
+            angular_momentum[:, 1] ** 2 +
+            angular_momentum[:, 2] ** 2
+        )
+
+    def pull_kinetic_energy(self, datasetName: str):
+        with h5py.File(os.path.join(self.FOFDirectory, 'kinetic_energy.hdf5'), 'r') as input_file:
+            kinetic_energy = np.array(input_file.get(datasetName))
+        return kinetic_energy
+
+    def pull_thermal_energy(self, datasetName: str):
+        with h5py.File(os.path.join(self.FOFDirectory, 'thermal_energy.hdf5'), 'r') as input_file:
+            thermal_energy = np.array(input_file.get(datasetName))
+        return thermal_energy
 
 
 if __name__ == '__main__':

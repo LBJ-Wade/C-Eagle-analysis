@@ -1039,3 +1039,22 @@ class Mixin:
             raise("[ERROR] Trying to convert mass to an unknown metric system.")
 
         return np.multiply(momentum, conv_factor)
+
+    @staticmethod
+    def energy_units(energy, unit_system='SI'):
+        """
+		CREATED: 07.03.2019
+		LAST MODIFIED: 07.03.2019
+
+		INPUTS: momentum np.array
+
+				metric system used: 'SI' or 'cgs' or astronomical 'astro'
+		"""
+        if unit_system == 'SI':
+            # m/s
+            conv_factor = np.power(10., 46)
+
+        else:
+            raise ("[ERROR] Trying to convert mass to an unknown metric system.")
+
+        return np.multiply(energy, conv_factor)

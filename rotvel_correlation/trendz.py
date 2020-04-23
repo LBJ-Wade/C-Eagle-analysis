@@ -472,9 +472,8 @@ class TrendZ:
 
 	@classmethod
 	def run_from_dict(cls, setup: Dict[str, Union[int, str, List[str], Figure]]):
-
+		self = cls()
 		if setup['run_mode'] is 'single_plot':
-			self = cls()
 			self.set_aperture(setup['aperture_id'])
 			self.set_simulation(setup['simulation_name'])
 			self.set_bootstrap_niters(setup['bootstrap_niters'])
@@ -488,27 +487,27 @@ class TrendZ:
 
 
 		elif setup['run_mode'] is 'multi_sim':
-			self = cls()
-			self.set_figure(setup['figure'])
-			axis = setup['figure'].add_subplot(111)
 			self.set_bootstrap_niters(setup['bootstrap_niters'])
 			if type(setup['aperture_id']) is int:
 				setup['aperture_id'] = [setup['aperture_id']]
 			for aperture in setup['aperture_id']:
 				if int(aperture) % size is rank:
 					self.set_aperture(aperture)
+					fig, axes = plt.subplots(ncols=2, nrows=2, constrained_layout=True)
+					self.set_figure(fig)
 					for sim in setup['simulation_name']:
 						self.set_simulation(sim)
-						self.plot_z_trends(axis=axis)
-					self.save_z_trend(common_folder=False)
-					plt.cla()
+						self.plot_z_trends(axis=axes[setup['simulation_name'].index(sim)])
+					self.save_z_trend(common_folder=True)
+					plt.clf()
+					fig, axes = plt.subplots(ncols=2, nrows=2, constrained_layout=True)
+					self.set_figure(fig)
 					for sim in setup['simulation_name']:
 						self.set_simulation(sim)
-						self.plot_z_trend_histogram(axis=axis)
-					self.save_z_trend_hist(common_folder=False)
+						self.plot_z_trend_histogram(axis=axes[setup['simulation_name'].index(sim)])
+					self.save_z_trend_hist(common_folder=True)
 
 		elif setup['run_mode'] is 'multi_bootstrap':
-			self = cls()
 			self.set_figure(setup['figure'])
 			self.set_bootstrap_niters(setup['bootstrap_niters'])
 			if type(setup['aperture_id']) is int:
