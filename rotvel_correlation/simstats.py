@@ -233,5 +233,5 @@ if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
 	simstats.make_simstats(save2hdf5=True)
-	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.hdf5'), key='aperture10')
+	stats_out = pd.read_hdf(os.path.join(simstats.path, 'simstats_celr_b_aperture10.hdf5'), 'aperture10')
 	print(stats_out)
