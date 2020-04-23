@@ -223,7 +223,7 @@ class Simstats:
 					'dynamical_merging_index_T' : read.pull_dynamical_merging_index('Total_dyn_mergindex')[self.aperture_id],
 					'thermodynamic_merging_index_T' : read.pull_thermodynamic_merging_index('Total_therm_mergindex')[self.aperture_id],
 					'substructure_fraction_T' : read.pull_substructure_merging_index('Total_substructure_fraction')[self.aperture_id],
-				}, ignore_index=True)
+				}, ignore_index=False)
 			else:
 				print(f"{'Skip - sample_completeness':<30s} {process_n:^25d} | {halo_id:^15d} | {halo_z:^20s}")
 
