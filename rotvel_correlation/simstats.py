@@ -244,7 +244,7 @@ class Simstats:
 	def read_metadata(self):
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		with pd.HDFStore(os.path.join(self.path, filename)) as store:
-			return getattr(store.get_storer('attributes').attrs, 'metadata')
+			return store['attributes']
 
 	def read_simstats(self) -> pd.DataFrame:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
