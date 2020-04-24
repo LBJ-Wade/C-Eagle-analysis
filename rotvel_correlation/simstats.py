@@ -157,9 +157,8 @@ class Simstats:
 
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		with h5py.File(os.path.join(self.path, filename), 'w') as master_file:
-			header = master_file.create_dataset('\Header', data=np.empty(0))
 			for key, text in zip(metadata.keys(), metadata.values()):
-				header.attrs[key] = text
+				master_file.attrs[key] = text
 		if os.path.isfile(os.path.join(self.path, filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 
@@ -168,8 +167,7 @@ class Simstats:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		if os.path.isfile(os.path.join(self.path, filename)):
 			with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
-				if "/Header" in master_file:
-					return master_file["/Header"].attrs is not None
+				return master_file.attrs is not None
 		else:
 			return False
 
@@ -242,8 +240,7 @@ class Simstats:
 	def read_metadata(self) -> Dict[str, Union[int, float, str, Dict[str, str]]]:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
-			h5dset = master_file["/Header"]
-			return h5dset.attrs
+			return master_file.attrs
 
 	def read_simstats(self) -> pd.DataFrame:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
