@@ -15,13 +15,14 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-import numpy as np
-import pandas as pd
 import sys
 import os
 import warnings
 import itertools
-from typing import Union
+from typing import Union, Dict
+import numpy as np
+import pandas as pd
+import h5py
 
 exec(open(os.path.abspath(os.path.join(
 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
@@ -71,19 +72,6 @@ class Simstats:
 	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata') -> None:
 		with pd.HDFStore(filename) as store:
 			store.put(key, df)
-
-	def h5load(self, store: pd.HDFStore, key: str = 'mydata') -> tuple:
-		"""
-		Based on StackOverflow:
-			https://stackoverflow.com/questions/29129095/save-additional-attributes-in-pandas-dataframe
-
-		:param store:
-		:param key:
-		:return:
-		"""
-		data = store[key]
-		metadata = getattr(store.get_storer(key).attrs, 'metadata')
-		return data, metadata
 
 	def make_metadata(self):
 		cols = [
@@ -136,9 +124,9 @@ class Simstats:
 				r'$M_\mathrm{aperture}^\mathrm{(DM)}$\quad[$M_\odot$]',
 				r'$M_\mathrm{aperture}^\mathrm{(stars)}$\quad[$M_\odot$]',
 				r'$\theta (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]',
-				r'$theta (\mathbf{L^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
-				r'$theta (\mathbf{L^\mathrm{(DM)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
-				r'$theta (\mathbf{v_\mathrm{pec}^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{v_\mathrm{pec}^\mathrm{(gas)}})$\quad[degrees]$',
+				r'$\theta (\mathbf{L^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
+				r'$\theta (\mathbf{L^\mathrm{(DM)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
+				r'$\theta (\mathbf{v_\mathrm{pec}^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{v_\mathrm{pec}^\mathrm{(gas)}})$\quad[degrees]$',
 				r'$\mathbf{v_\mathrm{pec}}$\quad[km/s]',
 				r'$\mathbf{v_\mathrm{pec}^\mathrm{(gas)}}$\quad[km/s]',
 				r'$\mathbf{v_\mathrm{pec}^\mathrm{(DM)}}$\quad[km/s]',
@@ -167,11 +155,14 @@ class Simstats:
 				'Columns/labels'          : dict(zip(cols, labels_tex))
 		}
 
-		df = pd.DataFrame(metadata, columns=metadata.keys())
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		self.h5store(os.path.join(self.path, filename), df, key='attributes')
+		with h5py.File(os.path.join(self.path, filename), 'w') as master_file:
+			header = master_file.create_dataset('\Header', data=None)
+			for key, text in zip(metadata.keys(), metadata.values()):
+				header.attrs[key] = text
 		if os.path.isfile(os.path.join(self.path, filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
+
 
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 		try:
@@ -241,10 +232,11 @@ class Simstats:
 		else:
 			return df
 
-	def read_metadata(self):
+	def read_metadata(self) -> Dict[str, Union[int, float, str, Dict[str, str]]]:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		with pd.HDFStore(os.path.join(self.path, filename)) as store:
-			return store['attributes']
+		with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
+			h5dset = master_file["/Header"]
+			return h5dset.attrs
 
 	def read_simstats(self) -> pd.DataFrame:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
