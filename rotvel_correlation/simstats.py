@@ -68,6 +68,17 @@ class Simstats:
 		a_equality = (omega_matter/omega_lambda/2)**(1/3)
 		return 1/a_equality -1
 
+	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata', **kwargs) -> None:
+		store = pd.HDFStore(filename)
+		store.put(key, df)
+		store.get_storer(key).attrs.metadata = kwargs
+		store.close()
+
+	def h5load(self, store: pd.HDFStore, key: str = 'mydata') -> tuple:
+		data = store[key]
+		metadata = store.get_storer(key).attrs.metadata
+		return data, metadata
+
 	def make_metadata(self):
 		cols = [
 				'cluster_id',
@@ -150,20 +161,16 @@ class Simstats:
 				'Columns/labels'          : dict(zip(cols, labels_tex))
 		}
 
-		df = pd.DataFrame.from_dict(metadata)
+		df = pd.DataFrame()
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		df.to_hdf(os.path.join(self.path, filename), key='attributes', mode='w')
-		if os.path.isfile(os.path.join(self.path + filename)):
+		self.h5store(os.path.join(self.path, filename), df, key='attributes', **metadata)
+		if os.path.isfile(os.path.join(self.path, filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
-
-	def read_metadata(self):
-		path2file = os.path.join(self.path, f"simstats_{self.simulation.simulation_name}.hdf5")
-		return pd.read_hdf(path2file, 'attributes')
 
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 		try:
 			self.read_metadata()
-		except(ValueError):
+		except(...):
 			print('[+] Metadata file not found. Generating attributes...')
 			self.make_metadata()
 		finally:
@@ -221,18 +228,22 @@ class Simstats:
 
 		print(df.info())
 		if save2hdf5:
-			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.hdf5"
-			df.to_hdf(os.path.join(self.path, filename), key=f'aperture{self.aperture_id}')
+			filename = f"simstats_{self.simulation.simulation_name}.hdf5"
+			self.h5store(os.path.join(self.path, filename), df, key=f'aperture{self.aperture_id}')
 			if os.path.isfile(os.path.join(self.path + filename)):
 				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 		else:
 			return df
 
+	def read_metadata(self):
+		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
+		with pd.HDFStore(os.path.join(self.path, filename)) as store:
+			return store.get_storer('attributes').attrs.metadata
 
 	def read_simstats(self) -> pd.DataFrame:
-		key = f'aperture{self.aperture_id}'
-		path2file = os.path.join(self.path, f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.hdf5")
-		return pd.read_hdf(path2file, key)
+		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
+		with pd.HDFStore(os.path.join(self.path, filename)) as store:
+			return store[f'aperture{self.aperture_id}']
 
 
 if __name__ == '__main__':
