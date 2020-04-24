@@ -19,7 +19,7 @@ import sys
 import os
 import warnings
 import itertools
-from typing import Union, Dict
+from typing import Union, Dict, List
 import numpy as np
 import pandas as pd
 import h5py
@@ -171,13 +171,18 @@ class Simstats:
 		else:
 			return False
 
+	def get_columns(self) -> List[str]:
+		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
+		with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
+			return master_file.attrs.keys()
 
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 		if not self.is_metadata():
 			print('[+] Metadata file not found. Generating attributes...')
 			self.make_metadata()
 		attributes = self.read_metadata()
-		cols = attributes['Columns/labels'].keys()
+		print(attributes)
+		cols = self.get_columns()
 		print(cols)
 
 		df = pd.DataFrame(columns=cols)
