@@ -167,7 +167,7 @@ class Simstats:
 				'Columns/labels'          : dict(zip(cols, labels_tex))
 		}
 
-		df = pd.DataFrame.from_dict(metadata)
+		df = pd.DataFrame(metadata, columns=metadata.keys())
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		self.h5store(os.path.join(self.path, filename), df, key='attributes')
 		if os.path.isfile(os.path.join(self.path, filename)):
