@@ -71,12 +71,12 @@ class Simstats:
 	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata', **kwargs) -> None:
 		store = pd.HDFStore(filename)
 		store.put(key, df)
-		store.get_storer(key).attrs.metadata = kwargs
+		setattr(store.get_storer(key).attrs, 'metadata', kwargs)
 		store.close()
 
 	def h5load(self, store: pd.HDFStore, key: str = 'mydata') -> tuple:
 		data = store[key]
-		metadata = store.get_storer(key).attrs.metadata
+		metadata = getattr(store.get_storer(key).attrs, 'metadata')
 		return data, metadata
 
 	def make_metadata(self):
@@ -238,7 +238,7 @@ class Simstats:
 	def read_metadata(self):
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		with pd.HDFStore(os.path.join(self.path, filename)) as store:
-			return store.get_storer('attributes').attrs.metadata
+			return getattr(store.get_storer('attributes').attrs, 'metadata')
 
 	def read_simstats(self) -> pd.DataFrame:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
