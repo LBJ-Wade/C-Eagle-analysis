@@ -163,7 +163,7 @@ class Simstats:
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 		try:
 			self.read_metadata()
-		except(...):
+		except(ValueError):
 			print('[+] Metadata file not found. Generating attributes...')
 			self.make_metadata()
 		finally:
