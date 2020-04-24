@@ -163,7 +163,7 @@ class Simstats:
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 		try:
 			self.read_metadata()
-		except:
+		except(...):
 			print('[+] Metadata file not found. Generating attributes...')
 			self.make_metadata()
 		finally:
@@ -172,7 +172,7 @@ class Simstats:
 			print(cols)
 
 		df = pd.DataFrame(columns=cols)
-		iterator = itertools.product(self.simulation.clusterIDAllowed[:1], self.simulation.redshiftAllowed)
+		iterator = itertools.product(self.simulation.clusterIDAllowed, self.simulation.redshiftAllowed)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
@@ -222,7 +222,7 @@ class Simstats:
 		print(df.info())
 		if save2hdf5:
 			filename = f"simstats_{self.simulation.simulation_name}_aperture{self.aperture_id}.hdf5"
-			df.to_hdf(os.path.join(self.path, filename), key=f'aperture{self.aperture_id}', mode='w')
+			df.to_hdf(os.path.join(self.path, filename), key=f'aperture{self.aperture_id}')
 			if os.path.isfile(os.path.join(self.path + filename)):
 				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 		else:
@@ -241,4 +241,4 @@ if __name__ == '__main__':
 	simstats.make_simstats(save2hdf5=True)
 	stats_out = simstats.read_simstats()
 	print(stats_out.query('cluster_id == 0 and redshift_float < 0.1')['redshift_float'])
-	print(stats_out.metadata)
+	print(simstats.read_metadata())
