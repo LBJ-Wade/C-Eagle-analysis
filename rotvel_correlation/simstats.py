@@ -68,10 +68,10 @@ class Simstats:
 		a_equality = (omega_matter/omega_lambda/2)**(1/3)
 		return 1/a_equality -1
 
-	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata', **kwargs) -> None:
+	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata', metadata: dict = None) -> None:
 		store = pd.HDFStore(filename)
 		store.put(key, df)
-		setattr(store.get_storer(key).attrs, 'metadata', kwargs)
+		setattr(store.get_storer(key).attrs, 'metadata', metadata)
 		store.close()
 
 	def h5load(self, store: pd.HDFStore, key: str = 'mydata') -> tuple:
@@ -163,7 +163,7 @@ class Simstats:
 
 		df = pd.DataFrame()
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		self.h5store(os.path.join(self.path, filename), df, key='attributes', **metadata)
+		self.h5store(os.path.join(self.path, filename), df, key='attributes', metadata=metadata)
 		if os.path.isfile(os.path.join(self.path, filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 
