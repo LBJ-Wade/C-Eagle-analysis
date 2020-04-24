@@ -157,7 +157,7 @@ class Simstats:
 
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		with h5py.File(os.path.join(self.path, filename), 'w') as master_file:
-			header = master_file.create_dataset('\Header', data=None)
+			header = master_file.create_dataset('\Header', data=np.empty(0, dtype=np.int))
 			for key, text in zip(metadata.keys(), metadata.values()):
 				header.attrs[key] = text
 		if os.path.isfile(os.path.join(self.path, filename)):
