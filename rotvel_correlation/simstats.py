@@ -164,16 +164,24 @@ class Simstats:
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
 
 
+	def is_metadata(self) -> bool:
+		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
+		if os.path.isfile(os.path.join(self.path, filename)):
+			with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
+				is_dataset = "/Header" in master_file
+				is_attr = master_file["/Header"].attrs is not None
+				return is_dataset and is_attr
+		else:
+			return False
+
+
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
-		try:
-			self.read_metadata()
-		except(...):
+		if not self.is_metadata():
 			print('[+] Metadata file not found. Generating attributes...')
 			self.make_metadata()
-		finally:
-			attributes = self.read_metadata()
-			cols = attributes['Columns/labels'].keys()
-			print(cols)
+		attributes = self.read_metadata()
+		cols = attributes['Columns/labels'].keys()
+		print(cols)
 
 		df = pd.DataFrame(columns=cols)
 		iterator = itertools.product(self.simulation.clusterIDAllowed[0], self.simulation.redshiftAllowed)
