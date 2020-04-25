@@ -255,9 +255,11 @@ if __name__ == '__main__':
 	                       help='Parse the name of the simulation to analyse.')
 	args = my_parser.parse_args()
 	simulation_name = vars(args)['simulation']
-	simstats = Simstats(simulation_name=simulation_name, aperture_id=10)
+	simstats = Simstats(simulation_name=simulation_name)
 	simstats.clear_file()
-	simstats.make_simstats(save2hdf5=True)
-	stats_out = simstats.read_simstats()
-	print(stats_out.query('cluster_id == 0 and redshift_float < 0.1')['redshift_float'])
-	print(simstats.read_metadata())
+	for aperture_id in range(20):
+		simstats.set_aperture(aperture_id)
+		simstats.make_simstats(save2hdf5=True)
+	# stats_out = simstats.read_simstats()
+	# print(stats_out.query('cluster_id == 0 and redshift_float < 0.1')['redshift_float'])
+	# print(simstats.read_metadata())
