@@ -137,7 +137,7 @@ class Simstats:
 	def get_matterLambda_equality_z(self) -> float:
 		cluster = Cluster(simulation_name=self.simulation.simulation_name, clusterID=0, redshift='z000p000')
 		omega_lambda = cluster.OmegaLambda
-		omega_matter = cluster.Omega0 - omega_lambda
+		omega_matter = cluster.Omega0
 		print(omega_lambda, omega_matter)
 		return (omega_matter/(2*omega_lambda))**(-1/3) -1
 
