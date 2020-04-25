@@ -164,8 +164,8 @@ class Simstats:
 		}
 		with h5py.File(os.path.join(self.path, self.filename), 'w') as master_file:
 			for key, text in zip(metadata.keys(), metadata.values()):
-				print(f"master_file.attrs.create({key}, {text}, dtype={type(text)})")
-				master_file.attrs.create(key, text, dtype=type(text))
+				print(f"master_file.attrs.create({key}, {text})")
+				master_file.attrs.create(key, text)
 		if os.path.isfile(os.path.join(self.path, self.filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {self.filename}")
 
