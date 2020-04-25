@@ -10,11 +10,6 @@ then in a format that can be used for plotting, further processing
 etc.
 -------------------------------------------------------------------
 """
-from mpi4py import MPI
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
-
 import sys
 import os
 import warnings
@@ -180,7 +175,7 @@ class Simstats:
 			print('[+] Metadata file not found.')
 			self.make_metadata()
 		df = pd.DataFrame(columns=self.cols)
-		iterator = itertools.product(self.simulation.clusterIDAllowed[:1], self.simulation.redshiftAllowed)
+		iterator = itertools.product(self.simulation.clusterIDAllowed, self.simulation.redshiftAllowed)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
