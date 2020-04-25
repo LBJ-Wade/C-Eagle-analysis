@@ -160,7 +160,7 @@ class Simstats:
 				'z mL equality'           : self.get_matterLambda_equality_z(),
 				'Cluster centre reference': 'Centre of potential',
 				'Pipeline stage'          : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
-				'Columns/labels'          : str([self.cols, self.labels_tex])
+				'Columns/labels'          : str(dict(zip(self.cols, self.labels_tex)))
 		}
 		with h5py.File(os.path.join(self.path, self.filename), 'w') as master_file:
 			for key, text in zip(metadata.keys(), metadata.values()):
@@ -239,7 +239,9 @@ class Simstats:
 
 	def read_metadata(self) -> Dict[str, Union[int, float, str, Dict[str, str]]]:
 		with h5py.File(os.path.join(self.path, self.filename), 'r') as master_file:
-			return dict(zip(master_file.attrs.keys(), master_file.attrs.values()))
+			metadata = dict(zip(master_file.attrs.keys(), master_file.attrs.values()))
+			metadata['Columns/labels'] = eval(metadata['Columns/labels'])
+			return metadata
 
 	def read_simstats(self) -> pd.DataFrame:
 		with pd.HDFStore(os.path.join(self.path, self.filename)) as store:
