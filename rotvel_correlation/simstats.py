@@ -164,6 +164,7 @@ class Simstats:
 		}
 		with h5py.File(os.path.join(self.path, self.filename), 'w') as master_file:
 			for key, text in zip(metadata.keys(), metadata.values()):
+				print(f"master_file.attrs.create({key}, {text}, dtype={type(text)})")
 				master_file.attrs.create(key, text, dtype=type(text))
 		if os.path.isfile(os.path.join(self.path, self.filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {self.filename}")
@@ -248,7 +249,7 @@ class Simstats:
 if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
-	# simstats.clear_file()
+	simstats.clear_file()
 	simstats.make_simstats(save2hdf5=True)
 	stats_out = simstats.read_simstats()
 	print(stats_out.query('cluster_id == 0 and redshift_float < 0.1')['redshift_float'])
