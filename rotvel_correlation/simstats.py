@@ -180,7 +180,7 @@ class Simstats:
 		print(attributes)
 		print(self.cols)
 		df = pd.DataFrame(columns=self.cols)
-		iterator = itertools.product(self.simulation.clusterIDAllowed[0], self.simulation.redshiftAllowed)
+		iterator = itertools.product(self.simulation.clusterIDAllowed[:1], self.simulation.redshiftAllowed)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
 			if self.simulation.sample_completeness[halo_id, self.simulation.redshiftAllowed.index(halo_z)]:
