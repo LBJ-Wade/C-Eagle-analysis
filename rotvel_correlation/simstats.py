@@ -239,7 +239,7 @@ class Simstats:
 	def read_metadata(self) -> Dict[str, Union[int, float, str, Dict[str, str]]]:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
-			return master_file.attrs
+			return dict(zip(master_file.attrs.keys(), master_file.attrs.values()))
 
 	def read_simstats(self) -> pd.DataFrame:
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
