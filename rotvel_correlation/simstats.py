@@ -162,9 +162,9 @@ class Simstats:
 				'Pipeline stage'          : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
 				'Columns/labels'          : str(dict(zip(self.cols, self.labels_tex)))
 		}
+		print('[+] Generating attributes...')
 		with h5py.File(os.path.join(self.path, self.filename), 'w') as master_file:
 			for key, text in zip(metadata.keys(), metadata.values()):
-				print(f"master_file.attrs.create({key}, {text})")
 				master_file.attrs.create(key, text)
 		if os.path.isfile(os.path.join(self.path, self.filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {self.filename}")
@@ -178,9 +178,8 @@ class Simstats:
 
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 		if not self.is_metadata():
-			print('[+] Metadata file not found. Generating attributes...')
+			print('[+] Metadata file not found.')
 			self.make_metadata()
-		print(self.cols)
 		df = pd.DataFrame(columns=self.cols)
 		iterator = itertools.product(self.simulation.clusterIDAllowed[:1], self.simulation.redshiftAllowed)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
