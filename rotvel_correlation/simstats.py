@@ -76,12 +76,48 @@ class Simstats:
 			'substructure_fraction_T'
 	]
 
-	def __init__(self, simulation_name:str = None, aperture_id: int = 10):
+	labels_tex = [
+			r'Cluster ID',
+			r'Redshift',
+			r'$R_{2500,crit}$\quad[Mpc]',
+			r'$R_{500,crit}$\quad[Mpc]',
+			r'$R_{200,crit}$\quad[Mpc]',
+			r'$R_\mathrm{aperture}$\quad[Mpc]',
+			r'$M_{2500,crit}$\quad[$M_\odot$]',
+			r'$M_{500,crit}$\quad[$M_\odot$]',
+			r'$M_{200,crit}$\quad[$M_\odot$]',
+			r'$M_{aperture}$\quad[$M_\odot$]',
+			r'$M_\mathrm{aperture}^\mathrm{(gas)}$\quad[$M_\odot$]',
+			r'$M_\mathrm{aperture}^\mathrm{(DM)}$\quad[$M_\odot$]',
+			r'$M_\mathrm{aperture}^\mathrm{(stars)}$\quad[$M_\odot$]',
+			r'$\theta (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]',
+			r'$\theta (\mathbf{L^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
+			r'$\theta (\mathbf{L^\mathrm{(DM)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
+			r'$\theta (\mathbf{v_\mathrm{pec}^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{v_\mathrm{pec}^\mathrm{(gas)}})$\quad[degrees]$',
+			r'$\mathbf{v_\mathrm{pec}}$\quad[km/s]',
+			r'$\mathbf{v_\mathrm{pec}^\mathrm{(gas)}}$\quad[km/s]',
+			r'$\mathbf{v_\mathrm{pec}^\mathrm{(DM)}}$\quad[km/s]',
+			r'$\mathbf{v_\mathrm{pec}^\mathrm{(stars)}}$\quad[km/s]',
+			r'$\mathbf{L}$\quad[$M_\odot$ Mpc km/s]',
+			r'$\mathbf{L^\mathrm{(gas)}}$\quad[$M_\odot$ Mpc km/s]',
+			r'$\mathbf{L^\mathrm{(DM)}}$\quad[$M_\odot$ Mpc km/s]',
+			r'$\mathbf{L^\mathrm{(stars)}}$\quad[$M_\odot$ Mpc km/s]',
+			r'Kinetic energy\quad[J]',
+			r'Kinetic energy (gas)\quad[J]',
+			r'Kinetic energy (DM)\quad[J]',
+			r'Thermal energy\quad[J]',
+			r'$M_\mathrm{sub}$\quad[$M_\odot$]',
+			r'Dynamical merging index',
+			r'Thermoynamic merging index',
+			r'Substructure fraction'
+	]
+
+	def __init__(self, simulation_name:str = None, aperture_id: int = 10) -> None:
 		warnings.filterwarnings("ignore")
 		self.set_aperture(aperture_id)
 		self.set_simulation(simulation_name)
 
-	def set_aperture(self, aperture_id: int):
+	def set_aperture(self, aperture_id: int) -> None:
 		self.aperture_id = aperture_id
 		aperture_id_str = f'Aperture {self.aperture_id}'
 		print(f"{aperture_id_str:^100s}\n")
@@ -89,6 +125,7 @@ class Simstats:
 	def set_simulation(self, simulation_name: str = None) -> None:
 		self.simulation = Simulation(simulation_name=simulation_name)
 		self.path = os.path.join(self.simulation.pathSave, self.simulation.simulation_name, 'rotvel_correlation')
+		self.filename = f"simstats_{self.simulation.simulation_name}.hdf5"
 		print(f"{self.simulation.simulation:=^100s}")
 		if not os.path.exists(self.path):
 			os.makedirs(self.path)
@@ -97,7 +134,7 @@ class Simstats:
 		read = pull.FOFRead(cluster)
 		return read.pull_apertures()
 
-	def get_matterLambda_equality_z(self):
+	def get_matterLambda_equality_z(self) -> float:
 		cluster = Cluster(simulation_name=self.simulation.simulation_name, clusterID=0, redshift='z000p000')
 		omega_lambda = cluster.OmegaLambda
 		omega_matter = cluster.Omega0 - omega_lambda
@@ -108,43 +145,13 @@ class Simstats:
 		with pd.HDFStore(filename) as store:
 			store.put(key, df)
 
-	def make_metadata(self):
+	def clear_file(self) -> None:
+		if os.path.isfile(os.path.join(self.path, self.filename)):
+			print(f"[+] Removing file...\n[+]\tPath: {self.path}\n[+]\tFile: {self.filename}")
+			os.remove(os.path.join(self.path, self.filename))
+			print(f"[+]\tRemoved.")
 
-		labels_tex = [
-				r'Cluster ID',
-				r'Redshift',
-				r'$R_{2500,crit}$\quad[Mpc]',
-				r'$R_{500,crit}$\quad[Mpc]',
-				r'$R_{200,crit}$\quad[Mpc]',
-				r'$R_\mathrm{aperture}$\quad[Mpc]',
-				r'$M_{2500,crit}$\quad[$M_\odot$]',
-				r'$M_{500,crit}$\quad[$M_\odot$]',
-				r'$M_{200,crit}$\quad[$M_\odot$]',
-				r'$M_{aperture}$\quad[$M_\odot$]',
-				r'$M_\mathrm{aperture}^\mathrm{(gas)}$\quad[$M_\odot$]',
-				r'$M_\mathrm{aperture}^\mathrm{(DM)}$\quad[$M_\odot$]',
-				r'$M_\mathrm{aperture}^\mathrm{(stars)}$\quad[$M_\odot$]',
-				r'$\theta (\mathbf{L},\mathrm{\widehat{CoP}},\mathbf{v_{pec}})$\quad[degrees]',
-				r'$\theta (\mathbf{L^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
-				r'$\theta (\mathbf{L^\mathrm{(DM)}},\mathrm{\widehat{CoP}},\mathbf{L^\mathrm{(stars)}})$\quad[degrees]$',
-				r'$\theta (\mathbf{v_\mathrm{pec}^\mathrm{(gas)}},\mathrm{\widehat{CoP}},\mathbf{v_\mathrm{pec}^\mathrm{(gas)}})$\quad[degrees]$',
-				r'$\mathbf{v_\mathrm{pec}}$\quad[km/s]',
-				r'$\mathbf{v_\mathrm{pec}^\mathrm{(gas)}}$\quad[km/s]',
-				r'$\mathbf{v_\mathrm{pec}^\mathrm{(DM)}}$\quad[km/s]',
-				r'$\mathbf{v_\mathrm{pec}^\mathrm{(stars)}}$\quad[km/s]',
-				r'$\mathbf{L}$\quad[$M_\odot$ Mpc km/s]',
-				r'$\mathbf{L^\mathrm{(gas)}}$\quad[$M_\odot$ Mpc km/s]',
-				r'$\mathbf{L^\mathrm{(DM)}}$\quad[$M_\odot$ Mpc km/s]',
-				r'$\mathbf{L^\mathrm{(stars)}}$\quad[$M_\odot$ Mpc km/s]',
-				r'Kinetic energy\quad[J]',
-				r'Kinetic energy (gas)\quad[J]',
-				r'Kinetic energy (DM)\quad[J]',
-				r'Thermal energy\quad[J]',
-				r'$M_\mathrm{sub}$\quad[$M_\odot$]',
-				r'Dynamical merging index',
-				r'Thermoynamic merging index',
-				r'Substructure fraction'
-		]
+	def make_metadata(self) -> None:
 		metadata = {
 				'Simulation'              : self.simulation.simulation,
 				'Number of clusters'      : self.simulation.totalClusters,
@@ -153,21 +160,17 @@ class Simstats:
 				'z mL equality'           : self.get_matterLambda_equality_z(),
 				'Cluster centre reference': 'Centre of potential',
 				'Pipeline stage'          : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
-				'Columns/labels'          : dict(zip(self.cols, labels_tex))
+				'Columns/labels'          : dict(zip(self.cols, self.labels_tex))
 		}
-
-		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		with h5py.File(os.path.join(self.path, filename), 'w') as master_file:
+		with h5py.File(os.path.join(self.path, self.filename), 'w') as master_file:
 			for key, text in zip(metadata.keys(), metadata.values()):
 				master_file.attrs[key] = text
-		if os.path.isfile(os.path.join(self.path, filename)):
-			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
-
+		if os.path.isfile(os.path.join(self.path, self.filename)):
+			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {self.filename}")
 
 	def is_metadata(self) -> bool:
-		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		if os.path.isfile(os.path.join(self.path, filename)):
-			with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
+		if os.path.isfile(os.path.join(self.path, self.filename)):
+			with h5py.File(os.path.join(self.path, self.filename), 'r') as master_file:
 				return master_file.attrs is not None
 		else:
 			return False
@@ -229,21 +232,18 @@ class Simstats:
 
 		print(df.info())
 		if save2hdf5:
-			filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-			self.h5store(os.path.join(self.path, filename), df, key=f'aperture{self.aperture_id}')
-			if os.path.isfile(os.path.join(self.path + filename)):
-				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {filename}")
+			self.h5store(os.path.join(self.path, self.filename), df, key=f'aperture{self.aperture_id}')
+			if os.path.isfile(os.path.join(self.path, self.filename)):
+				print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {self.filename}")
 		else:
 			return df
 
 	def read_metadata(self) -> Dict[str, Union[int, float, str, Dict[str, str]]]:
-		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
+		with h5py.File(os.path.join(self.path, self.filename), 'r') as master_file:
 			return dict(zip(master_file.attrs.keys(), master_file.attrs.values()))
 
 	def read_simstats(self) -> pd.DataFrame:
-		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		with pd.HDFStore(os.path.join(self.path, filename)) as store:
+		with pd.HDFStore(os.path.join(self.path, self.filename)) as store:
 			return store[f'aperture{self.aperture_id}']
 
 
@@ -251,6 +251,7 @@ if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
 	simstats.make_simstats(save2hdf5=True)
+	simstats.clear_file()
 	stats_out = simstats.read_simstats()
 	print(stats_out.query('cluster_id == 0 and redshift_float < 0.1')['redshift_float'])
 	print(simstats.read_metadata())
