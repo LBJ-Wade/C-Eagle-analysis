@@ -160,11 +160,11 @@ class Simstats:
 				'z mL equality'           : self.get_matterLambda_equality_z(),
 				'Cluster centre reference': 'Centre of potential',
 				'Pipeline stage'          : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
-				'Columns/labels'          : dict(zip(self.cols, self.labels_tex))
+				'Columns/labels'          : [self.cols, self.labels_tex]
 		}
 		with h5py.File(os.path.join(self.path, self.filename), 'w') as master_file:
 			for key, text in zip(metadata.keys(), metadata.values()):
-				master_file.attrs[key] = text
+				master_file.attrs.create(key, text, dtype=type(text))
 		if os.path.isfile(os.path.join(self.path, self.filename)):
 			print(f"[+] Saved\n[+]\tPath: {self.path}\n[+]\tFile: {self.filename}")
 
@@ -179,8 +179,6 @@ class Simstats:
 		if not self.is_metadata():
 			print('[+] Metadata file not found. Generating attributes...')
 			self.make_metadata()
-		attributes = self.read_metadata()
-		print(attributes)
 		print(self.cols)
 		df = pd.DataFrame(columns=self.cols)
 		iterator = itertools.product(self.simulation.clusterIDAllowed[:1], self.simulation.redshiftAllowed)
