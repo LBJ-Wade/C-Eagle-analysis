@@ -248,7 +248,14 @@ class Simstats:
 
 if __name__ == '__main__':
 
-	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
+	import argparse
+	my_parser = argparse.ArgumentParser()
+	my_parser.add_argument('-s',
+	                       '--simulation',
+	                       help='Parse the name of the simulation to analyse.')
+	args = my_parser.parse_args()
+	simulation_name = vars(args)['simulation']
+	simstats = Simstats(simulation_name=simulation_name, aperture_id=10)
 	simstats.clear_file()
 	simstats.make_simstats(save2hdf5=True)
 	stats_out = simstats.read_simstats()
