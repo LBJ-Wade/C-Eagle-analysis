@@ -139,7 +139,8 @@ class Simstats:
 		omega_lambda = cluster.OmegaLambda
 		omega_matter = cluster.Omega0 - omega_lambda
 		a_equality = (omega_matter/omega_lambda/2)**(1/3)
-		return 1/a_equality -1
+		z_equality = 1/a_equality -1
+		return z_equality
 
 	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata') -> None:
 		with pd.HDFStore(filename) as store:
