@@ -160,7 +160,7 @@ class Simstats:
 				'z mL equality'           : self.get_matterLambda_equality_z(),
 				'Cluster centre reference': 'Centre of potential',
 				'Pipeline stage'          : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
-				'Columns/labels'          : [self.cols, self.labels_tex]
+				'Columns/labels'          : str([self.cols, self.labels_tex])
 		}
 		with h5py.File(os.path.join(self.path, self.filename), 'w') as master_file:
 			for key, text in zip(metadata.keys(), metadata.values()):
