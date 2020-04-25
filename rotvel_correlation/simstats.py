@@ -138,9 +138,8 @@ class Simstats:
 		cluster = Cluster(simulation_name=self.simulation.simulation_name, clusterID=0, redshift='z000p000')
 		omega_lambda = cluster.OmegaLambda
 		omega_matter = cluster.Omega0 - omega_lambda
-		a_equality = (omega_matter/omega_lambda/2)**(1/3)
-		z_equality = 1/a_equality -1
-		return z_equality
+		print(omega_lambda, omega_matter)
+		return (omega_matter/(2*omega_lambda))**(-1/3) -1
 
 	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata') -> None:
 		with pd.HDFStore(filename) as store:
