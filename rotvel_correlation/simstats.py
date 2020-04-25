@@ -138,7 +138,6 @@ class Simstats:
 		cluster = Cluster(simulation_name=self.simulation.simulation_name, clusterID=0, redshift='z000p000')
 		omega_lambda = cluster.OmegaLambda
 		omega_matter = cluster.Omega0
-		print(omega_lambda, omega_matter)
 		return (omega_matter/(2*omega_lambda))**(-1/3) -1
 
 	def h5store(self, filename: str, df: pd.DataFrame, key: str = 'mydata') -> None:
@@ -250,9 +249,8 @@ class Simstats:
 if __name__ == '__main__':
 
 	simstats = Simstats(simulation_name='celr_b', aperture_id=10)
-	print(simstats.get_matterLambda_equality_z())
-	# simstats.clear_file()
-	# simstats.make_simstats(save2hdf5=True)
-	# stats_out = simstats.read_simstats()
-	# print(stats_out.query('cluster_id == 0 and redshift_float < 0.1')['redshift_float'])
-	# print(simstats.read_metadata())
+	simstats.clear_file()
+	simstats.make_simstats(save2hdf5=True)
+	stats_out = simstats.read_simstats()
+	print(stats_out.query('cluster_id == 0 and redshift_float < 0.1')['redshift_float'])
+	print(simstats.read_metadata())
