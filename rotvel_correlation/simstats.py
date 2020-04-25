@@ -40,6 +40,41 @@ class Simstats:
 	Simstats class contains methods for generating files with statistics for all simulation clusters
 	(all ID and all redshifts) with different parameters
 	"""
+	cols = [
+			'cluster_id',
+			'redshift_float',
+			'R_2500_crit',
+			'R_500_crit',
+			'R_200_crit',
+			'R_aperture',
+			'M_2500_crit',
+			'M_500_crit',
+			'M_200_crit',
+			'M_aperture_T',
+			'M_aperture_0',
+			'M_aperture_1',
+			'M_aperture_4',
+			'rotTvelT',
+			'rot0rot4',
+			'rot1rot4',
+			'vel0vel1',
+			'peculiar_velocity_T_magnitude',
+			'peculiar_velocity_0_magnitude',
+			'peculiar_velocity_1_magnitude',
+			'peculiar_velocity_4_magnitude',
+			'angular_momentum_T_magnitude',
+			'angular_momentum_0_magnitude',
+			'angular_momentum_1_magnitude',
+			'angular_momentum_4_magnitude',
+			'kinetic_energy_T',
+			'kinetic_energy_0',
+			'kinetic_energy_1',
+			'thermal_energy',
+			'substructure_mass_T',
+			'dynamical_merging_index_T',
+			'thermodynamic_merging_index_T',
+			'substructure_fraction_T'
+	]
 
 	def __init__(self, simulation_name:str = None, aperture_id: int = 10):
 		warnings.filterwarnings("ignore")
@@ -74,41 +109,7 @@ class Simstats:
 			store.put(key, df)
 
 	def make_metadata(self):
-		cols = [
-				'cluster_id',
-				'redshift_float',
-				'R_2500_crit',
-				'R_500_crit',
-				'R_200_crit',
-				'R_aperture',
-				'M_2500_crit',
-				'M_500_crit',
-				'M_200_crit',
-				'M_aperture_T',
-				'M_aperture_0',
-				'M_aperture_1',
-				'M_aperture_4',
-				'rotTvelT',
-				'rot0rot4',
-				'rot1rot4',
-				'vel0vel1',
-				'peculiar_velocity_T_magnitude',
-				'peculiar_velocity_0_magnitude',
-				'peculiar_velocity_1_magnitude',
-				'peculiar_velocity_4_magnitude',
-				'angular_momentum_T_magnitude',
-				'angular_momentum_0_magnitude',
-				'angular_momentum_1_magnitude',
-				'angular_momentum_4_magnitude',
-				'kinetic_energy_T',
-				'kinetic_energy_0',
-				'kinetic_energy_1',
-				'thermal_energy',
-				'substructure_mass_T',
-				'dynamical_merging_index_T',
-				'thermodynamic_merging_index_T',
-				'substructure_fraction_T'
-		]
+
 		labels_tex = [
 				r'Cluster ID',
 				r'Redshift',
@@ -152,7 +153,7 @@ class Simstats:
 				'z mL equality'           : self.get_matterLambda_equality_z(),
 				'Cluster centre reference': 'Centre of potential',
 				'Pipeline stage'          : r'Gadget3 - \texttt{SUBFIND} - FoFanalyser - \textbf{Simstats}',
-				'Columns/labels'          : dict(zip(cols, labels_tex))
+				'Columns/labels'          : dict(zip(self.cols, labels_tex))
 		}
 
 		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
@@ -171,21 +172,14 @@ class Simstats:
 		else:
 			return False
 
-	def get_columns(self) -> List[str]:
-		filename = f"simstats_{self.simulation.simulation_name}.hdf5"
-		with h5py.File(os.path.join(self.path, filename), 'r') as master_file:
-			return master_file.attrs.keys()
-
 	def make_simstats(self, save2hdf5: bool = True) -> Union[pd.DataFrame, None]:
 		if not self.is_metadata():
 			print('[+] Metadata file not found. Generating attributes...')
 			self.make_metadata()
 		attributes = self.read_metadata()
 		print(attributes)
-		cols = self.get_columns()
-		print(cols)
-
-		df = pd.DataFrame(columns=cols)
+		print(self.cols)
+		df = pd.DataFrame(columns=self.cols)
 		iterator = itertools.product(self.simulation.clusterIDAllowed[0], self.simulation.redshiftAllowed)
 		print(f"{'':<30s} {' process ID ':^25s} | {' halo ID ':^15s} | {' halo redshift ':^20s}\n")
 		for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
