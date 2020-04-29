@@ -174,12 +174,11 @@ for entry_index, data_entry in enumerate(data_entries):
             attrs[0]['Redshift bounds'],
             stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0],
     )
-    items_labels = """
-            {:s} \\textemdash\\ {:s}
-            Number of clusters: {:d} 
-            $z$ = {:s} 
-            Aperture radius = {:2.2f} $R_{{200~true}}$
-    """.format(*items_info)
+    items_labels = r"""
+            %s \textemdash\ %s
+            Number of clusters: %d 
+            $z$ = %s 
+            Aperture radius = %2.2f $R_{200\ true}$""".format(*items_info)
 
     info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15)
     ax[0].set_ylabel(label_y)
