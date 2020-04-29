@@ -189,10 +189,10 @@ for entry_index, data_entry in enumerate(data_entries):
     ax[2].set_xlabel(label_x)
     ax[3].set_xlabel(label_x)
     axisinfo_kwargs = dict(
-        horizontalalignment='right',
-        verticalalignment='top',
-        transform=axes.transAxes,
-        size=15
+            horizontalalignment='right',
+            verticalalignment='top',
+            transform=axes.transAxes,
+            size=15
     )
     handles = [Patch(facecolor=simstats_palette[i], label=attrs[i]['Simulation'], edgecolor='k', linewidth=1) for i in range(len(attrs))]
     leg = info_ax1.legend(handles=handles, loc='lower right', handlelength=1, fontsize=20)
@@ -204,18 +204,18 @@ for entry_index, data_entry in enumerate(data_entries):
         axes.tick_params(direction='in', length=5, top=True, right=True)
         if ax_idx == 0:
             axes.scatter(
-                pd.concat(stats_filtered)[data_entry['x']],
-                pd.concat(stats_filtered)[data_entry['y']],
-                s=5,
-                c=simstats_palette[ax_idx-1]
+                    pd.concat(stats_filtered)[data_entry['x']],
+                    pd.concat(stats_filtered)[data_entry['y']],
+                    s=5,
+                    c=simstats_palette[ax_idx-1]
             )
             axes.text(0.95, 0.95, r'\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
         else:
             axes.scatter(
-                stats_filtered[ax_idx-1][data_entry['x']],
-                stats_filtered[ax_idx-1][data_entry['y']],
-                s=5,
-                c=simstats_palette[ax_idx-1]
+                    stats_filtered[ax_idx-1][data_entry['x']],
+                    stats_filtered[ax_idx-1][data_entry['y']],
+                    s=5,
+                    c=simstats_palette[ax_idx-1]
             )
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
     plt.savefig(os.path.join(pathSave, f"scatterplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf"))
@@ -230,13 +230,11 @@ for entry_index, data_entry in enumerate(data_entries):
             artist.remove()
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
-    if data_entry['xscale'] is 'linear':
-        x_space = np.linspace(xlims[0], xlims[1], 101)
-    elif data_entry['xscale'] is 'log':
+    x_space = np.linspace(xlims[0], xlims[1], 101)
+    y_space = np.linspace(ylims[0], ylims[1], 101)
+    if data_entry['xscale'] is 'log':
         x_space = np.linspace(np.log10(xlims[0]), np.log10(xlims[1]), 101)
-    if data_entry['yscale'] is 'linear':
-        y_space = np.linspace(ylims[0], ylims[1], 101)
-    elif data_entry['yscale'] is 'log':
+    if data_entry['yscale'] is 'log':
         y_space = np.linspace(np.log10(ylims[0]), np.log10(ylims[1]), 101)
     xx, yy = np.meshgrid(x_space, y_space)
     positions = np.vstack([xx.ravel(), yy.ravel()])
