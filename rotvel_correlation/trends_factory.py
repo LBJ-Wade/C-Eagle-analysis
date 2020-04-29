@@ -180,7 +180,7 @@ for entry_index, data_entry in enumerate(data_entries):
             %s \textemdash\ %s
             Number of clusters: %d 
             $z$ = %s 
-            Aperture radius = %2.2f $R_{200\ true}$""".format(*items_info)
+            Aperture radius = %2.2f $R_{{200\ true}}$""".format(*items_info)
 
     info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
     ax[0].set_ylabel(label_y)
