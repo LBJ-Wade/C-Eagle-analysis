@@ -209,7 +209,7 @@ for entry_index, data_entry in enumerate(data_entries):
                 s=5,
                 c=simstats_palette[ax_idx-1]
             )
-            axes.text(0.95, 0.95, '\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, r'\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
         else:
             axes.scatter(
                 stats_filtered[ax_idx-1][data_entry['x']],
