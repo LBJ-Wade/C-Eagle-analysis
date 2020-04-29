@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as st
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
