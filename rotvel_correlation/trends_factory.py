@@ -13,10 +13,11 @@ from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 from matplotlib.gridspec import GridSpec
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-warnings
-parentdir = os.path.join(os.getcwd(), os.path.pardir)
-exec(open(os.path.abspath(os.path.join(parentdir, 'visualisation', 'light_mode.py'))).read())
-sys.path.append(os.path.abspath(parentdir))
+
+exec(open(os.path.abspath(os.path.join(
+		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from import_toolkit.cluster import Cluster
 from import_toolkit.simulation import Simulation
 from rotvel_correlation.simstats import Simstats
