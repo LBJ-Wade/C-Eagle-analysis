@@ -164,8 +164,8 @@ for entry_index, data_entry in enumerate(data_entries):
     plt.setp(ax[0].get_xticklabels(), visible=False)
     plt.setp(ax[2].get_yticklabels(), visible=False)
     plt.setp(ax[3].get_yticklabels(), visible=False)
-    label_x = attrs[0]['Columns/labels'][data_entry['x']].replace('{', '{{').replace('}', '}}')
-    label_y = attrs[0]['Columns/labels'][data_entry['y']].replace('{', '{{').replace('}', '}}')
+    label_x = attrs[0]['Columns/labels'][data_entry['x']]#.replace('{{', '{').replace('}', '}}')
+    label_y = attrs[0]['Columns/labels'][data_entry['y']]#.replace('{{', '{').replace('}', '}}')
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
     items_labels = f""" {label_x.split('[')[0].strip('quad')} \\textemdash\\ {label_y.split('[')[0]}
                         Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs]):d}
