@@ -428,15 +428,15 @@ class TrendZ:
 		                   loc='lower center', handlelength=1, fontsize=20)
 		axis.add_artist(leg2)
 
-			# arrow_radius = np.max(sim_hist[2])/1.5
-			# vpec_direction = np.average(sim_hist[0], weights=sim_hist[2]/np.max(sim_hist[2]))/180*np.pi
-			# kw = dict(arrowstyle="<|-", color='k', lw=1.5)
-			# inset_axis.annotate(r"$\mathbf{L}$", xytext=(np.pi/2, arrow_radius), xy=(0, 0), xycoords='polar', arrowprops=kw, ha="center", va="center")
-			# inset_axis.annotate(r"$\mathbf{v_{pec}}$", xytext=(vpec_direction, arrow_radius), xy=(vpec_direction, 0), xycoords='polar', arrowprops=kw,
-			#                     ha="center", va="center")
+		# arrow_radius = np.max(sim_hist[2])/1.5
+		# vpec_direction = np.average(sim_hist[0], weights=sim_hist[2]/np.max(sim_hist[2]))/180*np.pi
+		# kw = dict(arrowstyle="<|-", color='k', lw=1.5)
+		# inset_axis.annotate(r"$\mathbf{L}$", xytext=(np.pi/2, arrow_radius), xy=(0, 0), xycoords='polar', arrowprops=kw, ha="center", va="center")
+		# inset_axis.annotate(r"$\mathbf{v_{pec}}$", xytext=(vpec_direction, arrow_radius), xy=(vpec_direction, 0), xycoords='polar', arrowprops=kw,
+		#                     ha="center", va="center")
 
-			# inset_axis.arrow(0, 0, 0, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
-			# inset_axis.arrow(0, 0, np.pi/2, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
+		# inset_axis.arrow(0, 0, 0, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
+		# inset_axis.arrow(0, 0, np.pi/2, arrow_radius, alpha=0.5, width=0.15, edgecolor='black', facecolor='black', lw=20, zorder=5)
 
 
 	def save_z_trend(self, common_folder: bool = False) -> None:

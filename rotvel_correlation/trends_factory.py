@@ -118,9 +118,12 @@ query_COLLECTIVE.append('thermodynamic_merging_index_T < 1')
 stats_filtered = [stat.query(' and '.join(query_COLLECTIVE)) for stat in stats_out]
 
 # Generate plots catalog
-x_labels = ['redshift_float', 'R_500_crit', 'R_aperture', 'M_2500_crit', 'M_aperture_T', 'peculiar_velocity_T_magnitude', 'angular_momentum_T_magnitude',
-            'dynamical_merging_index_T', 'thermodynamic_merging_index_T', 'substructure_fraction_T']
-y_labels = ['M_200_crit','rotTvelT','rot0rot4','rot1rot4','dynamical_merging_index_T','thermodynamic_merging_index_T','substructure_fraction_T']
+x_labels = ['redshift_float', 'R_500_crit', 'R_aperture', 'M_2500_crit', 'M_aperture_T',
+            'peculiar_velocity_T_magnitude', 'angular_momentum_T_magnitude',
+            'dynamical_merging_index_T', 'thermodynamic_merging_index_T',
+            'substructure_fraction_T']
+y_labels = ['M_200_crit','rotTvelT','rot0rot4','rot1rot4','dynamical_merging_index_T',
+            'thermodynamic_merging_index_T','substructure_fraction_T']
 data_entries = list(itertools.product(x_labels, y_labels))
 x_labels = []
 y_labels = []
@@ -131,10 +134,10 @@ for entry in data_entries:
 xscale = []
 yscale = []
 for x in x_labels:
-    scale = 'log' if 'M' in x or 'R' in x or 'magnitude' in x else 'linear'
+    scale = 'log' if 'M' in x or 'R' in x or 'velocity' in x else 'linear'
     xscale.append(scale)
 for y in y_labels:
-    scale = 'log' if 'M' in y or 'R' in y or 'magnitude' in y else 'linear'
+    scale = 'log' if 'M' in y or 'R' in y or 'velocity' in y else 'linear'
     yscale.append(scale)
 data_summary = {
     'x' : x_labels,
@@ -188,7 +191,7 @@ for entry_index, data_entry in enumerate(data_entries):
     axisinfo_kwargs = dict(
         horizontalalignment='right',
         verticalalignment='top',
-        #transform=axes.transAxes,
+        transform=axes.transAxes,
         size=15
     )
     handles = [Patch(facecolor=simstats_palette[i], label=attrs[i]['Simulation'], edgecolor='k', linewidth=1) for i in range(len(attrs))]
@@ -215,8 +218,8 @@ for entry_index, data_entry in enumerate(data_entries):
                 c=simstats_palette[ax_idx-1]
             )
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
-    plt.savefig(os.path.join(pathSave, "scatterplot__{}__{}__aperture{}.pdf".format(data_entry['x'], data_entry['y'], aperture_id)))
-    print("[+] Figure saved: scatterplot__{}__{}__aperture{}.pdf".format(data_entry['x'], data_entry['y'], aperture_id))
+    plt.savefig(os.path.join(pathSave, f"scatterplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf"))
+    print(f"[+] Figure saved: scatterplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf")
     ##################################################################################################
     # kde PLOTS #
     ##################################################################################################
@@ -258,5 +261,5 @@ for entry_index, data_entry in enumerate(data_entries):
             cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
-    plt.savefig(os.path.join(pathSave, "kdeplot__{}__{}__aperture{}.pdf".format(data_entry['x'], data_entry['y'], aperture_id)))
-    print("[+] Figure saved: kdeplot__{}__{}__aperture{}.pdf".format(data_entry['x'], data_entry['y'], aperture_id))
+    plt.savefig(os.path.join(pathSave, f"kdeplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf"))
+    print(f"[+] Figure saved: kdeplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf")
