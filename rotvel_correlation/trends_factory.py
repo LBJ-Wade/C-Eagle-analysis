@@ -191,7 +191,7 @@ for entry_index, data_entry in enumerate(data_entries):
     axisinfo_kwargs = dict(
             horizontalalignment='right',
             verticalalignment='top',
-            transform=axes.transAxes,
+            transform=plt.gca().transAxes,
             size=15
     )
     handles = [Patch(facecolor=simstats_palette[i], label=attrs[i]['Simulation'], edgecolor='k', linewidth=1) for i in range(len(attrs))]
