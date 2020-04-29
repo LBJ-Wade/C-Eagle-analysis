@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as st
 import matplotlib
-# matplotlib.use('Agg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
@@ -121,8 +121,7 @@ stats_filtered = [stat.query(' and '.join(query_COLLECTIVE)) for stat in stats_o
 x_labels = ['redshift_float', 'R_500_crit', 'R_aperture', 'M_2500_crit', 'M_aperture_T', 'peculiar_velocity_T_magnitude', 'angular_momentum_T_magnitude',
             'dynamical_merging_index_T', 'thermodynamic_merging_index_T', 'substructure_fraction_T']
 y_labels = ['M_200_crit','rotTvelT','rot0rot4','rot1rot4','dynamical_merging_index_T','thermodynamic_merging_index_T','substructure_fraction_T']
-cols_summary = ['x', 'y', 'xscale', 'yscale']
-data_entries = itertools.product(x_labels, y_labels)
+data_entries = list(itertools.product(x_labels, y_labels))
 x_labels = []
 y_labels = []
 for entry in data_entries:
@@ -174,13 +173,13 @@ for entry_index, data_entry in enumerate(data_entries):
             attrs[0]['Redshift bounds'],
             stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0],
     )
-    # items_labels = r"""
-    #         %s \textemdash\ %s
-    #         Number of clusters: %d
-    #         $z$ = %s
-    #         Aperture radius = %2.2f $R_{200\ true}$""".format(*items_info)
-    #
-    # info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
+    items_labels = r"""
+            %s \textemdash\ %s
+            Number of clusters: %d 
+            $z$ = %s 
+            Aperture radius = %2.2f $R_{200\ true}$""".format(*items_info)
+
+    info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
