@@ -209,7 +209,7 @@ for entry_index, data_entry in enumerate(data_entries):
                     s=5,
                     c=simstats_palette[ax_idx-1]
             )
-            axes.text(0.95, 0.95, r'\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, r'\\textsc{Total}', **axisinfo_kwargs)
         else:
             axes.scatter(
                     stats_filtered[ax_idx-1][data_entry['x']],
@@ -217,7 +217,7 @@ for entry_index, data_entry in enumerate(data_entries):
                     s=5,
                     c=simstats_palette[ax_idx-1]
             )
-            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", **axisinfo_kwargs)
     plt.savefig(os.path.join(pathSave, f"scatterplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf"))
     print(f"[+] Figure saved: scatterplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf")
     ##################################################################################################
@@ -248,7 +248,7 @@ for entry_index, data_entry in enumerate(data_entries):
             #cfset = axes.contourf(xx, yy, f, cmap='Blues')
             cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
-            axes.text(0.95, 0.95, '\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, '\\textsc{Total}', **axisinfo_kwargs)
         else:
             x = stats_filtered[ax_idx-1][data_entry['x']]
             y = stats_filtered[ax_idx-1][data_entry['y']]
@@ -258,6 +258,6 @@ for entry_index, data_entry in enumerate(data_entries):
             #cfset = axes.contourf(xx, yy, f, cmap='Blues')
             cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
-            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", **axisinfo_kwargs)
     plt.savefig(os.path.join(pathSave, f"kdeplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf"))
     print(f"[+] Figure saved: kdeplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf")
