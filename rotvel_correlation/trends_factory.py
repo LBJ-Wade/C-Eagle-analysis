@@ -172,11 +172,11 @@ for entry_index, data_entry in enumerate(data_entries):
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
     label_x = attrs[0]['Columns/labels'][data_entry['x']].replace('{{', '{').replace('}', '}}')
     label_y = attrs[0]['Columns/labels'][data_entry['y']].replace('{{', '{').replace('}', '}}')
-    ax[0].set_ylabel(label_y)
-    ax[1].set_ylabel(label_y)
-    ax[1].set_xlabel(label_x)
-    ax[2].set_xlabel(label_x)
-    ax[3].set_xlabel(label_x)
+    # ax[0].set_ylabel(label_y)
+    # ax[1].set_ylabel(label_y)
+    # ax[1].set_xlabel(label_x)
+    # ax[2].set_xlabel(label_x)
+    # ax[3].set_xlabel(label_x)
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
     items_info = (
             label_x.split('[')[0].strip('quad'),
