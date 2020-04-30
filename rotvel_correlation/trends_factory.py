@@ -181,8 +181,8 @@ for entry_index, data_entry in enumerate(data_entries):
     label_y = attrs[0]['Columns/labels'][data_entry['y']]
     if label_x.endswith('$'): label_x = label_x.rstrip('$')
     if label_y.endswith('$'): label_y = label_y.rstrip('$')
-    label_x = label_x.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
-    label_y = label_y.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
+    # label_x = label_x.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
+    # label_y = label_y.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
