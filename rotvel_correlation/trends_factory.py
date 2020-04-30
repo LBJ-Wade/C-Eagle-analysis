@@ -170,13 +170,15 @@ for entry_index, data_entry in enumerate(data_entries):
     plt.setp(ax[3].get_yticklabels(), visible=False)
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
-    label_x = attrs[0]['Columns/labels'][data_entry['x']].replace('{{', '{').replace('}', '}}')
-    label_y = attrs[0]['Columns/labels'][data_entry['y']].replace('{{', '{').replace('}', '}}')
-    # ax[0].set_ylabel(label_y)
-    # ax[1].set_ylabel(label_y)
-    # ax[1].set_xlabel(label_x)
-    # ax[2].set_xlabel(label_x)
-    # ax[3].set_xlabel(label_x)
+    label_x = [data_entry['x']]
+    label_y = [data_entry['y']]
+    # label_x = attrs[0]['Columns/labels'][data_entry['x']].replace('{{', '{').replace('}', '}}')
+    # label_y = attrs[0]['Columns/labels'][data_entry['y']].replace('{{', '{').replace('}', '}}')
+    ax[0].set_ylabel(label_y)
+    ax[1].set_ylabel(label_y)
+    ax[1].set_xlabel(label_x)
+    ax[2].set_xlabel(label_x)
+    ax[3].set_xlabel(label_x)
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
     items_info = (
             label_x.split('[')[0].strip('quad'),
@@ -185,13 +187,13 @@ for entry_index, data_entry in enumerate(data_entries):
             attrs[0]['Redshift bounds'],
             stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0],
     )
-    # items_labels = r"""
-    #         %s \textemdash\ %s
-    #         Number of clusters: %d
-    #         $z$ = %s
-    #         Aperture radius = %2.2f $R_{{200\ true}}$""".format(*items_info)
-    #
-    # info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
+    items_labels = r"""
+            %s \textemdash\ %s
+            Number of clusters: %d
+            $z$ = %s
+            Aperture radius = %2.2f $R_{{200\ true}}$""".format(*items_info)
+
+    info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
 
     axisinfo_kwargs = dict(
             horizontalalignment='right',
