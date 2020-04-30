@@ -264,3 +264,6 @@ for entry_index, data_entry in enumerate(data_entries):
     filename = f"kdeplot_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
     print(f"[+] Plot {entry_index:3d} Figure saved: {filename}")
     plt.savefig(os.path.join(pathSave, filename))
+    ##################################################################################################
+    # MEDIAN PLOTS #
+    ##################################################################################################
