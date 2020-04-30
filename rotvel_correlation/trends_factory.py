@@ -20,6 +20,7 @@ exec(open(os.path.abspath(os.path.join(
 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
 from import_toolkit.cluster import Cluster
 from import_toolkit.simulation import Simulation
 from rotvel_correlation.simstats import Simstats
