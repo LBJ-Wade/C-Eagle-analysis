@@ -156,7 +156,7 @@ print(summary)
 # Activate the plot factory
 data_entries = summary.to_dict('r')
 for entry_index, data_entry in enumerate(data_entries):
-    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.pdf"
+    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
     gs.update(wspace=0., hspace=0.)
@@ -190,13 +190,15 @@ for entry_index, data_entry in enumerate(data_entries):
     ax[3].set_xlabel(label_x)
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
 
+    z_range = [np.min(pd.concat(stats_filtered)['redshift_float']),
+               np.max(pd.concat(stats_filtered)['redshift_float'])]
+    z_range_str = f'{z_range[0]:1.2f} - {z_range[1]:1.2f}' if z_range[0] < z_range[1] else f'{z_range[0]:1.2f}'
     items_labels = [
-        f"{label_x.split(r'quad')[0]} ---\\ {label_y.split(r'quad')[0]}",
-        f"Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs])}",
-        f"$z$ = {attrs[0]['Redshift bounds']}",
+        f"{label_x.split(r'quad')[0]} -\\ {label_y.split(r'quad')[0]}",
+        f"Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs]):d}",
+        f"$z$ = {z_range_str:s}",
         f"Aperture radius = {stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0]:2.2f} $R_{{200\\ true}}$"
     ]
-    print('\n'.join(items_labels))
     info_ax0.text(0.03, 0.97, '\n'.join(items_labels), horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
 
     axisinfo_kwargs = dict(
