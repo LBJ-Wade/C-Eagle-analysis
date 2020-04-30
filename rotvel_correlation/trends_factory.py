@@ -321,7 +321,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         )
             candlestick_v_kwargs = dict(align='edge',
                                         bottom=np.median(y),
-                                        width=ax_frame((0, 0.5))[1],
+                                        width=ax_frame((0.1, 0))[0],
                                         xerr=np.std(y) / np.sqrt(len(y)),
                                         ecolor='k',
                                         edgecolor='k',
@@ -363,7 +363,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         )
             candlestick_v_kwargs = dict(align='edge',
                                         bottom=np.median(y),
-                                        width=ax_frame((0, 0.5))[1],
+                                        width=ax_frame((0.1, 0))[0],
                                         xerr=np.std(y) / np.sqrt(len(y)),
                                         ecolor='k',
                                         edgecolor='k',
