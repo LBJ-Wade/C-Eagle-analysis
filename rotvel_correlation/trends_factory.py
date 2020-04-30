@@ -170,8 +170,8 @@ for entry_index, data_entry in enumerate(data_entries):
     plt.setp(ax[3].get_yticklabels(), visible=False)
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
-    label_x = [data_entry['x']]
-    label_y = [data_entry['y']]
+    label_x = data_entry['x']
+    label_y = data_entry['y']
     # label_x = attrs[0]['Columns/labels'][data_entry['x']].replace('{{', '{').replace('}', '}}')
     # label_y = attrs[0]['Columns/labels'][data_entry['y']].replace('{{', '{').replace('}', '}}')
     ax[0].set_ylabel(label_y)
