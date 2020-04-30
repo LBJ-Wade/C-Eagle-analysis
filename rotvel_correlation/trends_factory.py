@@ -154,6 +154,7 @@ print(summary)
 # Activate the plot factory
 data_entries = summary.to_dict('r')
 for entry_index, data_entry in enumerate(data_entries):
+    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.pdf"
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
     gs.update(wspace=0., hspace=0.)
@@ -167,8 +168,15 @@ for entry_index, data_entry in enumerate(data_entries):
     plt.setp(ax[0].get_xticklabels(), visible=False)
     plt.setp(ax[2].get_yticklabels(), visible=False)
     plt.setp(ax[3].get_yticklabels(), visible=False)
+    xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
+    ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
     label_x = attrs[0]['Columns/labels'][data_entry['x']].replace('{{', '{').replace('}', '}}')
     label_y = attrs[0]['Columns/labels'][data_entry['y']].replace('{{', '{').replace('}', '}}')
+    ax[0].set_ylabel(label_y)
+    ax[1].set_ylabel(label_y)
+    ax[1].set_xlabel(label_x)
+    ax[2].set_xlabel(label_x)
+    ax[3].set_xlabel(label_x)
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
     items_info = (
             label_x.split('[')[0].strip('quad'),
@@ -184,11 +192,7 @@ for entry_index, data_entry in enumerate(data_entries):
     #         Aperture radius = %2.2f $R_{{200\ true}}$""".format(*items_info)
     #
     # info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
-    ax[0].set_ylabel(label_y)
-    ax[1].set_ylabel(label_y)
-    ax[1].set_xlabel(label_x)
-    ax[2].set_xlabel(label_x)
-    ax[3].set_xlabel(label_x)
+
     axisinfo_kwargs = dict(
             horizontalalignment='right',
             verticalalignment='top',
@@ -201,6 +205,8 @@ for entry_index, data_entry in enumerate(data_entries):
     # SCATTER PLOTS #
     ##################################################################################################
     for ax_idx, axes in enumerate(ax):
+        axes.set_xscale(data_entry['xscale'])
+        axes.set_yscale(data_entry['yscale'])
         axes.tick_params(direction='in', length=5, top=True, right=True)
         if ax_idx == 0:
             axes.scatter(
@@ -218,9 +224,11 @@ for entry_index, data_entry in enumerate(data_entries):
                     c=simstats_palette[ax_idx-1]
             )
             axes.text(0.95, 0.95, f"\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
-    filename = f"scatterplot_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
-    print(f"[+] Plot {entry_index:3d} Figure saved: {filename}")
-    plt.savefig(os.path.join(pathSave, filename))
+
+    plt.savefig(os.path.join(pathSave, 'scatterplot'+filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'scatterplot'+filename}")
+
+
     ##################################################################################################
     # kde PLOTS #
     ##################################################################################################
@@ -229,8 +237,7 @@ for entry_index, data_entry in enumerate(data_entries):
     for axes in ax_kde:
         for artist in axes.lines + axes.collections:
             artist.remove()
-    xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
-    ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
+
     x_space = np.linspace(xlims[0], xlims[1], 101)
     y_space = np.linspace(ylims[0], ylims[1], 101)
     if data_entry['xscale'] is 'log':
@@ -260,9 +267,9 @@ for entry_index, data_entry in enumerate(data_entries):
             cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
             axes.text(0.95, 0.95, f"\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
-    filename = f"kdeplot_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
-    print(f"[+] Plot {entry_index:3d} Figure saved: {filename}")
-    plt.savefig(os.path.join(pathSave, filename))
+
+    plt.savefig(os.path.join(pathSave, 'kdeplot_'+filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'kdeplot_'+filename}")
     ##################################################################################################
     # MEDIAN PLOTS #
     ##################################################################################################
