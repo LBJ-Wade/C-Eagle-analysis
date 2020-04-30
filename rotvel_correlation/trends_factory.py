@@ -135,10 +135,10 @@ for entry in data_entries:
 xscale = []
 yscale = []
 for x in x_labels:
-    scale = 'log' if 'M' in x or 'R' in x or 'velocity' in x else 'linear'
+    scale = 'log' if 'M' in x or 'velocity' in x else 'linear'
     xscale.append(scale)
 for y in y_labels:
-    scale = 'log' if 'M' in y or 'R' in y or 'velocity' in y else 'linear'
+    scale = 'log' if 'M' in y or 'velocity' in y else 'linear'
     yscale.append(scale)
 data_summary = {
     'x' : x_labels,
@@ -170,29 +170,21 @@ for entry_index, data_entry in enumerate(data_entries):
     plt.setp(ax[3].get_yticklabels(), visible=False)
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
-    label_x = data_entry['x']
-    label_y = data_entry['y']
-    # label_x = attrs[0]['Columns/labels'][data_entry['x']].replace('{{', '{').replace('}', '}}')
-    # label_y = attrs[0]['Columns/labels'][data_entry['y']].replace('{{', '{').replace('}', '}}')
+    # label_x = data_entry['x']
+    # label_y = data_entry['y']
+    label_x = attrs[0]['Columns/labels'][data_entry['x']]#.replace('{{', '{').replace('}', '}}')
+    label_y = attrs[0]['Columns/labels'][data_entry['y']]#.replace('{{', '{').replace('}', '}}')
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
     ax[2].set_xlabel(label_x)
     ax[3].set_xlabel(label_x)
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
-    items_info = (
-            label_x.split('[')[0].strip('quad'),
-            label_y.split('[')[0],
-            np.sum([attr['Number of clusters'] for attr in attrs]),
-            attrs[0]['Redshift bounds'],
-            stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0],
-    )
-    items_labels = r"""
-            %s \textemdash\ %s
-            Number of clusters: %d
-            $z$ = %s
-            Aperture radius = %2.2f $R_{{200\ true}}$""".format(*items_info)
 
+    items_labels = f"""{label_x.split('[')[0].strip('quad')} \\textemdash\\ {label_y.split('[')[0]}
+        Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs])}
+        $z$ = {attrs[0]['Redshift bounds']}
+        Aperture radius = {stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0]:2.2f} $R_{{200\ true}}$"""
     info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
 
     axisinfo_kwargs = dict(
@@ -217,7 +209,7 @@ for entry_index, data_entry in enumerate(data_entries):
                     s=5,
                     c=simstats_palette[ax_idx-1]
             )
-            axes.text(0.95, 0.95, r'\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, f'\\textsc{{Total}}', transform=axes.transAxes, **axisinfo_kwargs)
         else:
             axes.scatter(
                     stats_filtered[ax_idx-1][data_entry['x']],
@@ -225,7 +217,7 @@ for entry_index, data_entry in enumerate(data_entries):
                     s=5,
                     c=simstats_palette[ax_idx-1]
             )
-            axes.text(0.95, 0.95, f"\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
     plt.savefig(os.path.join(pathSave, 'scatterplot'+filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'scatterplot'+filename}")
@@ -258,7 +250,7 @@ for entry_index, data_entry in enumerate(data_entries):
             #cfset = axes.contourf(xx, yy, f, cmap='Blues')
             cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
-            axes.text(0.95, 0.95, r'\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, f'\\textsc{{Total}}', transform=axes.transAxes, **axisinfo_kwargs)
         else:
             x = stats_filtered[ax_idx-1][data_entry['x']]
             y = stats_filtered[ax_idx-1][data_entry['y']]
@@ -268,7 +260,7 @@ for entry_index, data_entry in enumerate(data_entries):
             #cfset = axes.contourf(xx, yy, f, cmap='Blues')
             cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
-            axes.text(0.95, 0.95, f"\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
     plt.savefig(os.path.join(pathSave, 'kdeplot_'+filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'kdeplot_'+filename}")
