@@ -170,10 +170,10 @@ for entry_index, data_entry in enumerate(data_entries):
     plt.setp(ax[3].get_yticklabels(), visible=False)
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
-    # label_x = data_entry['x']
-    # label_y = data_entry['y']
-    label_x = attrs[0]['Columns/labels'][data_entry['x']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
-    label_y = attrs[0]['Columns/labels'][data_entry['y']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
+    label_x = data_entry['x']
+    label_y = data_entry['y']
+    # label_x = attrs[0]['Columns/labels'][data_entry['x']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
+    # label_y = attrs[0]['Columns/labels'][data_entry['y']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
@@ -184,7 +184,7 @@ for entry_index, data_entry in enumerate(data_entries):
     items_labels = f"""{label_x.split('quad')[0]} \\textemdash\\ {label_y.split('quad')[0]}
         Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs])}
         $z$ = {attrs[0]['Redshift bounds']}
-        Aperture radius = {stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0]:2.2f} $R_{{200\ true}}$"""
+        Aperture radius = {stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0]:2.2f} $R_{{200\\ true}}$"""
     print(items_labels)
     info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
 
