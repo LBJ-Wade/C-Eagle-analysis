@@ -111,7 +111,7 @@ simstats.append(Simstats(simulation_name='celr_e', aperture_id=aperture_id))
 simstats.append(Simstats(simulation_name='celr_b', aperture_id=aperture_id))
 stats_out = [sim.read_simstats() for sim in simstats]
 attrs = [sim.read_metadata() for sim in simstats]
-print(f"\n{' stats_out DATASET INFO ':^-40S}\n", stats_out[0].info())
+print(f"\n{' stats_out DATASET INFO ':^-40s}", stats_out[0].info())
 
 # Create SQL query
 query_COLLECTIVE = list()
@@ -151,11 +151,12 @@ data_summary = {
 summary = pd.DataFrame(data=data_summary, columns=data_summary.keys())
 summary = summary[summary['y'].str.contains('rot')]
 summary = summary[~summary['x'].str.contains('redshift')]
-print(f"\n{' summary DATASET PLOTS INFO ':^-40S}\n", summary)
+print(f"\n{' summary DATASET PLOTS INFO ':^-40s}", summary)
 
 
 
 # Activate the plot factory
+print(f"\n{' RUNNING PLOT FACTORY... ':^-40s}")
 data_entries = summary.to_dict('r')
 for entry_index, data_entry in enumerate(data_entries):
     filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
