@@ -158,7 +158,7 @@ print(f"\n{' summary DATASET PLOTS INFO ':-^40s}", summary)
 
 
 # Activate the plot factory
-print(f"\n{' RUNNING PLOT FACTORY... ':^--0s}")
+print(f"\n{' RUNNING PLOT FACTORY... ':-^40s}")
 data_entries = summary.to_dict('r')
 for entry_index, data_entry in enumerate(data_entries):
     filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
