@@ -301,22 +301,7 @@ for entry_index, data_entry in enumerate(data_entries):
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
     x_space = np.linspace(np.log10(xlims[0]), np.log10(xlims[1]), 101)
     y_space = np.linspace(ylims[0], ylims[1], 101)
-    candlestick_h_kwargs = dict(align='edge',
-                                left=np.median(x),
-                                height=ax_frame((0, 0.1))[1],
-                                xerr=np.std(x) / np.sqrt(len(x)),
-                                ecolor='k',
-                                edgecolor='k',
-                                alpha=1
-                                )
-    candlestick_v_kwargs = dict(align='edge',
-                                bottom=np.median(y),
-                                width=ax_frame((0, 0.5))[1],
-                                xerr=np.std(y) / np.sqrt(len(y)),
-                                ecolor='k',
-                                edgecolor='k',
-                                alpha=1
-                                )
+
     for ax_idx, axes in enumerate(ax_median):
         axes.set_xlim([xlims[0] - 0.1 * np.diff(xlims), xlims[1] + 0.1 * np.diff(xlims)])
         axes.set_ylim([ylims[0] - 0.1 * np.diff(ylims), ylims[1] + 0.1 * np.diff(ylims)])
@@ -325,6 +310,24 @@ for entry_index, data_entry in enumerate(data_entries):
         if ax_idx == 0:
             x = pd.concat(stats_filtered)[data_entry['x']]
             y = pd.concat(stats_filtered)[data_entry['y']]
+
+            candlestick_h_kwargs = dict(align='edge',
+                                        left=np.median(x),
+                                        height=ax_frame((0, 0.1))[1],
+                                        xerr=np.std(x) / np.sqrt(len(x)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        alpha=1
+                                        )
+            candlestick_v_kwargs = dict(align='edge',
+                                        bottom=np.median(y),
+                                        width=ax_frame((0, 0.5))[1],
+                                        xerr=np.std(y) / np.sqrt(len(y)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        alpha=1
+                                        )
+
             x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
             median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
             percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
@@ -349,6 +352,24 @@ for entry_index, data_entry in enumerate(data_entries):
         else:
             x = stats_filtered[ax_idx - 1][data_entry['x']]
             y = stats_filtered[ax_idx - 1][data_entry['y']]
+
+            candlestick_h_kwargs = dict(align='edge',
+                                        left=np.median(x),
+                                        height=ax_frame((0, 0.1))[1],
+                                        xerr=np.std(x) / np.sqrt(len(x)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        alpha=1
+                                        )
+            candlestick_v_kwargs = dict(align='edge',
+                                        bottom=np.median(y),
+                                        width=ax_frame((0, 0.5))[1],
+                                        xerr=np.std(y) / np.sqrt(len(y)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        alpha=1
+                                        )
+
             x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
             median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
             percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
