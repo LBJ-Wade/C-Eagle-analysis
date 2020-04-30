@@ -192,7 +192,7 @@ for entry_index, data_entry in enumerate(data_entries):
 
     z_range = [np.min(pd.concat(stats_filtered)['redshift_float']),
                np.max(pd.concat(stats_filtered)['redshift_float'])]
-    z_range_str = f'{z_range[0]:1.2f} - {z_range[1]:1.2f}' if z_range[0] < z_range[1] else f'{z_range[0]:1.2f}'
+    z_range_str = f'{z_range[0]:1.2f} - {z_range[1]:1.2f}' if round(z_range[0]) < round(z_range[1]) else f'{z_range[0]:1.2f}'
     items_labels = [
         f"{label_x.split(r'quad')[0]} -\\ {label_y.split(r'quad')[0]}",
         f"Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs]):d}",
