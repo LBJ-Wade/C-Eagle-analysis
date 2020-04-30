@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as st
 import matplotlib
-matplotlib.use('Agg')
+# matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
@@ -177,13 +177,13 @@ for entry_index, data_entry in enumerate(data_entries):
             attrs[0]['Redshift bounds'],
             stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0],
     )
-    items_labels = r"""
-            %s \textemdash\ %s
-            Number of clusters: %d 
-            $z$ = %s 
-            Aperture radius = %2.2f $R_{{200\ true}}$""".format(*items_info)
-
-    info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
+    # items_labels = r"""
+    #         %s \textemdash\ %s
+    #         Number of clusters: %d
+    #         $z$ = %s
+    #         Aperture radius = %2.2f $R_{{200\ true}}$""".format(*items_info)
+    #
+    # info_ax0.text(0.03, 0.97, items_labels, horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
