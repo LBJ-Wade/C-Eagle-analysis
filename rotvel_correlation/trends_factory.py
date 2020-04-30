@@ -90,7 +90,9 @@ def bayesian_blocks(t):
     return edges[change_points]
 
 # Print some overall stats about the datasets
+sys.stdout = open(os.devnull, 'w')
 read_apertures = [Simstats(simulation_name='macsis', aperture_id=i).read_simstats() for i in range(20)]
+sys.stdout = sys.__stdout__
 for apid, stat in enumerate(read_apertures):
     print(f"Aperture radius {apid} \t --> \t {stat['R_aperture'][0]/stat['R_200_crit'][0]:1.2f} R_200_crit")
 del read_apertures
@@ -109,7 +111,7 @@ simstats.append(Simstats(simulation_name='celr_e', aperture_id=aperture_id))
 simstats.append(Simstats(simulation_name='celr_b', aperture_id=aperture_id))
 stats_out = [sim.read_simstats() for sim in simstats]
 attrs = [sim.read_metadata() for sim in simstats]
-print(stats_out[0].info())
+print(f"\n{' stats_out DATASET INFO ':^-40S}\n", stats_out[0].info())
 
 # Create SQL query
 query_COLLECTIVE = list()
@@ -149,7 +151,7 @@ data_summary = {
 summary = pd.DataFrame(data=data_summary, columns=data_summary.keys())
 summary = summary[summary['y'].str.contains('rot')]
 summary = summary[~summary['x'].str.contains('redshift')]
-print(summary)
+print(f"\n{' summary DATASET PLOTS INFO ':^-40S}\n", summary)
 
 
 
@@ -172,8 +174,6 @@ for entry_index, data_entry in enumerate(data_entries):
     plt.setp(ax[3].get_yticklabels(), visible=False)
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
-    # label_x = data_entry['x']
-    # label_y = data_entry['y']
 
     # Unresolved issue with the Latex labels
     # Some contain an extra `$` at the end of the string, which should not be there.
@@ -181,13 +181,12 @@ for entry_index, data_entry in enumerate(data_entries):
     label_y = attrs[0]['Columns/labels'][data_entry['y']]
     if label_x.endswith('$'): label_x = label_x.rstrip('$')
     if label_y.endswith('$'): label_y = label_y.rstrip('$')
-    # label_x = label_x.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
-    # label_y = label_y.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
     ax[2].set_xlabel(label_x)
     ax[3].set_xlabel(label_x)
+
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
 
     z_range = [np.min(pd.concat(stats_filtered)['redshift_float']),
@@ -278,6 +277,95 @@ for entry_index, data_entry in enumerate(data_entries):
 
     plt.savefig(os.path.join(pathSave, 'kdeplot_'+filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'kdeplot_'+filename}")
+
+
     ##################################################################################################
     # MEDIAN PLOTS #
     ##################################################################################################
+    fig_median = fig
+    ax_median = [fig_median.axes[i] for i in [1, 3, 4, 5]]
+    for axes in ax_median:
+        for artist in axes.lines + axes.collections:
+            artist.remove()
+
+    perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
+    perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
+    perc16 = Line2D([], [], color='k', marker='v', linestyle='-.', markersize=10, label=r'$16^{th}$ percentile')
+    leg1 = fig_median.axes[2].legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=3, fontsize=20)
+    fig_median.axes[2].add_artist(leg1)
+    xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
+    ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
+    x_space = np.linspace(np.log10(xlims[0]), np.log10(xlims[1]), 101)
+    y_space = np.linspace(ylims[0], ylims[1], 101)
+    candlestick_h_kwargs = dict(align='edge',
+                                left=np.median(x),
+                                height=ax_frame((0, 0.1))[1],
+                                xerr=np.std(x) / np.sqrt(len(x)),
+                                ecolor='k',
+                                edgecolor='k',
+                                alpha=1
+                                )
+    candlestick_v_kwargs = dict(align='edge',
+                                bottom=np.median(y),
+                                width=ax_frame((0, 0.5))[1],
+                                xerr=np.std(y) / np.sqrt(len(y)),
+                                ecolor='k',
+                                edgecolor='k',
+                                alpha=1
+                                )
+    for ax_idx, axes in enumerate(ax_median):
+        axes.set_xlim([xlims[0] - 0.1 * np.diff(xlims), xlims[1] + 0.1 * np.diff(xlims)])
+        axes.set_ylim([ylims[0] - 0.1 * np.diff(ylims), ylims[1] + 0.1 * np.diff(ylims)])
+        axes_to_data = axes.transAxes + axes.transData.inverted()
+        ax_frame = axes_to_data.transform
+        if ax_idx == 0:
+            x = pd.concat(stats_filtered)[data_entry['x']]
+            y = pd.concat(stats_filtered)[data_entry['y']]
+            x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
+            median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
+            percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
+            percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
+            count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
+            std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
+            median_x = edges[:-1] + np.diff(edges) / 2
+            axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
+            axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y), marker='o', ms=5, c=simstats_palette[ax_idx - 1], alpha=1,
+                          linestyle='none', capsize=0)
+            axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y), marker='v', ms=5, c=simstats_palette[ax_idx - 1], alpha=1,
+                          linestyle='none', capsize=0)
+            axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y), marker='^', ms=5, c=simstats_palette[ax_idx - 1], alpha=1,
+                          linestyle='none', capsize=0)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.text(0.95, 0.95, '\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+        else:
+            x = stats_filtered[ax_idx - 1][data_entry['x']]
+            y = stats_filtered[ax_idx - 1][data_entry['y']]
+            x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
+            median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
+            percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
+            percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
+            count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
+            std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
+            median_x = edges[: -1] + np.diff(edges) / 2
+            axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
+            axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y), marker='o', ms=5, c=simstats_palette[ax_idx - 1], alpha=1,
+                          linestyle='none', capsize=0)
+            axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y), marker='v', ms=5, c=simstats_palette[ax_idx - 1], alpha=1,
+                          linestyle='none', capsize=0)
+            axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y), marker='^', ms=5, c=simstats_palette[ax_idx - 1], alpha=1,
+                          linestyle='none', capsize=0)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
+    info_ax1.add_artist(leg)
+    plt.savefig(os.path.join(pathSave, 'median_' + filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'median_' + filename}")
