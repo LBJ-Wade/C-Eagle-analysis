@@ -113,7 +113,8 @@ simstats.append(Simstats(simulation_name='celr_e', aperture_id=aperture_id))
 simstats.append(Simstats(simulation_name='celr_b', aperture_id=aperture_id))
 stats_out = [sim.read_simstats() for sim in simstats]
 attrs = [sim.read_metadata() for sim in simstats]
-print(f"\n{' stats_out DATASET INFO ':-^40s}\n", stats_out[0].info())
+print(f"\n{' stats_out DATASET INFO ':-^40s}")
+print(stats_out[0].info())
 
 # Create SQL query
 query_COLLECTIVE = list()
