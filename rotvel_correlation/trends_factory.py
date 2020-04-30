@@ -26,7 +26,7 @@ from import_toolkit.simulation import Simulation
 from rotvel_correlation.simstats import Simstats
 
 warnings.filterwarnings("ignore")
-pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work/rotvel_correlation'
+pathSave = '~/data/rotvel_correlation'
 
 def bayesian_blocks(t):
     """Bayesian Blocks Implementation
