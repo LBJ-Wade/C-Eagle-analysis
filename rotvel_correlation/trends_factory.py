@@ -151,6 +151,8 @@ summary = summary[summary['y'].str.contains('rot')]
 summary = summary[~summary['x'].str.contains('redshift')]
 print(summary)
 
+
+
 # Activate the plot factory
 data_entries = summary.to_dict('r')
 for entry_index, data_entry in enumerate(data_entries):
@@ -172,8 +174,15 @@ for entry_index, data_entry in enumerate(data_entries):
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
     # label_x = data_entry['x']
     # label_y = data_entry['y']
-    label_x = attrs[0]['Columns/labels'][data_entry['x']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
-    label_y = attrs[0]['Columns/labels'][data_entry['y']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
+
+    # Unresolved issue with the Latex labels
+    # Some contain an extra `$` at the end of the string, which should not be there.
+    label_x = attrs[0]['Columns/labels'][data_entry['x']]
+    label_y = attrs[0]['Columns/labels'][data_entry['y']]
+    if label_x.endswith('$'): label_x = label_x.rstrip('$')
+    if label_y.endswith('$'): label_y = label_y.rstrip('$')
+    label_x = label_x.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
+    label_y = label_y.replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
