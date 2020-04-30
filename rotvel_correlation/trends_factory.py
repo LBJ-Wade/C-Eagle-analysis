@@ -96,7 +96,9 @@ sys.stdout = sys.__stdout__
 for apid, stat in enumerate(read_apertures):
     print(f"Aperture radius {apid} \t --> \t {stat['R_aperture'][0]/stat['R_200_crit'][0]:1.2f} R_200_crit")
 del read_apertures
+sys.stdout = open(os.devnull, 'w')
 read_redshifts = [Simstats(simulation_name=i, aperture_id=0).read_simstats() for i in ['macsis', 'celr_e']]
+sys.stdout = sys.__stdout__
 for sim_name, stat in zip(['macsis', 'celr_e'], read_redshifts):
     print('\n')
     for zid, redshift in enumerate(stat.query('cluster_id == 0')['redshift_float']):
