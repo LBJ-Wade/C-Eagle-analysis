@@ -218,8 +218,9 @@ for entry_index, data_entry in enumerate(data_entries):
                     c=simstats_palette[ax_idx-1]
             )
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", **axisinfo_kwargs)
-    print(f"[+] Plot {entry_index:3d} Figure saved: scatterplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf")
-    plt.savefig(os.path.join(pathSave, f"scatterplot_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.pdf"))
+    filename = f"scatterplot_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
+    print(f"[+] Plot {entry_index:3d} Figure saved: {filename}")
+    plt.savefig(os.path.join(pathSave, filename))
     ##################################################################################################
     # kde PLOTS #
     ##################################################################################################
@@ -259,5 +260,6 @@ for entry_index, data_entry in enumerate(data_entries):
             cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", **axisinfo_kwargs)
-    print(f"[+] Plot {entry_index:3d} Figure saved: kdeplot__{data_entry['x']}__{data_entry['y']}__aperture{aperture_id}.pdf")
-    plt.savefig(os.path.join(pathSave, f"kdeplot_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.pdf"))
+    filename = f"kdeplot_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
+    print(f"[+] Plot {entry_index:3d} Figure saved: {filename}")
+    plt.savefig(os.path.join(pathSave, filename))
