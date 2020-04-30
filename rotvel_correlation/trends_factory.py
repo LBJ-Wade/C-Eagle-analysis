@@ -172,8 +172,8 @@ for entry_index, data_entry in enumerate(data_entries):
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
     # label_x = data_entry['x']
     # label_y = data_entry['y']
-    label_x = attrs[0]['Columns/labels'][data_entry['x']].replace("""\\""", """\\\\""")#.replace('}', '}}')
-    label_y = attrs[0]['Columns/labels'][data_entry['y']].replace("""\\""", """\\\\""")#.replace('}', '}}')
+    label_x = attrs[0]['Columns/labels'][data_entry['x']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
+    label_y = attrs[0]['Columns/labels'][data_entry['y']].replace("{", "{{").replace('}', '}}').replace('\\', '\\\\')
     ax[0].set_ylabel(label_y)
     ax[1].set_ylabel(label_y)
     ax[1].set_xlabel(label_x)
