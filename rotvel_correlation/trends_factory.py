@@ -181,7 +181,7 @@ for entry_index, data_entry in enumerate(data_entries):
     ax[3].set_xlabel(label_x)
     simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
 
-    items_labels = f"""{label_x.split('quad')[0]} $---\\$ {label_y.split('quad')[0]}
+    items_labels = f"""{label_x.split('quad')[0]+'$'} $---\\$ {label_y.split('quad')[0]+'$'}
         Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs])}
         $z$ = {attrs[0]['Redshift bounds']}
         Aperture radius = {stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0]:2.2f} $R_{{200\\ true}}$"""
