@@ -212,6 +212,8 @@ for entry_index, data_entry in enumerate(data_entries):
     handles = [Patch(facecolor=simstats_palette[i], label=attrs[i]['Simulation'], edgecolor='k', linewidth=1) for i in range(len(attrs))]
     leg = info_ax1.legend(handles=handles, loc='lower right', handlelength=1, fontsize=20)
     info_ax1.add_artist(leg)
+
+
     ##################################################################################################
     # SCATTER PLOTS #
     ##################################################################################################
@@ -292,10 +294,10 @@ for entry_index, data_entry in enumerate(data_entries):
         for artist in axes.lines + axes.collections:
             artist.remove()
 
-    perc84 = Line2D([], [], color='k', marker='^', linestyle='--', markersize=10, label=r'$84^{th}$ percentile')
-    perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=10, label=r'median')
-    perc16 = Line2D([], [], color='k', marker='v', linestyle='-.', markersize=10, label=r'$16^{th}$ percentile')
-    leg1 = fig_median.axes[2].legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=3, fontsize=20)
+    perc84 = Line2D([], [], color='k', marker='^', linestyle='none', markersize=12, label=r'$84^{th}$ percentile')
+    perc50 = Line2D([], [], color='k', marker='o', linestyle='none', markersize=12, label=r'median')
+    perc16 = Line2D([], [], color='k', marker='v', linestyle='none', markersize=12, label=r'$16^{th}$ percentile')
+    leg1 = fig_median.axes[2].legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=1, fontsize=20)
     fig_median.axes[2].add_artist(leg1)
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
@@ -305,7 +307,7 @@ for entry_index, data_entry in enumerate(data_entries):
     for ax_idx, axes in enumerate(ax_median):
         axes.set_xlim([xlims[0] - 0.1 * np.diff(xlims), xlims[1] + 0.1 * np.diff(xlims)])
         axes.set_ylim([ylims[0] - 0.1 * np.diff(ylims), ylims[1] + 0.1 * np.diff(ylims)])
-        axes_to_data = axes.transAxes# + axes.transData.inverted()
+        axes_to_data = axes.transAxes + axes.transData.inverted()
         ax_frame = axes_to_data.transform
         if ax_idx == 0:
             x = pd.concat(stats_filtered)[data_entry['x']]
@@ -391,6 +393,6 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
             axes.bar(ax_frame((0, 0))[0], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
-    info_ax1.add_artist(leg)
+
     plt.savefig(os.path.join(pathSave, 'median_' + filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'median_' + filename}")
