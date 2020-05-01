@@ -162,7 +162,7 @@ print(f"\n{' summary DATASET PLOTS INFO ':-^40s}\n", summary)
 print(f"\n{' RUNNING PLOT FACTORY... ':-^40s}")
 data_entries = summary.to_dict('r')
 for entry_index, data_entry in enumerate(data_entries):
-    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.png"
+    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.pdf"
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
     gs.update(wspace=0., hspace=0.)
@@ -397,8 +397,10 @@ for entry_index, data_entry in enumerate(data_entries):
                                         alpha=1
                                         )
 
-            # x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
-            x_bin_stats =  bayesian_blocks(x)
+            # Compute the bin edges using bayesian blocks
+            # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
+            # If the edges are <=3, take the whole dataset for statistics and ignore binning
+            x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
 
             if len(x_bin_stats) > 3:
                 median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
