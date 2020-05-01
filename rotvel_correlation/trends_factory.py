@@ -294,10 +294,10 @@ for entry_index, data_entry in enumerate(data_entries):
         for artist in axes.lines + axes.collections:
             artist.remove()
 
-    perc84 = Line2D([], [], color='k', marker='^', linestyle='none', markersize=12, label=r'$84^{th}$ percentile')
-    perc50 = Line2D([], [], color='k', marker='o', linestyle='none', markersize=12, label=r'median')
-    perc16 = Line2D([], [], color='k', marker='v', linestyle='none', markersize=12, label=r'$16^{th}$ percentile')
-    leg1 = fig_median.axes[2].legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=1, fontsize=20)
+    perc84 = Line2D([], [], color='k', marker='^', linestyle='-.', markersize=12, label=r'$84^{th}$ percentile')
+    perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=12, label=r'median')
+    perc16 = Line2D([], [], color='k', marker='v', linestyle='--', markersize=12, label=r'$16^{th}$ percentile')
+    leg1 = fig_median.axes[2].legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=2, fontsize=20)
     fig_median.axes[2].add_artist(leg1)
     xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
     ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
@@ -341,13 +341,13 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
             axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
                           marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='--', capsize=0)
+                          linestyle='-', capsize=0)
             axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
                           marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
                           linestyle='--', capsize=0)
             axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
                           marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='--', capsize=0)
+                          linestyle='-.', capsize=0)
 
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
@@ -362,7 +362,7 @@ for entry_index, data_entry in enumerate(data_entries):
 
             candlestick_h_kwargs = dict(align='edge',
                                         left=np.median(x),
-                                        height=0.05*axes_bbox.height,
+                                        height=ax_frame((0, 0.05*axes_bbox.height))[1],
                                         xerr=np.std(x) / np.sqrt(len(x)),
                                         ecolor='k',
                                         edgecolor='k',
@@ -370,7 +370,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         )
             candlestick_v_kwargs = dict(align='edge',
                                         bottom=np.median(y),
-                                        width=0.05*axes_bbox.width,
+                                        width=ax_frame((0, 0.05*axes_bbox.width))[1],
                                         xerr=np.std(y) / np.sqrt(len(y)),
                                         ecolor='k',
                                         edgecolor='k',
@@ -387,13 +387,13 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
             axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
                           marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='--', capsize=0)
+                          linestyle='-', capsize=0)
             axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
                           marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
                           linestyle='--', capsize=0)
             axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
                           marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='--', capsize=0)
+                          linestyle='-.', capsize=0)
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
             axes.barh(ax_frame((0, 0))[1], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
