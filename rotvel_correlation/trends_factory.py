@@ -305,7 +305,7 @@ for entry_index, data_entry in enumerate(data_entries):
     for ax_idx, axes in enumerate(ax_median):
         axes.set_xlim([xlims[0] - 0.1 * np.diff(xlims), xlims[1] + 0.1 * np.diff(xlims)])
         axes.set_ylim([ylims[0] - 0.1 * np.diff(ylims), ylims[1] + 0.1 * np.diff(ylims)])
-        axes_to_data = axes.transAxes + axes.transData.inverted()
+        axes_to_data = axes.transAxes# + axes.transData.inverted()
         ax_frame = axes_to_data.transform
         if ax_idx == 0:
             x = pd.concat(stats_filtered)[data_entry['x']]
