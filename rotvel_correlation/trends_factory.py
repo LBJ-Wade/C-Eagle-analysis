@@ -68,7 +68,7 @@ def bayesian_blocks(t):
         count_vec = np.cumsum(nn_vec[:K + 1][::-1])[::-1]
         # evaluate fitness function for these possibilities
         fit_vec = count_vec * (np.log(count_vec) - np.log(width))
-        fit_vec -= 3  # 4 comes from the prior on the number of changepoints
+        fit_vec -= 4  # 4 comes from the prior on the number of changepoints
         fit_vec[1:] += best[:K]
         # find the max of the fitness: this is the K^th changepoint
         i_max = np.argmax(fit_vec)
@@ -337,23 +337,30 @@ for entry_index, data_entry in enumerate(data_entries):
                                         alpha=1
                                         )
 
+            # Compute the bin edges using bayesian blocks
+            # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
+            # If the edges are <=3, take the whole dataset for statistics and ignore binning
             x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
-            median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
-            percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
-            percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
-            count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
-            std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
-            median_x = edges[:-1] + np.diff(edges) / 2
-            axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
-            axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
-                          marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='-', capsize=0)
-            axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
-                          marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='--', capsize=0)
-            axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
-                          marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='-.', capsize=0)
+
+            if len(x_bin_stats) > 3:
+                median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
+                percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
+                percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
+                count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
+                std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
+                median_x = edges[:-1] + np.diff(edges) / 2
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
+                axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
+                              marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-', capsize=0)
+                axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
+                              marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='--', capsize=0)
+                axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
+                              marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-.', capsize=0)
+            else:
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.8)
 
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
@@ -390,23 +397,29 @@ for entry_index, data_entry in enumerate(data_entries):
                                         alpha=1
                                         )
 
-            x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
-            median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
-            percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
-            percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
-            count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
-            std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
-            median_x = edges[: -1] + np.diff(edges) / 2
-            axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
-            axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
-                          marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='-', capsize=0)
-            axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
-                          marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='--', capsize=0)
-            axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
-                          marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                          linestyle='-.', capsize=0)
+            # x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
+            x_bin_stats = 10 ** bayesian_blocks(np.log10(x))
+
+            if len(x_bin_stats) > 3:
+                median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
+                percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
+                percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
+                count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
+                std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
+                median_x = edges[: -1] + np.diff(edges) / 2
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
+                axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
+                              marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-', capsize=0)
+                axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
+                              marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='--', capsize=0)
+                axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
+                              marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-.', capsize=0)
+            else:
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.8)
+
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
             axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
             axes.barh(ax_frame((0, 0))[1], 0, **candlestick_h_kwargs)
