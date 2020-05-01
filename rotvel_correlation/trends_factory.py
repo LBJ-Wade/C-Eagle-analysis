@@ -24,6 +24,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 from import_toolkit.cluster import Cluster
 from import_toolkit.simulation import Simulation
 from rotvel_correlation.simstats import Simstats
+from save.pdfmerge import merge_pdf
 
 warnings.filterwarnings("ignore")
 pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work/rotvel_correlation'
@@ -162,7 +163,7 @@ print(f"\n{' summary DATASET PLOTS INFO ':-^40s}\n", summary)
 print(f"\n{' RUNNING PLOT FACTORY... ':-^40s}")
 data_entries = summary.to_dict('r')
 for entry_index, data_entry in enumerate(data_entries):
-    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture"f"{aperture_id}.pdf"
+    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
     gs.update(wspace=0., hspace=0.)
@@ -432,3 +433,10 @@ for entry_index, data_entry in enumerate(data_entries):
 
     plt.savefig(os.path.join(pathSave, 'median' + filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'median' + filename}")
+
+
+# Merge the three categories of plots
+print(f"\n{' MERGING SUMMARY PLOTS ':-^40s}")
+merge_pdf('scatterplot', out_filename=f'scatterplot_aperture{aperture_id}', files_dir=pathSave)
+merge_pdf('kdeplot', out_filename=f'kdeplot_aperture{aperture_id}', files_dir=pathSave)
+merge_pdf('median', out_filename=f'median_aperture{aperture_id}', files_dir=pathSave)
