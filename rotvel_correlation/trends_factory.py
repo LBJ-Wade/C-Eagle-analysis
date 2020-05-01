@@ -398,7 +398,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         )
 
             # x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
-            x_bin_stats = 10 ** bayesian_blocks(np.log10(x))
+            x_bin_stats =  bayesian_blocks(x)
 
             if len(x_bin_stats) > 3:
                 median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
