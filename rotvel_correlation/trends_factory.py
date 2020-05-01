@@ -68,7 +68,7 @@ def bayesian_blocks(t):
         count_vec = np.cumsum(nn_vec[:K + 1][::-1])[::-1]
         # evaluate fitness function for these possibilities
         fit_vec = count_vec * (np.log(count_vec) - np.log(width))
-        fit_vec -= 4  # 4 comes from the prior on the number of changepoints
+        fit_vec -= 3  # 4 comes from the prior on the number of changepoints
         fit_vec[1:] += best[:K]
         # find the max of the fitness: this is the K^th changepoint
         i_max = np.argmax(fit_vec)
@@ -281,8 +281,8 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    plt.savefig(os.path.join(pathSave, 'kdeplot_'+filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'kdeplot_'+filename}")
+    plt.savefig(os.path.join(pathSave, 'kdeplot'+filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'kdeplot'+filename}")
 
 
     ##################################################################################################
@@ -324,6 +324,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         xerr=np.std(x) / np.sqrt(len(x)),
                                         ecolor='k',
                                         edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
                                         alpha=1
                                         )
             candlestick_v_kwargs = dict(align='edge',
@@ -332,6 +333,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         yerr=np.std(y) / np.sqrt(len(y)),
                                         ecolor='k',
                                         edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
                                         alpha=1
                                         )
 
@@ -353,12 +355,12 @@ for entry_index, data_entry in enumerate(data_entries):
                           marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
                           linestyle='-.', capsize=0)
 
-            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
-            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
-            axes.barh(ax_frame((0, 0))[1], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
-            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
-            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
-            axes.bar(ax_frame((0, 0))[0], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], 0, **candlestick_h_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
             axes.text(0.95, 0.95, '\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
         else:
             x = stats_filtered[ax_idx - 1][data_entry['x']]
@@ -375,6 +377,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         xerr=np.std(x) / np.sqrt(len(x)),
                                         ecolor='k',
                                         edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
                                         alpha=1
                                         )
             candlestick_v_kwargs = dict(align='edge',
@@ -383,6 +386,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         yerr=np.std(y) / np.sqrt(len(y)),
                                         ecolor='k',
                                         edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
                                         alpha=1
                                         )
 
@@ -403,13 +407,13 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
                           marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
                           linestyle='-.', capsize=0)
-            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
-            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
-            axes.barh(ax_frame((0, 0))[1], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_h_kwargs)
-            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
-            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
-            axes.bar(ax_frame((0, 0))[0], 0, facecolor=simstats_palette[ax_idx - 1], **candlestick_v_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], 0, **candlestick_h_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    plt.savefig(os.path.join(pathSave, 'median_' + filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'median_' + filename}")
+    plt.savefig(os.path.join(pathSave, 'median' + filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'median' + filename}")
