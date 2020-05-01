@@ -360,9 +360,15 @@ for entry_index, data_entry in enumerate(data_entries):
             x = stats_filtered[ax_idx - 1][data_entry['x']]
             y = stats_filtered[ax_idx - 1][data_entry['y']]
 
+            # Compute the candlestick widths
+            ax_xlims = axes.get_xlim()
+            ax_ylims = axes.get_ylim()
+            width  = ax_xlims[1]-ax_xlims[0] if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1])-np.log10(ax_xlims[0])
+            height = ax_ylims[1]-ax_ylims[0] if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1])-np.log10(ax_ylims[0])
+
             candlestick_h_kwargs = dict(align='edge',
                                         left=np.median(x),
-                                        height=ax_frame((0, 0.05*axes_bbox.height))[1],
+                                        height=0.05*height,
                                         xerr=np.std(x) / np.sqrt(len(x)),
                                         ecolor='k',
                                         edgecolor='k',
@@ -370,7 +376,7 @@ for entry_index, data_entry in enumerate(data_entries):
                                         )
             candlestick_v_kwargs = dict(align='edge',
                                         bottom=np.median(y),
-                                        width=ax_frame((0, 0.05*axes_bbox.width))[1],
+                                        width=0.05*width,
                                         xerr=np.std(y) / np.sqrt(len(y)),
                                         ecolor='k',
                                         edgecolor='k',
