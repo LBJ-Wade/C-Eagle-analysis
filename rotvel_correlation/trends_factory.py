@@ -475,6 +475,7 @@ for entry_index, data_entry in enumerate(data_entries):
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
 
 print(f"\n{' GENERATING PLOT BOOK ':-^50s}")
+print(summary.to_latex())
 # Summarise plots in a LaTeX >> (compiled) pdf file
 plot_types = ['scatterplot', 'kdeplot', 'median']
 for plot_type in plot_types:
@@ -496,7 +497,6 @@ for plot_type in plot_types:
         \textsc{Binning method: %} 
         \end{abstract}
         \section{Plot summary}
-        \centering 
         %
         ''' % (
                 plot_type,
