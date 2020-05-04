@@ -2,30 +2,21 @@ import sys
 import os
 import warnings
 import itertools
-from typing import Union, List
+import subprocess
 import numpy as np
 import pandas as pd
+import slack
 import scipy.stats as st
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.patches import Patch
-from matplotlib.axes import Axes
-from matplotlib.figure import Figure
 from matplotlib.gridspec import GridSpec
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-
 exec(open(os.path.abspath(os.path.join(
 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
-
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-
-from import_toolkit.cluster import Cluster
-from import_toolkit.simulation import Simulation
 from rotvel_correlation.simstats import Simstats
-from save.pdfmerge import merge_pdf
-
 warnings.filterwarnings("ignore")
 pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work/rotvel_correlation'
 
@@ -89,6 +80,36 @@ def bayesian_blocks(t):
         ind = last[ind - 1]
     change_points = change_points[i_cp:]
     return edges[change_points]
+
+def freedman_diaconis(x: np.ndarray) -> np.ndarray:
+    """
+    The binwidth is proportional to the interquartile range (IQR) and inversely proportional to cube root of a.size.
+    Can be too conservative for small datasets, but is quite good for large datasets. The IQR is very robust to
+    outliers.
+
+    :param x: np.ndarray
+        The 1-dimensional x-data to bin.
+    :return: np.ndarray
+        The bins edges computed using the FD method.
+    """
+    return np.histogram_bin_edges(x, bins='fd')
+
+def equal_number_FD(x: np.ndarray) -> np.ndarray:
+    """
+    Takes the number of bins computed using the FD method, but then selects the bin edges splitting
+    the dataset in bins with equal number of data-points.
+
+    :param x: np.ndarray
+        The 1-dimensional x-data to bin.
+    :return: np.ndarray
+        The bins edges computed using the equal-N method.
+    """
+    nbin = len(np.histogram_bin_edges(x, bins='fd')) - 1
+    npt = len(x)
+    return np.interp(np.linspace(0, npt, nbin + 1),
+                     np.arange(npt),
+                     np.sort(x))
+
 
 # Print some overall stats about the datasets
 sys.stdout = open(os.devnull, 'w')
@@ -161,9 +182,13 @@ print(f"\n{' summary DATASET PLOTS INFO ':-^40s}\n", summary)
 
 # Activate the plot factory
 print(f"\n{' RUNNING PLOT FACTORY... ':-^40s}")
+
 data_entries = summary.to_dict('r')
+x_binning = equal_number_FD
+print(f"[+] Binning method for x_data set to `{x_binning.__name__}`.")
+
 for entry_index, data_entry in enumerate(data_entries):
-    filename = f"_{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
+    filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
     gs.update(wspace=0., hspace=0.)
@@ -239,8 +264,8 @@ for entry_index, data_entry in enumerate(data_entries):
             )
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    plt.savefig(os.path.join(pathSave, 'scatterplot'+filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'scatterplot'+filename}")
+    plt.savefig(os.path.join(pathSave, 'scatterplot', filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: scatterplot >> {filename}")
 
 
     ##################################################################################################
@@ -282,8 +307,8 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    plt.savefig(os.path.join(pathSave, 'kdeplot'+filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'kdeplot'+filename}")
+    plt.savefig(os.path.join(pathSave, 'kdeplot', filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: kdeplot >> {filename}")
 
 
     ##################################################################################################
@@ -341,7 +366,7 @@ for entry_index, data_entry in enumerate(data_entries):
             # Compute the bin edges using bayesian blocks
             # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
             # If the edges are <=3, take the whole dataset for statistics and ignore binning
-            x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
+            x_bin_stats = x_binning(x) if data_entry['xscale'] is 'linear' else 10 ** x_binning(np.log10(x))
 
             if len(x_bin_stats) > 3:
                 median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
@@ -401,7 +426,7 @@ for entry_index, data_entry in enumerate(data_entries):
             # Compute the bin edges using bayesian blocks
             # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
             # If the edges are <=3, take the whole dataset for statistics and ignore binning
-            x_bin_stats = bayesian_blocks(x) if data_entry['xscale'] is 'linear' else 10 ** bayesian_blocks(np.log10(x))
+            x_bin_stats = x_binning(x) if data_entry['xscale'] is 'linear' else 10 ** x_binning(np.log10(x))
 
             if len(x_bin_stats) > 3:
                 median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
@@ -431,12 +456,87 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    plt.savefig(os.path.join(pathSave, 'median' + filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {'median' + filename}")
+    plt.savefig(os.path.join(pathSave, 'median', filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: median >> {filename}")
 
 
-# Merge the three categories of plots
-print(f"\n{' MERGING SUMMARY PLOTS ':-^40s}")
-merge_pdf('scatterplot', out_filename=f'scatterplot_aperture{aperture_id}', files_dir=pathSave)
-merge_pdf('kdeplot', out_filename=f'kdeplot_aperture{aperture_id}', files_dir=pathSave)
-merge_pdf('median', out_filename=f'median_aperture{aperture_id}', files_dir=pathSave)
+# Summarise plots in a LaTeX >> (compiled) pdf file
+plot_types = ['scatterplot', 'kdeplot', 'median']
+for plot_type in plot_types:
+    fname = os.path.join(pathSave, plot_type, f'{plot_type}_merged_aperture{aperture_id}.tex')
+    with open(fname, 'w') as fout:
+        print(f"[+] Generating LaTeX script file: {fname}")
+        preamble = r'''\documentclass{article} \usepackage{graphicx} \begin{document}'''
+        title = r'''\title{\bf Spin - peculiar velocity correlations\\ \textsc{%(plot_type)s} \author{Edo Altamura} \date{\today} \maketitle'''
+        abstract = r'''\begin{abstract} \textsc{Binning method: %(x_binning.__name__)s} \end{abstract}'''
+        plot_summary = r'''\section{Plot summary}\centering %(summary.to_latex(caption=r"Plots selected are only those with $\theta$ as $y$-axis."))s'''
+        figures = r'''Figures start\\'''
+        # Write figures
+        for entry_index, data_entry in enumerate(data_entries):
+            filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
+            filepath = os.path.join(pathSave, plot_type, filename)
+
+            figures += r'''
+            \newpage
+            \begin{figure}
+                \centering
+                \includegraphics[width=\textwidth]{%(filepath)s}
+                \caption{('\n'.join(items_labels))s}
+                \label{%(filename)s}
+            \end{figure}
+            '''
+
+
+        # Merge all pieces of the tex file
+        texdoc = [
+            preamble,
+            title,
+            abstract,
+            plot_summary,
+            figures,
+            r"This document is automatically generated by the plot factory pipeline. "
+            r"\end{document}"
+        ]
+        for i in range(len(texdoc)):
+            fout.write(texdoc[i])
+
+    # Compile the tex file using `pdflatex`
+    print(f"[+] Compiling LaTeX script file into pdf: {fname.replace('tex', 'pdf')}")
+    cmd = ['pdflatex', '-interaction', 'nonstopmode', fname]
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+    retcode = proc.returncode
+    if not retcode == 0:
+        os.unlink(f"{fname.replace('tex', 'pdf')}")
+        raise ValueError('Error {} executing command: {}'.format(retcode, ' '.join(cmd)))
+    os.unlink(fname)
+    os.unlink(f"{fname.replace('tex', 'log')}")
+
+    # Send files to Slack:
+    # init slack client with access token
+    print(f"[+] Forwarding {fname.replace('tex', 'pdf')} to the `#personal` Slack channel...")
+    slack_token = os.environ['xoxp-452271173797-451476014913-1101193540773-57eb7b0d416e8764be6849fdeda52ce8']
+    client = slack.WebClient(token=slack_token)
+
+    # upload file
+    response = client.files_upload(
+            file=f"{fname.replace('tex', 'pdf')}",
+            initial_comment='This space ship needs some repairs I think...',
+            channels='#personal'
+    )
+    assert response['ok']
+    slack_file = response['file']
+
+
+
+"""
+TODO LIST
+
+01/05/2020
+- The vertical candlestick in the medianplot has a very tiny width when the xscale == log
+- Alternative to bayesian block binning for the x-dataset:
+    > Use equal bin sized and the Freedman Diaconis Estimator
+    > Derive the optimal number of bins fromthe Freedman Diaconis Estimator. Then define bins edges 
+      such all bins have equal number of datapoints within. Use sort(dataset) and then slice array.
+- Bootstrap on the fly (10**4) on bins and candlestick margins.
+"""
