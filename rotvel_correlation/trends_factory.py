@@ -264,6 +264,8 @@ for entry_index, data_entry in enumerate(data_entries):
             )
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
+    if not os.path.exists(os.path.join(pathSave, 'scatterplot')):
+        os.makedirs(os.path.join(pathSave, 'scatterplot'))
     plt.savefig(os.path.join(pathSave, 'scatterplot', filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: scatterplot >> {filename}")
 
@@ -307,6 +309,8 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
+    if not os.path.exists(os.path.join(pathSave, 'kdeplot')):
+        os.makedirs(os.path.join(pathSave, 'kdeplot'))
     plt.savefig(os.path.join(pathSave, 'kdeplot', filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: kdeplot >> {filename}")
 
@@ -456,6 +460,8 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
+    if not os.path.exists(os.path.join(pathSave, 'median')):
+        os.makedirs(os.path.join(pathSave, 'median'))
     plt.savefig(os.path.join(pathSave, 'median', filename))
     print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: median >> {filename}")
 
@@ -485,7 +491,6 @@ for plot_type in plot_types:
                 \label{%(filename)s}
             \end{figure}
             '''
-
 
         # Merge all pieces of the tex file
         texdoc = [
