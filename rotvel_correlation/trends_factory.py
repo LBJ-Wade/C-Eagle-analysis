@@ -498,12 +498,11 @@ for plot_type in plot_types:
         \end{abstract}
         \section{Plot summary}
         \begin{center}
-        %
         \end{center}
         ''' % (
                 plot_type,
                 x_binning.__name__,
-                summary.to_latex().strip(r'''{}''')
+                # summary.to_latex().strip(r'''{}''')
         )
 
         for entry_index, data_entry in enumerate(data_entries):
