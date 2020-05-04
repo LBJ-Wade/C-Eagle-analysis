@@ -483,7 +483,7 @@ for plot_type in plot_types:
     with open(fname, 'w') as fout:
         print(f"[+] Generating LaTeX script file: {fname}")
         preamble = r'''\documentclass{article} \usepackage{graphicx} \begin{document}'''
-        title = r'''\title{\bf Spin - peculiar velocity correlations\\ \textsc{%(plot_type)s} \author{Edo Altamura} \date{\today} \maketitle'''
+        title = r'''\title{Spin - peculiar velocity correlations: \textsc{%(plot_type)s} \author{Edo Altamura} \date{\today} \maketitle'''
         abstract = r'''\begin{abstract} \textsc{Binning method: %(x_binning.__name__)s} \end{abstract}'''
         plot_summary = r'''\section{Plot summary}\centering %(summary.to_latex(caption=r"Plots selected are only those with $\theta$ as $y$-axis."))s'''
         figures = r'''Figures start\\'''
