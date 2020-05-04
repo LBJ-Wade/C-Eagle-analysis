@@ -501,7 +501,7 @@ for plot_type in plot_types:
         '''.format(
                 plot_type,
                 x_binning.__name__,
-                summary.to_latex(caption=r"Plots selected are only those with $\theta$ as $y$-axis.")
+                summary.to_latex()
         )
 
         for entry_index, data_entry in enumerate(data_entries):
