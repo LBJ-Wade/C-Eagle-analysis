@@ -135,7 +135,7 @@ simstats.append(Simstats(simulation_name='celr_e', aperture_id=aperture_id))
 simstats.append(Simstats(simulation_name='celr_b', aperture_id=aperture_id))
 stats_out = [sim.read_simstats() for sim in simstats]
 attrs = [sim.read_metadata() for sim in simstats]
-print(f"\n{' stats_out DATASET INFO ':-^40s}")
+print(f"\n{' stats_out DATASET INFO ':-^50s}")
 print(stats_out[0].info())
 
 # Create SQL query
@@ -181,14 +181,21 @@ print(f"\n{' summary DATASET PLOTS INFO ':-^40s}\n", summary)
 
 
 # Activate the plot factory
-print(f"\n{' RUNNING PLOT FACTORY... ':-^40s}")
+print(f"\n{' RUNNING PLOT FACTORY ':-^50s}")
 
 data_entries = summary.to_dict('r')
 x_binning = equal_number_FD
 print(f"[+] Binning method for x_data set to `{x_binning.__name__}`.")
 
 for entry_index, data_entry in enumerate(data_entries):
+
     filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
+    if (
+            os.path.isfile(os.path.join(pathSave, 'scatter', filename)) and
+            os.path.isfile(os.path.join(pathSave, 'kdeplot', filename)) and
+            os.path.isfile(os.path.join(pathSave, 'median', filename))
+    ): continue
+
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
     gs.update(wspace=0., hspace=0.)
@@ -243,6 +250,7 @@ for entry_index, data_entry in enumerate(data_entries):
     ##################################################################################################
     # SCATTER PLOTS #
     ##################################################################################################
+    plot_type = 'scatterplot'
     for ax_idx, axes in enumerate(ax):
         axes.set_xscale(data_entry['xscale'])
         axes.set_yscale(data_entry['yscale'])
@@ -264,15 +272,16 @@ for entry_index, data_entry in enumerate(data_entries):
             )
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    if not os.path.exists(os.path.join(pathSave, 'scatterplot')):
-        os.makedirs(os.path.join(pathSave, 'scatterplot'))
-    plt.savefig(os.path.join(pathSave, 'scatterplot', filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: scatterplot >> {filename}")
+    if not os.path.exists(os.path.join(pathSave, plot_type)):
+        os.makedirs(os.path.join(pathSave, plot_type))
+    plt.savefig(os.path.join(pathSave, plot_type, filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
 
 
     ##################################################################################################
     # kde PLOTS #
     ##################################################################################################
+    plot_type = 'kdeplot'
     fig_kde = fig
     ax_kde = [fig_kde.axes[i] for i in [1, 3, 4, 5]]
     for axes in ax_kde:
@@ -309,15 +318,16 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    if not os.path.exists(os.path.join(pathSave, 'kdeplot')):
-        os.makedirs(os.path.join(pathSave, 'kdeplot'))
-    plt.savefig(os.path.join(pathSave, 'kdeplot', filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: kdeplot >> {filename}")
+    if not os.path.exists(os.path.join(pathSave, plot_type)):
+        os.makedirs(os.path.join(pathSave, plot_type))
+    plt.savefig(os.path.join(pathSave, plot_type, filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
 
 
     ##################################################################################################
     # MEDIAN PLOTS #
     ##################################################################################################
+    plot_type = 'median'
     fig_median = fig
     ax_median = [fig_median.axes[i] for i in [1, 3, 4, 5]]
     for axes in ax_median:
@@ -460,12 +470,12 @@ for entry_index, data_entry in enumerate(data_entries):
             axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
             axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-    if not os.path.exists(os.path.join(pathSave, 'median')):
-        os.makedirs(os.path.join(pathSave, 'median'))
-    plt.savefig(os.path.join(pathSave, 'median', filename))
-    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: median >> {filename}")
+    if not os.path.exists(os.path.join(pathSave, plot_type)):
+        os.makedirs(os.path.join(pathSave, plot_type))
+    plt.savefig(os.path.join(pathSave, plot_type, filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
 
-
+print(f"\n{' GENERATING PLOT BOOK ':-^50s}")
 # Summarise plots in a LaTeX >> (compiled) pdf file
 plot_types = ['scatterplot', 'kdeplot', 'median']
 for plot_type in plot_types:
@@ -487,7 +497,7 @@ for plot_type in plot_types:
             \begin{figure}
                 \centering
                 \includegraphics[width=\textwidth]{%(filepath)s}
-                \caption{('\n'.join(items_labels))s}
+                \caption{%(filename)s}
                 \label{%(filename)s}
             \end{figure}
             '''
@@ -517,8 +527,7 @@ for plot_type in plot_types:
     os.unlink(fname)
     os.unlink(f"{fname.replace('tex', 'log')}")
 
-    # Send files to Slack:
-    # init slack client with access token
+    # Send files to Slack: init slack client with access token
     print(f"[+] Forwarding {fname.replace('tex', 'pdf')} to the `#personal` Slack channel...")
     slack_token = os.environ['xoxp-452271173797-451476014913-1101193540773-57eb7b0d416e8764be6849fdeda52ce8']
     client = slack.WebClient(token=slack_token)
