@@ -190,288 +190,289 @@ print(f"[+] Binning method for x_data set to `{x_binning.__name__}`.")
 for entry_index, data_entry in enumerate(data_entries):
 
     filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
-    if (not os.path.isfile(os.path.join(pathSave, 'scatter', filename)) or
-        not os.path.isfile(os.path.join(pathSave, 'kdeplot', filename)) or
-        not os.path.isfile(os.path.join(pathSave, 'median', filename))):
+    are_files = [os.path.isfile(os.path.join(pathSave, 'scatter', filename)),
+                 os.path.isfile(os.path.join(pathSave, 'kdeplot', filename)),
+                 os.path.isfile(os.path.join(pathSave, 'median', filename))]
+    if any(are_files): continue
 
-        fig = plt.figure(figsize=(15, 10))
-        gs = GridSpec(2, 3, figure=fig)
-        gs.update(wspace=0., hspace=0.)
-        info_ax0 = fig.add_subplot(gs[0]); info_ax0.axis('off')
-        ax1 = fig.add_subplot(gs[1])
-        info_ax1 = fig.add_subplot(gs[2]); info_ax1.axis('off')
-        ax2 = fig.add_subplot(gs[3], sharex=ax1, sharey=ax1)
-        ax3 = fig.add_subplot(gs[4], sharex=ax2, sharey=ax2)
-        ax4 = fig.add_subplot(gs[5], sharex=ax3, sharey=ax3)
-        ax = [ax1, ax2, ax3, ax4]
-        plt.setp(ax[0].get_xticklabels(), visible=False)
-        plt.setp(ax[2].get_yticklabels(), visible=False)
-        plt.setp(ax[3].get_yticklabels(), visible=False)
-        xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
-        ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
+    fig = plt.figure(figsize=(15, 10))
+    gs = GridSpec(2, 3, figure=fig)
+    gs.update(wspace=0., hspace=0.)
+    info_ax0 = fig.add_subplot(gs[0]); info_ax0.axis('off')
+    ax1 = fig.add_subplot(gs[1])
+    info_ax1 = fig.add_subplot(gs[2]); info_ax1.axis('off')
+    ax2 = fig.add_subplot(gs[3], sharex=ax1, sharey=ax1)
+    ax3 = fig.add_subplot(gs[4], sharex=ax2, sharey=ax2)
+    ax4 = fig.add_subplot(gs[5], sharex=ax3, sharey=ax3)
+    ax = [ax1, ax2, ax3, ax4]
+    plt.setp(ax[0].get_xticklabels(), visible=False)
+    plt.setp(ax[2].get_yticklabels(), visible=False)
+    plt.setp(ax[3].get_yticklabels(), visible=False)
+    xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
+    ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
 
-        # Unresolved issue with the Latex labels
-        # Some contain an extra `$` at the end of the string, which should not be there.
-        label_x = attrs[0]['Columns/labels'][data_entry['x']]
-        label_y = attrs[0]['Columns/labels'][data_entry['y']]
-        if label_x.endswith('$'): label_x = label_x.rstrip('$')
-        if label_y.endswith('$'): label_y = label_y.rstrip('$')
-        ax[0].set_ylabel(label_y)
-        ax[1].set_ylabel(label_y)
-        ax[1].set_xlabel(label_x)
-        ax[2].set_xlabel(label_x)
-        ax[3].set_xlabel(label_x)
+    # Unresolved issue with the Latex labels
+    # Some contain an extra `$` at the end of the string, which should not be there.
+    label_x = attrs[0]['Columns/labels'][data_entry['x']]
+    label_y = attrs[0]['Columns/labels'][data_entry['y']]
+    if label_x.endswith('$'): label_x = label_x.rstrip('$')
+    if label_y.endswith('$'): label_y = label_y.rstrip('$')
+    ax[0].set_ylabel(label_y)
+    ax[1].set_ylabel(label_y)
+    ax[1].set_xlabel(label_x)
+    ax[2].set_xlabel(label_x)
+    ax[3].set_xlabel(label_x)
 
-        simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
+    simstats_palette = ['#1B9E77','#D95F02','#7570B3','#E7298A']
 
-        z_range = [np.min(pd.concat(stats_filtered)['redshift_float']),
-                   np.max(pd.concat(stats_filtered)['redshift_float'])]
-        z_range_str = f'{z_range[0]:1.2f} - {z_range[1]:1.2f}' if round(z_range[0]) < round(z_range[1]) else f'{z_range[0]:1.2f}'
-        items_labels = [
-            f"{label_x.split(r'quad')[0]} -\\ {label_y.split(r'quad')[0]}",
-            f"Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs]):d}",
-            f"$z$ = {z_range_str:s}",
-            f"Aperture radius = {stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0]:2.2f} $R_{{200\\ true}}$"
-        ]
-        info_ax0.text(0.03, 0.97, '\n'.join(items_labels), horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
+    z_range = [np.min(pd.concat(stats_filtered)['redshift_float']),
+               np.max(pd.concat(stats_filtered)['redshift_float'])]
+    z_range_str = f'{z_range[0]:1.2f} - {z_range[1]:1.2f}' if round(z_range[0]) < round(z_range[1]) else f'{z_range[0]:1.2f}'
+    items_labels = [
+        f"{label_x.split(r'quad')[0]} -\\ {label_y.split(r'quad')[0]}",
+        f"Number of clusters: {np.sum([attr['Number of clusters'] for attr in attrs]):d}",
+        f"$z$ = {z_range_str:s}",
+        f"Aperture radius = {stats_filtered[0]['R_aperture'][0] / stats_filtered[0]['R_200_crit'][0]:2.2f} $R_{{200\\ true}}$"
+    ]
+    info_ax0.text(0.03, 0.97, '\n'.join(items_labels), horizontalalignment='left', verticalalignment='top', size=15, transform=info_ax0.transAxes)
 
-        axisinfo_kwargs = dict(
-                horizontalalignment='right',
-                verticalalignment='top',
-                size=15
-        )
-        handles = [Patch(facecolor=simstats_palette[i], label=attrs[i]['Simulation'], edgecolor='k', linewidth=1) for i in range(len(attrs))]
-        leg = info_ax1.legend(handles=handles, loc='lower right', handlelength=1, fontsize=20)
-        info_ax1.add_artist(leg)
-
-
-        ##################################################################################################
-        # SCATTER PLOTS #
-        ##################################################################################################
-        plot_type = 'scatterplot'
-        for ax_idx, axes in enumerate(ax):
-            axes.set_xscale(data_entry['xscale'])
-            axes.set_yscale(data_entry['yscale'])
-            axes.tick_params(direction='in', length=5, top=True, right=True)
-            if ax_idx == 0:
-                axes.scatter(
-                        pd.concat(stats_filtered)[data_entry['x']],
-                        pd.concat(stats_filtered)[data_entry['y']],
-                        s=5,
-                        c=simstats_palette[ax_idx-1]
-                )
-                axes.text(0.95, 0.95, f'\\textsc{{Total}}', transform=axes.transAxes, **axisinfo_kwargs)
-            else:
-                axes.scatter(
-                        stats_filtered[ax_idx-1][data_entry['x']],
-                        stats_filtered[ax_idx-1][data_entry['y']],
-                        s=5,
-                        c=simstats_palette[ax_idx-1]
-                )
-                axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
-
-        if not os.path.exists(os.path.join(pathSave, plot_type)):
-            os.makedirs(os.path.join(pathSave, plot_type))
-        plt.savefig(os.path.join(pathSave, plot_type, filename))
-        print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
+    axisinfo_kwargs = dict(
+            horizontalalignment='right',
+            verticalalignment='top',
+            size=15
+    )
+    handles = [Patch(facecolor=simstats_palette[i], label=attrs[i]['Simulation'], edgecolor='k', linewidth=1) for i in range(len(attrs))]
+    leg = info_ax1.legend(handles=handles, loc='lower right', handlelength=1, fontsize=20)
+    info_ax1.add_artist(leg)
 
 
-        ##################################################################################################
-        # kde PLOTS #
-        ##################################################################################################
-        plot_type = 'kdeplot'
-        fig_kde = fig
-        ax_kde = [fig_kde.axes[i] for i in [1, 3, 4, 5]]
-        for axes in ax_kde:
-            for artist in axes.lines + axes.collections:
-                artist.remove()
+    ##################################################################################################
+    # SCATTER PLOTS #
+    ##################################################################################################
+    plot_type = 'scatterplot'
+    for ax_idx, axes in enumerate(ax):
+        axes.set_xscale(data_entry['xscale'])
+        axes.set_yscale(data_entry['yscale'])
+        axes.tick_params(direction='in', length=5, top=True, right=True)
+        if ax_idx == 0:
+            axes.scatter(
+                    pd.concat(stats_filtered)[data_entry['x']],
+                    pd.concat(stats_filtered)[data_entry['y']],
+                    s=5,
+                    c=simstats_palette[ax_idx-1]
+            )
+            axes.text(0.95, 0.95, f'\\textsc{{Total}}', transform=axes.transAxes, **axisinfo_kwargs)
+        else:
+            axes.scatter(
+                    stats_filtered[ax_idx-1][data_entry['x']],
+                    stats_filtered[ax_idx-1][data_entry['y']],
+                    s=5,
+                    c=simstats_palette[ax_idx-1]
+            )
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-        x_space = np.linspace(xlims[0], xlims[1], 101)
-        y_space = np.linspace(ylims[0], ylims[1], 101)
-        if data_entry['xscale'] is 'log':
-            x_space = np.linspace(np.log10(xlims[0]), np.log10(xlims[1]), 101)
-        if data_entry['yscale'] is 'log':
-            y_space = np.linspace(np.log10(ylims[0]), np.log10(ylims[1]), 101)
-        xx, yy = np.meshgrid(x_space, y_space)
-        positions = np.vstack([xx.ravel(), yy.ravel()])
-        for ax_idx, axes in enumerate(ax_kde):
-            if ax_idx == 0:
-                x = pd.concat(stats_filtered)[data_entry['x']]
-                y = pd.concat(stats_filtered)[data_entry['y']]
-                values = np.vstack([x if data_entry['xscale'] is 'linear' else np.log10(x), y])
-                kernel = st.gaussian_kde(values)
-                f = np.reshape(kernel(positions).T, xx.shape)
-                #cfset = axes.contourf(xx, yy, f, cmap='Blues')
-                cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
-                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
-                axes.text(0.95, 0.95, f'\\textsc{{Total}}', transform=axes.transAxes, **axisinfo_kwargs)
-            else:
-                x = stats_filtered[ax_idx-1][data_entry['x']]
-                y = stats_filtered[ax_idx-1][data_entry['y']]
-                values = np.vstack([x if data_entry['xscale'] is 'linear' else np.log10(x), y])
-                kernel = st.gaussian_kde(values)
-                f = np.reshape(kernel(positions).T, xx.shape)
-                #cfset = axes.contourf(xx, yy, f, cmap='Blues')
-                cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
-                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
-                axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
-
-        if not os.path.exists(os.path.join(pathSave, plot_type)):
-            os.makedirs(os.path.join(pathSave, plot_type))
-        plt.savefig(os.path.join(pathSave, plot_type, filename))
-        print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
+    if not os.path.exists(os.path.join(pathSave, plot_type)):
+        os.makedirs(os.path.join(pathSave, plot_type))
+    plt.savefig(os.path.join(pathSave, plot_type, filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
 
 
-        ##################################################################################################
-        # MEDIAN PLOTS #
-        ##################################################################################################
-        plot_type = 'median'
-        fig_median = fig
-        ax_median = [fig_median.axes[i] for i in [1, 3, 4, 5]]
-        for axes in ax_median:
-            for artist in axes.lines + axes.collections:
-                artist.remove()
+    ##################################################################################################
+    # kde PLOTS #
+    ##################################################################################################
+    plot_type = 'kdeplot'
+    fig_kde = fig
+    ax_kde = [fig_kde.axes[i] for i in [1, 3, 4, 5]]
+    for axes in ax_kde:
+        for artist in axes.lines + axes.collections:
+            artist.remove()
 
-        perc84 = Line2D([], [], color='k', marker='^', linestyle='-.', markersize=12, label=r'$84^{th}$ percentile')
-        perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=12, label=r'median')
-        perc16 = Line2D([], [], color='k', marker='v', linestyle='--', markersize=12, label=r'$16^{th}$ percentile')
-        leg1 = fig_median.axes[2].legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=2, fontsize=20)
-        fig_median.axes[2].add_artist(leg1)
-        xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
-        ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
+    x_space = np.linspace(xlims[0], xlims[1], 101)
+    y_space = np.linspace(ylims[0], ylims[1], 101)
+    if data_entry['xscale'] is 'log':
         x_space = np.linspace(np.log10(xlims[0]), np.log10(xlims[1]), 101)
-        y_space = np.linspace(ylims[0], ylims[1], 101)
+    if data_entry['yscale'] is 'log':
+        y_space = np.linspace(np.log10(ylims[0]), np.log10(ylims[1]), 101)
+    xx, yy = np.meshgrid(x_space, y_space)
+    positions = np.vstack([xx.ravel(), yy.ravel()])
+    for ax_idx, axes in enumerate(ax_kde):
+        if ax_idx == 0:
+            x = pd.concat(stats_filtered)[data_entry['x']]
+            y = pd.concat(stats_filtered)[data_entry['y']]
+            values = np.vstack([x if data_entry['xscale'] is 'linear' else np.log10(x), y])
+            kernel = st.gaussian_kde(values)
+            f = np.reshape(kernel(positions).T, xx.shape)
+            #cfset = axes.contourf(xx, yy, f, cmap='Blues')
+            cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
+            axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
+            axes.text(0.95, 0.95, f'\\textsc{{Total}}', transform=axes.transAxes, **axisinfo_kwargs)
+        else:
+            x = stats_filtered[ax_idx-1][data_entry['x']]
+            y = stats_filtered[ax_idx-1][data_entry['y']]
+            values = np.vstack([x if data_entry['xscale'] is 'linear' else np.log10(x), y])
+            kernel = st.gaussian_kde(values)
+            f = np.reshape(kernel(positions).T, xx.shape)
+            #cfset = axes.contourf(xx, yy, f, cmap='Blues')
+            cset = axes.contour(xx if data_entry['xscale'] is 'linear' else 10**xx, yy, f, colors=simstats_palette[ax_idx-1])
+            axes.scatter(x, y, s=3, c=simstats_palette[ax_idx-1], alpha=0.2)
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx-1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
 
-        for ax_idx, axes in enumerate(ax_median):
-            axes.set_xlim([xlims[0] - 0.1 * np.diff(xlims), xlims[1] + 0.1 * np.diff(xlims)])
-            axes.set_ylim([ylims[0] - 0.1 * np.diff(ylims), ylims[1] + 0.1 * np.diff(ylims)])
-            axes_to_data = axes.transAxes + axes.transData.inverted()
-            ax_frame = axes_to_data.transform
-            if ax_idx == 0:
-                x = pd.concat(stats_filtered)[data_entry['x']]
-                y = pd.concat(stats_filtered)[data_entry['y']]
+    if not os.path.exists(os.path.join(pathSave, plot_type)):
+        os.makedirs(os.path.join(pathSave, plot_type))
+    plt.savefig(os.path.join(pathSave, plot_type, filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
 
-                # Compute the candlestick widths
-                ax_xlims = axes.get_xlim()
-                ax_ylims = axes.get_ylim()
-                width = ax_xlims[1] - ax_xlims[0] if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1]) - np.log10(ax_xlims[0])
-                height = ax_ylims[1] - ax_ylims[0] if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1]) - np.log10(ax_ylims[0])
-                candlestick_h_kwargs = dict(align='edge',
-                                            left=np.median(x),
-                                            height=0.05 * height,
-                                            xerr=np.std(x) / np.sqrt(len(x)),
-                                            ecolor='k',
-                                            edgecolor='k',
-                                            facecolor=simstats_palette[ax_idx - 1],
-                                            alpha=1
-                                            )
-                candlestick_v_kwargs = dict(align='edge',
-                                            bottom=np.median(y),
-                                            width=0.05 * width,
-                                            yerr=np.std(y) / np.sqrt(len(y)),
-                                            ecolor='k',
-                                            edgecolor='k',
-                                            facecolor=simstats_palette[ax_idx - 1],
-                                            alpha=1
-                                            )
 
-                # Compute the bin edges using bayesian blocks
-                # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
-                # If the edges are <=3, take the whole dataset for statistics and ignore binning
-                x_bin_stats = x_binning(x) if data_entry['xscale'] is 'linear' else 10 ** x_binning(np.log10(x))
+    ##################################################################################################
+    # MEDIAN PLOTS #
+    ##################################################################################################
+    plot_type = 'median'
+    fig_median = fig
+    ax_median = [fig_median.axes[i] for i in [1, 3, 4, 5]]
+    for axes in ax_median:
+        for artist in axes.lines + axes.collections:
+            artist.remove()
 
-                if len(x_bin_stats) > 3:
-                    median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
-                    percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
-                    percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
-                    count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
-                    std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
-                    median_x = edges[:-1] + np.diff(edges) / 2
-                    axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
-                    axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
-                                  marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                                  linestyle='-', capsize=0)
-                    axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
-                                  marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                                  linestyle='--', capsize=0)
-                    axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
-                                  marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                                  linestyle='-.', capsize=0)
-                else:
-                    axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.8)
+    perc84 = Line2D([], [], color='k', marker='^', linestyle='-.', markersize=12, label=r'$84^{th}$ percentile')
+    perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=12, label=r'median')
+    perc16 = Line2D([], [], color='k', marker='v', linestyle='--', markersize=12, label=r'$16^{th}$ percentile')
+    leg1 = fig_median.axes[2].legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=2, fontsize=20)
+    fig_median.axes[2].add_artist(leg1)
+    xlims = [np.min(pd.concat(stats_filtered)[data_entry['x']]), np.max(pd.concat(stats_filtered)[data_entry['x']])]
+    ylims = [np.min(pd.concat(stats_filtered)[data_entry['y']]), np.max(pd.concat(stats_filtered)[data_entry['y']])]
+    x_space = np.linspace(np.log10(xlims[0]), np.log10(xlims[1]), 101)
+    y_space = np.linspace(ylims[0], ylims[1], 101)
 
-                axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
-                axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
-                axes.barh(ax_frame((0, 0))[1], 0, **candlestick_h_kwargs)
-                axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), **candlestick_v_kwargs)
-                axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), **candlestick_v_kwargs)
-                axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
-                axes.text(0.95, 0.95, '\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+    for ax_idx, axes in enumerate(ax_median):
+        axes.set_xlim([xlims[0] - 0.1 * np.diff(xlims), xlims[1] + 0.1 * np.diff(xlims)])
+        axes.set_ylim([ylims[0] - 0.1 * np.diff(ylims), ylims[1] + 0.1 * np.diff(ylims)])
+        axes_to_data = axes.transAxes + axes.transData.inverted()
+        ax_frame = axes_to_data.transform
+        if ax_idx == 0:
+            x = pd.concat(stats_filtered)[data_entry['x']]
+            y = pd.concat(stats_filtered)[data_entry['y']]
+
+            # Compute the candlestick widths
+            ax_xlims = axes.get_xlim()
+            ax_ylims = axes.get_ylim()
+            width = ax_xlims[1] - ax_xlims[0] if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1]) - np.log10(ax_xlims[0])
+            height = ax_ylims[1] - ax_ylims[0] if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1]) - np.log10(ax_ylims[0])
+            candlestick_h_kwargs = dict(align='edge',
+                                        left=np.median(x),
+                                        height=0.05 * height,
+                                        xerr=np.std(x) / np.sqrt(len(x)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
+                                        alpha=1
+                                        )
+            candlestick_v_kwargs = dict(align='edge',
+                                        bottom=np.median(y),
+                                        width=0.05 * width,
+                                        yerr=np.std(y) / np.sqrt(len(y)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
+                                        alpha=1
+                                        )
+
+            # Compute the bin edges using bayesian blocks
+            # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
+            # If the edges are <=3, take the whole dataset for statistics and ignore binning
+            x_bin_stats = x_binning(x) if data_entry['xscale'] is 'linear' else 10 ** x_binning(np.log10(x))
+
+            if len(x_bin_stats) > 3:
+                median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
+                percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
+                percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
+                count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
+                std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
+                median_x = edges[:-1] + np.diff(edges) / 2
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
+                axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
+                              marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-', capsize=0)
+                axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
+                              marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='--', capsize=0)
+                axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
+                              marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-.', capsize=0)
             else:
-                x = stats_filtered[ax_idx - 1][data_entry['x']]
-                y = stats_filtered[ax_idx - 1][data_entry['y']]
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.8)
 
-                # Compute the candlestick widths
-                ax_xlims = axes.get_xlim()
-                ax_ylims = axes.get_ylim()
-                width  = ax_xlims[1]-ax_xlims[0] if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1])-np.log10(ax_xlims[0])
-                height = ax_ylims[1]-ax_ylims[0] if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1])-np.log10(ax_ylims[0])
-                candlestick_h_kwargs = dict(align='edge',
-                                            left=np.median(x),
-                                            height=0.05*height,
-                                            xerr=np.std(x) / np.sqrt(len(x)),
-                                            ecolor='k',
-                                            edgecolor='k',
-                                            facecolor=simstats_palette[ax_idx - 1],
-                                            alpha=1
-                                            )
-                candlestick_v_kwargs = dict(align='edge',
-                                            bottom=np.median(y),
-                                            width=0.05*width,
-                                            yerr=np.std(y) / np.sqrt(len(y)),
-                                            ecolor='k',
-                                            edgecolor='k',
-                                            facecolor=simstats_palette[ax_idx - 1],
-                                            alpha=1
-                                            )
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], 0, **candlestick_h_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
+            axes.text(0.95, 0.95, '\\textsc{Total}', transform=axes.transAxes, **axisinfo_kwargs)
+        else:
+            x = stats_filtered[ax_idx - 1][data_entry['x']]
+            y = stats_filtered[ax_idx - 1][data_entry['y']]
 
-                # Compute the bin edges using bayesian blocks
-                # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
-                # If the edges are <=3, take the whole dataset for statistics and ignore binning
-                x_bin_stats = x_binning(x) if data_entry['xscale'] is 'linear' else 10 ** x_binning(np.log10(x))
+            # Compute the candlestick widths
+            ax_xlims = axes.get_xlim()
+            ax_ylims = axes.get_ylim()
+            width  = ax_xlims[1]-ax_xlims[0] if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1])-np.log10(ax_xlims[0])
+            height = ax_ylims[1]-ax_ylims[0] if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1])-np.log10(ax_ylims[0])
+            candlestick_h_kwargs = dict(align='edge',
+                                        left=np.median(x),
+                                        height=0.05*height,
+                                        xerr=np.std(x) / np.sqrt(len(x)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
+                                        alpha=1
+                                        )
+            candlestick_v_kwargs = dict(align='edge',
+                                        bottom=np.median(y),
+                                        width=0.05*width,
+                                        yerr=np.std(y) / np.sqrt(len(y)),
+                                        ecolor='k',
+                                        edgecolor='k',
+                                        facecolor=simstats_palette[ax_idx - 1],
+                                        alpha=1
+                                        )
 
-                if len(x_bin_stats) > 3:
-                    median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
-                    percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
-                    percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
-                    count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
-                    std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
-                    median_x = edges[: -1] + np.diff(edges) / 2
-                    axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
-                    axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
-                                  marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                                  linestyle='-', capsize=0)
-                    axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
-                                  marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                                  linestyle='--', capsize=0)
-                    axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
-                                  marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
-                                  linestyle='-.', capsize=0)
-                else:
-                    axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.8)
+            # Compute the bin edges using bayesian blocks
+            # Note on small datasets (e.g. CELRs) the bayesian block algorithm can give singular results
+            # If the edges are <=3, take the whole dataset for statistics and ignore binning
+            x_bin_stats = x_binning(x) if data_entry['xscale'] is 'linear' else 10 ** x_binning(np.log10(x))
 
-                axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
-                axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
-                axes.barh(ax_frame((0, 0))[1], 0, **candlestick_h_kwargs)
-                axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), **candlestick_v_kwargs)
-                axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), **candlestick_v_kwargs)
-                axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
-                axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
+            if len(x_bin_stats) > 3:
+                median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
+                percent84_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
+                percent16_y, _, _  = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
+                count_y, _, _      = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
+                std_y, _, _        = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
+                median_x = edges[: -1] + np.diff(edges) / 2
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.2)
+                axes.errorbar(median_x, median_y, yerr=std_y / np.sqrt(count_y),
+                              marker='o', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-', capsize=0)
+                axes.errorbar(median_x, percent16_y, yerr=std_y / np.sqrt(count_y),
+                              marker='v', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='--', capsize=0)
+                axes.errorbar(median_x, percent84_y, yerr=std_y / np.sqrt(count_y),
+                              marker='^', ms=8, c=simstats_palette[ax_idx - 1], alpha=1,
+                              linestyle='-.', capsize=0)
+            else:
+                axes.scatter(x, y, s=3, c=simstats_palette[ax_idx - 1], alpha=0.8)
 
-        if not os.path.exists(os.path.join(pathSave, plot_type)):
-            os.makedirs(os.path.join(pathSave, plot_type))
-        plt.savefig(os.path.join(pathSave, plot_type, filename))
-        print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 84) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], np.percentile(x, 16) - np.median(x), **candlestick_h_kwargs)
+            axes.barh(ax_frame((0, 0))[1], 0, **candlestick_h_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 84) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], np.percentile(y, 16) - np.median(y), **candlestick_v_kwargs)
+            axes.bar(ax_frame((0, 0))[0], 0, **candlestick_v_kwargs)
+            axes.text(0.95, 0.95, f"\\textsc{{{attrs[ax_idx - 1]['Simulation']}}}", transform=axes.transAxes, **axisinfo_kwargs)
+
+    if not os.path.exists(os.path.join(pathSave, plot_type)):
+        os.makedirs(os.path.join(pathSave, plot_type))
+    plt.savefig(os.path.join(pathSave, plot_type, filename))
+    print(f"[+] Plot {entry_index:3d}/{len(data_entries)} Figure saved: {plot_type:>15s} >> {filename}")
 
 print(f"\n{' GENERATING PLOT BOOK ':-^50s}")
 # Summarise plots in a LaTeX >> (compiled) pdf file
