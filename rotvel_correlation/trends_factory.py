@@ -498,7 +498,7 @@ for plot_type in plot_types:
         \section{Plot summary}
         \centering 
         %
-        '''.format(
+        ''' % (
                 plot_type,
                 x_binning.__name__,
                 summary.to_latex()
@@ -516,7 +516,7 @@ for plot_type in plot_types:
                 \caption{%}
                 \label{%}
             \end{figure}
-            '''.format(
+            ''' % (
                     filepath,
                     filename,
                     filename
