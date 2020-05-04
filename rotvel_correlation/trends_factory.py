@@ -194,7 +194,7 @@ for entry_index, data_entry in enumerate(data_entries):
             os.path.isfile(os.path.join(pathSave, 'scatter', filename)) and
             os.path.isfile(os.path.join(pathSave, 'kdeplot', filename)) and
             os.path.isfile(os.path.join(pathSave, 'median', filename))
-    ): continue
+    ): break
 
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
