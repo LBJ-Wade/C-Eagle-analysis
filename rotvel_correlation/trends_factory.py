@@ -523,7 +523,7 @@ Binning method: {x_binning.__name__.replace('_', '-')}
 
     # Send files to Slack: init slack client with access token
     print(f"[+] Forwarding {fname.replace('tex', 'pdf')} to the `#personal` Slack channel...")
-    slack_token = os.environ['xoxp-452271173797-451476014913-1101193540773-57eb7b0d416e8764be6849fdeda52ce8']
+    slack_token = 'xoxp-452271173797-451476014913-1101193540773-57eb7b0d416e8764be6849fdeda52ce8'
     client = slack.WebClient(token=slack_token)
 
     # upload file
