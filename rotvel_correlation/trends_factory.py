@@ -485,7 +485,8 @@ for plot_type in plot_types:
 \\usepackage{{lmodern}}
 \\usepackage[T1]{{fontenc}}
 \\usepackage{{textcomp}}
-\\usepackage{{graphicx}} 
+\\usepackage{{graphicx}}
+\\usepackage{{grffile}}
 \\usepackage{{booktabs}}
 \\begin{{document}}
 
