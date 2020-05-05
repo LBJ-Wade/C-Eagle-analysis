@@ -482,6 +482,9 @@ for plot_type in plot_types:
         print(f"[+] Generating LaTeX script file: {fname}")
         tex_source = f"""
 \\documentclass{{article}} 
+\\usepackage{{lmodern}}
+\\usepackage[T1]{{fontenc}}
+\\usepackage{{textcomp}}
 \\usepackage{{graphicx}} 
 \\usepackage{{booktabs}}
 \\begin{{document}}
