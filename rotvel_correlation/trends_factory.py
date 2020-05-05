@@ -509,7 +509,7 @@ Binning method: {x_binning.__name__.replace('_', '-')}
 \\newpage
 \\begin{{figure}}
     \\centering
-    \\includegraphics[width=\\textwidth]{{\"{filepath}\"}}
+    \\includegraphics[width=\\textwidth]{{{filepath}}}
     \\caption{{{filename.replace('_', '-')}}}
 \\end{{figure}}
                         """
