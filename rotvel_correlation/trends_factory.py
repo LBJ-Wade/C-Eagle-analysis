@@ -521,7 +521,7 @@ Binning method: {x_binning.__name__.replace('_', '-')}
     # Compile the tex file using `pdflatex`
     print(f"[+] Compiling LaTeX script file into pdf: {fname.replace('tex', 'pdf')}")
     cmd = ['pdflatex', '-interaction', 'nonstopmode', f'{fname}']
-    proc = subprocess.Popen(cmd)
+    proc = subprocess.Popen(cmd, cwd=os.path.join(pathSave, plot_type))
     proc.communicate()
     retcode = proc.returncode
     if not retcode is 0:
