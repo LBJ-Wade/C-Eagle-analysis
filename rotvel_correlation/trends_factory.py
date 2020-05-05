@@ -506,7 +506,7 @@ Binning method: {x_binning.__name__.replace('_', '-')}
             filepath = os.path.join(pathSave, plot_type, filename)
 
             tex_source += f"""
-\\newpage
+\\clearpage
 \\begin{{figure}}
     \\centering
     \\includegraphics[width=\\textwidth]{{{filepath}}}
