@@ -514,7 +514,7 @@ Binning method: {x_binning.__name__}
                         """
 
         tex_source += r"\end{document}"
-        fout.write(tex_source)
+        fout.write(tex_source.replace(r'_', r'\\textunderscore'))
 
     # Compile the tex file using `pdflatex`
     print(f"[+] Compiling LaTeX script file into pdf: {fname.replace('tex', 'pdf')}")
