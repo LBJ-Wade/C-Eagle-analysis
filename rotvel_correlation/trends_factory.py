@@ -184,7 +184,7 @@ print(f"\n{' summary DATASET PLOTS INFO ':-^40s}\n", summary)
 print(f"\n{' RUNNING PLOT FACTORY ':-^50s}")
 
 data_entries = summary.to_dict('r')
-x_binning = freedman_diaconis
+x_binning = bayesian_blocks
 print(f"[+] Binning method for x_data set to `{x_binning.__name__}`.")
 
 for entry_index, data_entry in enumerate(data_entries):
@@ -415,8 +415,8 @@ for entry_index, data_entry in enumerate(data_entries):
             # Compute the candlestick widths
             ax_xlims = axes.get_xlim()
             ax_ylims = axes.get_ylim()
-            width  = ax_xlims[1]-ax_xlims[0] if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1])-np.log10(ax_xlims[0])
-            height = ax_ylims[1]-ax_ylims[0] if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1])-np.log10(ax_ylims[0])
+            width  = ax_xlims[1]-ax_xlims[0] if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1]/ax_xlims[0])
+            height = ax_ylims[1]-ax_ylims[0] if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1]/ax_ylims[0])
             candlestick_h_kwargs = dict(align='edge',
                                         left=np.median(x),
                                         height=0.05*height,
@@ -527,7 +527,7 @@ Binning method: {x_binning.__name__.replace('_', '-')}
         fout.write(tex_source)
 
     # Compile the tex file using `pdflatex`
-    print(f"[+] Compiling LaTeX script file into pdf: {fname.replace('tex', 'pdf')}")
+    print(f"[+] Compiling LaTeX script file into pdf: {fname.replace('tex', 'pdf').split('/')[-1]}")
     cmd = ['pdflatex', '-interaction', 'nonstopmode', f'{fname}']
     proc = subprocess.Popen(cmd, cwd=os.path.join(pathSave, plot_type))
     proc.communicate()
@@ -541,14 +541,14 @@ Binning method: {x_binning.__name__.replace('_', '-')}
     os.unlink(f"{fname.replace('tex', 'aux')}")
 
     # Send files to Slack: init slack client with access token
-    print(f"[+] Forwarding {fname.replace('tex', 'pdf')} to the `#personal` Slack channel...")
+    print(f"[+] Forwarding {fname.replace('tex', 'pdf').split('/')[-1]} to the `#personal` Slack channel...")
     slack_token = 'xoxp-452271173797-451476014913-1101193540773-57eb7b0d416e8764be6849fdeda52ce8'
     client = slack.WebClient(token=slack_token)
 
     # upload file
     response = client.files_upload(
             file=f"{fname.replace('tex', 'pdf')}",
-            initial_comment='This space ship needs some repairs I think...',
+            initial_comment=f"This file was sent upon completion of the plot factory pipeline.\nAttachments: {fname.replace('tex', 'pdf').split('/')[-1]}",
             channels='#personal'
     )
 
