@@ -2,6 +2,7 @@ import sys
 import os
 import warnings
 import itertools
+import subprocess
 import numpy as np
 import pandas as pd
 import slack
@@ -519,7 +520,16 @@ Binning method: {x_binning.__name__.replace('_', '-')}
 
     # Compile the tex file using `pdflatex`
     print(f"[+] Compiling LaTeX script file into pdf: {fname.replace('tex', 'pdf')}")
-    os.system(f"pdflatex {fname}")
+    cmd = ['pdflatex', '-interaction', 'nonstopmode', f'{fname}']
+    proc = subprocess.Popen(cmd)
+    proc.communicate()
+    retcode = proc.returncode
+    if not retcode is 0:
+        os.unlink(f"{fname.replace('tex', 'pdf')}")
+        raise ValueError('Error {} executing command: {}'.format(retcode, ' '.join(cmd)))
+
+    os.unlink( f'{fname}')
+    os.unlink(f"{fname.replace('tex', 'log')}")
 
     # Send files to Slack: init slack client with access token
     print(f"[+] Forwarding {fname.replace('tex', 'pdf')} to the `#personal` Slack channel...")
@@ -532,8 +542,7 @@ Binning method: {x_binning.__name__.replace('_', '-')}
             initial_comment='This space ship needs some repairs I think...',
             channels='#personal'
     )
-    assert response['ok']
-    slack_file = response['file']
+
 
 
 
