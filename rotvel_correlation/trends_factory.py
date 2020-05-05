@@ -188,7 +188,7 @@ print(f"[+] Binning method for x_data set to `{x_binning.__name__}`.")
 
 for entry_index, data_entry in enumerate(data_entries):
 
-    filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
+    filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.pdf"
     are_files = [os.path.isfile(os.path.join(pathSave, 'scatter', filename)),
                  os.path.isfile(os.path.join(pathSave, 'kdeplot', filename)),
                  os.path.isfile(os.path.join(pathSave, 'median', filename))]
@@ -502,7 +502,7 @@ Binning method: {x_binning.__name__.replace('_', '-')}
                         """
 
         for entry_index, data_entry in enumerate(data_entries):
-            filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.png"
+            filename = f"{data_entry['x'].replace('_', '')}_{data_entry['y'].replace('_', '')}_aperture{aperture_id}.pdf"
             filepath = os.path.join(pathSave, plot_type, filename)
 
             tex_source += f"""
