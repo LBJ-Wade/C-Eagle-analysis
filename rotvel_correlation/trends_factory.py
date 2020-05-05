@@ -193,7 +193,7 @@ for entry_index, data_entry in enumerate(data_entries):
     are_files = [os.path.isfile(os.path.join(pathSave, 'scatter', filename)),
                  os.path.isfile(os.path.join(pathSave, 'kdeplot', filename)),
                  os.path.isfile(os.path.join(pathSave, 'median', filename))]
-    if any(are_files): continue
+    #if any(are_files): continue
 
     fig = plt.figure(figsize=(15, 10))
     gs = GridSpec(2, 3, figure=fig)
