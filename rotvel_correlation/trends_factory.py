@@ -415,8 +415,8 @@ for entry_index, data_entry in enumerate(data_entries):
             # Compute the candlestick widths
             ax_xlims = axes.get_xlim()
             ax_ylims = axes.get_ylim()
-            width  = ax_xlims[1]-ax_xlims[0]#if data_entry['xscale'] is 'linear' else np.log10(ax_xlims[1]/ax_xlims[0])
-            height = ax_ylims[1]-ax_ylims[0]#if data_entry['yscale'] is 'linear' else np.log10(ax_ylims[1]/ax_ylims[0])
+            width  = ax_xlims[1]-ax_xlims[0] if data_entry['xscale'] is 'linear' else (ax_xlims[1]-ax_xlims[0])*(ax_xlims[0])/np.log(10)
+            height = ax_ylims[1]-ax_ylims[0] if data_entry['yscale'] is 'linear' else (ax_ylims[1]-ax_ylims[0])*(ax_ylims[0])/np.log(10)
             candlestick_h_kwargs = dict(align='edge',
                                         left=np.median(x),
                                         height=0.05*height,
