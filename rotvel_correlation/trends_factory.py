@@ -489,6 +489,14 @@ for plot_type in plot_types:
 \\usepackage{{graphicx}}
 \\usepackage{{grffile}}
 \\usepackage{{booktabs}}
+\\usepackage{{geometry}}
+\\geometry{{
+ a4paper,
+ right=10mm,
+ left=10mm,
+ top=10mm,
+ bottom=10mm,
+ }}
 \\begin{{document}}
 
 \\title{{Spin - peculiar velocity correlations: {plot_type} }}
@@ -528,8 +536,9 @@ Binning method: {x_binning.__name__.replace('_', '-')}
         os.unlink(f"{fname.replace('tex', 'pdf')}")
         raise ValueError('Error {} executing command: {}'.format(retcode, ' '.join(cmd)))
 
-    os.unlink( f'{fname}')
+    os.unlink(f'{fname}')
     os.unlink(f"{fname.replace('tex', 'log')}")
+    os.unlink(f"{fname.replace('tex', 'aux')}")
 
     # Send files to Slack: init slack client with access token
     print(f"[+] Forwarding {fname.replace('tex', 'pdf')} to the `#personal` Slack channel...")
