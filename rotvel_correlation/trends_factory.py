@@ -483,6 +483,7 @@ for plot_type in plot_types:
         tex_source = f"""
 \\documentclass{{article}} 
 \\usepackage{{graphicx}} 
+\\usepackage{{booktabs}}
 \\begin{{document}}
 
 \\title{{Spin - peculiar velocity correlations: {plot_type} }}
