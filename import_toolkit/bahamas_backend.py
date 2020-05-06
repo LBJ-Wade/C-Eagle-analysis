@@ -1,7 +1,7 @@
 # The BAHAMAS simulation is run in the form of a periodic volume and therefore
 # requires a separate backend, incompatble with zooms.
 
-from .cluster import Cluster
+from cluster import Cluster
 if __name__ == '__main__':
 
     import inspect
