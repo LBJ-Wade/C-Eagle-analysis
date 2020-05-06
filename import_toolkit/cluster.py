@@ -102,13 +102,12 @@ class Cluster(simulation.Simulation,
         RETURNS: string type. Path of the hdf5 file to extract data from.
         """
         # os.chdir(sys.path[0])	# Set working directory as the directory of this file.
-        master_directory = self.pathData
-        cluster_ID = self.cluster_prefix + self.halo_Num(self.clusterID)
-        data_dir = 'data'
         if self.simulation_name == 'bahamas':
-            return master_directory
+            return self.pathData
         else:
-            return os.path.join(master_directory, cluster_ID, data_dir)
+            return os.path.join(self.pathData,
+                                self.cluster_prefix + self.halo_Num(self.clusterID),
+                                'data')
 
     def is_cluster(self) -> bool:
         """
