@@ -105,7 +105,10 @@ class Cluster(simulation.Simulation,
         master_directory = self.pathData
         cluster_ID = self.cluster_prefix + self.halo_Num(self.clusterID)
         data_dir = 'data'
-        return os.path.join(master_directory, cluster_ID, data_dir)
+        if self.simulation_name == 'bahamas':
+            return master_directory
+        else:
+            return os.path.join(master_directory, cluster_ID, data_dir)
 
     def is_cluster(self) -> bool:
         """

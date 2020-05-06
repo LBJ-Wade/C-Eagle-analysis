@@ -76,8 +76,12 @@ class Mixin:
 
                 if self.simulation_name == 'celr_e' or self.simulation_name == 'ceagle':
                     sbj_string = sbj_string + '_' + self.redshift
-                elif self.simulation_name == 'celr_b' or self.simulation_name == 'macsis':
+
+                elif (self.simulation_name == 'celr_b' or
+                      self.simulation_name == 'macsis' or
+                      self.simulation_name == 'bahamas'):
                     sbj_string = sbj_string
+
 
                 file_dir = os.path.join(self.path_from_cluster_name(), sbj_string)
                 try:
