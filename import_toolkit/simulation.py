@@ -4,6 +4,7 @@ from copy import copy
 import os
 
 from ._cluster_retriever import redshift_str2num
+from .bahamas_backend import BahamasSim
 
 
 class Simulation:
@@ -163,21 +164,22 @@ class Simulation:
         elif self.simulation_name == 'bahamas':
             self.simulation = 'BAHAMAS'
             self.computer = 'virgo_nas@mizar.jb.man.ac.uk'
-            self.pathData = ''
+            self.pathData = '/scratch/nas_virgo/Cosmo-OWLS/AGN_TUNED_nu0_L400N1024_Planck'
             self.cluster_prefix = 'halo_'
-            self.totalClusters = 45
+            self.totalClusters = 1465687
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
             self.zcat = {
-                'z_value':
-                    ['z001p017', 'z000p899', 'z000p795', 'z000p703', 'z000p619', 'z000p543', 'z000p474', 'z000p411',
-                     'z000p366', 'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155', 'z000p113', 'z000p101',
-                     'z000p073', 'z000p036', 'z000p000'][::-1],
-                'z_IDNumber':
-                    ['011', '012', '013', '014', '015', '016', '017', '018', '019', '020', '021', '022', '023', '024',
-                     '025', '026', '027', '028', '029'][::-1]}
+                    'z_float'   :
+                        [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.749999, 0.499999, 0.374999,
+                         0.25, 0.125, 2.22045e-16][::-1],
+                    'z_value'   :
+                        ['z003p000', 'z002p750', 'z002p500', 'z002p250', 'z002p000', 'z001p750', 'z001p500', 'z001p250',
+                         'z001p000', 'z000p750', 'z000p500', 'z000p375', 'z000p250', 'z000p125', 'z000p000'][::-1],
+                    'z_IDNumber':
+                        ['018', '019', '020', '021', '022', '023', '024', '025', '026', '027', '028', '029', '030',
+                         '031', '032'][::-1]}
             self.redshiftAllowed = self.zcat['z_value']
-            self.centralFOF_groupNumber = 1
 
         else:
             raise(ValueError("Simulation name error: expected [`ceagle` or, `celr_b` or, `celr_e` or, `macsis` "

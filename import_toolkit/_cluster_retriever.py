@@ -39,7 +39,9 @@ def redshift_num2str(z: float):
     """
     z = round(z, 3)
     integer_z, decimal_z = str(z).split('.')
-    return 'z' + integer_z.rjust(3, '0') + 'p' + decimal_z.rjust(3, '0')
+    integer_z = int(integer_z)
+    decimal_z = int(decimal_z)
+    return f"z{integer_z:0>3d}p{decimal_z:0<3d}"
 
 
 
