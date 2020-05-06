@@ -178,6 +178,7 @@ class Simulation:
                         ['018', '019', '020', '021', '022', '023', '024', '025', '026', '027', '028', '029', '030',
                          '031', '032'][::-1]}
             self.redshiftAllowed = self.zcat['z_value']
+            self.centralFOF_groupNumber = None
 
         else:
             raise(ValueError("Simulation name error: expected [`ceagle` or, `celr_b` or, `celr_e` or, `macsis` "
