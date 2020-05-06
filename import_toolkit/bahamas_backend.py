@@ -1,27 +1,7 @@
 # The BAHAMAS simulation is run in the form of a periodic volume and therefore
 # requires a separate backend, incompatble with zooms.
 
-from cluster import Cluster
-if __name__ == '__main__':
 
-    import inspect
-
-    class TEST:
-        data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                         'partType1': ['mass', 'coordinates', 'velocity'],
-                         'partType4': ['mass', 'coordinates', 'velocity']}
-
-        def cluster_imports(self):
-            print(inspect.stack()[0][3])
-            cluster = Cluster(simulation_name='bahamas',
-                              clusterID=0,
-                              redshift='z000p000',
-                              comovingframe=False)
-
-            cluster.info()
-
-    test = TEST()
-    test.cluster_imports()
 
 
 

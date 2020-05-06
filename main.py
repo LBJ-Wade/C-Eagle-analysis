@@ -70,37 +70,57 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
 
-    def check_dirs(self) -> np.ndarray:
-        """
-        Loops over all listed clusters and redshifts and returns a boolean for what clusters and redshifts
-        are present in the simulation archive.
-        :return:
-        """
-        iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
-        check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
-        for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-            c = Cluster(simulation_name=self.simulation_name,
-                        clusterID=halo_id,
-                        redshift=halo_z)
+    import inspect
 
-            redshift_threshold = redshift_str2num(halo_z) < 1.8
-            test = c.is_cluster() * c.is_redshift() * redshift_threshold
-            check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
-            print(process_n, halo_id, halo_z, test)
+    class TEST:
+        data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                         'partType1': ['mass', 'coordinates', 'velocity'],
+                         'partType4': ['mass', 'coordinates', 'velocity']}
 
-        np.save(f'import_toolkit/{c.simulation_name}_sample_completeness.npy', check_matrix)
-        print(len(np.where(check_matrix == True)[0])/np.product(check_matrix.shape)*100)
-        for i in check_matrix:
-            print([int(j) for j in i])
-        return check_matrix
+        def cluster_imports(self):
+            print(inspect.stack()[0][3])
+            cluster = Cluster(simulation_name='bahamas',
+                              clusterID=0,
+                              redshift='z000p000',
+                              comovingframe=False)
 
-    s = Simulation(simulation_name='macsis')
-    for n in s.clusterIDAllowed:
-        path1 = os.path.join(s.pathSave, s.simulation_name,
-                            f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p024')
-        path2 = os.path.join(s.pathSave, s.simulation_name,
-                             f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p240')
-        os.rename(path1, path2)
+            cluster.info()
+
+    test = TEST()
+    test.cluster_imports()
+
+
+    # def check_dirs(self) -> np.ndarray:
+    #     """
+    #     Loops over all listed clusters and redshifts and returns a boolean for what clusters and redshifts
+    #     are present in the simulation archive.
+    #     :return:
+    #     """
+    #     iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
+    #     check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
+    #     for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+    #         c = Cluster(simulation_name=self.simulation_name,
+    #                     clusterID=halo_id,
+    #                     redshift=halo_z)
+    #
+    #         redshift_threshold = redshift_str2num(halo_z) < 1.8
+    #         test = c.is_cluster() * c.is_redshift() * redshift_threshold
+    #         check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
+    #         print(process_n, halo_id, halo_z, test)
+    #
+    #     np.save(f'import_toolkit/{c.simulation_name}_sample_completeness.npy', check_matrix)
+    #     print(len(np.where(check_matrix == True)[0])/np.product(check_matrix.shape)*100)
+    #     for i in check_matrix:
+    #         print([int(j) for j in i])
+    #     return check_matrix
+    #
+    # s = Simulation(simulation_name='macsis')
+    # for n in s.clusterIDAllowed:
+    #     path1 = os.path.join(s.pathSave, s.simulation_name,
+    #                         f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p024')
+    #     path2 = os.path.join(s.pathSave, s.simulation_name,
+    #                          f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p240')
+    #     os.rename(path1, path2)
 
 
 if __name__ == "__main__":
