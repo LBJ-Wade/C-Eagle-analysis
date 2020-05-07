@@ -28,8 +28,8 @@ filename = f"bahamas-box-5r200spheres.pdf"
 fig = plt.figure(figsize=(15, 15))
 ax = fig.add_subplot(111)
 ax.set_aspect('equal')
-ax.set_xlim([0, 400])
-ax.set_ylim([0, 400])
+# ax.set_xlim([0, 400])
+# ax.set_ylim([0, 400])
 ax.set_xlabel(r'$x$ \quad [cMpc]')
 ax.set_ylabel(r'$y$ \quad [cMpc]')
 
