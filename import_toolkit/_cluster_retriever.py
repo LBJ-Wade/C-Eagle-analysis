@@ -145,11 +145,32 @@ class Mixin:
         RETURNS: type = np.array of 3 doubles
         ACCESS DATA: e.g. group_CoP[0] for getting the x value
         """
-        dat_index = self.clusterID if self.simulation_name is 'bahamas' else 0
-        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-            pos = h5file['/FOF/GroupCentreOfPotential'][dat_index]
-            if not self.comovingframe:
-                pos = self.comoving_length(pos)
+        Ngroups = 0
+        file_counter = 0
+        if self.simulation_name == 'bahamas':
+            while True:
+                with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
+                    Ngroups += h5file['Header'].attrs.get('Ngroups')
+                    file_counter += 1
+                    print(file_counter, Ngroups)
+                if Ngroups >= self.clusterID:
+                    break
+
+            Ngroups_diff = Ngroups - self.clusterID
+            with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
+                Ngroups = h5file['Header'].attrs.get('Ngroups')
+
+
+                if not self.comovingframe:
+                    pos = self.comoving_length(pos)
+            free_memory(['pos'], invert=True)
+
+
+        else:
+            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+                pos = h5file['/FOF/GroupCentreOfPotential'][0]
+                if not self.comovingframe:
+                    pos = self.comoving_length(pos)
             free_memory(['pos'], invert=True)
         return pos
 
@@ -159,10 +180,8 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        dat_index = self.clusterID if self.simulation_name is 'bahamas' else 0
         with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-            h5dset = h5file["/FOF/Group_R_Crit200"]
-            r200c = h5dset[...][0]
+            r200c = h5file["/FOF/Group_R_Crit200"][0]
             if not self.comovingframe:
                 r200c = self.comoving_length(r200c)
             free_memory(['r200c'], invert=True)
@@ -175,9 +194,7 @@ class Mixin:
         RETURNS: type = double
         """
         with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-            h5dset = h5file["/FOF/Group_R_Crit500"]
-            r500c = h5dset[...][0]
-
+            r500c  = h5file["/FOF/Group_R_Crit500"][0]
             if not self.comovingframe:
                 r500c = self.comoving_length(r500c)
             free_memory(['r500c'], invert=True)
@@ -189,14 +206,11 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        h5dset = h5file["/FOF/Group_R_Crit2500"]
-        temp = h5dset[...]
-        h5file.close()
-        r2500c = temp[0]
-        if not self.comovingframe:
-            r2500c = self.comoving_length(r2500c)
-        free_memory(['r2500c'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+            r2500c = h5file["/FOF/Group_R_Crit2500"][0]
+            if not self.comovingframe:
+                r2500c = self.comoving_length(r2500c)
+            free_memory(['r2500c'], invert=True)
         return r2500c
 
     @data_subject(subject="groups")

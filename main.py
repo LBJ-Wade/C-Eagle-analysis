@@ -70,28 +70,14 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
 
-    import inspect
 
-    class TEST:
-        data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                         'partType1': ['mass', 'coordinates', 'velocity'],
-                         'partType4': ['mass', 'coordinates', 'velocity']}
-
-        def cluster_imports(self):
-            print(inspect.stack()[0][3])
-            cluster = Cluster(simulation_name='bahamas',
-                              clusterID=0,
-                              redshift='z000p000',
-                              comovingframe=False)
-
-            cluster.info()
-            self.cluster = cluster
+    cluster = Cluster(simulation_name='bahamas',
+                      clusterID=10,
+                      redshift='z000p000',
+                      comovingframe=False)
 
 
-    test = TEST()
-    test.cluster_imports()
-    print(test.cluster.partdata_filePaths())
-    print(test.cluster.groups_filePaths())
+    cluster.group_centre_of_potential()
 
 
     # def check_dirs(self) -> np.ndarray:

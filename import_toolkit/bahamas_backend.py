@@ -343,4 +343,36 @@ FILE_CONTENTS {
  group      /Parameters
  group      /Parameters/ChemicalElements
  group      /Units
+
+
+ Header attrs
+ "BoxSize"
+ "ExpansionFactor"
+ "Flag_Cooling"
+ "Flag_DoublePrecision"
+ "Flag_Feedback"
+ "Flag_IC_Info"
+ "Flag_Metals"
+ "Flag_Sfr"
+ "Flag_StellarAge"
+ "HubbleParam"
+ "MassTable"
+ "NTask"
+ "Ngroups"
+ "Nids"
+ "Nsubgroups"
+ "NumFilesPerSnapshot"
+ "NumPart_ThisFile"
+ "NumPart_Total"
+ "NumPart_Total_HighWord"
+ "Omega0"
+ "OmegaBaryon"
+ "OmegaLambda"
+ "Redshift"
+ "RunLabel"
+ "SendOffSetTask"
+ "Time"
+ "TotNgroups"
+ "TotNids"
+ "TotNsubgroups"
  """
