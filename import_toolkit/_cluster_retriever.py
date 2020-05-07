@@ -157,8 +157,8 @@ class Mixin:
                 pos = h5file['/FOF/GroupCentreOfPotential'][self.clusterID - Ngroups]
                 print(pos)
 
-            with h5.File(kwargs['file_list_sorted'][1], 'r') as h5file:
-                print(pos == h5file['/FOF/GroupCentreOfPotential'][2863-2863])
+            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+                print(pos == h5file['/FOF/GroupCentreOfPotential'][0])
 
             pos = pos if self.comovingframe else self.comoving_length(pos)
             free_memory(['pos'], invert=True)
