@@ -8,8 +8,8 @@ import h5py
 import numpy as np
 from matplotlib import pyplot as plt
 
-exec(open(os.path.abspath(os.path.join(
-		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
+# exec(open(os.path.abspath(os.path.join(
+# 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 warnings.filterwarnings("ignore")
 from import_toolkit.cluster import Cluster
