@@ -74,7 +74,8 @@ def main():
     cluster = Cluster(simulation_name='bahamas',
                       clusterID=3000,
                       redshift='z000p000',
-                      comovingframe=False)
+                      comovingframe=False,
+                      fastbrowsing=True)
 
 
     cluster.group_centre_of_potential()
