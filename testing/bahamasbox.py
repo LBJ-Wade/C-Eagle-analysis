@@ -37,8 +37,8 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 		cop = group_file['/FOF/GroupCentreOfPotential'][:]
 		m500 = group_file['/FOF/Group_M_Crit500'][:]*10**10
 		m_filter = np.where(m500>10**14)[0]
-		ax.scatter(cop[~m_filter, 0], cop[~m_filter, 1], marker='o', size=5, color='k', alpha=0.1, label=r'$M_{500~crit} < 10^{14}\ M_\odot$')
-		ax.scatter(cop[m_filter,0], cop[m_filter,1], marker='o', size=5, color='r', alpha=1, label=r'$M_{500~crit} > 10^{14}\ M_\odot$')
+		ax.scatter(cop[~m_filter, 0], cop[~m_filter, 1], marker='o', s=5, c='k', alpha=0.1, label=r'$M_{500~crit} < 10^{14}\ M_\odot$')
+		ax.scatter(cop[m_filter,0], cop[m_filter,1], marker='o', s=5, c='r', alpha=1, label=r'$M_{500~crit} > 10^{14}\ M_\odot$')
 
 
 legend = ax.legend(loc='upper center', shadow=True)
