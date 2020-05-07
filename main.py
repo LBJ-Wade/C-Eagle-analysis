@@ -72,7 +72,7 @@ def main():
 
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=10,
+                      clusterID=3000,
                       redshift='z000p000',
                       comovingframe=False)
 

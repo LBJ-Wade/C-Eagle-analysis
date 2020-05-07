@@ -157,6 +157,7 @@ class Mixin:
                     break
 
             Ngroups_diff = Ngroups - self.clusterID
+            print(Ngroups_diff)
             with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                 Ngroups = h5file['Header'].attrs.get('Ngroups')
                 pos = h5file['/FOF/GroupCentreOfPotential'][Ngroups_diff]
