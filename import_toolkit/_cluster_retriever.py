@@ -158,10 +158,9 @@ class Mixin:
                 print(pos)
 
             with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-                pos = h5file['/FOF/GroupCentreOfPotential'][2862-2863]
-                print(pos)
+                print(pos == h5file['/FOF/GroupCentreOfPotential'][2862-2863])
 
-                pos = pos if self.comovingframe else self.comoving_length(pos)
+            pos = pos if self.comovingframe else self.comoving_length(pos)
             free_memory(['pos'], invert=True)
 
 

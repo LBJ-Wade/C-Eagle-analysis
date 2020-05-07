@@ -70,15 +70,16 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
 
+    for i in range(2860, 2867, 1):
 
-    cluster = Cluster(simulation_name='bahamas',
-                      clusterID=2862,
-                      redshift='z000p000',
-                      comovingframe=False,
-                      fastbrowsing=True)
+        cluster = Cluster(simulation_name='bahamas',
+                          clusterID=i,
+                          redshift='z000p000',
+                          comovingframe=False,
+                          fastbrowsing=True)
 
 
-    cluster.group_centre_of_potential()
+        cluster.group_centre_of_potential()
 
 
     # def check_dirs(self) -> np.ndarray:
