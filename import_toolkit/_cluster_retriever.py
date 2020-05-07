@@ -146,7 +146,7 @@ class Mixin:
         ACCESS DATA: e.g. group_CoP[0] for getting the x value
         """
         Ngroups = 0
-        file_counter = 0
+        file_counter = -1
         if self.simulation_name == 'bahamas':
             while Ngroups <= self.clusterID:
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
