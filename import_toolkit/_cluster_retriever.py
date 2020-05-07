@@ -145,9 +145,9 @@ class Mixin:
         RETURNS: type = np.array of 3 doubles
         ACCESS DATA: e.g. group_CoP[0] for getting the x value
         """
+        dat_index = self.clusterID if self.simulation_name is 'bahamas' else 0
         with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-            hd5set = h5file['/FOF/GroupCentreOfPotential']
-            pos = hd5set[...][0]
+            pos = h5file['/FOF/GroupCentreOfPotential'][dat_index]
             if not self.comovingframe:
                 pos = self.comoving_length(pos)
             free_memory(['pos'], invert=True)
@@ -159,6 +159,7 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
+        dat_index = self.clusterID if self.simulation_name is 'bahamas' else 0
         with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
             h5dset = h5file["/FOF/Group_R_Crit200"]
             r200c = h5dset[...][0]

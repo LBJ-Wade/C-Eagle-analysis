@@ -85,9 +85,13 @@ def main():
                               comovingframe=False)
 
             cluster.info()
+            self.cluster = cluster
+
 
     test = TEST()
     test.cluster_imports()
+    print(test.cluster.partdata_filePaths())
+    print(test.cluster.groups_filePaths())
 
 
     # def check_dirs(self) -> np.ndarray:
