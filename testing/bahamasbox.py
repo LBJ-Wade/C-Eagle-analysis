@@ -8,7 +8,7 @@ import h5py
 import numpy as np
 from matplotlib import pyplot as plt
 import matplotlib.lines as mlines
-
+from matplotlib.collections import EllipseCollection
 
 # exec(open(os.path.abspath(os.path.join(
 # 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
@@ -38,9 +38,19 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 	with h5py.File(file, 'r') as group_file:
 		cop = group_file['/FOF/GroupCentreOfPotential'][:]
 		m500 = group_file['/FOF/Group_M_Crit500'][:]*10**10
+		r200 = group_file['/FOF/Group_R_Crit200'][:]
 		m_filter = np.where(m500>10**14)[0]
 		ax.scatter(cop[~m_filter, 0], cop[~m_filter, 1], marker='o', s=5, c='k', alpha=1)
 		ax.scatter(cop[m_filter,0], cop[m_filter,1], marker='o', s=5, c='r', alpha=1)
+
+		offsets = list(zip(cop[m_filter,0], cop[m_filter,1]))
+		ax.add_collection(EllipseCollection(widths=r200*5, heights=r200*5, angles=0, units='xy',
+		                                    facecolors='r', offsets=offsets, alpha=0.3,
+		                                    transOffset=ax.transData))
+		offsets = list(zip(cop[~m_filter, 0], cop[~m_filter, 1]))
+		ax.add_collection(EllipseCollection(widths=r200 * 5, heights=r200 * 5, angles=0, units='xy',
+		                                    facecolors='k', offsets=offsets, alpha=0.3,
+		                                    transOffset=ax.transData))
 
 
 
