@@ -149,12 +149,14 @@ class Mixin:
         file_counter = 0
         if self.simulation_name == 'bahamas':
             while True:
-                with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
-                    Ngroups += h5file['Header'].attrs.get('Ngroups')
-                    file_counter += 1
-                    print(file_counter, Ngroups)
+
                 if Ngroups >= self.clusterID:
                     break
+                else:
+                    with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
+                        Ngroups += h5file['Header'].attrs.get('Ngroups')
+                        file_counter += 1
+                        print(file_counter, Ngroups)
 
             Ngroups_diff = Ngroups - self.clusterID
             print(Ngroups_diff)
