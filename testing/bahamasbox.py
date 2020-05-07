@@ -7,6 +7,8 @@ import warnings
 import h5py
 import numpy as np
 from matplotlib import pyplot as plt
+import matplotlib.lines as mlines
+
 
 # exec(open(os.path.abspath(os.path.join(
 # 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
@@ -37,12 +39,18 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 		cop = group_file['/FOF/GroupCentreOfPotential'][:]
 		m500 = group_file['/FOF/Group_M_Crit500'][:]*10**10
 		m_filter = np.where(m500>10**14)[0]
-		ax.scatter(cop[~m_filter, 0], cop[~m_filter, 1], marker='o', s=5, c='k', alpha=0.1, label=r'$M_{500~crit} < 10^{14}\ M_\odot$')
-		ax.scatter(cop[m_filter,0], cop[m_filter,1], marker='o', s=5, c='r', alpha=1, label=r'$M_{500~crit} > 10^{14}\ M_\odot$')
+		ax.scatter(cop[~m_filter, 0], cop[~m_filter, 1], marker='o', s=5, c='k', alpha=1)
+		ax.scatter(cop[m_filter,0], cop[m_filter,1], marker='o', s=5, c='r', alpha=1)
 
 
-legend = ax.legend(loc='upper center', shadow=True)
-legend.get_frame().set_facecolor('white')
+
+
+blue_star = mlines.Line2D([], [], color='k', marker='o', linestyle='None',
+                          markersize=10, label=r'$M_{500~crit} < 10^{14}\ M_\odot$')
+red_square = mlines.Line2D([], [], color='r', marker='o', linestyle='None',
+                          markersize=10, label=r'$M_{500~crit} > 10^{14}\ M_\odot$')
+plt.legend(handles=[blue_star, red_square])
+
 plt.savefig(filepath+filename)
 
 # Send files to Slack: init slack client with access token
