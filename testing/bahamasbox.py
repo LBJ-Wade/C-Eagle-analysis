@@ -42,8 +42,10 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 		cop = group_file['/FOF/GroupCentreOfPotential'][:]
 		m500 = group_file['/FOF/Group_M_Crit500'][:]*10**10
 		r200 = group_file['/FOF/Group_R_Crit200'][:]
-
+		n_total += len(m500)
 		m_filter = np.where(m500 > 10**13)[0]
+		n_largeM += len(m_filter)
+
 		ax.scatter(cop[m_filter,0], cop[m_filter,1], marker='o', s=2, c='r', alpha=1)
 		offsets = list(zip(cop[m_filter,0], cop[m_filter,1]))
 		ax.add_collection(EllipseCollection(widths=r200[m_filter]*5, heights=r200[m_filter]*5, angles=0, units='xy',
@@ -51,14 +53,12 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 		                                    transOffset=ax.transData))
 
 		m_filter = np.where(m500 < 10 ** 13)[0]
-		ax.scatter(cop[m_filter, 0], cop[m_filter, 1], marker='o', s=2, c='k', alpha=1)
-		offsets = list(zip(cop[m_filter, 0], cop[m_filter, 1]))
-		ax.add_collection(EllipseCollection(widths=r200[m_filter] * 5, heights=r200[m_filter] * 5, angles=0, units='xy',
-		                                    facecolors='k', offsets=offsets, alpha=0.3,
-		                                    transOffset=ax.transData))
+		ax.scatter(cop[m_filter, 0], cop[m_filter, 1], marker='o', s=2, c='k', alpha=0.05)
+		# offsets = list(zip(cop[m_filter, 0], cop[m_filter, 1]))
+		# ax.add_collection(EllipseCollection(widths=r200[m_filter] * 5, heights=r200[m_filter] * 5, angles=0, units='xy',
+		#                                     facecolors='k', offsets=offsets, alpha=0.3,
+		#                                     transOffset=ax.transData))
 
-		n_largeM += len(m_filter)
-		n_total += len(m500)
 
 print('n_largeM', n_largeM)
 print('n_total', n_total)
