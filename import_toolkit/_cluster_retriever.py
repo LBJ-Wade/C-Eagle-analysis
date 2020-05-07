@@ -159,10 +159,8 @@ class Mixin:
             Ngroups_diff = Ngroups - self.clusterID
             with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                 Ngroups = h5file['Header'].attrs.get('Ngroups')
-
-
-                if not self.comovingframe:
-                    pos = self.comoving_length(pos)
+                pos = h5file['/FOF/GroupCentreOfPotential'][Ngroups_diff]
+                pos = pos if self.comovingframe else self.comoving_length(pos)
             free_memory(['pos'], invert=True)
 
 
