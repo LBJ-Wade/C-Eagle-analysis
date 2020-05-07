@@ -23,7 +23,7 @@ cluster = Cluster(simulation_name='bahamas',
                   fastbrowsing=True)
 
 filepath = "/local/scratch/altamura/analysis_results/"
-filename = f"bahamas-box-5r200spheres.pdf"
+filename = f"bahamas-box-5r200spheres.jpg"
 
 fig = plt.figure(figsize=(15, 15))
 ax = fig.add_subplot(111)
@@ -32,6 +32,9 @@ ax.set_aspect('equal')
 # ax.set_ylim([0, 400])
 ax.set_xlabel(r'$x$ \quad [cMpc]')
 ax.set_ylabel(r'$y$ \quad [cMpc]')
+
+n_largeM = 0
+n_total = 0
 
 for counter, file in enumerate(cluster.groups_filePaths()):
 	print(f"[+] Analysing eagle_subfind_tab file {counter}")
@@ -52,7 +55,11 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 		                                    facecolors='k', offsets=offsets, alpha=0.3,
 		                                    transOffset=ax.transData))
 
+		n_largeM += len(m_filter)
+		n_total += len(m500)
 
+print('n_largeM', n_largeM)
+print('n_total', n_total)
 
 
 blue_star = mlines.Line2D([], [], color='k', marker='o', linestyle='None',
