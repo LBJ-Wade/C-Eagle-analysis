@@ -146,19 +146,21 @@ class Mixin:
         ACCESS DATA: e.g. group_CoP[0] for getting the x value
         """
         Ngroups = 0
-        file_counter = -1
+        file_counter = 0
         if self.simulation_name == 'bahamas':
             while Ngroups <= self.clusterID:
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                     Ngroups += h5file['Header'].attrs.get('Ngroups')
                     file_counter += 1
             print(file_counter, Ngroups)
+            with h5.File(kwargs['file_list_sorted'][file_counter-1], 'r') as h5file:
+                pos = h5file['/FOF/GroupCentreOfPotential'][self.clusterID - Ngroups]
+                print(pos)
 
-            Ngroups_diff = Ngroups - self.clusterID
-            print(Ngroups_diff)
-            with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
-                Ngroups = h5file['Header'].attrs.get('Ngroups')
-                pos = h5file['/FOF/GroupCentreOfPotential'][Ngroups_diff]
+            with h5.File(kwargs['file_list_sorted'][1], 'r') as h5file:
+                pos = h5file['/FOF/GroupCentreOfPotential'][3000-2863]
+                print(pos)
+
                 pos = pos if self.comovingframe else self.comoving_length(pos)
             free_memory(['pos'], invert=True)
 
