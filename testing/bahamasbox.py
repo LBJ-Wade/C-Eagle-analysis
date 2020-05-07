@@ -53,7 +53,7 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 		                                    transOffset=ax.transData))
 
 		m_filter = np.where(m500 < 10 ** 13)[0]
-		ax.scatter(cop[m_filter, 0], cop[m_filter, 1], marker='o', s=2, c='k', alpha=0.01)
+		ax.scatter(cop[m_filter, 0], cop[m_filter, 1], marker='o', s=2, c='k', alpha=0.02)
 		# offsets = list(zip(cop[m_filter, 0], cop[m_filter, 1]))
 		# ax.add_collection(EllipseCollection(widths=r200[m_filter] * 5, heights=r200[m_filter] * 5, angles=0, units='xy',
 		#                                     facecolors='k', offsets=offsets, alpha=0.3,
