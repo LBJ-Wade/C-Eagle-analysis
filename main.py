@@ -79,7 +79,9 @@ def main():
                       fastbrowsing=True)
 
 
-    cluster.group_centre_of_potential()
+    print('group_centre_of_potential', cluster.group_centre_of_potential())
+    print('NumOfSubhalos', cluster.NumOfSubhalos())
+    print('subhalo_groupNumber', cluster.subhalo_groupNumber())
 
 
     # def check_dirs(self) -> np.ndarray:

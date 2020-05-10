@@ -139,37 +139,29 @@ class Mixin:
         return kwargs['file_list_sorted']
 
     @data_subject(subject="groups")
+    def file_group_indexify(self, **kwargs):
+        if self.simulation_name == 'bahamas':
+            Ngroups = 0
+            file_counter = -1
+            while Ngroups <= self.clusterID:
+                with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
+                    Ngroups += h5file['Header'].attrs.get('Ngroups')
+                    file_counter += 1
+            return file_counter, self.clusterID - Ngroups
+        else:
+            return 0, 0
+
+    @data_subject(subject="groups")
     def group_centre_of_potential(self, *args, **kwargs):
         """
         AIM: reads the FoF group central of potential from the path and file given
         RETURNS: type = np.array of 3 doubles
         ACCESS DATA: e.g. group_CoP[0] for getting the x value
         """
-        Ngroups = 0
-        file_counter = -1
-        if self.simulation_name == 'bahamas':
-            while Ngroups <= self.clusterID:
-                with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
-                    Ngroups += h5file['Header'].attrs.get('Ngroups')
-                    file_counter += 1
-            print(file_counter, Ngroups, self.clusterID)
-            with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
-                pos = h5file['/FOF/GroupCentreOfPotential'][self.clusterID - Ngroups]
-                print(pos)
-
-            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-                print(pos == h5file['/FOF/GroupCentreOfPotential'][0])
-
-            pos = pos if self.comovingframe else self.comoving_length(pos)
-            free_memory(['pos'], invert=True)
-
-
-        else:
-            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-                pos = h5file['/FOF/GroupCentreOfPotential'][0]
-                if not self.comovingframe:
-                    pos = self.comoving_length(pos)
-            free_memory(['pos'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            pos = h5file['/FOF/GroupCentreOfPotential'][self.groupfof_counter]
+        pos = pos if self.comovingframe else self.comoving_length(pos)
+        free_memory(['pos'], invert=True)
         return pos
 
     @data_subject(subject="groups")
@@ -178,11 +170,10 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-            r200c = h5file["/FOF/Group_R_Crit200"][0]
-            if not self.comovingframe:
-                r200c = self.comoving_length(r200c)
-            free_memory(['r200c'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            r200c = h5file['/FOF/Group_R_Crit200'][self.groupfof_counter]
+        r200c = r200c if self.comovingframe else self.comoving_length(r200c)
+        free_memory(['r200c'], invert=True)
         return r200c
 
     @data_subject(subject="groups")
@@ -191,11 +182,10 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-            r500c  = h5file["/FOF/Group_R_Crit500"][0]
-            if not self.comovingframe:
-                r500c = self.comoving_length(r500c)
-            free_memory(['r500c'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            r500c = h5file['/FOF/Group_R_Crit500'][self.groupfof_counter]
+        r500c = r500c if self.comovingframe else self.comoving_length(r500c)
+        free_memory(['r500c'], invert=True)
         return r500c
 
     @data_subject(subject="groups")
@@ -204,11 +194,10 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-            r2500c = h5file["/FOF/Group_R_Crit2500"][0]
-            if not self.comovingframe:
-                r2500c = self.comoving_length(r2500c)
-            free_memory(['r2500c'], invert=True)
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            r2500c = h5file['/FOF/Group_R_Crit2500'][self.groupfof_counter]
+        r2500c = r2500c if self.comovingframe else self.comoving_length(r2500c)
+        free_memory(['r2500c'], invert=True)
         return r2500c
 
     @data_subject(subject="groups")
@@ -217,15 +206,11 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        h5dset = h5file["/FOF/GroupMass"]
-        temp = h5dset[...]
-        h5file.close()
-        m_tot = temp[0]
-        if not self.comovingframe:
-            m_tot = self.comoving_mass(m_tot)
-        free_memory(['m_tot'], invert=True)
-        return m_tot
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            m_fof = h5file['/FOF/GroupMass'][self.groupfof_counter]
+        m_fof = m_fof if self.comovingframe else self.comoving_mass(m_fof)
+        free_memory(['m_fof'], invert=True)
+        return m_fof
 
     @data_subject(subject="groups")
     def group_M200(self, *args, **kwargs):
@@ -233,15 +218,11 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        h5dset = h5file["/FOF/Group_M_Crit200"]
-        temp = h5dset[...]
-        h5file.close()
-        m200 = temp[0]
-        if not self.comovingframe:
-            m200 = self.comoving_mass(m200)
-        free_memory(['m200'], invert=True)
-        return m200
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            m200c = h5file['/FOF/Group_M_Crit200'][self.groupfof_counter]
+        m200c = m200c if self.comovingframe else self.comoving_mass(m200c)
+        free_memory(['m200c'], invert=True)
+        return m200c
 
     @data_subject(subject="groups")
     def group_M500(self, *args, **kwargs):
@@ -249,15 +230,11 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        h5dset = h5file["/FOF/Group_M_Crit500"]
-        temp = h5dset[...]
-        h5file.close()
-        m500 = temp[0]
-        if not self.comovingframe:
-            m500 = self.comoving_mass(m500)
-        free_memory(['m500'], invert=True)
-        return m500
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            m500c = h5file['/FOF/Group_M_Crit500'][self.groupfof_counter]
+        m500c = m500c if self.comovingframe else self.comoving_mass(m500c)
+        free_memory(['m500c'], invert=True)
+        return m500c
 
     @data_subject(subject="groups")
     def group_M2500(self, *args, **kwargs):
@@ -265,18 +242,14 @@ class Mixin:
         AIM: reads the FoF virial radius from the path and file given
         RETURNS: type = double
         """
-        h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-        h5dset = h5file["/FOF/Group_M_Crit2500"]
-        temp = h5dset[...]
-        h5file.close()
-        m2500 = temp[0]
-        if not self.comovingframe:
-            m2500 = self.comoving_mass(m2500)
-        free_memory(['m2500'], invert=True)
-        return m2500
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            m2500c = h5file['/FOF/Group_M_Crit2500'][self.groupfof_counter]
+        m2500c = m2500c if self.comovingframe else self.comoving_mass(m2500c)
+        free_memory(['m2500c'], invert=True)
+        return m2500c
 
     @data_subject(subject="groups")
-    def NumOfSubhalos(self, *args, central_FOF=None, **kwargs):
+    def NumOfSubhalos(self, *args, **kwargs):
         """
         AIM: retrieves the redshift of the file
         RETURNS: type = int
@@ -284,56 +257,31 @@ class Mixin:
         NOTES: there is no file for the FOF group number array. Instead,
                 there is an array in /FOF for the number of subhalos in each
                 FOF group. Used to gather each subgroup number
+                Nsubgroups
         """
-        if central_FOF:
-            h5file = h5.File(kwargs['file_list_sorted'][0], 'r')
-            h5dset = h5file["/FOF/NumOfSubhalos"]
-            attr_value = h5dset[...]
-            h5file.close()
-            Ngroups = attr_value[0]
-            free_memory(['Ngroups'], invert=True)
-            return Ngroups
-
-        elif central_FOF is None or not central_FOF:
-            Ngroups = np.zeros(0, dtype=np.int)
-            for path in kwargs['file_list_sorted']:
-                h5file = h5.File(path, 'r')
-                h5dset = h5file["/FOF/NumOfSubhalos"]
-                attr_value = h5dset[...]
-                h5file.close()
-                Ngroups = np.concatenate((Ngroups, attr_value), axis=0)
-            free_memory(['Ngroups'], invert=True)
-            return Ngroups
+        with h5.File(kwargs['file_list_sorted'][self.file_counter], 'r') as h5file:
+            Nsubgroups = h5file['/FOF/NumOfSubhalos'][self.groupfof_counter]
+        free_memory(['Nsubgroups'], invert=True)
+        return Nsubgroups
 
     @data_subject(subject="groups")
-    def SubGroupNumber(self, *args, central_FOF=None, **kwargs):
+    def subhalo_groupNumber(self, *args, **kwargs):
         """
+        SUBGROUP NUMBER INDEX
+
         AIM: reads the group number of subgroups from the path and file given
         RETURNS: type = 1/2D np.array
-
-        if central_FOF:
-            returns []
-
         """
-        if central_FOF:
-            # Build the sgn list artificially: less overhead in opening files
-            n_subhalos = self.NumOfSubhalos(*args, central_FOF=True, **kwargs)
-            sgn_list = np.linspace(0, n_subhalos - 1, n_subhalos, dtype=np.int)
-            free_memory(['sgn_list'], invert=True)
-            return sgn_list
+        subhalo_groupNumber = np.zeros(0, dtype=np.int)
+        base_index_shift = 0
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                sub_gn = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0] + base_index_shift
+                subhalo_groupNumber = np.concatenate((subhalo_groupNumber, sub_gn))
+                base_index_shift += h5file['Subhalo/GroupNumber'].size
 
-        elif central_FOF is None or not central_FOF:
-            sgn_list = np.zeros(0, dtype=np.int)
-            for path in kwargs['file_list_sorted']:
-                h5file = h5.File(path, 'r')
-                h5dset = h5file["/Subhalo/SubGroupNumber"]
-                sgn_sublist = h5dset[...]
-                h5file.close()
-                sgn_list = np.concatenate((sgn_list, sgn_sublist), axis=0)
-            # Check that the len of array is == total no of subhalos
-            assert np.sum(self.NumOfSubhalos(*args, central_FOF=False, **kwargs)) == sgn_list.__len__()
-            free_memory(['sgn_list'], invert=True)
-            return sgn_list
+        free_memory(['subhalo_groupNumber'], invert=True)
+        return subhalo_groupNumber
 
     @data_subject(subject="groups")
     def subgroups_centre_of_potential(self, *args, **kwargs):
@@ -352,7 +300,16 @@ class Mixin:
                     .						.					]]
 
         """
+        assert hasattr(self, f'subhalo_groupNumber')
+        subhalo_groupNumber = getattr(self, f'subhalo_groupNumber')
         pos = np.zeros((0, 3), dtype=np.float)
+        base_index_shift = 0
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                sub_gn = np.where(h5file['Subhalo/CentreOfPotential'][:] == self.clusterID)[0] + base_index_shift
+                subhalo_groupNumber = np.concatenate((subhalo_groupNumber, sub_gn))
+                base_index_shift += h5file['Subhalo/GroupNumber'].size
+
         for path in kwargs['file_list_sorted']:
             h5file = h5.File(path, 'r')
             hd5set = h5file['/Subhalo/CentreOfPotential']

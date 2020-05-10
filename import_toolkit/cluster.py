@@ -30,6 +30,7 @@ class Cluster(simulation.Simulation,
         self.requires = requires
 
         if not fastbrowsing:
+            self.file_counter, self.groupfof_counter = self.file_group_indexify()
 
             # Set additional cosmoloy attributes from methods
             self.hubble_param = self.file_hubble_param()
@@ -48,7 +49,7 @@ class Cluster(simulation.Simulation,
             self.M200  = self.group_M200()
             self.M500  = self.group_M500()
             self.M2500 = self.group_M2500()
-            self.NumOfSubhalos = self.NumOfSubhalos(central_FOF = self.centralFOF_groupNumber)
+            self.NumOfSubhalos = self.NumOfSubhalos()
 
         # Import particle datasets
         if requires is not None:

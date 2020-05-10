@@ -59,17 +59,12 @@ for counter, file in enumerate(cluster.groups_filePaths()):
 		#                                     facecolors='k', offsets=offsets, alpha=0.3,
 		#                                     transOffset=ax.transData))
 
-
 print('n_largeM', n_largeM)
 print('n_total', n_total)
 
-
-blue_star = mlines.Line2D([], [], color='k', marker='o', linestyle='None',
-                          markersize=10, label=r'$M_{500~crit} < 10^{13}\ M_\odot$')
-red_square = mlines.Line2D([], [], color='r', marker='o', linestyle='None',
-                          markersize=10, label=r'$M_{500~crit} > 10^{13}\ M_\odot$')
+blue_star = mlines.Line2D([], [], color='k', marker='o', linestyle='None', markersize=10, label=r'$M_{500~crit} < 10^{13}\ M_\odot$')
+red_square = mlines.Line2D([], [], color='r', marker='o', linestyle='None', markersize=10, label=r'$M_{500~crit} > 10^{13}\ M_\odot$')
 plt.legend(handles=[blue_star, red_square])
-
 plt.savefig(filepath+filename)
 
 # Send files to Slack: init slack client with access token

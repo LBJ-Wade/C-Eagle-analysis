@@ -18,6 +18,7 @@ class Simulation:
                                                'stars': '4',
                                          'black_holes': '5'}
 
+
         if self.simulation_name == 'ceagle':
             self.simulation = 'C-EAGLE'
             self.computer = 'cosma.dur.ac.uk'
