@@ -223,7 +223,16 @@ class Cluster(simulation.Simulation,
             quickly accessed from the RAM.
         -------------------------------------------------------------------------
         """
-        for part_type in self.requires.keys():
+        # Subdivide into particle types and subhalo keywords
+        requires_particledata = list()
+        requires_subhalos = list()
+        for key in self.requires.keys():
+            if 'partType' in key:
+                requires_particledata.append(key)
+            if 'subhalo' in key:
+                requires_subhalos.append(key)
+
+        for part_type in requires_particledata:
 
             group_number_index = np.where(self.group_number_part(part_type[-1]) == 1)[0]
 
@@ -278,6 +287,18 @@ class Cluster(simulation.Simulation,
             for field in self.requires[part_type]:
                 filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
                 setattr(self, part_type + '_' + field, filtered_attribute)
+
+
+        for subhalo_key in requires_subhalos:
+            for field in self.requires[subhalo_key]:
+                if field == 'subhalo_groupNumber' and not hasattr(self, field):
+                    setattr(self, field, self.subhalo_groupNumber())
+                elif field == 'subhalo_centre_of_potential' and not hasattr(self, field):
+                    setattr(self, field, self.subgroups_centre_of_potential())
+                elif field == 'subhalo_centre_of_mass' and not hasattr(self, field):
+                    setattr(self, field, self.subgroups_centre_of_mass())
+                elif field == 'subhalo_velocity' and not hasattr(self, field):
+                    setattr(self, field, self.subgroups_velocity())
 
 
 

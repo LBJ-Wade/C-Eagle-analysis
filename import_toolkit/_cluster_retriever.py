@@ -300,27 +300,16 @@ class Mixin:
                     .						.					]]
 
         """
-        assert hasattr(self, f'subhalo_groupNumber')
-        subhalo_groupNumber = getattr(self, f'subhalo_groupNumber')
-        pos = np.zeros((0, 3), dtype=np.float)
-        base_index_shift = 0
+        CoP = np.zeros((0, 3), dtype=np.float)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                sub_gn = np.where(h5file['Subhalo/CentreOfPotential'][:] == self.clusterID)[0] + base_index_shift
-                subhalo_groupNumber = np.concatenate((subhalo_groupNumber, sub_gn))
-                base_index_shift += h5file['Subhalo/GroupNumber'].size
-
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/Subhalo/CentreOfPotential']
-            sub_CoP = hd5set[...]
-            h5file.close()
-            pos = np.concatenate((pos, sub_CoP), axis=0)
-            free_memory(['pos'], invert=True)
-
-        if not self.comovingframe:
-            pos = self.comoving_length(pos)
-        return pos
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                sub_CoP = h5file['Subhalo/CentreOfPotential'][subhalo_gn_index]
+                CoP = np.concatenate((CoP, sub_CoP))
+                
+        CoP = CoP if self.comovingframe else self.comoving_length(CoP)
+        free_memory(['CoP'], invert=True)
+        return CoP
 
     @data_subject(subject="groups")
     def subgroups_centre_of_mass(self, *args, **kwargs):
@@ -339,19 +328,16 @@ class Mixin:
                     .						.					]]
 
         """
+        CoM = np.zeros((0, 3), dtype=np.float)
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                sub_CoM = h5file['Subhalo/CentreOfMass'][subhalo_gn_index]
+                CoM = np.concatenate((CoM, sub_CoM))
 
-        pos = np.zeros((0, 3), dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/Subhalo/CentreOfMass']
-            sub_CoM = hd5set[...]
-            h5file.close()
-            pos = np.concatenate((pos, sub_CoM), axis=0)
-            free_memory(['pos'], invert=True)
-
-        if not self.comovingframe:
-            pos = self.comoving_length(pos)
-        return pos
+        CoM = CoM if self.comovingframe else self.comoving_length(CoM)
+        free_memory(['CoM'], invert=True)
+        return CoM
 
     @data_subject(subject="groups")
     def subgroups_velocity(self, *args, **kwargs):
