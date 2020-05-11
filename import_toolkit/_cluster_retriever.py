@@ -276,7 +276,7 @@ class Mixin:
         base_index_shift = 0
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                sub_gn = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0] + base_index_shift
+                sub_gn = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0] + base_index_shift
                 subhalo_groupNumber = np.concatenate((subhalo_groupNumber, sub_gn))
                 base_index_shift += h5file['Subhalo/GroupNumber'].size
 
@@ -303,7 +303,7 @@ class Mixin:
         CoP = np.zeros((0, 3), dtype=np.float)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0]
                 sub_CoP = h5file['Subhalo/CentreOfPotential'][subhalo_gn_index]
                 CoP = np.concatenate((CoP, sub_CoP))
                 
@@ -331,7 +331,7 @@ class Mixin:
         CoM = np.zeros((0, 3), dtype=np.float)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0]
                 sub_CoM = h5file['Subhalo/CentreOfMass'][subhalo_gn_index]
                 CoM = np.concatenate((CoM, sub_CoM))
 
@@ -359,7 +359,7 @@ class Mixin:
         vel = np.zeros((0, 3), dtype=np.float)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0]
                 sub_vel = h5file['Subhalo/Velocity'][subhalo_gn_index]
                 vel = np.concatenate((vel, sub_vel))
 
@@ -376,7 +376,7 @@ class Mixin:
         mass = np.zeros(0, dtype=np.float)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0]
                 sub_mass = h5file['Subhalo/Mass'][subhalo_gn_index]
                 mass = np.concatenate((mass, sub_mass))
 
@@ -393,7 +393,7 @@ class Mixin:
         kinetic = np.zeros(0, dtype=np.float)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0]
                 sub_kinetic = h5file['Subhalo/KineticEnergy'][subhalo_gn_index]
                 kinetic = np.concatenate((kinetic, sub_kinetic))
 
@@ -410,7 +410,7 @@ class Mixin:
         thermal = np.zeros(0, dtype=np.float)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0]
                 sub_thermal = h5file['Subhalo/ThermalEnergy'][subhalo_gn_index]
                 thermal = np.concatenate((thermal, sub_thermal))
 
@@ -434,7 +434,7 @@ class Mixin:
                 data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
                 chunk_size = 1000000
                 for i in range(0, data_size, chunk_size):
-                    part_gn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.clusterID+1)[0]
+                    part_gn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.centralFOF_groupNumber+1)[0]
                     group_number = np.concatenate((group_number, part_gn_index), axis=0)
                     yield ((counter + 1) / (length_operation * int(data_size/chunk_size)))  # Give control back to decorator
                     counter += 1

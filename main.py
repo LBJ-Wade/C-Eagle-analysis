@@ -81,7 +81,7 @@ def main():
 
     # print('group_centre_of_potential', cluster.group_centre_of_potential())
     # print('NumOfSubhalos', cluster.NumOfSubhalos())
-    print('subgroups_centre_of_potential', cluster.group_number_part('gas'))
+    print('subgroups_centre_of_potential', cluster.group_number_part('gas'), len(cluster.group_number_part('gas')))
 
 
     # def check_dirs(self) -> np.ndarray:
