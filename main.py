@@ -73,18 +73,16 @@ def main():
 
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=1000,
+                      clusterID=0,
                       redshift='z003p000',
                       comovingframe=False,
                       fastbrowsing=False)
 
 
-    # print('group_centre_of_potential', cluster.group_centre_of_potential())
-    # print('NumOfSubhalos', cluster.NumOfSubhalos())
+    print('group_centre_of_potential', cluster.centre_of_potential)
+    print('group_centre_of_potential', cluster.r200)
     sgn = cluster.group_number_part('gas')
-    print('cluster.group_number_part', sgn, len(sgn))
-    print('cluster.group_number_part', sgn, len(sgn))
-    print('cluster.group_number_part', sgn, len(sgn))
+    print('cluster.group_number_part', len(sgn), sgn)
 
 
     # def check_dirs(self) -> np.ndarray:
