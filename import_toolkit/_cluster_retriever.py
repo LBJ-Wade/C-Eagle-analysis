@@ -426,13 +426,16 @@ class Mixin:
             part_type = self.particle_type_conversion[part_type]
 
         group_number = np.zeros(0, dtype=np.int)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType' + part_type + '/GroupNumber']
-            sub_gn = hd5set[...]
-            h5file.close()
-            group_number = np.concatenate((group_number, sub_gn), axis=0)
-            assert group_number.__len__() > 0, "Array is empty."
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                for i in range(0, data_size, 100000):
+                    part_gn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + 100000] == self.clusterID)[0]
+                    group_number = np.concatenate((group_number, part_gn_index), axis=0)
+                    print(i)
+
+        free_memory(['group_number'], invert=True)
+        assert group_number.__len__() > 0, "Array is empty."
         return group_number
 
     @ProgressBar()
