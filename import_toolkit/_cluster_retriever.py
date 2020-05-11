@@ -20,7 +20,7 @@ import numpy as np
 from .memory import free_memory
 from .progressbar import ProgressBar
 
-CHUNK_SIZE = 2000000
+CHUNK_SIZE = 8000000
 
 def redshift_str2num(z: str):
     """
@@ -559,7 +559,7 @@ class Mixin:
                 with h5.File(file, 'r') as h5file:
                     data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
                     for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
-                        index_end = index_shift * (CHUNK_SIZE + 1) - 1 if (index_shift + 1) * CHUNK_SIZE - 1 < data_size else data_size - 1
+                        index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size-1
                         part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
                         part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
                         part_vel = h5file[f'/PartType{part_type}/Velocity'][index_start:index_end][part_gn_index]
