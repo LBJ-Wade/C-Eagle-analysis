@@ -20,6 +20,7 @@ import numpy as np
 from .memory import free_memory
 from .progressbar import ProgressBar
 
+CHUNK_SIZE = 2000000
 
 def redshift_str2num(z: str):
     """
@@ -431,12 +432,12 @@ class Mixin:
             for file in kwargs['file_list_sorted']:
                 with h5.File(file, 'r') as h5file:
                     data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                    chunk_size = 2000000
-                    for index_shift, i in enumerate(range(0, data_size, chunk_size)):
-                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size]
-                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0] + chunk_size*index_shift
+                    for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
+                        index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE - 1 < data_size else data_size-1
+                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
+                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0] + index_start
                         group_number = np.concatenate((group_number, part_gn_index), axis=0)
-                        yield ((counter + 1) / (length_operation * int(data_size/chunk_size)))  # Give control back to decorator
+                        yield ((counter + 1) / (length_operation * int(data_size/CHUNK_SIZE)))  # Give control back to decorator
                         counter += 1
 
         else:
@@ -463,15 +464,30 @@ class Mixin:
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
         subgroup_number = np.zeros(0, dtype=np.int)
-        for file in kwargs['file_list_sorted']:
-            with h5.File(file, 'r') as h5file:
-                data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                chunk_size = 1000000
-                for i in range(0, data_size, chunk_size):
-                    part_sgn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.centralFOF_groupNumber + 1)[0]
-                    sgn = h5file[f'/PartType{part_type}/SubGroupNumber'][i:i + chunk_size][part_sgn_index]
-                    subgroup_number = np.concatenate((subgroup_number, sgn), axis=0)
-                    yield ((counter + 1) / (length_operation * int(data_size / chunk_size)))  # Give control back to decorator
+
+        if self.simulation_name is 'bahamas':
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                    for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
+                        if (index_shift + 1) * CHUNK_SIZE - 1 < data_size:
+                            part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_shift * (CHUNK_SIZE + 1) - 1]
+                        else:
+                            part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:data_size - 1]
+                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
+                        group_number = np.concatenate((group_number, part_gn_index), axis=0)
+                        yield ((counter + 1) / (length_operation * int(data_size / CHUNK_SIZE)))  # Give control back to decorator
+                        counter += 1
+
+        else:
+            base_index_shift = 0
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0] + base_index_shift
+                    group_number = np.concatenate((group_number, part_gn_index), axis=0)
+                    base_index_shift += h5file[f'/PartType{part_type}/GroupNumber'].size
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
                     counter += 1
 
         free_memory(['subgroup_number'], invert=True)
