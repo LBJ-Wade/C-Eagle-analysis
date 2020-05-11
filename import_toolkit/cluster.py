@@ -240,25 +240,18 @@ class Cluster(simulation.Simulation,
 
                 if field == 'mass' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1])[group_number_index])
-
                 elif field == 'coordinates' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1])[group_number_index])
-
                 elif field == 'velocity' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1])[group_number_index])
-
                 elif field == 'temperature' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1])[group_number_index])
-
                 elif field == 'sphdensity' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1])[group_number_index])
-
                 elif field == 'sphkernel' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1])[group_number_index])
-
                 elif field == 'metallicity' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1])[group_number_index])
-
                 elif field == 'subgroupnumber' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1])[group_number_index])
 
@@ -299,6 +292,16 @@ class Cluster(simulation.Simulation,
                     setattr(self, field, self.subgroups_centre_of_mass())
                 elif field == 'subhalo_velocity' and not hasattr(self, field):
                     setattr(self, field, self.subgroups_velocity())
+                elif field == 'subhalo_mass' and not hasattr(self, field):
+                    setattr(self, field, self.subgroups_mass())
+                elif field == 'subhalo_kin_energy' and not hasattr(self, field):
+                    setattr(self, field, self.subgroups_kin_energy())
+                elif field == 'subhalo_therm_energy' and not hasattr(self, field):
+                    setattr(self, field, self.subgroups_therm_energy())
+
+
+
+
 
 
 

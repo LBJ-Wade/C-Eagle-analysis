@@ -356,18 +356,15 @@ class Mixin:
                     .						.					]]
 
         """
-
         vel = np.zeros((0, 3), dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/Subhalo/Velocity']
-            sub_v = hd5set[...]
-            h5file.close()
-            vel = np.concatenate((vel, sub_v), axis=0)
-            free_memory(['vel'], invert=True)
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                sub_vel = h5file['Subhalo/Velocity'][subhalo_gn_index]
+                vel = np.concatenate((vel, sub_vel))
 
-        if not self.comovingframe:
-            vel = self.comoving_velocity(vel)
+        vel = vel if self.comovingframe else self.comoving_velocity(vel)
+        free_memory(['vel'], invert=True)
         return vel
 
     @data_subject(subject="groups")
@@ -376,18 +373,15 @@ class Mixin:
         AIM: reads the subgroups masses from the path and file given
         RETURNS: type = 1D np.array
         """
-
         mass = np.zeros(0, dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/Subhalo/Mass']
-            sub_m = hd5set[...]
-            h5file.close()
-            mass = np.concatenate((mass, sub_m))
-            free_memory(['mass'], invert=True)
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                sub_mass = h5file['Subhalo/Mass'][subhalo_gn_index]
+                mass = np.concatenate((mass, sub_mass))
 
-        if not self.comovingframe:
-            mass = self.comoving_mass(mass)
+        mass = mass if self.comovingframe else self.comoving_mass(mass)
+        free_memory(['mass'], invert=True)
         return mass
 
     @data_subject(subject="groups")
@@ -396,18 +390,16 @@ class Mixin:
         AIM: reads the subgroups kinetic energy from the path and file given
         RETURNS: type = 1D np.array
         """
-        kin_energy = np.zeros(0, dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/Subhalo/KineticEnergy']
-            sub_ke = hd5set[...]
-            h5file.close()
-            kin_energy = np.concatenate((kin_energy, sub_ke), axis=0)
-            free_memory(['kin_energy'], invert=True)
+        kinetic = np.zeros(0, dtype=np.float)
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                sub_kinetic = h5file['Subhalo/KineticEnergy'][subhalo_gn_index]
+                kinetic = np.concatenate((kinetic, sub_kinetic))
 
-        if not self.comovingframe:
-            kin_energy = self.comoving_kinetic_energy(kin_energy)
-        return kin_energy
+        kinetic = kinetic if self.comovingframe else self.comoving_kinetic_energy(kinetic)
+        free_memory(['kinetic'], invert=True)
+        return kinetic
 
     @data_subject(subject="groups")
     def subgroups_therm_energy(self, *args, **kwargs):
@@ -415,15 +407,15 @@ class Mixin:
         AIM: reads the subgroups thermal energy from the path and file given
         RETURNS: type = 1D np.array
         """
-        therm_energy = np.zeros(0, dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/Subhalo/ThermalEnergy']
-            sub_th = hd5set[...]
-            h5file.close()
-            therm_energy = np.concatenate((therm_energy, sub_th), axis=0)
-            free_memory(['therm_energy'], invert=True)
-        return therm_energy
+        thermal = np.zeros(0, dtype=np.float)
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                subhalo_gn_index = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0]
+                sub_thermal = h5file['Subhalo/ThermalEnergy'][subhalo_gn_index]
+                thermal = np.concatenate((thermal, sub_thermal))
+
+        free_memory(['thermal'], invert=True)
+        return thermal
 
     @data_subject(subject="particledata")
     def group_number_part(self, part_type, *args, **kwargs):
