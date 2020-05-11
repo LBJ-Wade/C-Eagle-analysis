@@ -417,6 +417,7 @@ class Mixin:
         free_memory(['thermal'], invert=True)
         return thermal
 
+    @ProgressBar()
     @data_subject(subject="particledata")
     def group_number_part(self, part_type, *args, **kwargs):
         """
@@ -425,14 +426,18 @@ class Mixin:
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
         group_number = np.zeros(0, dtype=np.int)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
                 data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                for i in range(0, data_size, 1000000):
-                    part_gn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + 1000000] == self.clusterID+1)[0]
+                chunk_size = 1000000
+                for i in range(0, data_size, chunk_size):
+                    part_gn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.clusterID+1)[0]
                     group_number = np.concatenate((group_number, part_gn_index), axis=0)
-                    print(i)
+                    yield ((counter + 1) / (length_operation * int(data_size/chunk_size)))  # Give control back to decorator
+                    counter += 1
 
         free_memory(['group_number'], invert=True)
         assert group_number.__len__() > 0, "Array is empty."
