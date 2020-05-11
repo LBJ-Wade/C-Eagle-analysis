@@ -72,15 +72,15 @@ def main():
 
 
 
-    cluster = Cluster(simulation_name='bahamas',
+    cluster = Cluster(simulation_name='ceagle',
                       clusterID=0,
-                      redshift='z003p000',
+                      redshift='z000p899',
                       comovingframe=False,
                       fastbrowsing=False)
 
 
-    print('group_centre_of_potential', cluster.centre_of_potential)
-    print('group_centre_of_potential', cluster.r200)
+    print('centre_of_potential', cluster.centre_of_potential)
+    print('r200', cluster.r200)
     sgn = cluster.group_number_part('gas')
     print('cluster.group_number_part', len(sgn), sgn)
 
