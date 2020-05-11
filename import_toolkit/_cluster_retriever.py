@@ -454,7 +454,9 @@ class Mixin:
                 data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
                 chunk_size = 1000000
                 for i in range(0, data_size, chunk_size):
-                    part_sgn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.centralFOF_groupNumber + 1)[0]
+                    part_sgn_index = np.where(
+                            h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.centralFOF_groupNumber + 1
+                    )[0]
                     sgn = h5file[f'/PartType{part_type}/SubGroupNumber'][i:i + chunk_size][part_sgn_index]
                     subgroup_number = np.concatenate((subgroup_number, sgn), axis=0)
                     yield ((counter + 1) / (length_operation * int(data_size / chunk_size)))  # Give control back to decorator
@@ -467,11 +469,26 @@ class Mixin:
     @ProgressBar()
     @data_subject(subject="particledata")
     def particle_coordinates(self, part_type, *args, **kwargs):
-        """
-        RETURNS: 2D np.array
-        """
-        if part_type.__len__() > 1:
+        if len(part_type) > 1:
             part_type = self.particle_type_conversion[part_type]
+
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
+        subgroup_number = np.zeros(0, dtype=np.int)
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                chunk_size = 1000000
+                for i in range(0, data_size, chunk_size):
+                    part_sgn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.centralFOF_groupNumber + 1)[0]
+                    sgn = h5file[f'/PartType{part_type}/SubGroupNumber'][i:i + chunk_size][part_sgn_index]
+                    subgroup_number = np.concatenate((subgroup_number, sgn), axis=0)
+                    yield ((counter + 1) / (length_operation * int(data_size / chunk_size)))  # Give control back to decorator
+                    counter += 1
+
+        free_memory(['subgroup_number'], invert=True)
+        assert subgroup_number.__len__() > 0, "Array is empty."
+        return subgroup_number
 
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
