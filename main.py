@@ -72,9 +72,9 @@ def main():
 
 
 
-    cluster = Cluster(simulation_name='bahamas',
+    cluster = Cluster(simulation_name='ceagle',
                       clusterID=0,
-                      redshift='z003p000',
+                      redshift='z001p993',
                       comovingframe=False,
                       fastbrowsing=False)
 
