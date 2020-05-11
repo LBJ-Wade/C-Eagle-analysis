@@ -74,15 +74,15 @@ def main():
 
     cluster = Cluster(simulation_name='bahamas',
                       clusterID=0,
-                      redshift='z003p000',
+                      redshift='z000p000',
                       comovingframe=False,
                       fastbrowsing=False)
 
 
     print('centre_of_potential', cluster.centre_of_potential)
-    print('r200', cluster.r200)
-    sgn = cluster.subgroup_number_part('gas')
-    print('cluster.group_number_part', len(sgn), sgn)
+    print('r500', cluster.r500)
+    # sgn = cluster.subgroup_number_part('gas')
+    # print('cluster.group_number_part', len(sgn), sgn)
 
 
     # def check_dirs(self) -> np.ndarray:
