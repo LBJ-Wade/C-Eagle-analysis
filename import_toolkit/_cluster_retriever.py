@@ -483,7 +483,7 @@ class Mixin:
                 with h5.File(file, 'r') as h5file:
                     part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
                     part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
-                    part_sgn = h5file[f'/PartType{part_type}/SubGroupNumber'][part_gn_index]
+                    part_sgn = h5file[f'/PartType{part_type}/SubGroupNumber'][:][part_gn_index]
                     subgroup_number = np.concatenate((subgroup_number, part_sgn), axis=0)
                     yield ((counter + 1) / (length_operation))  # Give control back to decorator
                     counter += 1
@@ -500,98 +500,128 @@ class Mixin:
 
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
-        subgroup_number = np.zeros(0, dtype=np.int)
-        for file in kwargs['file_list_sorted']:
-            with h5.File(file, 'r') as h5file:
-                data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                chunk_size = 1000000
-                for i in range(0, data_size, chunk_size):
-                    part_sgn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.centralFOF_groupNumber + 1)[0]
-                    sgn = h5file[f'/PartType{part_type}/SubGroupNumber'][i:i + chunk_size][part_sgn_index]
-                    subgroup_number = np.concatenate((subgroup_number, sgn), axis=0)
-                    yield ((counter + 1) / (length_operation * int(data_size / chunk_size)))  # Give control back to decorator
+        coords = np.zeros((0, 3), dtype=np.float)
+
+        if self.simulation_name is 'bahamas':
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    boxsize = h5file['Header'].attrs['BoxSize']
+                    data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                    for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
+                        index_end = index_shift * (CHUNK_SIZE + 1) - 1 if (index_shift + 1) * CHUNK_SIZE - 1 < data_size else data_size - 1
+                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
+                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
+                        part_coords = h5file[f'/PartType{part_type}/Coordinates'][index_start:index_end][part_gn_index]
+
+                        ## Periodic boundary wrapping
+                        for coord_axis in [0, 1, 2]:
+                            # Right boundary
+                            if self.centre_of_potential[coord_axis] + 5*self.r200 < boxsize:
+                                beyond_index = np.where(part_coords[:, coord_axis] < boxsize/2)[0]
+                                part_coords[beyond_index, coord_axis] += boxsize
+
+                            # Left boundary
+                            elif self.centre_of_potential[coord_axis] < 5*self.r200:
+                                beyond_index = np.where(part_coords[:, coord_axis] > boxsize/2)[0]
+                                part_coords[beyond_index, coord_axis] -= boxsize
+
+                        coords = np.concatenate((coords, part_coords), axis=0)
+                        yield ((counter + 1) / (length_operation * int(data_size / CHUNK_SIZE)))  # Give control back to decorator
+                        counter += 1
+
+        else:
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                    part_coords = h5file[f'/PartType{part_type}/Coordinates'][:][part_gn_index]
+                    coords = np.concatenate((coords, part_coords), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
                     counter += 1
 
-        free_memory(['subgroup_number'], invert=True)
-        assert subgroup_number.__len__() > 0, "Array is empty."
-        return subgroup_number
-
-        counter = 0
-        length_operation = len(kwargs['file_list_sorted'])
-        pos = np.zeros((0, 3), dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType' + part_type + '/Coordinates']
-            sub_pos = hd5set[...]
-            h5file.close()
-            pos = np.concatenate((pos, sub_pos), axis=0)
-            free_memory(['pos'], invert=True)
-            assert pos.__len__() > 0, "Array is empty."
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
-
-        if not self.comovingframe:
-            pos = self.comoving_length(pos)
-        return pos
+        free_memory(['coords'], invert=True)
+        coords = coords if self.comovingframe else self.comoving_length(coords)
+        assert coords.__len__() > 0, "Array is empty."
+        return coords
 
     @ProgressBar()
     @data_subject(subject="particledata")
     def particle_velocity(self, part_type, *args, **kwargs):
-        """
-        RETURNS: 2D np.array
-        """
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
-        part_vel = np.zeros((0, 3), dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType' + part_type + '/Velocity']
-            sub_vel = hd5set[...]
-            h5file.close()
-            part_vel = np.concatenate((part_vel, sub_vel), axis=0)
-            free_memory(['part_vel'], invert=True)
-            assert part_vel.__len__() > 0, "Array is empty."
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
+        vel = np.zeros((0, 3), dtype=np.float)
 
-        if not self.comovingframe:
-            part_vel = self.comoving_velocity(part_vel)
-        return part_vel
+        if self.simulation_name is 'bahamas':
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                    for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
+                        index_end = index_shift * (CHUNK_SIZE + 1) - 1 if (index_shift + 1) * CHUNK_SIZE - 1 < data_size else data_size - 1
+                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
+                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
+                        part_vel = h5file[f'/PartType{part_type}/Velocity'][index_start:index_end][part_gn_index]
+                        vel = np.concatenate((vel, part_vel), axis=0)
+                        yield ((counter + 1) / (length_operation*int(data_size/CHUNK_SIZE)))  # Give control back to decorator
+                        counter += 1
+
+        else:
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                    part_vel = h5file[f'/PartType{part_type}/Velocity'][:][part_gn_index]
+                    vel = np.concatenate((vel, part_vel), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
+
+        free_memory(['coords'], invert=True)
+        vel = vel if self.comovingframe else self.comoving_velocity(vel)
+        assert vel.__len__() > 0, "Array is empty."
+        return vel
 
     @ProgressBar()
     @data_subject(subject="particledata")
     def particle_masses(self, part_type, *args, **kwargs):
-        """
-        RETURNS: 2D np.array
-        """
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
         if part_type == '1':
-            part_mass = np.ones(self.DM_NumPart_Total()) * self.DM_particleMass()
+            mass = np.ones(self.DM_NumPart_Total(), dtype=np.float) * self.DM_particleMass()
         else:
             counter = 0
             length_operation = len(kwargs['file_list_sorted'])
-            part_mass = np.zeros(0, dtype=np.float)
-            for path in kwargs['file_list_sorted']:
-                h5file = h5.File(path, 'r')
-                hd5set = h5file['/PartType' + part_type + '/Mass']
-                sub_m = hd5set[...]
-                h5file.close()
-                part_mass = np.concatenate((part_mass, sub_m), axis=0)
-                free_memory(['part_mass'], invert=True)
-                yield ((counter + 1) / length_operation)  # Give control back to decorator
-                counter += 1
+            mass = np.zeros(0, dtype=np.float)
 
-        assert part_mass.__len__() > 0, "Array is empty."
+            if self.simulation_name is 'bahamas':
+                for file in kwargs['file_list_sorted']:
+                    with h5.File(file, 'r') as h5file:
+                        data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                        for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
+                            index_end = index_shift * (CHUNK_SIZE + 1) - 1 if (index_shift + 1) * CHUNK_SIZE - 1 < data_size else data_size - 1
+                            part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
+                            part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
+                            part_mass = h5file[f'/PartType{part_type}/Mass'][index_start:index_end][part_gn_index]
+                            mass = np.concatenate((mass, part_mass), axis=0)
+                            yield ((counter + 1) / (length_operation * int(data_size / CHUNK_SIZE)))  # Give control back to decorator
+                            counter += 1
 
-        if not self.comovingframe:
-            part_mass = self.comoving_mass(part_mass)
+            else:
+                for file in kwargs['file_list_sorted']:
+                    with h5.File(file, 'r') as h5file:
+                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
+                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                        part_mass = h5file[f'/PartType{part_type}/Mass'][:][part_gn_index]
+                        mass = np.concatenate((mass, part_mass), axis=0)
+                        yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                        counter += 1
 
-        return part_mass
+        free_memory(['mass'], invert=True)
+        mass = mass if self.comovingframe else self.comoving_mass(mass)
+        assert mass.__len__() > 0, "Array is empty."
+        return mass
 
     @ProgressBar()
     @data_subject(subject="particledata")
