@@ -28,19 +28,19 @@ filename = f"bahamas-clustermap-5r200.jpg"
 fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(111)
 ax.set_aspect('equal')
-ax.set_xlabel(r'$x$ \\quad [Mpc]')
-ax.set_ylabel(r'$y$ \\quad [Mpc]')
+ax.set_xlabel(r'$y\ $ [Mpc]')
+ax.set_ylabel(r'$z\ $ [Mpc]')
 
 coords = cluster.particle_coordinates('gas')
-ax.scatter(coords[:,0], coords[:,1], marker='.', c='k', alpha=0.01)
+ax.scatter(coords[:,1], coords[:,2], marker='.', c='k', alpha=0.001)
 
 items_labels = r"""POINT PARTICLE MAP
-Cluster {:s}\ {:d}
+Cluster {:s} {:d}
 $z$ = {:.2f}
 $R_{{500\ true}}$ = {:.2f} Mpc""".format(cluster.simulation,
-                                                      cluster.clusterID,
-                                                      cluster.z,
-                                                      cluster.r500)
+                                          cluster.clusterID,
+                                          cluster.z,
+                                          cluster.r500)
 
 print(items_labels)
 ax.text(0.03, 0.97, items_labels,
