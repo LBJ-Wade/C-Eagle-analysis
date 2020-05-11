@@ -429,8 +429,8 @@ class Mixin:
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
                 data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                for i in range(0, data_size, 100000):
-                    part_gn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + 100000] == self.clusterID)[0]
+                for i in range(0, data_size, 1000000):
+                    part_gn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + 1000000] == self.clusterID)[0]
                     group_number = np.concatenate((group_number, part_gn_index), axis=0)
                     print(i)
 
