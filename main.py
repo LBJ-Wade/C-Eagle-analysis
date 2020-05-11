@@ -81,7 +81,7 @@ def main():
 
     print('centre_of_potential', cluster.centre_of_potential)
     print('r200', cluster.r200)
-    sgn = cluster.group_number_part('gas')
+    sgn = cluster.subgroup_number_part('gas')
     print('cluster.group_number_part', len(sgn), sgn)
 
 
