@@ -428,14 +428,24 @@ class Mixin:
         group_number = np.zeros(0, dtype=np.int)
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                chunk_size = 2000000
-                for index_shift, i in enumerate(range(0, data_size, chunk_size)):
+
+                if self.simulation_name is 'bahamas':
+                    data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                    chunk_size = 2000000
+                    for index_shift, i in enumerate(range(0, data_size, chunk_size)):
+                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size]
+                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0] + chunk_size*index_shift
+                        group_number = np.concatenate((group_number, part_gn_index), axis=0)
+                        yield ((counter + 1) / (length_operation * int(data_size/chunk_size)))  # Give control back to decorator
+                        counter += 1
+
+                else:
                     part_gn = h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size]
-                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0] + chunk_size*index_shift
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
                     group_number = np.concatenate((group_number, part_gn_index), axis=0)
-                    yield ((counter + 1) / (length_operation * int(data_size/chunk_size)))  # Give control back to decorator
+                    yield ((counter + 1) / (length_operation ))  # Give control back to decorator
                     counter += 1
+
 
         free_memory(['group_number'], invert=True)
         assert group_number.__len__() > 0, "Array is empty."
