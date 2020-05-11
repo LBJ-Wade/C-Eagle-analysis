@@ -28,13 +28,13 @@ filename = f"bahamas-clustermap-5r200.jpg"
 fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(111)
 ax.set_aspect('equal')
-ax.set_xlabel(r'$x$ \quad [cMpc]')
-ax.set_ylabel(r'$y$ \quad [cMpc]')
+ax.set_xlabel(r'$x$ \\quad [Mpc]')
+ax.set_ylabel(r'$y$ \\quad [Mpc]')
 
 coords = cluster.particle_coordinates('gas')
-ax.scatter(coords[:,0], coords[:,1], marker=',', c='k', alpha=1)
+ax.scatter(coords[:,0], coords[:,1], marker='.', c='k', alpha=0.01)
 
-items_labels = r"""THERMODYNAMIC PHASE SPACE
+items_labels = r"""POINT PARTICLE MAP
                Cluster {:s}\ {:d}
                $z$ = {:.3f}
                $R_{{500\ true}}$ = {:.2f} Mpc""".format(cluster.simulation,
