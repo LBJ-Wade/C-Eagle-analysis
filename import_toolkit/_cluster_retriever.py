@@ -440,7 +440,7 @@ class Mixin:
                         counter += 1
 
                 else:
-                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size]
+                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
                     part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
                     group_number = np.concatenate((group_number, part_gn_index), axis=0)
                     yield ((counter + 1) / (length_operation ))  # Give control back to decorator
