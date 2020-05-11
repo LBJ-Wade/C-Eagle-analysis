@@ -36,7 +36,7 @@ ax.scatter(coords[:,0], coords[:,1], marker='.', c='k', alpha=0.01)
 
 items_labels = r"""POINT PARTICLE MAP
 Cluster {:s}\ {:d}
-$z$ = {:.3f}
+$z$ = {:.2f}
 $R_{{500\ true}}$ = {:.2f} Mpc""".format(cluster.simulation,
                                                       cluster.clusterID,
                                                       cluster.z,
