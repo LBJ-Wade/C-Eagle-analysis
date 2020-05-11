@@ -420,9 +420,6 @@ class Mixin:
     @ProgressBar()
     @data_subject(subject="particledata")
     def group_number_part(self, part_type, *args, **kwargs):
-        """
-        RETURNS: np.array
-        """
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
@@ -446,23 +443,26 @@ class Mixin:
     @ProgressBar()
     @data_subject(subject="particledata")
     def subgroup_number_part(self, part_type, *args, **kwargs):
-
         if len(part_type) > 1:
             part_type = self.particle_type_conversion[part_type]
 
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
-        sub_group_number = np.zeros(0, dtype=np.int)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType' + part_type + '/SubGroupNumber']
-            sub_gn = hd5set[...]
-            h5file.close()
-            sub_group_number = np.concatenate((sub_group_number, sub_gn), axis=0)
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
+        subgroup_number = np.zeros(0, dtype=np.int)
+        for file in kwargs['file_list_sorted']:
+            with h5.File(file, 'r') as h5file:
+                data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
+                chunk_size = 1000000
+                for i in range(0, data_size, chunk_size):
+                    part_sgn_index = np.where(h5file[f'/PartType{part_type}/GroupNumber'][i:i + chunk_size] == self.centralFOF_groupNumber + 1)[0]
+                    sgn = h5file[f'/PartType{part_type}/SubGroupNumber'][i:i + chunk_size][part_sgn_index]
+                    subgroup_number = np.concatenate((subgroup_number, sgn), axis=0)
+                    yield ((counter + 1) / (length_operation * int(data_size / chunk_size)))  # Give control back to decorator
+                    counter += 1
 
-        return sub_group_number
+        free_memory(['subgroup_number'], invert=True)
+        assert subgroup_number.__len__() > 0, "Array is empty."
+        return subgroup_number
 
     @ProgressBar()
     @data_subject(subject="particledata")

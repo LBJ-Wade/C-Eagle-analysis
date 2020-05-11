@@ -76,12 +76,13 @@ def main():
                       clusterID=0,
                       redshift='z003p000',
                       comovingframe=False,
-                      fastbrowsing=True)
+                      fastbrowsing=False)
 
 
     # print('group_centre_of_potential', cluster.group_centre_of_potential())
     # print('NumOfSubhalos', cluster.NumOfSubhalos())
-    print('subgroups_centre_of_potential', cluster.group_number_part('gas'), len(cluster.group_number_part('gas')))
+    sgn = cluster.subgroup_number_part('gas')
+    print('cluster.subgroup_number_part', sgn, len(sgn))
 
 
     # def check_dirs(self) -> np.ndarray:
