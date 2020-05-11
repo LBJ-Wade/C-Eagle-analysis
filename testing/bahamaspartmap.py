@@ -35,9 +35,9 @@ coords = cluster.particle_coordinates('gas')
 ax.scatter(coords[:,0], coords[:,1], marker='.', c='k', alpha=0.01)
 
 items_labels = r"""POINT PARTICLE MAP
-               Cluster {:s}\ {:d}
-               $z$ = {:.3f}
-               $R_{{500\ true}}$ = {:.2f} Mpc""".format(cluster.simulation,
+Cluster {:s}\ {:d}
+$z$ = {:.3f}
+$R_{{500\ true}}$ = {:.2f} Mpc""".format(cluster.simulation,
                                                       cluster.clusterID,
                                                       cluster.z,
                                                       cluster.r500)
