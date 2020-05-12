@@ -512,22 +512,21 @@ class Mixin:
                         part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
                         part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
                         part_coords = h5file[f'/PartType{part_type}/Coordinates'][index_start:index_end,:][part_gn_index]
-
-                        ## Periodic boundary wrapping
-                        for coord_axis in [0, 1, 2]:
-                            # Right boundary
-                            if self.centre_of_potential[coord_axis] + 5*self.r200 < boxsize:
-                                beyond_index = np.where(part_coords[:, coord_axis] < boxsize/2)[0]
-                                part_coords[beyond_index, coord_axis] += boxsize
-
-                            # Left boundary
-                            elif self.centre_of_potential[coord_axis] < 5*self.r200:
-                                beyond_index = np.where(part_coords[:, coord_axis] > boxsize/2)[0]
-                                part_coords[beyond_index, coord_axis] -= boxsize
-
                         coords = np.concatenate((coords, part_coords), axis=0)
                         yield ((counter + 1) / (length_operation * int(data_size / CHUNK_SIZE)))  # Give control back to decorator
                         counter += 1
+
+            ## Periodic boundary wrapping
+            for coord_axis in [0, 1, 2]:
+                # Right boundary
+                if self.centre_of_potential[coord_axis] + 5*self.r200 > boxsize:
+                    beyond_index = np.where(coords[:, coord_axis] < boxsize/2)[0]
+                    coords[beyond_index, coord_axis] += boxsize
+
+                # Left boundary
+                elif self.centre_of_potential[coord_axis] - 5*self.r200 < 0.:
+                    beyond_index = np.where(coords[:, coord_axis] > boxsize/2)[0]
+                    coords[beyond_index, coord_axis] -= boxsize
 
         else:
             for file in kwargs['file_list_sorted']:
