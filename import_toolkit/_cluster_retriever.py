@@ -545,6 +545,8 @@ class Mixin:
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
+        assert hasattr(self, f'partType{part_type}_groupnumber')
+        part_gn_index = getattr(self, f'partType{part_type}_groupnumber')
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
         vel = np.zeros((0, 3), dtype=np.float)
@@ -552,15 +554,10 @@ class Mixin:
         if self.simulation_name is 'bahamas':
             for file in kwargs['file_list_sorted']:
                 with h5.File(file, 'r') as h5file:
-                    data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                    for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
-                        index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size-1
-                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
-                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
-                        part_vel = h5file[f'/PartType{part_type}/Velocity'][index_start:index_end][part_gn_index]
-                        vel = np.concatenate((vel, part_vel), axis=0)
-                        yield ((counter + 1) / (length_operation*int(data_size/CHUNK_SIZE)))  # Give control back to decorator
-                        counter += 1
+                    part_vel = h5file[f'/PartType{part_type}/Velocity'][part_gn_index]
+                    vel = np.concatenate((vel, part_vel), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
 
         else:
             for file in kwargs['file_list_sorted']:
@@ -584,8 +581,13 @@ class Mixin:
             part_type = self.particle_type_conversion[part_type]
 
         if part_type == '1':
-            mass = np.ones(self.DM_NumPart_Total(), dtype=np.float) * self.DM_particleMass()
+            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+                number_of_particles = h5file['Header'].attrs['NumPart_ThisFile'][1]
+                particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
+            mass = np.ones(number_of_particles, dtype=np.float) * particle_mass_DM
         else:
+            assert hasattr(self, f'partType{part_type}_groupnumber')
+            part_gn_index = getattr(self, f'partType{part_type}_groupnumber')
             counter = 0
             length_operation = len(kwargs['file_list_sorted'])
             mass = np.zeros(0, dtype=np.float)
@@ -593,15 +595,10 @@ class Mixin:
             if self.simulation_name is 'bahamas':
                 for file in kwargs['file_list_sorted']:
                     with h5.File(file, 'r') as h5file:
-                        data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                        for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
-                            index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size-1
-                            part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
-                            part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0]
-                            part_mass = h5file[f'/PartType{part_type}/Mass'][index_start:index_end][part_gn_index]
-                            mass = np.concatenate((mass, part_mass), axis=0)
-                            yield ((counter+1)/(length_operation*int(data_size/CHUNK_SIZE)))  # Give control back to decorator
-                            counter += 1
+                        part_mass = h5file[f'/PartType{part_type}/Mass'][part_gn_index]
+                        mass = np.concatenate((mass, part_mass), axis=0)
+                        yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                        counter += 1
 
             else:
                 for file in kwargs['file_list_sorted']:
@@ -625,18 +622,29 @@ class Mixin:
         RETURNS: 1D np.array
         """
         # Check that we are extracting the temperature of gas particles
+        assert hasattr(self, f'partType0_groupnumber')
+        part_gn_index = getattr(self, f'partType0_groupnumber')
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
         temperature = np.zeros(0, dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType0/Temperature']
-            sub_T = hd5set[...]
-            h5file.close()
-            temperature = np.concatenate((temperature, sub_T), axis=0)
-            free_memory(['temperature'], invert=True)
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
+
+        if self.simulation_name is 'bahamas':
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_temperature = h5file[f'/PartType0/Temperature'][part_gn_index]
+                    temperature = np.concatenate((temperature, part_temperature), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
+
+        else:
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_gn = h5file[f'/PartType0/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                    part_temperature = h5file[f'/PartType0/Temperature'][:][part_gn_index]
+                    temperature = np.concatenate((temperature, part_temperature), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
 
         assert temperature.__len__() > 0, "Array is empty."
         return temperature
@@ -644,77 +652,94 @@ class Mixin:
     @ProgressBar()
     @data_subject(subject="particledata")
     def particle_SPH_density(self, *args, **kwargs):
-        """
-        RETURNS: 1D np.array
-        """
+
+        assert hasattr(self, f'partType0_groupnumber')
+        part_gn_index = getattr(self, f'partType0_groupnumber')
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
-        densitySPH = np.zeros(0, dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType0/Density']
-            sub_den = hd5set[...]
-            h5file.close()
-            densitySPH = np.concatenate((densitySPH, sub_den), axis=0)
-            free_memory(['densitySPH'], invert=True)
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
+        density = np.zeros(0, dtype=np.float)
 
-        assert densitySPH.__len__() > 0, "Array is empty."
+        if self.simulation_name is 'bahamas':
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_density = h5file[f'/PartType0/Density'][part_gn_index]
+                    density = np.concatenate((density, part_density), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
 
-        if not self.comovingframe:
-            densitySPH = self.comoving_density(densitySPH)
+        else:
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_gn = h5file[f'/PartType0/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                    part_density = h5file[f'/PartType0/Density'][:][part_gn_index]
+                    density = np.concatenate((density, part_density), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
 
-        return densitySPH
+        assert density.__len__() > 0, "Array is empty."
+        density = density if self.comovingframe else self.comoving_density(density)
+        return density
 
     @ProgressBar()
     @data_subject(subject="particledata")
     def particle_SPH_smoothinglength(self, *args, **kwargs):
-        """
-        RETURNS: 1D np.array
-        """
+        assert hasattr(self, f'partType0_groupnumber')
+        part_gn_index = getattr(self, f'partType0_groupnumber')
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
         smoothinglength = np.zeros(0, dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType0/SmoothingLength']
-            sub_den = hd5set[...]
-            h5file.close()
-            smoothinglength = np.concatenate((smoothinglength, sub_den), axis=0)
-            free_memory(['smoothinglength'], invert=True)
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
+
+        if self.simulation_name is 'bahamas':
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_smoothinglength = h5file[f'/PartType0/SmoothingLength'][part_gn_index]
+                    smoothinglength = np.concatenate((smoothinglength, part_smoothinglength), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
+
+        else:
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_gn = h5file[f'/PartType0/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                    part_smoothinglength = h5file[f'/PartType0/SmoothingLength'][:][part_gn_index]
+                    smoothinglength = np.concatenate((smoothinglength, part_smoothinglength), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
 
         assert smoothinglength.__len__() > 0, "Array is empty."
-
-        if not self.comovingframe:
-            smoothinglength = self.comoving_length(smoothinglength)
-
+        smoothinglength = smoothinglength if self.comovingframe else self.comoving_length(smoothinglength)
         return smoothinglength
 
     @ProgressBar()
     @data_subject(subject="particledata")
     def particle_metallicity(self, *args, **kwargs):
-        """
-        RETURNS: 1D np.array
-        """
+        assert hasattr(self, f'partType0_groupnumber')
+        part_gn_index = getattr(self, f'partType0_groupnumber')
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
         metallicity = np.zeros(0, dtype=np.float)
-        for path in kwargs['file_list_sorted']:
-            h5file = h5.File(path, 'r')
-            hd5set = h5file['/PartType0/Metallicity']
-            sub_Z = hd5set[...]
-            h5file.close()
-            metallicity = np.concatenate((metallicity, sub_Z), axis=0)
-            free_memory(['metallicity'], invert=True)
-            yield ((counter + 1) / length_operation)  # Give control back to decorator
-            counter += 1
 
-        if not self.comovingframe:
-            raise("Metallicity not yet implemented for comoving -> physical frame conversion.")
+        if self.simulation_name is 'bahamas':
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_metallicity = h5file[f'/PartType0/Metallicity'][part_gn_index]
+                    metallicity = np.concatenate((metallicity, part_metallicity), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
 
+        else:
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    part_gn = h5file[f'/PartType0/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                    part_metallicity = h5file[f'/PartType0/Metallicity'][:][part_gn_index]
+                    metallicity = np.concatenate((metallicity, part_metallicity), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
+
+        assert metallicity.__len__() > 0, "Array is empty."
         return metallicity
 
     @data_subject(subject="particledata")
