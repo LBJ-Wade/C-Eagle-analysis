@@ -235,28 +235,25 @@ class Cluster(simulation.Simulation,
                 requires_subhalos.append(key)
 
         for part_type in requires_particledata:
-
-            group_number_index = np.where(self.group_number_part(part_type[-1]) == 1)[0]
-
             for field in self.requires[part_type]:
-
                 if field == 'mass' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1])[group_number_index])
+                    setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1]))
                 elif field == 'coordinates' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1])[group_number_index])
+                    setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1]))
                 elif field == 'velocity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1])[group_number_index])
+                    setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1]))
                 elif field == 'temperature' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1])[group_number_index])
+                    setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1]))
                 elif field == 'sphdensity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1])[group_number_index])
+                    setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1]))
                 elif field == 'sphkernel' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1])[group_number_index])
+                    setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1]))
                 elif field == 'metallicity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1])[group_number_index])
+                    setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1]))
                 elif field == 'subgroupnumber' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1])[group_number_index])
-
+                    setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1]))
+                elif field == 'groupnumber' and not hasattr(self, part_type+'_'+field):
+                    setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
 
             radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
             clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
@@ -264,10 +261,7 @@ class Cluster(simulation.Simulation,
             if (part_type == 'partType0' and
                 hasattr(self, 'partType0_sphdensity') and
                 hasattr(self, 'partType0_temperature')):
-
-                log_temperature_cut = np.log10(
-                    self.density_units(self.partType0_sphdensity, unit_system='nHcgs')) / 3 + 13/3
-
+                log_temperature_cut = np.log10(self.density_units(self.partType0_sphdensity, unit_system='nHcgs')) / 3 + 13/3
                 equation_of_state_index = np.where(
                     (self.partType0_temperature > 1e4) &
                     (np.log10(self.partType0_temperature) > log_temperature_cut)
@@ -276,13 +270,11 @@ class Cluster(simulation.Simulation,
                 intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
 
             else:
-
                 intersected_index = clean_radius_index
 
             for field in self.requires[part_type]:
                 filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
                 setattr(self, part_type + '_' + field, filtered_attribute)
-
 
         for subhalo_key in requires_subhalos:
             for field in self.requires[subhalo_key]:
@@ -300,12 +292,6 @@ class Cluster(simulation.Simulation,
                     setattr(self, field, self.subgroups_kin_energy())
                 elif field == 'subhalo_therm_energy' and not hasattr(self, field):
                     setattr(self, field, self.subgroups_therm_energy())
-
-
-
-
-
-
 
 
 

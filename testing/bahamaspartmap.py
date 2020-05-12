@@ -16,11 +16,14 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 warnings.filterwarnings("ignore")
 from import_toolkit.cluster import Cluster
 
+data_required = {'partType0': ['groupnumber', 'coordinates']}
+
 cluster = Cluster(simulation_name='bahamas',
                   clusterID=0,
                   redshift='z003p000',
                   comovingframe=False,
-                  fastbrowsing=False)
+                  fastbrowsing=False,
+                  requires=data_required)
 
 filepath = "/local/scratch/altamura/analysis_results/"
 filename = f"bahamas-clustermap-5r200.jpg"
@@ -31,7 +34,7 @@ ax.set_aspect('equal')
 ax.set_xlabel(r'$y\ $ [Mpc]')
 ax.set_ylabel(r'$z\ $ [Mpc]')
 
-coords = cluster.particle_coordinates('gas')
+coords = getattr(cluster, f'partType0_coordinates')
 x = coords[:,0]
 y = coords[:,1]
 del coords

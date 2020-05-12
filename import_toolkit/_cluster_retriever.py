@@ -498,46 +498,36 @@ class Mixin:
         if len(part_type) > 1:
             part_type = self.particle_type_conversion[part_type]
 
+        assert hasattr(self, f'partType{part_type}_groupnumber')
+        part_gn_index = getattr(self, f'partType{part_type}_coordinates')
+        counter = 0
+        length_operation = len(kwargs['file_list_sorted'])
+        coords = np.zeros((0, 3), dtype=np.float)
+
         if self.simulation_name is 'bahamas':
-            counter = 0
-            coords = np.zeros((0, 3), dtype=np.float)
-            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-                boxsize = h5file['Header'].attrs['BoxSize']
-                # data_size = h5file['Header'].attrs['NumPart_ThisFile'][int(part_type)]
-                part_gn_index = self.group_number_part(part_type)
-                coords = h5file[f'/PartType{part_type}/Coordinates'][part_gn_index]
-                del part_gn_index
+            for file in kwargs['file_list_sorted']:
+                with h5.File(file, 'r') as h5file:
+                    boxsize = h5file['Header'].attrs['BoxSize']
+                    coords = h5file[f'/PartType{part_type}/Coordinates'][part_gn_index]
+                    del part_gn_index
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
 
+                ## Periodic boundary wrapping
+                for coord_axis in [0, 1, 2]:
+                    # Right boundary
+                    if self.centre_of_potential[coord_axis] + 5*self.r200 > boxsize:
+                        beyond_index = np.where(coords[:, coord_axis] < boxsize/2)[0]
+                        coords[beyond_index, coord_axis] += boxsize
+                        del beyond_index
 
-                # for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
-                #     index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size - 1
-                #     part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
-                #     part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0]
-                #     del part_gn
-                #     part_coords = h5file[f'/PartType{part_type}/Coordinates'][index_start:index_end][part_gn_index]
-                #     del part_gn_index
-                #     coords = np.concatenate((coords, part_coords), axis=0)
-                #     yield ((counter+1) / (data_size/CHUNK_SIZE))  # Give control back to decorator
-                #     counter += 1
-
-            ## Periodic boundary wrapping
-            for coord_axis in [0, 1, 2]:
-                # Right boundary
-                if self.centre_of_potential[coord_axis] + 5*self.r200 > boxsize:
-                    beyond_index = np.where(coords[:, coord_axis] < boxsize/2)[0]
-                    coords[beyond_index, coord_axis] += boxsize
-                    del beyond_index
-
-                # Left boundary
-                elif self.centre_of_potential[coord_axis] - 5*self.r200 < 0.:
-                    beyond_index = np.where(coords[:, coord_axis] > boxsize/2)[0]
-                    coords[beyond_index, coord_axis] -= boxsize
-                    del beyond_index
+                    # Left boundary
+                    elif self.centre_of_potential[coord_axis] - 5*self.r200 < 0.:
+                        beyond_index = np.where(coords[:, coord_axis] > boxsize/2)[0]
+                        coords[beyond_index, coord_axis] -= boxsize
+                        del beyond_index
 
         else:
-            counter = 0
-            length_operation = len(kwargs['file_list_sorted'])
-            coords = np.zeros((0, 3), dtype=np.float)
             for file in kwargs['file_list_sorted']:
                 with h5.File(file, 'r') as h5file:
                     part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
@@ -549,7 +539,7 @@ class Mixin:
 
         free_memory(['coords'], invert=True)
         coords = coords if self.comovingframe else self.comoving_length(coords)
-        assert coords.__len__() > 0, "Array is empty."
+        assert len(coords) > 0, "Array is empty."
         return coords
 
     @ProgressBar()
