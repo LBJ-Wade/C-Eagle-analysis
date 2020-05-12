@@ -73,7 +73,7 @@ def main():
 
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=0,
+                      clusterID=10000,
                       redshift='z000p000',
                       comovingframe=False,
                       fastbrowsing=False)
@@ -81,8 +81,8 @@ def main():
 
     print('centre_of_potential', cluster.centre_of_potential)
     print('r500', cluster.r500)
-    # sgn = cluster.subgroup_number_part('gas')
-    # print('cluster.group_number_part', len(sgn), sgn)
+    sgn = cluster.particle_coordinates('gas')
+    print('cluster.particle_coordinates', len(sgn), sgn)
 
 
     # def check_dirs(self) -> np.ndarray:
