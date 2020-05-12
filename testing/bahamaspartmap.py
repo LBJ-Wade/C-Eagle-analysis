@@ -35,6 +35,7 @@ ax.set_xlabel(r'$y\ $ [Mpc]')
 ax.set_ylabel(r'$z\ $ [Mpc]')
 
 coords = getattr(cluster, f'partType0_coordinates')
+print(coords)
 x = coords[:,0]
 y = coords[:,2]
 del coords
