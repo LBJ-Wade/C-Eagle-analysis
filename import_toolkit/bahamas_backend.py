@@ -3,7 +3,72 @@
 
 
 
+#!/usr/bin/env python
+import os
+import h5py
+import numpy as np
+from mpi4py import MPI
+np.seterr(divide='ignore')
 
+# ----- REQUIRED FUNCTIONS -----
+def split(NProcs,MyRank,nfiles):
+    nfiles=int(nfiles)
+    nf=int(nfiles/NProcs)
+    rmd=nfiles % NProcs
+    st=MyRank*nf
+    fh=(MyRank+1)*nf
+    if MyRank < rmd:
+        st+=MyRank
+        fh+=(MyRank+1)
+    else:
+        st+=rmd
+        fh+=rmd
+    return st,fh
+
+def commune(comm,MyRank,NProcs,data):
+    tmp=np.zeros(NProcs,dtype=np.int)
+    tmp[MyRank]=len(data)
+    cnts=np.zeros(NProcs,dtype=np.int)
+    comm.Allreduce([tmp,MPI.INT],[cnts,MPI.INT],op=MPI.SUM)
+    del tmp
+    dspl=np.zeros(NProcs,dtype=np.int)
+    i=0
+    for j in range(0,NProcs,1):
+        dspl[j]=i
+        i+=cnts[j]
+    rslt=np.zeros(i,dtype=data.dtype)
+    comm.Allgatherv([data,cnts[MyRank]],[rslt,cnts,dspl,MPI._typedict[data.dtype.char]])
+    del data,cnts,dspl
+    return rslt
+
+def slice_conv(f,iden,hub,aexp,st,fh):
+    ase=aexp**(f[iden].attrs['aexp-scale-exponent'])
+    hse=hub**(f[iden].attrs['h-scale-exponent'])
+    cgscf=f[iden].attrs['CGSConversionFactor']*ase*hse
+    dset=f[iden][st:fh]*cgscf
+    return dset
+
+#Based heavily on work by David Barnes
+def find_files(sn):
+
+    path='/scratch/nas_virgo/Cosmo-OWLS/AGN_TUNED_nu0_L400N1024_Planck'
+
+    if os.path.isfile(path+'/particledata_'+sn+'/eagle_subfind_particles_'+sn+'.0.hdf5') == True:
+        pd=path+'/particledata_'+sn+'/eagle_subfind_particles_'+sn+'.0.hdf5'
+    sd=[]
+    for x in os.listdir(path+'/groups_'+sn+'/'):
+        if x.startswith('eagle_subfind_tab_'):
+            sd.append(path+'/groups_'+sn+'/'+x)
+    odr=[]
+    for x in sd: odr.append(int(x[94:-5]))
+    odr=np.array(odr)
+    so=np.argsort(odr)
+    del odr
+    sd=np.array(sd)
+    sd=sd[so]
+    del so
+    sd=list(sd)
+    return [sd,pd]
 
 
 
