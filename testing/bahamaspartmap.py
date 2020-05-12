@@ -18,7 +18,7 @@ from import_toolkit.cluster import Cluster
 
 cluster = Cluster(simulation_name='bahamas',
                   clusterID=0,
-                  redshift='z000p000',
+                  redshift='z003p000',
                   comovingframe=False,
                   fastbrowsing=False)
 
