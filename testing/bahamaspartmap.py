@@ -33,12 +33,11 @@ ax.set_ylabel(r'$z\ $ [Mpc]')
 
 coords = cluster.particle_coordinates('gas')
 x = coords[:,0]
-# y = coords[:,1]
-z = coords[:,2]
+y = coords[:,1]
 del coords
 ax.set_xlim(np.min(x), np.max(x))
-ax.set_ylim(np.min(z), np.max(z))
-ax.scatter(x,z, marker=',', c='k', alpha=0.01)
+ax.set_ylim(np.min(y), np.max(y))
+ax.scatter(x,y, marker=',', c='k', alpha=0.01)
 
 items_labels = r"""POINT PARTICLE MAP
 Cluster {:s} {:d}
