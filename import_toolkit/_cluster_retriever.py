@@ -499,7 +499,7 @@ class Mixin:
             part_type = self.particle_type_conversion[part_type]
 
         assert hasattr(self, f'partType{part_type}_groupnumber')
-        part_gn_index = getattr(self, f'partType{part_type}_coordinates')
+        part_gn_index = getattr(self, f'partType{part_type}_groupnumber')
         counter = 0
         length_operation = len(kwargs['file_list_sorted'])
         coords = np.zeros((0, 3), dtype=np.float)
