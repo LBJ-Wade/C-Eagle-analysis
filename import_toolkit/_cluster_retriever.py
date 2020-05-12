@@ -514,17 +514,17 @@ class Mixin:
                     counter += 1
 
                 ## Periodic boundary wrapping
-                for coord_axis in [0, 1, 2]:
+                for coord_axis in range(3):
                     # Right boundary
                     if self.centre_of_potential[coord_axis] + 5*self.r200 > boxsize:
                         beyond_index = np.where(coords[:, coord_axis] < boxsize/2)[0]
-                        coords[beyond_index, coord_axis] += boxsize
+                        coords[beyond_index, coord_axis] = coords[beyond_index, coord_axis] + boxsize
                         del beyond_index
 
                     # Left boundary
                     elif self.centre_of_potential[coord_axis] - 5*self.r200 < 0.:
                         beyond_index = np.where(coords[:, coord_axis] > boxsize/2)[0]
-                        coords[beyond_index, coord_axis] -= boxsize
+                        coords[beyond_index, coord_axis] = coords[beyond_index, coord_axis] - boxsize
                         del beyond_index
 
         else:
