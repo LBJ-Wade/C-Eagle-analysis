@@ -36,10 +36,8 @@ ax.set_ylabel(r'$z\ $ [Mpc]')
 
 coords = getattr(cluster, f'partType0_coordinates')
 x = coords[:,0]
-y = coords[:,1]
+y = coords[:,2]
 del coords
-ax.set_xlim(np.min(x), np.max(x))
-ax.set_ylim(np.min(y), np.max(y))
 ax.scatter(x,y, marker=',', c='k', alpha=0.01)
 
 items_labels = r"""POINT PARTICLE MAP
