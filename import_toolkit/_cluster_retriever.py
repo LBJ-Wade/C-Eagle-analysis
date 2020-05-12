@@ -20,7 +20,7 @@ import numpy as np
 from .memory import free_memory
 from .progressbar import ProgressBar
 
-CHUNK_SIZE = 8000000
+CHUNK_SIZE = 1000000
 
 def redshift_str2num(z: str):
     """
@@ -511,7 +511,7 @@ class Mixin:
                         index_end = index_shift * (CHUNK_SIZE + 1) - 1 if (index_shift + 1) * CHUNK_SIZE - 1 < data_size else data_size - 1
                         part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
                         part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
-                        part_coords = h5file[f'/PartType{part_type}/Coordinates'][index_start:index_end][part_gn_index]
+                        part_coords = h5file[f'/PartType{part_type}/Coordinates'][index_start:index_end,:][part_gn_index]
 
                         ## Periodic boundary wrapping
                         for coord_axis in [0, 1, 2]:
