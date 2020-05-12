@@ -70,13 +70,14 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
 
-
+    data_required = {'partType0': ['groupnumber', 'coordinates']}
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=10000,
-                      redshift='z000p000',
+                      clusterID=0,
+                      redshift='z003p000',
                       comovingframe=False,
-                      fastbrowsing=False)
+                      fastbrowsing=False,
+                      requires=data_required)
 
 
     print('centre_of_potential', cluster.centre_of_potential)
