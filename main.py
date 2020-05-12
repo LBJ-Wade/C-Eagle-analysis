@@ -82,8 +82,9 @@ def main():
 
     print('centre_of_potential', cluster.centre_of_potential)
     print('r500', cluster.r500)
-    sgn = cluster.particle_coordinates('gas')
-    print('cluster.particle_coordinates', len(sgn), sgn)
+    print('cluster.partType0_groupnumber', cluster.partType0_groupnumber)
+    print('cluster.partType0_coordinates', cluster.partType0_coordinates)
+
 
 
     # def check_dirs(self) -> np.ndarray:
