@@ -503,30 +503,33 @@ class Mixin:
         coords = np.zeros((0, 3), dtype=np.float)
 
         if self.simulation_name is 'bahamas':
-            for file in kwargs['file_list_sorted']:
-                with h5.File(file, 'r') as h5file:
-                    boxsize = h5file['Header'].attrs['BoxSize']
-                    data_size = h5file[f'/PartType{part_type}/GroupNumber'].size
-                    for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
-                        index_end = index_shift * (CHUNK_SIZE + 1) - 1 if (index_shift + 1) * CHUNK_SIZE - 1 < data_size else data_size - 1
-                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
-                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber + 1)[0]
-                        part_coords = h5file[f'/PartType{part_type}/Coordinates'][index_start:index_end,:][part_gn_index]
-                        coords = np.concatenate((coords, part_coords), axis=0)
-                        yield ((counter + 1) / (length_operation * int(data_size / CHUNK_SIZE)))  # Give control back to decorator
-                        counter += 1
+            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+                boxsize = h5file['Header'].attrs['BoxSize']
+                data_size = h5file['Header'].attrs['NumPart_ThisFile'][int(part_type)]
+                for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
+                    index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size - 1
+                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0]
+                    del part_gn
+                    part_coords = h5file[f'/PartType{part_type}/Coordinates'][index_start:index_end][part_gn_index]
+                    del part_gn_index
+                    coords = np.concatenate((coords, part_coords), axis=0)
+                    yield ((counter + 1) / (int(data_size / CHUNK_SIZE)))  # Give control back to decorator
+                    counter += 1
 
-            ## Periodic boundary wrapping
-            for coord_axis in [0, 1, 2]:
-                # Right boundary
-                if self.centre_of_potential[coord_axis] + 5*self.r200 > boxsize:
-                    beyond_index = np.where(coords[:, coord_axis] < boxsize/2)[0]
-                    coords[beyond_index, coord_axis] += boxsize
+                ## Periodic boundary wrapping
+                for coord_axis in [0, 1, 2]:
+                    # Right boundary
+                    if self.centre_of_potential[coord_axis] + 5*self.r200 > boxsize:
+                        beyond_index = np.where(coords[:, coord_axis] < boxsize/2)[0]
+                        coords[beyond_index, coord_axis] += boxsize
+                        del beyond_index
 
-                # Left boundary
-                elif self.centre_of_potential[coord_axis] - 5*self.r200 < 0.:
-                    beyond_index = np.where(coords[:, coord_axis] > boxsize/2)[0]
-                    coords[beyond_index, coord_axis] -= boxsize
+                    # Left boundary
+                    elif self.centre_of_potential[coord_axis] - 5*self.r200 < 0.:
+                        beyond_index = np.where(coords[:, coord_axis] > boxsize/2)[0]
+                        coords[beyond_index, coord_axis] -= boxsize
+                        del beyond_index
 
         else:
             for file in kwargs['file_list_sorted']:
