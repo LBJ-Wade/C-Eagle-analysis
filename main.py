@@ -79,13 +79,13 @@ def main():
                       redshift='z003p000',
                       requires=None)
 
-    # print('file_group_indexify', cluster.file_group_indexify())
+    print('file_group_indexify', cluster.file_group_indexify())
     print('centre_of_potential', cluster.centre_of_potential)
     print('r500', cluster.r500)
-    # print('cluster.partType0_groupnumber', cluster.partType0_groupnumber)
-    # print('cluster.partType0_mass', cluster.partType0_mass)
-    # print('cluster.partType0_coordinates', cluster.partType0_coordinates)
-    # print('cluster.partType0_velocity', cluster.partType0_velocity)
+    print('cluster.partType0_groupnumber', cluster.partType0_groupnumber)
+    print('cluster.partType0_mass', cluster.partType0_mass)
+    print('cluster.partType0_coordinates', cluster.partType0_coordinates)
+    print('cluster.partType0_velocity', cluster.partType0_velocity)
     # print('cluster.partType0_temperature', cluster.partType0_temperature)
     # print('cluster.partType0_sphdensity', cluster.partType0_sphdensity)
 
