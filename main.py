@@ -70,9 +70,9 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
 
-    data_required = {'partType0': ['groupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+    data_required = {'partType0': ['groupnumber', 'mass', 'coordinates']}#, 'velocity', 'temperature', 'sphdensity'],
                      # 'partType1': ['groupnumber', 'mass', 'coordinates', 'velocity'],
-                     'partType4': ['groupnumber', 'mass', 'coordinates', 'velocity']}
+                     # 'partType4': ['groupnumber', 'mass', 'coordinates', 'velocity']}
 
     cluster = Cluster(simulation_name='bahamas',
                       clusterID=0,
@@ -82,11 +82,11 @@ def main():
     print('centre_of_potential', cluster.centre_of_potential)
     print('r500', cluster.r500)
     print('cluster.partType0_groupnumber', cluster.partType0_groupnumber)
-    print('cluster.partType0_mass', cluster.partType0_mass)
+    # print('cluster.partType0_mass', cluster.partType0_mass)
     print('cluster.partType0_coordinates', cluster.partType0_coordinates)
-    print('cluster.partType0_velocity', cluster.partType0_velocity)
-    print('cluster.partType0_temperature', cluster.partType0_temperature)
-    print('cluster.partType0_sphdensity', cluster.partType0_sphdensity)
+    # print('cluster.partType0_velocity', cluster.partType0_velocity)
+    # print('cluster.partType0_temperature', cluster.partType0_temperature)
+    # print('cluster.partType0_sphdensity', cluster.partType0_sphdensity)
 
 
     # def check_dirs(self) -> np.ndarray:
