@@ -79,6 +79,7 @@ def main():
                       redshift='z003p000',
                       requires=data_required)
 
+    print('file_group_indexify', cluster.file_group_indexify())
     print('centre_of_potential', cluster.centre_of_potential)
     print('r500', cluster.r500)
     print('cluster.partType0_groupnumber', cluster.partType0_groupnumber)

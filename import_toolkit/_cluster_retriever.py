@@ -144,7 +144,7 @@ class Mixin:
         if self.simulation_name == 'bahamas':
             Ngroups = 0
             file_counter = -1
-            while Ngroups <= self.centralFOF_groupNumber:
+            while Ngroups <= self.clusterID:
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                     Ngroups += h5file['Header'].attrs['Ngroups']
                     file_counter += 1
