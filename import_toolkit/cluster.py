@@ -272,9 +272,9 @@ class Cluster(simulation.Simulation,
             else:
                 intersected_index = clean_radius_index
 
-            for field in self.requires[part_type]:
-                filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
-                setattr(self, part_type + '_' + field, filtered_attribute)
+            # for field in self.requires[part_type]:
+            #     filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
+            #     setattr(self, part_type + '_' + field, filtered_attribute)
 
         for subhalo_key in requires_subhalos:
             for field in self.requires[subhalo_key]:
