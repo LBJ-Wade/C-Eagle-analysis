@@ -261,14 +261,13 @@ class Cluster(simulation.Simulation,
             if (part_type == 'partType0' and
                 hasattr(self, 'partType0_sphdensity') and
                 hasattr(self, 'partType0_temperature')):
-                # log_temperature_cut = np.log10(self.density_units(self.partType0_sphdensity, unit_system='nHcgs')) / 3 + 13/3
-                # equation_of_state_index = np.where(
-                #     (self.partType0_temperature > 1e4) &
-                #     (np.log10(self.partType0_temperature) > log_temperature_cut)
-                # )[0]
-                #
-                # intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
-                intersected_index = clean_radius_index
+                log_temperature_cut = np.log10(self.density_units(self.partType0_sphdensity, unit_system='nHcgs')) / 3 + 13/3
+                equation_of_state_index = np.where(
+                    (self.partType0_temperature > 1e4) &
+                    (np.log10(self.partType0_temperature) > log_temperature_cut)
+                )[0]
+
+                intersected_index = equation_of_state_index#np.intersect1d(clean_radius_index, equation_of_state_index)
 
             else:
                 intersected_index = clean_radius_index
