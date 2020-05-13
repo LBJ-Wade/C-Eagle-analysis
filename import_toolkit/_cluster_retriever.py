@@ -15,6 +15,7 @@ They working principle is based on OOP class inheritance.
 
 from functools import wraps
 import os
+import re
 import h5py as h5
 import numpy as np
 from .memory import free_memory
@@ -44,6 +45,11 @@ def redshift_num2str(z: float):
     decimal_z = int(decimal_z)
     return f"z{integer_z:0>3d}p{decimal_z:0<3d}"
 
+
+_nsre = re.compile('([0-9]+)')
+def natural_sort_key(s):
+    return [int(text) if text.isdigit() else text.lower()
+            for text in re.split(_nsre, s)]
 
 
 class Mixin:
@@ -105,16 +111,14 @@ class Mixin:
 
                 # Transfer function state into the **kwargs
                 # These **kwargs are accessible to the decorated class methods
+                file_list = [x for x in file_list if x.startswith(prefix)]
+                file_list.sort(key=natural_sort_key)
                 kwargs['subject'] = decorator_kwargs['subject']
                 kwargs['file_dir'] = file_dir
-                kwargs['file_list'] = [x for x in file_list if x.startswith(prefix)]
-                kwargs['file_list_sorted'] = sorted([os.path.join(file_dir, file) for file in kwargs['file_list']])
-                # print(kwargs['file_list_sorted'])
-
+                kwargs['file_list'] = file_list
+                kwargs['file_list_sorted'] = [os.path.join(file_dir, file) for file in file_list]
                 return f(self, *args, **kwargs)
-
             return decorated_function
-
         return wrapper
 
     #####################################################
