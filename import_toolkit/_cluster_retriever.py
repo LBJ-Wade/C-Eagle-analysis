@@ -147,7 +147,7 @@ class Mixin:
             while Ngroups <= self.clusterID:
                 file_counter += 1
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
-                    print(file_counter, h5file['Header'].attrs['Ngroups'])
+                    print(file_counter, h5file['Header'].attrs['Ngroups'], kwargs['file_list_sorted'][file_counter])
                     Ngroups += h5file['Header'].attrs['Ngroups']
 
             return file_counter-1, Ngroups%self.clusterID
