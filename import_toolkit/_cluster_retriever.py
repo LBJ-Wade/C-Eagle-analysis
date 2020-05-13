@@ -435,7 +435,7 @@ class Mixin:
                     for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
                         index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size-1
                         part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
-                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber+1)[0] + index_start
+                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0] + index_start
                         group_number = np.concatenate((group_number, part_gn_index), axis=0)
                         yield ((counter + 1) / (length_operation*data_size/CHUNK_SIZE))  # Give control back to decorator
                         counter += 1
