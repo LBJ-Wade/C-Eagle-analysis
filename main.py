@@ -77,7 +77,7 @@ def main():
     cluster = Cluster(simulation_name='bahamas',
                       clusterID=10000,
                       redshift='z003p000',
-                      requires=None)
+                      requires=data_required)
 
     print('file_group_indexify', cluster.file_group_indexify())
     print('centre_of_potential', cluster.centre_of_potential)
