@@ -143,12 +143,12 @@ class Mixin:
     def file_group_indexify(self, **kwargs):
         if self.simulation_name == 'bahamas':
             Ngroups = 0
-            file_counter = -1
+            file_counter = 0
             while Ngroups <= self.clusterID:
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                     Ngroups += h5file['Header'].attrs['Ngroups']
                     file_counter += 1
-            return file_counter, self.clusterID % Ngroups
+            return file_counter-1, self.clusterID % Ngroups
         else:
             return 0, 0
 
