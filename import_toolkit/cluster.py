@@ -30,7 +30,7 @@ class Cluster(simulation.Simulation,
         self.requires = requires
         self.file_counter, self.groupfof_counter = self.file_group_indexify()
         if simulation_name == 'bahamas':
-            self.centralFOF_groupNumber = self.clusterID+1
+            self.centralFOF_groupNumber = self.clusterID
 
         if not fastbrowsing:
 
