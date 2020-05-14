@@ -155,7 +155,8 @@ class Mixin:
         :param inertia_tensor:
         :return:
         """
-        return np.linalg.eig(inertia_tensor) if eigenvalues else np.linalg.eig(inertia_tensor)[1]
+        eigensolution = np.linalg.eig(inertia_tensor)
+        return eigensolution if eigenvalues else eigensolution[1]
 
     def generate_apertures(self):
         """

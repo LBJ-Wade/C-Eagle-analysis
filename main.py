@@ -87,7 +87,7 @@ def main():
     print('cluster.partType0_mass', cluster.partType0_mass)
     print('cluster.partType0_coordinates', cluster.partType0_coordinates)
     print('inertia_tensor', I)
-    print('principal axes', cluster.principal_axes_ellipsoid(I, eigenvalues=True))
+    print('principal axes', cluster.principal_axes_ellipsoid(I))
     # print('cluster.partType0_velocity', cluster.partType0_velocity)
     # print('cluster.partType0_temperature', cluster.partType0_temperature)
     # print('cluster.partType0_sphdensity', cluster.partType0_sphdensity)

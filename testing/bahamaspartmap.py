@@ -7,6 +7,8 @@ import warnings
 import h5py
 import numpy as np
 from matplotlib import pyplot as plt
+from matplotlib import patches
+
 import matplotlib.lines as mlines
 from matplotlib.collections import EllipseCollection
 
@@ -16,7 +18,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 warnings.filterwarnings("ignore")
 from import_toolkit.cluster import Cluster
 
-data_required = {'partType0': ['groupnumber', 'coordinates']}
+data_required = {'partType0': ['groupnumber', 'mass', 'coordinates']}
 
 cluster = Cluster(simulation_name='bahamas',
                   clusterID=0,
@@ -35,11 +37,17 @@ ax.set_xlabel(r'$y\ $ [Mpc]')
 ax.set_ylabel(r'$z\ $ [Mpc]')
 
 coords = getattr(cluster, f'partType0_coordinates')
-print(coords)
+x0, y0, z0 = cluster.centre_of_potential
+a, b, c = cluster.principal_axes_ellipsoid(cluster.inertia_tensor(cluster.partType0_mass, coords))
 x = coords[:,0]
 y = coords[:,2]
 del coords
 ax.scatter(x,y, marker=',', c='k', alpha=0.01)
+
+e1 = patches.Ellipse((x0, y0), a*4*cluster.r200, b*4*cluster.r200,
+                     angle=cluster.angle_between_vectors(a, [1,0,0]), linewidth=2, fill=False, zorder=2, color='r')
+
+ax.add_patch(e1)
 
 items_labels = r"""POINT PARTICLE MAP
 Cluster {:s} {:d}
