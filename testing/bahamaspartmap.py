@@ -43,7 +43,7 @@ x = coords[:,0]
 y = coords[:,2]
 del coords
 ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.01)
-ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=)
+ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=1)
 
 e1 = patches.Ellipse((x0, y0), a*cluster.r200, b*cluster.r200,
                      angle=cluster.angle_between_vectors(a, [1,0,0]),
