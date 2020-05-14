@@ -153,7 +153,7 @@ class Mixin:
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                     Ngroups += h5file['Header'].attrs['Ngroups']
                     print(file_counter, Ngroups, element_counter)
-                    if Ngroups > self.clusterID:
+                    if element_counter < h5file['Header'].attrs['Ngroups']:
                         break
                     else:
                         file_counter += 1
