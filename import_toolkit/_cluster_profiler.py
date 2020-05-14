@@ -991,7 +991,8 @@ class Mixin:
         _eigenvalues /= self.group_mass_aperture(aperture_radius=aperture_radius, out_allPartTypes=False)
         _triaxiality = (_eigenvalues[0] - _eigenvalues[1]) / (_eigenvalues[0] - _eigenvalues[2])
         _circularity = np.sqrt(_eigenvalues[2] / _eigenvalues[0])
-
+        del mass
+        del coords
         inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()), axis=0)
         eigenvalues = np.concatenate((eigenvalues, _eigenvalues), axis=0)
         eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()), axis=0)
