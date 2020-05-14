@@ -151,7 +151,7 @@ class Mixin:
     @staticmethod
     def principal_axes_ellipsoid(inertia_tensor: np.ndarray, eigenvalues: bool = False) -> np.ndarray:
         """
-
+        Compute the eigenvalues and eigenvectors of the inertia tensor for morphology studies
         :param inertia_tensor:
         :return:
         """
@@ -908,7 +908,104 @@ class Mixin:
             return result
 
 
+    def group_morphology(self, aperture_radius: float = None) -> Dict[str, np.ndarray]:
+        """
+        Method that computes the cluster's morphology information from particles within a
+        specified aperture.
+        If the aperture is not specified, it is set by default to the true R500 of the cluster
+        radius from the centre of potential and computes the morphology analysis using the relative
+        static methods in this Mixin class.
+        The method also checks that the necessary datasets are loaded into the cluster object.
+        The information is gathered in dictionary-form output and contains the following analysis
+        datasets, relative to the given aperture:
 
+            - Inertia tensor (3x3 matrix): np.ndarray
+            - Eigenvalues of the inertia tensor, per unit mass 3x np.float
+                lambda_i / mass_within_aperture = (semi-axis length)**2
+                They represent the semi-axes of the ellipsoid.
+            - Eigenvectors of the inertia tensor 3x 1D array
+                They are normalised and express the orientation of the semi-axes of the ellipsoid.
+            - Triaxiality 1x np.float:
+                triaxiality = (a**2-b**2)/(a**2-c**2)
+            -Circularity 1x np.float:
+                circularity = c/a
+
+        Each of these datasets is structured as follows:
+
+            [
+                Morphology_dataset_allParticleTypes,
+                Morphology_dataset_ParticleType0,
+                Morphology_dataset_ParticleType1,
+                Morphology_dataset_ParticleType4,
+            ]
+
+        :param out_allPartTypes: default = False
+        :param aperture_radius: default = None (R500)
+        :return: expected a numpy array of dimension 1 if all particletypes are combined, or
+            dimension 2 if particle types are returned separately.
+        """
+        if aperture_radius is None:
+            aperture_radius = self.r500
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
+
+        mass           = np.zeros(0, dtype=np.float)
+        coords         = np.zeros((0, 3), dtype=np.float)
+        inertia_tensor = np.zeros((0, 9), dtype=np.float)
+        eigenvalues    = np.zeros((0, 3), dtype=np.float)
+        eigenvectors   = np.zeros((0, 9), dtype=np.float)
+        triaxiality    = np.zeros(0, dtype=np.float)
+        circularity    = np.zeros(0, dtype=np.float)
+
+        for part_type in ['4', '1', '0']:
+            assert hasattr(self, f'partType{part_type}_coordinates')
+            assert hasattr(self, f'partType{part_type}_mass')
+            radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
+            aperture_radius_index = np.where(radial_dist < aperture_radius)[0]
+            del radial_dist
+            _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
+            _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
+            if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+            if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
+            _coords = np.subtract(_coords, self.centre_of_potential)
+
+            out_allPartTypes_iterator = [2, 1, 0]
+            out_allPartTypes_i = 0
+            _inertia_tensor = self.inertia_tensor(_mass, _coords)
+            _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
+            _eigenvalues /= self.group_mass_aperture(aperture_radius=aperture_radius,
+                                                    out_allPartTypes=True)[out_allPartTypes_iterator[out_allPartTypes_i]]
+            out_allPartTypes_i += 1
+            _triaxiality = (_eigenvalues[0]-_eigenvalues[1])/(_eigenvalues[0]-_eigenvalues[2])
+            _circularity = np.sqrt(_eigenvalues[2] / _eigenvalues[0])
+
+            mass = np.concatenate((mass, _mass), axis=0)
+            coords = np.concatenate((coords, _coords), axis=0)
+            inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()), axis=0)
+            eigenvalues = np.concatenate((eigenvalues, _eigenvalues), axis=0)
+            eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()), axis=0)
+            triaxiality = np.concatenate((triaxiality, _triaxiality), axis=0)
+            circularity = np.concatenate((circularity, _circularity), axis=0)
+
+        _inertia_tensor = self.inertia_tensor(mass, coords)
+        _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
+        _eigenvalues /= self.group_mass_aperture(aperture_radius=aperture_radius, out_allPartTypes=False)
+        _triaxiality = (_eigenvalues[0] - _eigenvalues[1]) / (_eigenvalues[0] - _eigenvalues[2])
+        _circularity = np.sqrt(_eigenvalues[2] / _eigenvalues[0])
+
+        inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()), axis=0)
+        eigenvalues = np.concatenate((eigenvalues, _eigenvalues), axis=0)
+        eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()), axis=0)
+        triaxiality = np.concatenate((triaxiality, _triaxiality), axis=0)
+        circularity = np.concatenate((circularity, _circularity), axis=0)
+
+        morphology_dict = {
+                'inertia_tensor' : inertia_tensor[::-1],
+                'eigenvalues'    : eigenvalues[::-1],
+                'eigenvectors'   : eigenvectors[::-1],
+                'triaxiality'    : triaxiality[::-1],
+                'circularity'    : circularity[::-1],
+        }
+        return morphology_dict
 
     #####################################################
     #													#
