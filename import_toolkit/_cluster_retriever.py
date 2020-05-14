@@ -152,13 +152,11 @@ class Mixin:
             while True:
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                     Ngroups += h5file['Header'].attrs['Ngroups']
-                    print(file_counter, Ngroups, element_counter)
                     if element_counter < h5file['Header'].attrs['Ngroups']:
                         break
                     else:
                         file_counter += 1
                         element_counter -= h5file['Header'].attrs['Ngroups']
-
             return file_counter, element_counter
         else:
             return 0, 0
@@ -591,14 +589,14 @@ class Mixin:
         if part_type.__len__() > 1:
             part_type = self.particle_type_conversion[part_type]
 
+        assert hasattr(self, f'partType{part_type}_groupnumber')
+        part_gn_index = getattr(self, f'partType{part_type}_groupnumber')
+
         if part_type == '1':
             with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-                number_of_particles = h5file['Header'].attrs['NumPart_ThisFile'][1]
                 particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
-            mass = np.ones(number_of_particles, dtype=np.float) * particle_mass_DM
+            mass = np.ones(len(part_gn_index), dtype=np.float) * particle_mass_DM
         else:
-            assert hasattr(self, f'partType{part_type}_groupnumber')
-            part_gn_index = getattr(self, f'partType{part_type}_groupnumber')
             counter = 0
             length_operation = len(kwargs['file_list_sorted'])
             mass = np.zeros(0, dtype=np.float)

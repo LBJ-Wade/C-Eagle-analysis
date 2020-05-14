@@ -149,13 +149,13 @@ class Mixin:
         ])
 
     @staticmethod
-    def principal_axes_ellipsoid(inertia_tensor: np.ndarray) -> np.ndarray:
+    def principal_axes_ellipsoid(inertia_tensor: np.ndarray, eigenvalues: bool = False) -> np.ndarray:
         """
 
         :param inertia_tensor:
         :return:
         """
-        pass
+        return np.linalg.eig(inertia_tensor) if eigenvalues else np.linalg.eig(inertia_tensor)[1]
 
     def generate_apertures(self):
         """
