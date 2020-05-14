@@ -144,8 +144,8 @@ ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.04)
 ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=1)
 plot_ellipse(x_cent = x0,
              y_cent = y0,
-             semimaj=a*cluster.r200,
-             semimin=b*cluster.r200,
+             semimaj=np.linalg.norm(a)*cluster.r200,
+             semimin=np.linalg.norm(b)*cluster.r200,
              phi=cluster.angle_between_vectors(a, [1,0,0]),
              ax=ax,
              plot_kwargs={'color':'r','linestyle':'-','linewidth':3,'alpha':0.8})
