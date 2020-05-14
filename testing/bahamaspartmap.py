@@ -148,7 +148,7 @@ plot_ellipse(x_cent = x0,
              y_cent = y0,
              semimaj=np.sqrt(a[0]**2 + a[1]**2)*cluster.r200,
              semimin=np.sqrt(b[0]**2 + b[1]**2)*cluster.r200,
-             phi=cluster.angle_between_vectors(a, [1,0,0]),
+             phi=cluster.angle_between_vectors(a[:2], [1,0]),
              ax=ax,
              plot_kwargs={'color':'r','linestyle':'-','linewidth':3,'alpha':0.8})
 
