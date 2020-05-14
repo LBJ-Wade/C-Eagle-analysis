@@ -42,10 +42,12 @@ a, b, c = cluster.principal_axes_ellipsoid(cluster.inertia_tensor(cluster.partTy
 x = coords[:,0]
 y = coords[:,2]
 del coords
-ax.scatter(x,y, marker=',', c='k', alpha=0.01)
+ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.01)
+ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=)
 
-e1 = patches.Ellipse((x0, y0), a*4*cluster.r200, b*4*cluster.r200,
-                     angle=cluster.angle_between_vectors(a, [1,0,0]), linewidth=2, fill=False, zorder=2, color='r')
+e1 = patches.Ellipse((x0, y0), a*cluster.r200, b*cluster.r200,
+                     angle=cluster.angle_between_vectors(a, [1,0,0]),
+                     linewidth=2, fill=False, zorder=2, color='r')
 
 ax.add_patch(e1)
 
