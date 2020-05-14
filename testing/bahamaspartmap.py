@@ -4,13 +4,9 @@ import sys
 import os.path
 import slack
 import warnings
-import h5py
-import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib import patches
-
-import matplotlib.lines as mlines
-from matplotlib.collections import EllipseCollection
+import numpy as np
+from scipy.stats import chi2
 
 # exec(open(os.path.abspath(os.path.join(
 # 		os.path.dirname(__file__), os.path.pardir, 'visualisation', 'light_mode.py'))).read())
@@ -18,8 +14,113 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 warnings.filterwarnings("ignore")
 from import_toolkit.cluster import Cluster
 
-data_required = {'partType0': ['groupnumber', 'mass', 'coordinates']}
+def plot_ellipse(semimaj=1, semimin=1, phi=0, x_cent=0, y_cent=0, theta_num=1e3, ax=None, plot_kwargs=None,
+                 fill=False, fill_kwargs=None, data_out=False, cov=None, mass_level=0.68):
+    '''
+        An easy to use function for plotting ellipses in Python 2.7!
 
+        The function creates a 2D ellipse in polar coordinates then transforms to cartesian coordinates.
+        It can take a covariance matrix and plot contours from it.
+
+        semimaj : float
+            length of semimajor axis (always taken to be some phi (-90<phi<90 deg) from positive x-axis!)
+
+        semimin : float
+            length of semiminor axis
+
+        phi : float
+            angle in radians of semimajor axis above positive x axis
+
+        x_cent : float
+            X coordinate center
+
+        y_cent : float
+            Y coordinate center
+
+        theta_num : int
+            Number of points to sample along ellipse from 0-2pi
+
+        ax : matplotlib axis property
+            A pre-created matplotlib axis
+
+        plot_kwargs : dictionary
+            matplotlib.plot() keyword arguments
+
+        fill : bool
+            A flag to fill the inside of the ellipse
+
+        fill_kwargs : dictionary
+            Keyword arguments for matplotlib.fill()
+
+        data_out : bool
+            A flag to return the ellipse samples without plotting
+
+        cov : ndarray of shape (2,2)
+            A 2x2 covariance matrix, if given this will overwrite semimaj, semimin and phi
+
+        mass_level : float
+            if supplied cov, mass_level is the contour defining fractional probability mass enclosed
+            for example: mass_level = 0.68 is the standard 68% mass
+
+    '''
+    # Get Ellipse Properties from cov matrix
+    if cov is not None:
+        eig_vec, eig_val, u = np.linalg.svd(cov)
+        # Make sure 0th eigenvector has positive x-coordinate
+        if eig_vec[0][0] < 0:
+            eig_vec[0] *= -1
+        semimaj = np.sqrt(eig_val[0])
+        semimin = np.sqrt(eig_val[1])
+        if mass_level is None:
+            multiplier = np.sqrt(2.279)
+        else:
+            distances = np.linspace(0, 20, 20001)
+            chi2_cdf = chi2.cdf(distances, df=2)
+            multiplier = np.sqrt(distances[np.where(np.abs(chi2_cdf - mass_level) == np.abs(chi2_cdf - mass_level).min())[0][0]])
+        semimaj *= multiplier
+        semimin *= multiplier
+        phi = np.arccos(np.dot(eig_vec[0], np.array([1, 0])))
+        if eig_vec[0][1] < 0 and phi > 0:
+            phi *= -1
+
+    # Generate data for ellipse structure
+    theta = np.linspace(0, 2 * np.pi, theta_num)
+    r = 1 / np.sqrt((np.cos(theta)) ** 2 + (np.sin(theta)) ** 2)
+    x = r * np.cos(theta)
+    y = r * np.sin(theta)
+    data = np.array([x, y])
+    S = np.array([[semimaj, 0], [0, semimin]])
+    R = np.array([[np.cos(phi), -np.sin(phi)], [np.sin(phi), np.cos(phi)]])
+    T = np.dot(R, S)
+    data = np.dot(T, data)
+    data[0] += x_cent
+    data[1] += y_cent
+
+    # Output data?
+    if data_out == True:
+        return data
+
+    # Plot!
+    return_fig = False
+    if ax is None:
+        return_fig = True
+        fig, ax = plt.subplots()
+
+    if plot_kwargs is None:
+        ax.plot(data[0], data[1], color='b', linestyle='-')
+    else:
+        ax.plot(data[0], data[1], **plot_kwargs)
+
+    if fill == True:
+        ax.fill(data[0], data[1], **fill_kwargs)
+
+    if return_fig == True:
+        return fig
+
+
+filepath = "/local/scratch/altamura/analysis_results/"
+filename = f"bahamas-clustermap-5r200.jpg"
+data_required = {'partType0': ['groupnumber', 'mass', 'coordinates']}
 cluster = Cluster(simulation_name='bahamas',
                   clusterID=0,
                   redshift='z003p000',
@@ -27,29 +128,27 @@ cluster = Cluster(simulation_name='bahamas',
                   fastbrowsing=False,
                   requires=data_required)
 
-filepath = "/local/scratch/altamura/analysis_results/"
-filename = f"bahamas-clustermap-5r200.jpg"
+coords = cluster.partType0_coordinates
+x0, y0, z0 = cluster.centre_of_potential
+a, b, c = cluster.principal_axes_ellipsoid(cluster.inertia_tensor(cluster.partType0_mass, coords))
+x = coords[:,0]
+y = coords[:,1]
+del coords
 
 fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(111)
 ax.set_aspect('equal')
 ax.set_xlabel(r'$y\ $ [Mpc]')
 ax.set_ylabel(r'$y\ $ [Mpc]')
-
-coords = getattr(cluster, f'partType0_coordinates')
-x0, y0, z0 = cluster.centre_of_potential
-a, b, c = cluster.principal_axes_ellipsoid(cluster.inertia_tensor(cluster.partType0_mass, coords))
-x = coords[:,0]
-y = coords[:,1]
-del coords
 ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.04)
 ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=1)
-
-e1 = patches.Ellipse((x0, y0), a*cluster.r200, b*cluster.r200,
-                     angle=cluster.angle_between_vectors(a, [1,0,0]),
-                     linewidth=2, fill=False, color='r')
-
-ax.add_patch(e1)
+plot_ellipse(x_cent = x0,
+             y_cent = y0,
+             semimaj=a*cluster.r200,
+             semimin=b*cluster.r200,
+             phi=cluster.angle_between_vectors(a, [1,0,0]),
+             ax=ax,
+             plot_kwargs={'color':'r','linestyle':'-','linewidth':3,'alpha':0.8})
 
 items_labels = r"""POINT PARTICLE MAP
 Cluster {:s} {:d}
@@ -58,7 +157,6 @@ $R_{{500\ true}}$ = {:.2f} Mpc""".format(cluster.simulation,
                                           cluster.clusterID,
                                           cluster.z,
                                           cluster.r500)
-
 print(items_labels)
 ax.text(0.03, 0.97, items_labels,
           horizontalalignment='left',
