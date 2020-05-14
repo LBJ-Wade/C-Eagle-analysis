@@ -47,7 +47,7 @@ ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=1)
 
 e1 = patches.Ellipse((x0, y0), a*cluster.r200, b*cluster.r200,
                      angle=cluster.angle_between_vectors(a, [1,0,0]),
-                     linewidth=2, fill=False, zorder=2, color='r')
+                     linewidth=2, fill=False, color='r')
 
 ax.add_patch(e1)
 
