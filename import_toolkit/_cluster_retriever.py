@@ -154,7 +154,7 @@ class Mixin:
                     Ngroups += h5file['Header'].attrs['Ngroups']
                     print(file_counter, h5file['Header'].attrs['Ngroups'], Ngroups, kwargs['file_list_sorted'][file_counter])
 
-            return file_counter, Ngroups%self.clusterID-1
+            return file_counter, Ngroups%self.clusterID
         else:
             return 0, 0
 
@@ -283,7 +283,7 @@ class Mixin:
         base_index_shift = 0
         for file in kwargs['file_list_sorted']:
             with h5.File(file, 'r') as h5file:
-                sub_gn = np.where(h5file['Subhalo/GroupNumber'][:] == self.centralFOF_groupNumber)[0] + base_index_shift
+                sub_gn = np.where(h5file['Subhalo/GroupNumber'][:] == self.clusterID)[0] + base_index_shift
                 subhalo_groupNumber = np.concatenate((subhalo_groupNumber, sub_gn))
                 base_index_shift += h5file['Subhalo/GroupNumber'].size
 
