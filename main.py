@@ -75,7 +75,7 @@ def main():
                      # 'partType4': ['groupnumber', 'mass', 'coordinates', 'velocity']}
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=10,
+                      clusterID=1497,
                       redshift='z003p000',
                       requires=data_required)
 
