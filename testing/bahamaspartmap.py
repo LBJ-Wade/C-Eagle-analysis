@@ -142,8 +142,8 @@ ax.set_xlabel(r'$y\ $ [Mpc]')
 ax.set_ylabel(r'$y\ $ [Mpc]')
 ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.04)
 ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=1)
-ax.plot([x0, a[0]], [y0, a[1]], marker='none', c='lime', lw=10, alpha=1)
-ax.plot([x0, b[0]], [y0, b[1]], marker='none', c='lime', lw=10, alpha=1)
+ax.plot([x0, a[0]], [y0, a[1]], marker=None, c='lime', lw=10, alpha=1)
+ax.plot([x0, b[0]], [y0, b[1]], marker=None, c='lime', lw=10, alpha=1)
 plot_ellipse(x_cent = x0,
              y_cent = y0,
              semimaj=np.sqrt(a[0]**2 + a[1]**2)*cluster.r200,
