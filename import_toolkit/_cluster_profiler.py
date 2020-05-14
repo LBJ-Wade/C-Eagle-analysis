@@ -112,6 +112,51 @@ class Mixin:
         linear_momentum_r = velocity * mass[:, None]
         return np.sum(np.cross(coords, linear_momentum_r), axis=0) / np.sum(mass)
 
+    @staticmethod
+    def inertia_tensor(mass: np.ndarray, coords: np.ndarray) -> np.ndarray:
+        """
+		Compute the moment of inertia tensor in matrix form:
+
+		            I_xx    I_xy    I_xz
+		            I_yx    I_yy    I_yz
+		            I_zx    I_zy    I_zz
+
+		:param mass: the mass array of the particles
+		:param coords: the coordinates of the particles, rescaled to the origin of reference
+			Usually, coords are rescaled with respect to the centre of potential.
+
+		:return: np.array with the 3x3 component inertia tensor.
+		"""
+        m = np.asarray(mass)
+        coords = np.asarray(coords)
+        x = coords[:, 0]
+        y = coords[:, 1]
+        z = coords[:, 2]
+        del coords
+        I_xx = np.sum(m*(y**2+z**2))
+        I_xy = - np.sum(m*x*y)
+        I_xz = - np.sum(m*x*z)
+        I_yx = I_xy
+        I_yy = np.sum(m*(x**2+z**2))
+        I_yz = - np.sum(m*y*z)
+        I_zx = I_xz
+        I_zy = I_yz
+        I_zz = np.sum(m*(x**2+y**2))
+        return np.array([
+                [I_xx, I_xy, I_xz],
+                [I_yx, I_yy, I_yz],
+                [I_zx, I_zy, I_zz],
+        ])
+
+    @staticmethod
+    def principal_axes_ellipsoid(inertia_tensor: np.ndarray) -> np.ndarray:
+        """
+
+        :param inertia_tensor:
+        :return:
+        """
+        pass
+
     def generate_apertures(self):
         """
         Generate an array of apertures for calculating global properties of the clusters.
