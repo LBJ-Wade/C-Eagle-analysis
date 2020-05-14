@@ -34,13 +34,13 @@ fig = plt.figure(figsize=(10, 10))
 ax = fig.add_subplot(111)
 ax.set_aspect('equal')
 ax.set_xlabel(r'$y\ $ [Mpc]')
-ax.set_ylabel(r'$z\ $ [Mpc]')
+ax.set_ylabel(r'$y\ $ [Mpc]')
 
 coords = getattr(cluster, f'partType0_coordinates')
 x0, y0, z0 = cluster.centre_of_potential
 a, b, c = cluster.principal_axes_ellipsoid(cluster.inertia_tensor(cluster.partType0_mass, coords))
 x = coords[:,0]
-y = coords[:,2]
+y = coords[:,1]
 del coords
 ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.01)
 ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=1)
