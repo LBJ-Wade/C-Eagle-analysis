@@ -975,8 +975,9 @@ class Mixin:
             _eigenvalues /= self.group_mass_aperture(aperture_radius=aperture_radius,
                                                     out_allPartTypes=True)[out_allPartTypes_iterator[out_allPartTypes_i]]
             out_allPartTypes_i += 1
-            _triaxiality = (_eigenvalues[0]-_eigenvalues[1])/(_eigenvalues[0]-_eigenvalues[2])
-            _circularity = np.sqrt(_eigenvalues[2] / _eigenvalues[0])
+            _eigenvalues_sorted = np.sort(_eigenvalues)[::-1]
+            _triaxiality = (_eigenvalues_sorted[0]-_eigenvalues_sorted[1])/(_eigenvalues_sorted[0]-_eigenvalues_sorted[2])
+            _circularity = np.sqrt(_eigenvalues_sorted[2] / _eigenvalues_sorted[0])
             mass = np.concatenate((mass, _mass), axis=0)
             coords = np.concatenate((coords, _coords), axis=0)
             inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
@@ -989,8 +990,9 @@ class Mixin:
         del mass, coords
         _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
         _eigenvalues /= self.group_mass_aperture(aperture_radius=aperture_radius, out_allPartTypes=False)
-        _triaxiality = (_eigenvalues[0] - _eigenvalues[1]) / (_eigenvalues[0] - _eigenvalues[2])
-        _circularity = np.sqrt(_eigenvalues[2] / _eigenvalues[0])
+        _eigenvalues_sorted = np.sort(_eigenvalues)[::-1]
+        _triaxiality = (_eigenvalues_sorted[0] - _eigenvalues_sorted[1]) / (_eigenvalues_sorted[0] - _eigenvalues_sorted[2])
+        _circularity = np.sqrt(_eigenvalues_sorted[2] / _eigenvalues_sorted[0])
         inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
         eigenvalues = np.concatenate((eigenvalues, _eigenvalues[None,:]), axis=0)
         eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()[None,:]), axis=0)
