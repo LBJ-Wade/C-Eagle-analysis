@@ -70,9 +70,9 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
 
-    data_required = {'partType0': ['groupnumber', 'mass', 'coordinates']}#, 'velocity', 'temperature', 'sphdensity'],
-                     # 'partType1': ['groupnumber', 'mass', 'coordinates', 'velocity'],
-                     # 'partType4': ['groupnumber', 'mass', 'coordinates', 'velocity']}
+    data_required = {'partType0': ['groupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                     'partType1': ['groupnumber', 'mass', 'coordinates', 'velocity'],
+                     'partType4': ['groupnumber', 'mass', 'coordinates', 'velocity']}
 
     cluster = Cluster(simulation_name='bahamas',
                       clusterID=1496,
