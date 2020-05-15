@@ -243,7 +243,7 @@ class Mixin:
             bulk_velocity = self.group_zero_momentum_frame(aperture_radius=aperture_radius)
             kinetic_energy_PartTypes = np.zeros(0, dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -267,7 +267,7 @@ class Mixin:
             mass = np.zeros(0, dtype=np.float)
             velocity = np.zeros((0, 3), dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -329,7 +329,7 @@ class Mixin:
 
             mass   = np.zeros(0, dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_mass')
                 radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
@@ -373,7 +373,7 @@ class Mixin:
             total_mass = self.group_mass_aperture(out_allPartTypes=True, aperture_radius=aperture_radius)
             substructure_mass_PartTypes = np.zeros(0, dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_subgroupnumber')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -385,7 +385,7 @@ class Mixin:
                 if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
 
                 fuzz_mass = np.sum(_mass)
-                substructure_mass = total_mass[['0', '1', '4', '5'].index(part_type)] - fuzz_mass
+                substructure_mass = total_mass[['0', '1', '4'].index(part_type)] - fuzz_mass
                 substructure_mass_PartTypes = np.append(substructure_mass_PartTypes, substructure_mass)
 
             return substructure_mass_PartTypes
@@ -395,7 +395,7 @@ class Mixin:
             total_mass = self.group_mass_aperture(out_allPartTypes=False, aperture_radius=aperture_radius)
             fuzz_mass = np.zeros(0, dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_subgroupnumber')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -442,7 +442,7 @@ class Mixin:
             total_mass = self.group_mass_aperture(out_allPartTypes=True, aperture_radius=aperture_radius)
             substructure_frac_PartTypes = np.zeros(0, dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_subgroupnumber')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -464,7 +464,7 @@ class Mixin:
             total_mass = self.group_mass_aperture(out_allPartTypes=False, aperture_radius=aperture_radius)
             fuzz_mass = np.zeros(0, dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_subgroupnumber')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -505,7 +505,7 @@ class Mixin:
 
             CoM_PartTypes = np.zeros((0, 3), dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_mass')
                 radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
@@ -526,7 +526,7 @@ class Mixin:
             mass   = np.zeros(0, dtype=np.float)
             coords = np.zeros((0, 3), dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_mass')
                 radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
@@ -601,7 +601,7 @@ class Mixin:
 
             ZMF_PartTypes = np.zeros((0, 3), dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -623,7 +623,7 @@ class Mixin:
             mass     = np.zeros(0, dtype=np.float)
             velocity = np.zeros((0, 3), dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -666,7 +666,7 @@ class Mixin:
 
             ANG_PartTypes = np.zeros((0, 3), dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
@@ -694,7 +694,7 @@ class Mixin:
             coords   = np.zeros((0, 3), dtype=np.float)
             velocity = np.zeros((0, 3), dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_velocity')
                 assert hasattr(self, f'partType{part_type}_mass')
