@@ -982,8 +982,8 @@ class Mixin:
             inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
             eigenvalues = np.concatenate((eigenvalues, _eigenvalues[None,:]), axis=0)
             eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()[None,:]), axis=0)
-            triaxiality = np.concatenate((triaxiality, _triaxiality), axis=0)
-            circularity = np.concatenate((circularity, _circularity), axis=0)
+            triaxiality = np.append(triaxiality, _triaxiality)
+            circularity = np.append(circularity, _circularity)
 
         _inertia_tensor = self.inertia_tensor(mass, coords)
         del mass, coords
@@ -994,8 +994,8 @@ class Mixin:
         inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
         eigenvalues = np.concatenate((eigenvalues, _eigenvalues[None,:]), axis=0)
         eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()[None,:]), axis=0)
-        triaxiality = np.concatenate((triaxiality, _triaxiality), axis=0)
-        circularity = np.concatenate((circularity, _circularity), axis=0)
+        triaxiality = np.append(triaxiality, _triaxiality)
+        circularity = np.append(circularity, _circularity)
 
         morphology_dict = {
                 'inertia_tensor' : inertia_tensor[::-1],
