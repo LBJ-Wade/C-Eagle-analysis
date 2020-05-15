@@ -133,15 +133,15 @@ cluster = Cluster(simulation_name='bahamas',
 coords = cluster.partType0_coordinates
 x0, y0, z0 = cluster.centre_of_potential
 morphology = cluster.group_morphology(aperture_radius=cluster.r200)
-eigenvalues = morphology['eigenvalues']
-eigenvectors = morphology['eigenvectors']
+eigenvalues = morphology['eigenvalues'][1]
+eigenvectors = morphology['eigenvectors'][1].reshape((3,3))
 
 # Sort eigenvalues from largest to smallest
 eigenvalues  = [x for x,_ in sorted(zip(eigenvalues,eigenvectors))][::-1]
 eigenvectors = [x for _,x in sorted(zip(eigenvalues,eigenvectors))][::-1]
 
-a_val, b_val, c_val = np.sqrt(eigenvalues[1])
-a_vec, b_vec, c_vec = eigenvectors[1].reshape((3,3))
+a_val, b_val, c_val = np.sqrt(eigenvalues)
+a_vec, b_vec, c_vec = eigenvectors
 x = coords[:,0]
 y = coords[:,1]
 del coords
