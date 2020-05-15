@@ -137,8 +137,8 @@ eigenvalues = morphology['eigenvalues']
 eigenvectors = morphology['eigenvectors']
 
 # Sort eigenvalues from largest to smallest
-eigenvalues  = [x for x, _ in sorted(zip(eigenvectors, eigenvalues))][::-1]
-eigenvectors = [y for _, y in sorted(zip(eigenvectors, eigenvalues))][::-1]
+eigenvalues  = [x for x,_ in sorted(zip(eigenvalues,eigenvectors))][::-1]
+eigenvectors = [x for _,x in sorted(zip(eigenvalues,eigenvectors))][::-1]
 
 a_val, b_val, c_val = np.sqrt(eigenvalues[1])
 a_vec, b_vec, c_vec = eigenvectors[1].reshape((3,3))
