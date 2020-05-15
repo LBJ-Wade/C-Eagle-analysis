@@ -311,7 +311,7 @@ class Mixin:
 
             mass_PartTypes = np.zeros(0, dtype=np.float)
 
-            for part_type in ['0', '1', '4', '5']:
+            for part_type in ['0', '1', '4']:
                 assert hasattr(self, f'partType{part_type}_coordinates')
                 assert hasattr(self, f'partType{part_type}_mass')
                 radial_dist = self.radial_distance_CoP(getattr(self, f'partType{part_type}_coordinates'))
