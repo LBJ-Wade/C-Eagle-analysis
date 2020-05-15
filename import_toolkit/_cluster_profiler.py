@@ -980,10 +980,10 @@ class Mixin:
             mass = np.concatenate((mass, _mass), axis=0)
             coords = np.concatenate((coords, _coords), axis=0)
             inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
-            eigenvalues = np.concatenate((eigenvalues, _eigenvalues), axis=0)
+            eigenvalues = np.concatenate((eigenvalues, _eigenvalues[None,:]), axis=0)
             eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()[None,:]), axis=0)
-            triaxiality = np.concatenate((triaxiality, _triaxiality), axis=0)
-            circularity = np.concatenate((circularity, _circularity), axis=0)
+            triaxiality = np.concatenate((triaxiality, _triaxiality[None,:]), axis=0)
+            circularity = np.concatenate((circularity, _circularity[None,:]), axis=0)
 
         _inertia_tensor = self.inertia_tensor(mass, coords)
         del mass, coords
@@ -992,10 +992,10 @@ class Mixin:
         _triaxiality = (_eigenvalues[0] - _eigenvalues[1]) / (_eigenvalues[0] - _eigenvalues[2])
         _circularity = np.sqrt(_eigenvalues[2] / _eigenvalues[0])
         inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
-        eigenvalues = np.concatenate((eigenvalues, _eigenvalues), axis=0)
+        eigenvalues = np.concatenate((eigenvalues, _eigenvalues[None,:]), axis=0)
         eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()[None,:]), axis=0)
-        triaxiality = np.concatenate((triaxiality, _triaxiality), axis=0)
-        circularity = np.concatenate((circularity, _circularity), axis=0)
+        triaxiality = np.concatenate((triaxiality, _triaxiality[None,:]), axis=0)
+        circularity = np.concatenate((circularity, _circularity[None,:]), axis=0)
 
         morphology_dict = {
                 'inertia_tensor' : inertia_tensor[::-1],
