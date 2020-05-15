@@ -120,7 +120,9 @@ def plot_ellipse(semimaj=1, semimin=1, phi=0, x_cent=0, y_cent=0, theta_num=1e3,
 
 filepath = "/local/scratch/altamura/analysis_results/"
 filename = f"bahamas-clustermap-5r200.jpg"
-data_required = {'partType0': ['groupnumber', 'mass', 'coordinates']}
+data_required = {'partType0': ['groupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                 'partType1': ['groupnumber', 'mass', 'coordinates', 'velocity'],
+                 'partType4': ['groupnumber', 'mass', 'coordinates', 'velocity']}
 cluster = Cluster(simulation_name='bahamas',
                   clusterID=0,
                   redshift='z003p000',
@@ -130,7 +132,9 @@ cluster = Cluster(simulation_name='bahamas',
 
 coords = cluster.partType0_coordinates
 x0, y0, z0 = cluster.centre_of_potential
-a, b, c = cluster.principal_axes_ellipsoid(cluster.inertia_tensor(cluster.partType0_mass, coords))
+morphology = cluster.group_morphology(aperture_radius=cluster.r200)
+a_val, b_val, c_val = np.sqrt(morphology['eigenvalues'][1])
+a_vec, b_vec, c_vec = morphology['eigenvectors'][1].reshape((3,3))
 x = coords[:,0]
 y = coords[:,1]
 del coords
@@ -142,13 +146,13 @@ ax.set_xlabel(r'$y\ $ [Mpc]')
 ax.set_ylabel(r'$y\ $ [Mpc]')
 ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.04)
 ax.scatter([x0], [y0], marker='*', c='r', s=10, alpha=1)
-ax.plot([x0, x0+a[0]], [y0, y0+a[1]], marker=None, c='lime', lw=1, alpha=1)
-ax.plot([x0, x0+b[0]], [y0, y0+b[1]], marker=None, c='lime', lw=1, alpha=1)
+ax.plot([x0, x0+a_vec[0]], [y0, y0+a_vec[1]], marker=None, c='lime', lw=1, alpha=1)
+ax.plot([x0, x0+b_vec[0]], [y0, y0+b_vec[1]], marker=None, c='lime', lw=1, alpha=1)
 plot_ellipse(x_cent = x0,
              y_cent = y0,
-             semimaj=np.sqrt(a[0]**2 + a[1]**2)*cluster.r200,
-             semimin=np.sqrt(b[0]**2 + b[1]**2)*cluster.r200,
-             phi=cluster.angle_between_vectors(a[:2], [0,1]),
+             semimaj=a_val,
+             semimin=b_val,
+             phi=cluster.angle_between_vectors(a_vec[:2], [0,1]),
              ax=ax,
              plot_kwargs={'color':'r','linestyle':'-','linewidth':3,'alpha':0.8})
 
