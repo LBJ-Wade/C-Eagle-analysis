@@ -133,8 +133,15 @@ cluster = Cluster(simulation_name='bahamas',
 coords = cluster.partType0_coordinates
 x0, y0, z0 = cluster.centre_of_potential
 morphology = cluster.group_morphology(aperture_radius=cluster.r200)
-a_val, b_val, c_val = np.sqrt(morphology['eigenvalues'][1])
-a_vec, b_vec, c_vec = morphology['eigenvectors'][1].reshape((3,3))
+eigenvalues = morphology['eigenvalues']
+eigenvectors = morphology['eigenvectors']
+
+# Sort eigenvalues from largest to smallest
+eigenvalues  = [x for x, y in sorted(zip(eigenvalues, eigenvectors), key=lambda pair: pair[0])][::-1]
+eigenvectors = [y for x, y in sorted(zip(eigenvalues, eigenvectors), key=lambda pair: pair[0])][::-1]
+
+a_val, b_val, c_val = np.sqrt(eigenvalues[1])
+a_vec, b_vec, c_vec = eigenvectors[1].reshape((3,3))
 x = coords[:,0]
 y = coords[:,1]
 del coords
@@ -144,7 +151,7 @@ ax = fig.add_subplot(111)
 ax.set_aspect('equal')
 ax.set_xlabel(r'$y\ $ [Mpc]')
 ax.set_ylabel(r'$y\ $ [Mpc]')
-ax.scatter(x,y, marker=',', c='k', s=0.5, alpha=0.07)
+ax.scatter(x,y, marker=',', c='k', s=1, alpha=0.07)
 ax.scatter([x0], [y0], marker='*', c='r', s=40, alpha=1)
 ax.plot([x0, x0+a_vec[0]], [y0, y0+a_vec[1]], marker=None, c='lime', lw=1, alpha=1)
 ax.plot([x0, x0+b_vec[0]], [y0, y0+b_vec[1]], marker=None, c='lime', lw=1, alpha=1)
