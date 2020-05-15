@@ -159,10 +159,14 @@ plot_ellipse(x_cent = x0,
 items_labels = r"""POINT PARTICLE MAP
 Cluster {:s} {:d}
 $z$ = {:.2f}
-$R_{{500\ true}}$ = {:.2f} Mpc""".format(cluster.simulation,
-                                          cluster.clusterID,
-                                          cluster.z,
-                                          cluster.r500)
+$R_{{500\ true}}$ = {:.2f} Mpc
+Triaxiality = {:.2f}
+Circularity = {:.2f}""".format(cluster.simulation,
+                               cluster.clusterID,
+                               cluster.z,
+                               cluster.r500,
+                               morphology['triaxiality'][0],
+                               morphology['circularity'][0])
 print(items_labels)
 ax.text(0.03, 0.97, items_labels,
           horizontalalignment='left',
