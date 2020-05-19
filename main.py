@@ -82,11 +82,14 @@ def main():
                       comovingframe=False,
                       requires=data_required)
 
-    print({
+    halo_output = {
             **cluster.group_fofinfo(),
             **cluster.group_dynamics(),
             **cluster.group_morphology()
-    })
+    }
+
+    for key in halo_output:
+        print('\n', key, halo_output[key], sep='\n')
 
 
     # def check_dirs(self) -> np.ndarray:
