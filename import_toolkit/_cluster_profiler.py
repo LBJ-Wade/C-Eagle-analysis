@@ -968,7 +968,7 @@ class Mixin:
         """
         if aperture_radius is None:
             aperture_radius = self.r500
-            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:.2f} Mpc.')
+            warnings.warn(f'Aperture radius set to default R_500,true. = {self.r500:2.2f} Mpc.')
 
         mass = np.zeros(0, dtype=np.float)
         coords = np.zeros((0, 3), dtype=np.float)
