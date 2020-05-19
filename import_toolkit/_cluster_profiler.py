@@ -1047,7 +1047,7 @@ class Mixin:
             _thermal_energy = self.thermal_energy(self.mass_units(_mass), _temperature)*np.power(10., -46) if part_type is '0' else 0.
             thermal_energy = np.append(thermal_energy, _thermal_energy)
 
-            _kinetic_energy = self.kinetic_energy(self.mass_units(_mass), self.velocity_units(_velocity_norm))
+            _kinetic_energy = self.kinetic_energy(self.mass_units(_mass), self.velocity_units(_velocity_norm))*np.power(10., -46)
             kinetic_energy = np.append(kinetic_energy, _kinetic_energy)
 
             _dynamical_merging_index = np.linalg.norm(self.centre_of_potential-_centre_of_mass)/aperture_radius
@@ -1112,7 +1112,7 @@ class Mixin:
         _thermal_energy = np.sum(thermal_energy)
         thermal_energy = np.append(thermal_energy, _thermal_energy)
 
-        _kinetic_energy = self.kinetic_energy(self.mass_units(mass), self.velocity_units(velocity_norm))
+        _kinetic_energy = self.kinetic_energy(self.mass_units(mass), self.velocity_units(velocity_norm))*np.power(10., -46)
         kinetic_energy = np.append(kinetic_energy, _kinetic_energy)
 
         _dynamical_merging_index = np.linalg.norm(self.centre_of_potential - _centre_of_mass) / aperture_radius
