@@ -23,6 +23,9 @@ import warnings
 # Delete the units from Unyt constants
 hydrogen_mass = float(hydrogen_mass.value)
 boltzmann_constant = float(boltzmann_constant.value)
+gravitational_constant = float(gravitational_constant.value)
+parsec = float(parsec.value)
+solar_mass = float(solar_mass.value)
 
 class Mixin:
 
@@ -1028,7 +1031,7 @@ class Mixin:
             _specific_angular_momentum = np.linalg.norm(_angular_momentum)/_aperture_mass
             specific_angular_momentum = np.append(specific_angular_momentum, _specific_angular_momentum)
 
-            _circular_velocity = np.sqrt(gravitational_constant.value*self.mass_units(_aperture_mass)/self.length_units(aperture_radius))/1e3
+            _circular_velocity = np.sqrt(gravitational_constant*self.mass_units(_aperture_mass)/self.length_units(aperture_radius))/1e3
             circular_velocity = np.append(circular_velocity, _circular_velocity)
 
             _spin_parameter = _specific_angular_momentum/(self.length_units(aperture_radius)*_circular_velocity*1e3*np.sqrt(2))
@@ -1092,7 +1095,7 @@ class Mixin:
         _specific_angular_momentum = np.linalg.norm(_angular_momentum) / _aperture_mass
         specific_angular_momentum = np.append(specific_angular_momentum, _specific_angular_momentum)
 
-        _circular_velocity = np.sqrt(gravitational_constant.value * self.mass_units(_aperture_mass) / self.length_units(aperture_radius)) / 1e3
+        _circular_velocity = np.sqrt(gravitational_constant * self.mass_units(_aperture_mass) / self.length_units(aperture_radius)) / 1e3
         circular_velocity = np.append(circular_velocity, _circular_velocity)
 
         _spin_parameter = _specific_angular_momentum / (self.length_units(aperture_radius) * _circular_velocity * 1e3 * np.sqrt(2))
@@ -1400,10 +1403,10 @@ class Mixin:
 		"""
         if unit_system == 'SI':
             # m/s
-            conv_factor = 1e6 * parsec.value
+            conv_factor = 1e6 * parsec
         elif unit_system == 'cgs':
             # cm/s
-            conv_factor = 1e8 * parsec.value
+            conv_factor = 1e8 * parsec
         elif unit_system == 'astro':
             # km/s
             conv_factor = 1
@@ -1424,10 +1427,10 @@ class Mixin:
         """
         if unit_system == 'SI':
             # m/s
-            conv_factor = 1e10 * solar_mass.value
+            conv_factor = 1e10 * solar_mass
         elif unit_system == 'cgs':
             # cm/s
-            conv_factor = 1e13 * solar_mass.value
+            conv_factor = 1e13 * solar_mass
         elif unit_system == 'astro':
             # km/s
             conv_factor = 1e10
