@@ -301,9 +301,11 @@ if __name__ == '__main__':
     import inspect
 
     class TEST:
-        data_required = {'partType0': ['mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                         'partType1': ['mass', 'coordinates', 'velocity'],
-                         'partType4': ['mass', 'coordinates', 'velocity']}
+        data_required = {
+                'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+                'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
+                'partType4': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity']
+        }
 
         def cluster_imports(self):
             print(inspect.stack()[0][3])
@@ -313,9 +315,14 @@ if __name__ == '__main__':
                               comovingframe=False,
                               requires=self.data_required)
 
+            print({
+                    **cluster.group_fofinfo(),
+                    **cluster.group_dynamics(),
+                    **cluster.group_morphology()
+            })
 
 
-            cluster.info()
+            # cluster.info()
 
     test = TEST()
     test.cluster_imports()
