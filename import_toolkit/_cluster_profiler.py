@@ -1059,7 +1059,7 @@ class Mixin:
             del _mass
             del _velocity
             del _coords
-            del _temperature
+            if part_type is '0': del _temperature
             del _subgroupnumber
             del _aperture_mass
             del _coords_norm
