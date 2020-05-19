@@ -1109,7 +1109,7 @@ class Mixin:
         _substructure_fraction = _substructure_mass / _aperture_mass
         substructure_fraction = np.append(substructure_fraction, _substructure_fraction)
 
-        _thermal_energy = self.thermal_energy(self.mass_units(mass), temperature) * np.power(10., -46) if part_type is '0' else 0.
+        _thermal_energy = np.sum(thermal_energy)
         thermal_energy = np.append(thermal_energy, _thermal_energy)
 
         _kinetic_energy = self.kinetic_energy(self.mass_units(mass), self.velocity_units(velocity_norm))
@@ -1118,7 +1118,7 @@ class Mixin:
         _dynamical_merging_index = np.linalg.norm(self.centre_of_potential - _centre_of_mass) / aperture_radius
         dynamical_merging_index = np.append(dynamical_merging_index, _dynamical_merging_index)
 
-        _thermodynamic_merging_index = _kinetic_energy / _thermal_energy if part_type is '0' else 0.
+        _thermodynamic_merging_index = np.sum(thermodynamic_merging_index)
         thermodynamic_merging_index = np.append(thermodynamic_merging_index, _thermodynamic_merging_index)
 
         del mass
