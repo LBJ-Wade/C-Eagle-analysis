@@ -1001,7 +1001,7 @@ class Mixin:
             _mass = getattr(self, f'partType{part_type}_mass')[aperture_radius_index]
             _velocity = getattr(self, f'partType{part_type}_velocity')[aperture_radius_index]
             _coords = getattr(self, f'partType{part_type}_coordinates')[aperture_radius_index]
-            if part_type is '0': _temperature = getattr(self, f'partType{part_type}_temperature')[aperture_radius_index]
+            _temperature = getattr(self, f'partType{part_type}_temperature')[aperture_radius_index] if part_type is '0' else np.array([])
             _subgroupnumber = getattr(self, f'partType{part_type}_subgroupnumber')[aperture_radius_index]
             if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
             if _velocity.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
@@ -1012,7 +1012,7 @@ class Mixin:
             mass = np.concatenate((mass, _mass), axis=0)
             coords = np.concatenate((coords, _coords), axis=0)
             velocity = np.concatenate((velocity, _velocity), axis=0)
-            if part_type is '0': temperature = np.concatenate((temperature, _temperature), axis=0)
+            temperature = np.concatenate((temperature, _temperature), axis=0)
 
             _aperture_mass = np.sum(_mass)
             aperture_mass = np.append(aperture_mass, _aperture_mass)
@@ -1059,7 +1059,7 @@ class Mixin:
             del _mass
             del _velocity
             del _coords
-            if part_type is '0': del _temperature
+            del _temperature
             del _subgroupnumber
             del _aperture_mass
             del _coords_norm
