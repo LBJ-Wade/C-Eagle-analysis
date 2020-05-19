@@ -70,26 +70,23 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
 
-    data_required = {'partType0': ['groupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                     'partType1': ['groupnumber', 'mass', 'coordinates', 'velocity'],
-                     'partType4': ['groupnumber', 'mass', 'coordinates', 'velocity']}
+    data_required = {
+            'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+            'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
+            'partType4': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity']
+    }
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=1496,
+                      clusterID=0,
                       redshift='z003p000',
+                      comovingframe=False,
                       requires=data_required)
 
-    I = cluster.inertia_tensor(cluster.partType0_mass, cluster.partType0_coordinates)
-    print('file_group_indexify', cluster.file_counter, cluster.groupfof_counter)
-    print('centre_of_potential', cluster.centre_of_potential)
-    print('r500', cluster.r500)
-    print('cluster.partType0_groupnumber', cluster.partType0_groupnumber)
-    print('cluster.partType0_mass', cluster.partType0_mass)
-    print('cluster.partType0_coordinates', cluster.partType0_coordinates)
-    print('morphology', cluster.group_morphology(aperture_radius=cluster.r200))
-    # print('cluster.partType0_velocity', cluster.partType0_velocity)
-    # print('cluster.partType0_temperature', cluster.partType0_temperature)
-    # print('cluster.partType0_sphdensity', cluster.partType0_sphdensity)
+    print({
+            **cluster.group_fofinfo(),
+            **cluster.group_dynamics(),
+            **cluster.group_morphology()
+    })
 
 
     # def check_dirs(self) -> np.ndarray:

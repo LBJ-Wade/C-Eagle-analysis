@@ -293,36 +293,3 @@ class Cluster(simulation.Simulation,
                     setattr(self, field, self.subgroups_kin_energy())
                 elif field == 'subhalo_therm_energy' and not hasattr(self, field):
                     setattr(self, field, self.subgroups_therm_energy())
-
-
-
-if __name__ == '__main__':
-
-    import inspect
-
-    class TEST:
-        data_required = {
-                'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
-                'partType4': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity']
-        }
-
-        def cluster_imports(self):
-            print(inspect.stack()[0][3])
-            cluster = Cluster(simulation_name='celr_b',
-                              clusterID=0,
-                              redshift='z000p000',
-                              comovingframe=False,
-                              requires=self.data_required)
-
-            print({
-                    **cluster.group_fofinfo(),
-                    **cluster.group_dynamics(),
-                    **cluster.group_morphology()
-            })
-
-
-            # cluster.info()
-
-    test = TEST()
-    test.cluster_imports()
