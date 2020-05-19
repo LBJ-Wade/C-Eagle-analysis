@@ -1126,10 +1126,10 @@ class Mixin:
         del velocity
         del temperature
         del _aperture_mass
-        del _coords_norm
+        del coords_norm
         del _centre_of_mass
         del _zero_momentum_frame
-        del _velocity_norm
+        del velocity_norm
         del _angular_momentum
         del _specific_angular_momentum
         del _circular_velocity
