@@ -1078,6 +1078,8 @@ class Mixin:
             del _dynamical_merging_index
             del _thermodynamic_merging_index
 
+            print('particleType', part_type)
+
         _aperture_mass = np.sum(mass)
         aperture_mass = np.append(aperture_mass, _aperture_mass)
 
