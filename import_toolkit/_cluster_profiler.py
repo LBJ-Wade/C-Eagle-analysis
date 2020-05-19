@@ -24,7 +24,7 @@ import warnings
 hydrogen_mass = float(hydrogen_mass.value)
 boltzmann_constant = float(boltzmann_constant.value)
 gravitational_constant = float(gravitational_constant.value)
-parsec = float(parsec.value)
+parsec = float((1*parsec).in_units('m').value)
 solar_mass = float(solar_mass.value)
 
 class Mixin:
