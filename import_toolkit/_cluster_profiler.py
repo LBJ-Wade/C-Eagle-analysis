@@ -1237,43 +1237,66 @@ class Mixin:
             coords = np.concatenate((coords, _coords), axis=0)
 
             _inertia_tensor = self.inertia_tensor(_mass, _coords)
+            inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None, :]), axis=0)
+
             _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
             _eigenvalues /= np.sum(_mass)
-
             # Sort eigenvalues from largest to smallest
-            _eigenvalues_sorted  = [x for x, _ in sorted(zip(eigenvalues, eigenvectors))][::-1]
+            _eigenvalues_sorted  = sorted(_eigenvalues)[::-1]
             _eigenvectors_sorted = [x for _, x in sorted(zip(eigenvalues, eigenvectors))][::-1]
+            eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None, :]), axis=0)
+            eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None, :]), axis=0)
 
             _triaxiality = (_eigenvalues_sorted[0]-_eigenvalues_sorted[1])/(_eigenvalues_sorted[0]-_eigenvalues_sorted[2])
-            _sphericity = np.sqrt(_eigenvalues_sorted[2] / _eigenvalues_sorted[0])
-            _elongation = np.sqrt(_eigenvalues_sorted[1] / _eigenvalues_sorted[0])
-
-            inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
-            eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None,:]), axis=0)
-            eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None,:]), axis=0)
             triaxiality = np.append(triaxiality, _triaxiality)
+
+            _sphericity = np.sqrt(_eigenvalues_sorted[2]) / np.sqrt(_eigenvalues_sorted[0])
             sphericity = np.append(sphericity, _sphericity)
+
+            _elongation = np.sqrt(_eigenvalues_sorted[1]) / np.sqrt(_eigenvalues_sorted[0])
             elongation = np.append(elongation, _elongation)
 
-        _inertia_tensor = self.inertia_tensor(mass, coords)
-        del mass, coords
-        _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
-        _eigenvalues /= np.sum(_mass)
+            del _mass
+            del _coords
+            del _inertia_tensor
+            del _eigenvalues
+            del _eigenvalues
+            del _eigenvalues_sorted
+            del _eigenvectors_sorted
+            del _triaxiality
+            del _sphericity
+            del _elongation
 
+        _inertia_tensor = self.inertia_tensor(mass, coords)
+        inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None, :]), axis=0)
+
+        _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
+        _eigenvalues /= np.sum(mass)
         # Sort eigenvalues from largest to smallest
-        _eigenvalues_sorted = [x for x, _ in sorted(zip(eigenvalues, eigenvectors))][::-1]
+        _eigenvalues_sorted = sorted(_eigenvalues)[::-1]
         _eigenvectors_sorted = [x for _, x in sorted(zip(eigenvalues, eigenvectors))][::-1]
+        eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None, :]), axis=0)
+        eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None, :]), axis=0)
 
         _triaxiality = (_eigenvalues_sorted[0] - _eigenvalues_sorted[1]) / (_eigenvalues_sorted[0] - _eigenvalues_sorted[2])
-        _sphericity = np.sqrt(_eigenvalues_sorted[2] / _eigenvalues_sorted[0])
-        _elongation = np.sqrt(_eigenvalues_sorted[1] / _eigenvalues_sorted[0])
-
-        inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
-        eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None,:]), axis=0)
-        eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None,:]), axis=0)
         triaxiality = np.append(triaxiality, _triaxiality)
+
+        _sphericity = np.sqrt(_eigenvalues_sorted[2])/np.sqrt(_eigenvalues_sorted[0])
         sphericity = np.append(sphericity, _sphericity)
+
+        _elongation = np.sqrt(_eigenvalues_sorted[1])/np.sqrt(_eigenvalues_sorted[0])
         elongation = np.append(elongation, _elongation)
+
+        del mass
+        del coords
+        del _inertia_tensor
+        del _eigenvalues
+        del _eigenvalues
+        del _eigenvalues_sorted
+        del _eigenvectors_sorted
+        del _triaxiality
+        del _sphericity
+        del _elongation
 
         morphology_dict = {
                 'inertia_tensor' : inertia_tensor[::-1],
