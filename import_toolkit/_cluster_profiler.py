@@ -1242,8 +1242,8 @@ class Mixin:
             _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
             _eigenvalues /= np.sum(_mass)
             # Sort eigenvalues from largest to smallest
-            _eigenvalues_sorted  = sorted(_eigenvalues)[::-1]
-            _eigenvectors_sorted = [x for _, x in sorted(zip(eigenvalues, eigenvectors))][::-1]
+            _eigenvalues_sorted  = np.sort(_eigenvalues)[::-1]
+            _eigenvectors_sorted = np.asarray([x for _, x in sorted(zip(eigenvalues, eigenvectors))])[::-1]
             eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None, :]), axis=0)
             eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None, :]), axis=0)
 
@@ -1273,8 +1273,8 @@ class Mixin:
         _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
         _eigenvalues /= np.sum(mass)
         # Sort eigenvalues from largest to smallest
-        _eigenvalues_sorted = sorted(_eigenvalues)[::-1]
-        _eigenvectors_sorted = [x for _, x in sorted(zip(eigenvalues, eigenvectors))][::-1]
+        _eigenvalues_sorted = np.sort(_eigenvalues)[::-1]
+        _eigenvectors_sorted = np.asarray([x for _, x in sorted(zip(eigenvalues, eigenvectors))])[::-1]
         eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None, :]), axis=0)
         eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None, :]), axis=0)
 
