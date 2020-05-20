@@ -979,6 +979,7 @@ class Mixin:
         centre_of_mass = np.zeros((0, 3), dtype=np.float)
         zero_momentum_frame = np.zeros((0, 3), dtype=np.float)
         angular_momentum = np.zeros((0, 3), dtype=np.float)
+        angular_velocity = np.zeros((0, 3), dtype=np.float)
         specific_angular_momentum = np.zeros(0, dtype=np.float)
         circular_velocity = np.zeros(0, dtype=np.float)
         spin_parameter = np.zeros(0, dtype=np.float)
@@ -1028,6 +1029,9 @@ class Mixin:
             _angular_momentum = self.angular_momentum(_mass, _coords_norm, _velocity_norm)
             angular_momentum = np.concatenate((angular_momentum, _angular_momentum[None,:]), axis=0)
 
+            _angular_velocity = np.linalg.inv(self.inertia_tensor(_mass, _coords_norm))@_angular_momentum
+            angular_velocity = np.concatenate((angular_velocity, _angular_velocity[None,:]), axis=0)
+
             _specific_angular_momentum = np.linalg.norm(_angular_momentum)/_aperture_mass
             specific_angular_momentum = np.append(specific_angular_momentum, _specific_angular_momentum)
 
@@ -1068,6 +1072,7 @@ class Mixin:
             del _zero_momentum_frame
             del _velocity_norm
             del _angular_momentum
+            del _angular_velocity
             del _specific_angular_momentum
             del _circular_velocity
             del _specific_angular_momentum_SI
@@ -1079,8 +1084,6 @@ class Mixin:
             del _kinetic_energy
             del _dynamical_merging_index
             del _thermodynamic_merging_index
-
-            print('particleType', part_type)
 
         _aperture_mass = np.sum(mass)
         aperture_mass = np.append(aperture_mass, _aperture_mass)
@@ -1095,6 +1098,9 @@ class Mixin:
         velocity_norm = np.subtract(velocity, _zero_momentum_frame)
         _angular_momentum = self.angular_momentum(mass, coords_norm, velocity_norm)
         angular_momentum = np.concatenate((angular_momentum, _angular_momentum[None, :]), axis=0)
+
+        _angular_velocity = np.linalg.inv(self.inertia_tensor(mass, coords_norm))@_angular_momentum
+        angular_velocity = np.concatenate((angular_velocity, _angular_velocity[None, :]), axis=0)
 
         _specific_angular_momentum = np.linalg.norm(_angular_momentum) / _aperture_mass
         specific_angular_momentum = np.append(specific_angular_momentum, _specific_angular_momentum)
@@ -1134,6 +1140,7 @@ class Mixin:
         del _zero_momentum_frame
         del velocity_norm
         del _angular_momentum
+        del _angular_velocity
         del _specific_angular_momentum
         del _circular_velocity
         del _specific_angular_momentum_SI
@@ -1150,6 +1157,7 @@ class Mixin:
                 'centre_of_mass' : centre_of_mass[::-1],
                 'zero_momentum_frame' : zero_momentum_frame[::-1],
                 'angular_momentum' : angular_momentum[::-1],
+                'angular_velocity': angular_velocity[::-1],
                 'specific_angular_momentum' : specific_angular_momentum[::-1],
                 'circular_velocity' : circular_velocity[::-1],
                 'spin_parameter' : spin_parameter[::-1],
@@ -1225,23 +1233,24 @@ class Mixin:
             if _mass.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
             if _coords.__len__() == 0: warnings.warn(f"Array PartType{part_type} is empty - check filtering.")
             _coords = np.subtract(_coords, self.centre_of_potential)
+            mass = np.concatenate((mass, _mass), axis=0)
+            coords = np.concatenate((coords, _coords), axis=0)
 
-            out_allPartTypes_iterator = [2, 1, 0]
-            out_allPartTypes_i = 0
             _inertia_tensor = self.inertia_tensor(_mass, _coords)
             _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
-            _eigenvalues /= self.group_mass_aperture(aperture_radius=aperture_radius,
-                                                    out_allPartTypes=True)[out_allPartTypes_iterator[out_allPartTypes_i]]
-            out_allPartTypes_i += 1
-            _eigenvalues_sorted = np.sort(_eigenvalues)[::-1]
+            _eigenvalues /= np.sum(_mass)
+
+            # Sort eigenvalues from largest to smallest
+            _eigenvalues_sorted  = [x for x, _ in sorted(zip(eigenvalues, eigenvectors))][::-1]
+            _eigenvectors_sorted = [x for _, x in sorted(zip(eigenvalues, eigenvectors))][::-1]
+
             _triaxiality = (_eigenvalues_sorted[0]-_eigenvalues_sorted[1])/(_eigenvalues_sorted[0]-_eigenvalues_sorted[2])
             _sphericity = np.sqrt(_eigenvalues_sorted[2] / _eigenvalues_sorted[0])
             _elongation = np.sqrt(_eigenvalues_sorted[1] / _eigenvalues_sorted[0])
-            mass = np.concatenate((mass, _mass), axis=0)
-            coords = np.concatenate((coords, _coords), axis=0)
+
             inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
-            eigenvalues = np.concatenate((eigenvalues, _eigenvalues[None,:]), axis=0)
-            eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()[None,:]), axis=0)
+            eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None,:]), axis=0)
+            eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None,:]), axis=0)
             triaxiality = np.append(triaxiality, _triaxiality)
             sphericity = np.append(sphericity, _sphericity)
             elongation = np.append(elongation, _elongation)
@@ -1249,14 +1258,19 @@ class Mixin:
         _inertia_tensor = self.inertia_tensor(mass, coords)
         del mass, coords
         _eigenvalues, _eigenvectors = self.principal_axes_ellipsoid(_inertia_tensor, eigenvalues=True)
-        _eigenvalues /= self.group_mass_aperture(aperture_radius=aperture_radius, out_allPartTypes=False)
-        _eigenvalues_sorted = np.sort(_eigenvalues)[::-1]
+        _eigenvalues /= np.sum(_mass)
+
+        # Sort eigenvalues from largest to smallest
+        _eigenvalues_sorted = [x for x, _ in sorted(zip(eigenvalues, eigenvectors))][::-1]
+        _eigenvectors_sorted = [x for _, x in sorted(zip(eigenvalues, eigenvectors))][::-1]
+
         _triaxiality = (_eigenvalues_sorted[0] - _eigenvalues_sorted[1]) / (_eigenvalues_sorted[0] - _eigenvalues_sorted[2])
         _sphericity = np.sqrt(_eigenvalues_sorted[2] / _eigenvalues_sorted[0])
         _elongation = np.sqrt(_eigenvalues_sorted[1] / _eigenvalues_sorted[0])
+
         inertia_tensor = np.concatenate((inertia_tensor, _inertia_tensor.ravel()[None,:]), axis=0)
-        eigenvalues = np.concatenate((eigenvalues, _eigenvalues[None,:]), axis=0)
-        eigenvectors = np.concatenate((eigenvectors, _eigenvectors.ravel()[None,:]), axis=0)
+        eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None,:]), axis=0)
+        eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None,:]), axis=0)
         triaxiality = np.append(triaxiality, _triaxiality)
         sphericity = np.append(sphericity, _sphericity)
         elongation = np.append(elongation, _elongation)
