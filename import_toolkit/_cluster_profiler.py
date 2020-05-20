@@ -1245,7 +1245,7 @@ class Mixin:
             _eigenvalues_sorted  = np.sort(_eigenvalues)[::-1]
             _eigenvectors_sorted = np.zeros_like(_eigenvectors)
             for counter, val in np.ndenumerate(_eigenvalues_sorted):
-                index = _eigenvalues.index(val)
+                index = np.where(_eigenvalues==val)[0]
                 _eigenvectors_sorted[counter] = _eigenvectors[index]
 
             eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None, :]), axis=0)
@@ -1280,7 +1280,7 @@ class Mixin:
         _eigenvalues_sorted = np.sort(_eigenvalues)[::-1]
         _eigenvectors_sorted = np.zeros_like(_eigenvectors)
         for counter, val in np.ndenumerate(_eigenvalues_sorted):
-            index = _eigenvalues.index(val)
+            index = np.where(_eigenvalues==val)[0]
             _eigenvectors_sorted[counter] = _eigenvectors[index]
         eigenvalues = np.concatenate((eigenvalues, _eigenvalues_sorted[None, :]), axis=0)
         eigenvectors = np.concatenate((eigenvectors, _eigenvectors_sorted.ravel()[None, :]), axis=0)
