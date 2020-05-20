@@ -1264,7 +1264,6 @@ class Mixin:
             del _coords
             del _inertia_tensor
             del _eigenvalues
-            del _eigenvalues
             del _eigenvalues_sorted
             del _eigenvectors_sorted
             del _triaxiality
@@ -1297,7 +1296,6 @@ class Mixin:
         del mass
         del coords
         del _inertia_tensor
-        del _eigenvalues
         del _eigenvalues
         del _eigenvalues_sorted
         del _eigenvectors_sorted
