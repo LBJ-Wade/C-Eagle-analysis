@@ -162,7 +162,7 @@ class Mixin:
 
     def generate_apertures(self):
         manual = [
-                0.1*self.r500,
+              #  0.1*self.r500,
                 self.r2500,
                 1.5*self.r2500,
                 self.r500,
