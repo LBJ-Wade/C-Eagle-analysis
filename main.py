@@ -84,8 +84,8 @@ def main():
 
     halo_output = {
             **cluster.group_fofinfo(),
-            **cluster.group_dynamics(),
-            **cluster.group_morphology()
+            **cluster.group_dynamics(aperture_radius=cluster.r200),
+            **cluster.group_morphology(aperture_radius=cluster.r200)
     }
 
     for key in halo_output:

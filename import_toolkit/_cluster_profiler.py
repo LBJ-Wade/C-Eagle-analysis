@@ -23,7 +23,8 @@ import warnings
 # Delete the units from Unyt constants
 hydrogen_mass = float(hydrogen_mass.value)
 boltzmann_constant = float(boltzmann_constant.value)
-gravitational_constant = float(gravitational_constant.value)
+G_SI = float(gravitational_constant.value)
+G_astro = float(gravitational_constant.in_units('10e6*pc/(1e10*solar_mass)*(km/s)**2').value)
 parsec = float((1*parsec).in_units('m').value)
 solar_mass = float(solar_mass.value)
 
@@ -1035,15 +1036,10 @@ class Mixin:
             _specific_angular_momentum = np.linalg.norm(_angular_momentum)/_aperture_mass
             specific_angular_momentum = np.append(specific_angular_momentum, _specific_angular_momentum)
 
-            _circular_velocity = np.sqrt(gravitational_constant*self.mass_units(_aperture_mass)/self.length_units(aperture_radius))/1e3
+            _circular_velocity = np.sqrt(G_astro*_aperture_mass/aperture_radius)
             circular_velocity = np.append(circular_velocity, _circular_velocity)
 
-            _specific_angular_momentum_SI = self.angular_momentum(
-                    self.mass_units(_mass),
-                    self.length_units(_coords_norm),
-                    self.velocity_units(_velocity_norm)
-            ) / np.sum(self.mass_units(_mass))
-            _spin_parameter = _specific_angular_momentum_SI/(self.length_units(aperture_radius)*self.velocity_units(_circular_velocity)*np.sqrt(2))
+            _spin_parameter = np.linalg.norm(_angular_momentum)/(_aperture_mass*aperture_radius*_circular_velocity*np.sqrt(2))
             spin_parameter = np.append(spin_parameter, _spin_parameter)
 
             sgn_index = np.where(_subgroupnumber == 0)[0]
@@ -1079,7 +1075,6 @@ class Mixin:
             del _angular_velocity
             del _specific_angular_momentum
             del _circular_velocity
-            del _specific_angular_momentum_SI
             del _spin_parameter
             del sgn_index
             del _substructure_mass
@@ -1109,15 +1104,10 @@ class Mixin:
         _specific_angular_momentum = np.linalg.norm(_angular_momentum) / _aperture_mass
         specific_angular_momentum = np.append(specific_angular_momentum, _specific_angular_momentum)
 
-        _circular_velocity = np.sqrt(gravitational_constant * self.mass_units(_aperture_mass) / self.length_units(aperture_radius)) / 1e3
+        _circular_velocity = np.sqrt(G_astro*_aperture_mass/aperture_radius)
         circular_velocity = np.append(circular_velocity, _circular_velocity)
 
-        _specific_angular_momentum_SI = self.angular_momentum(
-                self.mass_units(mass),
-                self.length_units(coords_norm),
-                self.velocity_units(velocity_norm)
-        )/np.sum(self.mass_units(mass))
-        _spin_parameter = _specific_angular_momentum_SI/(self.length_units(aperture_radius)*self.velocity_units(_circular_velocity)*np.sqrt(2))
+        _spin_parameter = np.linalg.norm(_angular_momentum)/(_aperture_mass*aperture_radius*_circular_velocity*np.sqrt(2))
         spin_parameter = np.append(spin_parameter, _spin_parameter)
 
         _substructure_mass = np.sum(substructure_mass)
@@ -1151,7 +1141,6 @@ class Mixin:
         del _angular_velocity
         del _specific_angular_momentum
         del _circular_velocity
-        del _specific_angular_momentum_SI
         del _spin_parameter
         del _substructure_mass
         del _substructure_fraction
