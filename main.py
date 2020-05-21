@@ -97,10 +97,10 @@ def main():
                 **halo_output,
                 **alignment_dict
         }
-        master_dict.update({f'aperture{i:02d}' : halo_output})
-        print(f"Aperture {i:02d}: {r_a:2.2f} Mpc\tOutput size {sys.getsizeof(halo_output)/1024:2.0f} kB")
+        master_dict[f'aperture{i:02d}'] = halo_output
         del halo_output, alignment_dict
     print(f"\nmaster_dict: \tOutput size {sys.getsizeof(master_dict) / 1024:2.0f} kB")
+    for key in master_dict: print(key)
 
 
     # def check_dirs(self) -> np.ndarray:
