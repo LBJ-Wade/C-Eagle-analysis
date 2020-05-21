@@ -77,8 +77,8 @@ def main():
     }
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=0,
-                      redshift='z003p000',
+                      clusterID=1000,
+                      redshift='z000p000',
                       comovingframe=False,
                       requires=data_required)
 
