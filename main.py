@@ -96,7 +96,7 @@ def main():
                 **halo_output,
                 **alignment_dict
         }
-        print(f"Aperture {i:>0d}: {r_a:2.2f} Mpc\tOutput size {sys.getsizeof(halo_output)/1024:d} kB")
+        print(f"Aperture {i:>0d}: {r_a:2.2f} Mpc\tOutput size {sys.getsizeof(halo_output)/1024:2.0f} kB")
 
 
     # def check_dirs(self) -> np.ndarray:
