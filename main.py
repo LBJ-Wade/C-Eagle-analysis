@@ -85,6 +85,7 @@ def main():
                       requires=data_required)
 
     apertures = cluster.generate_apertures()
+    master_dict = {}
     for i,r_a in enumerate(apertures):
         halo_output = {
                 **cluster.group_fofinfo(aperture_radius=cluster.r200),
@@ -96,8 +97,10 @@ def main():
                 **halo_output,
                 **alignment_dict
         }
-        print(f"Aperture {i:>0d}: {r_a:2.2f} Mpc\tOutput size {sys.getsizeof(halo_output)/1024:2.0f} kB")
+        master_dict.update({f'aperture{i:02d}' : halo_output})
+        print(f"Aperture {i:02d}: {r_a:2.2f} Mpc\tOutput size {sys.getsizeof(halo_output)/1024:2.0f} kB")
         del halo_output, alignment_dict
+    print(f"\nmaster_dict: \tOutput size {sys.getsizeof(master_dict) / 1024:2.0f} kB")
 
 
     # def check_dirs(self) -> np.ndarray:
