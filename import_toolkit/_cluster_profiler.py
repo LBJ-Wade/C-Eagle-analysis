@@ -24,7 +24,7 @@ import warnings
 hydrogen_mass = float(hydrogen_mass.value)
 boltzmann_constant = float(boltzmann_constant.value)
 G_SI = float(gravitational_constant.value)
-G_astro = float(gravitational_constant.in_units('10e6*pc/(1e10*solar_mass)*(km/s)**2').value)
+G_astro = float(gravitational_constant.in_units('(1e6*pc)*(km/s)**2/(1e10*solar_mass)').value)
 parsec = float((1*parsec).in_units('m').value)
 solar_mass = float(solar_mass.value)
 
