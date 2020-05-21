@@ -1,6 +1,6 @@
 """
 ------------------------------------------------------------------
-FILE:   rotvel_correlation/align_angles.py
+FILE:   rotvel_correlation/plot_alignmatrix.py
 AUTHOR: Edo Altamura
 DATE:   15-03-2020
 ------------------------------------------------------------------

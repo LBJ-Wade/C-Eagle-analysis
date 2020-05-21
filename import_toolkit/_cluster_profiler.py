@@ -15,7 +15,6 @@ They working principle is based on OOP class inheritance.
 """
 
 import numpy as np
-from typing import Dict, Union
 from unyt import hydrogen_mass, boltzmann_constant, gravitational_constant, parsec, solar_mass
 from .memory import free_memory
 import warnings

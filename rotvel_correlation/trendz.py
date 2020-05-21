@@ -1,6 +1,6 @@
 """
 ------------------------------------------------------------------
-FILE:   rotvel_correlation/align_angles.py
+FILE:   rotvel_correlation/plot_alignmatrix.py
 AUTHOR: Edo Altamura
 DATE:   15-03-2020
 ------------------------------------------------------------------
@@ -41,7 +41,7 @@ from import_toolkit.simulation import Simulation
 from import_toolkit._cluster_retriever import redshift_str2num
 from import_toolkit.progressbar import ProgressBar
 from read import pull
-from rotvel_correlation.align_angles import CorrelationMatrix
+from rotvel_correlation.plot_alignmatrix import CorrelationMatrix
 
 
 class TrendZ:
