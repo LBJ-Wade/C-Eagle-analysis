@@ -162,16 +162,17 @@ class Mixin:
         return eigensolution if eigenvalues else eigensolution[1]
 
     def generate_apertures(self):
-        """
-        Generate an array of apertures for calculating global properties of the clusters.
-        The apertures use both R2500 and R200 units:
-
-        :return: (np.ndarray)
-            The array with 100 different apertures, ranging from ~ R2500 to 5*R200
-            NOTE: the apertures are returned in the PHYSICAL frame.
-        """
-        assert self.r2500 > 0. and self.r200 > 0., f"Issue encountered at {self.clusterID}, {self.redshift}"
-        return np.logspace(np.log10(self.r200 / 4), np.log10(5 * self.r200), 20)
+        physical = [0.01, 0.03, 0.05, 0.07, 0.10]
+        manual = [
+                0.1*self.r500,
+                self.r2500,
+                1.5*self.r2500,
+                self.r500,
+                1.5*self.r500,
+        ]
+        auto = np.logspace(np.log10(self.r200), np.log10(5 * self.r200), 11).tolist()
+        all_apertures = physical+manual+auto
+        return np.asarray(all_apertures)
 
 
     def group_thermal_energy(self,
@@ -911,6 +912,7 @@ class Mixin:
             return result
 
     def group_fofinfo(self, aperture_radius: float = None) -> Dict[str, Union[np.ndarray, np.float]]:
+        if aperture_radius is None: warnings.warn(f'Aperture radius not defined.')
         fof_dict = {
                 'hubble_param'  : self.hubble_param,
                 'comic_time'    : self.comic_time,
@@ -1017,6 +1019,9 @@ class Mixin:
             velocity = np.concatenate((velocity, _velocity), axis=0)
             temperature = np.concatenate((temperature, _temperature), axis=0)
 
+            _N_particles = len(_mass)
+            N_particles = np.append(N_particles, _N_particles)
+
             _aperture_mass = np.sum(_mass)
             aperture_mass = np.append(aperture_mass, _aperture_mass)
 
@@ -1063,6 +1068,7 @@ class Mixin:
             thermodynamic_merging_index = np.append(thermodynamic_merging_index, _thermodynamic_merging_index)
 
             del _mass
+            del _N_particles
             del _velocity
             del _coords
             del _temperature
@@ -1084,6 +1090,9 @@ class Mixin:
             del _kinetic_energy
             del _dynamical_merging_index
             del _thermodynamic_merging_index
+
+        _N_particles = len(mass)
+        N_particles = np.append(N_particles, _N_particles)
 
         _aperture_mass = np.sum(mass)
         aperture_mass = np.append(aperture_mass, _aperture_mass)
@@ -1129,6 +1138,7 @@ class Mixin:
         _thermodynamic_merging_index = np.sum(thermodynamic_merging_index)
         thermodynamic_merging_index = np.append(thermodynamic_merging_index, _thermodynamic_merging_index)
 
+        del _N_particles
         del mass
         del coords
         del velocity
@@ -1151,6 +1161,7 @@ class Mixin:
         del _thermodynamic_merging_index
 
         dynamic_dict = {
+                'N_particles' : N_particles[::-1],
                 'aperture_mass' : aperture_mass[::-1],
                 'centre_of_mass' : centre_of_mass[::-1],
                 'zero_momentum_frame' : zero_momentum_frame[::-1],
