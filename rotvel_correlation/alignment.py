@@ -72,29 +72,29 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 	c_a = np.zeros_like(v_l)
 
 	for i,j in product(list(range(4)), repeat=2):
-		if i > j:
-			v_l[i, j] = angle(peculiar_velocity[i], angular_momentum[j])
-			v_w[i, j] = angle(peculiar_velocity[i], angular_velocity[j])
-			l_w[i, j] = angle(angular_momentum[i], angular_velocity[j])
-			a_v[i, j] = angle(a_vec[i], peculiar_velocity[j])
-			a_l[i, j] = angle(a_vec[i], angular_momentum[j])
-			a_w[i, j] = angle(a_vec[i], angular_velocity[j])
-			b_v[i, j] = angle(b_vec[i], peculiar_velocity[j])
-			b_l[i, j] = angle(b_vec[i], angular_momentum[j])
-			b_w[i, j] = angle(b_vec[i], angular_velocity[j])
-			c_v[i, j] = angle(c_vec[i], peculiar_velocity[j])
-			c_l[i, j] = angle(c_vec[i], angular_momentum[j])
-			c_w[i, j] = angle(c_vec[i], angular_velocity[j])
-			a_b[i, j] = angle(a_vec[i], b_vec[j])
-			b_c[i, j] = angle(b_vec[i], c_vec[j])
-			c_a[i, j] = angle(c_vec[i], a_vec[j])
+		#if i > j:
+		v_l[i, j] = angle(peculiar_velocity[i], angular_momentum[j])
+		v_w[i, j] = angle(peculiar_velocity[i], angular_velocity[j])
+		l_w[i, j] = angle(angular_momentum[i], angular_velocity[j])
+		a_v[i, j] = angle(a_vec[i], peculiar_velocity[j])
+		a_l[i, j] = angle(a_vec[i], angular_momentum[j])
+		a_w[i, j] = angle(a_vec[i], angular_velocity[j])
+		b_v[i, j] = angle(b_vec[i], peculiar_velocity[j])
+		b_l[i, j] = angle(b_vec[i], angular_momentum[j])
+		b_w[i, j] = angle(b_vec[i], angular_velocity[j])
+		c_v[i, j] = angle(c_vec[i], peculiar_velocity[j])
+		c_l[i, j] = angle(c_vec[i], angular_momentum[j])
+		c_w[i, j] = angle(c_vec[i], angular_velocity[j])
+		a_b[i, j] = angle(a_vec[i], b_vec[j])
+		b_c[i, j] = angle(b_vec[i], c_vec[j])
+		c_a[i, j] = angle(c_vec[i], a_vec[j])
 
 	# Check eigenvector orthogonality
 	for i,j in product(list(range(4)), repeat=2):
-		if i > j:
-			a_b[i, j] -= 90.
-			b_c[i, j] -= 90.
-			c_a[i, j] -= 90.
+		# if i >= j:
+		a_b[i, j] -= 90.
+		b_c[i, j] -= 90.
+		c_a[i, j] -= 90.
 	if (
 			np.count_nonzero(np.rint(a_b)) is not 0 or
 			np.count_nonzero(np.rint(b_c)) is not 0 or
