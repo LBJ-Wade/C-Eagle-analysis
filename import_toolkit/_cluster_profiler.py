@@ -15,7 +15,7 @@ They working principle is based on OOP class inheritance.
 """
 
 import numpy as np
-from typing import List, Dict, Tuple
+from typing import Dict, Union
 from unyt import hydrogen_mass, boltzmann_constant, gravitational_constant, parsec, solar_mass
 from .memory import free_memory
 import warnings
@@ -113,8 +113,7 @@ class Mixin:
         mass = np.asarray(mass)
         coords = np.asarray(coords)
         velocity = np.asarray(velocity)
-        linear_momentum_r = velocity * mass[:, None]
-        return np.sum(np.cross(coords, linear_momentum_r), axis=0) / np.sum(mass)
+        return np.sum(np.cross(coords, velocity*mass[:, None]), axis=0)
 
     @staticmethod
     def inertia_tensor(mass: np.ndarray, coords: np.ndarray) -> np.ndarray:
@@ -911,7 +910,7 @@ class Mixin:
         else:
             return result
 
-    def group_fofinfo(self) -> Dict[str, np.ndarray]:
+    def group_fofinfo(self, aperture_radius: float = None) -> Dict[str, Union[np.ndarray, np.float]]:
         fof_dict = {
                 'hubble_param'  : self.hubble_param,
                 'comic_time'    : self.comic_time,
@@ -920,6 +919,7 @@ class Mixin:
                 'Omega0'        : self.Omega0,
                 'OmegaLambda'   : self.OmegaLambda,
                 'centre_of_potential' : self.centre_of_potential,
+                'r_aperture'          : aperture_radius,
                 'r200'          : self.r200,
                 'r500'          : self.r500,
                 'r2500'         : self.r2500,
@@ -976,6 +976,7 @@ class Mixin:
         velocity = np.zeros((0, 3), dtype=np.float)
         temperature = np.zeros(0, dtype=np.float)
 
+        N_particles = np.zeros(0, dtype=np.float)
         aperture_mass = np.zeros(0, dtype=np.float)
         centre_of_mass = np.zeros((0, 3), dtype=np.float)
         zero_momentum_frame = np.zeros((0, 3), dtype=np.float)
