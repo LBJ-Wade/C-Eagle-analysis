@@ -6,10 +6,12 @@ import numpy as np
 from . import simulation
 from . import _cluster_retriever
 from . import _cluster_profiler
+from . import _cluster_report
 
 class Cluster(simulation.Simulation,
               _cluster_retriever.Mixin,
-              _cluster_profiler.Mixin):
+              _cluster_profiler.Mixin,
+              _cluster_report.Mixin):
 
     def __init__(self,
                  simulation_name: str = None,

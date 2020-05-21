@@ -77,13 +77,13 @@ def main():
     }
 
     cluster = Cluster(simulation_name='bahamas',
-                      clusterID=1000,
+                      clusterID=14000,
                       redshift='z000p000',
                       comovingframe=False,
                       requires=data_required)
 
     halo_output = {
-            **cluster.group_fofinfo(),
+            **cluster.group_fofinfo(aperture_radius=cluster.r200),
             **cluster.group_dynamics(aperture_radius=cluster.r200),
             **cluster.group_morphology(aperture_radius=cluster.r200)
     }
