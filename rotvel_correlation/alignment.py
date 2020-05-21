@@ -89,14 +89,14 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 		c_a[i, j] = angle(c_vec[i], a_vec[j])
 
 	# Check eigenvector orthogonality
-	for i,j in product(list(range(4)), repeat=2):
-		a_b[i, j] -= 90.
-		b_c[i, j] -= 90.
-		c_a[i, j] -= 90.
+	for i in range(4):
+		a_b[i, i] -= 90.
+		b_c[i, i] -= 90.
+		c_a[i, i] -= 90.
 	if (
-			np.count_nonzero(np.rint(a_b)) is not 0 or
-			np.count_nonzero(np.rint(b_c)) is not 0 or
-			np.count_nonzero(np.rint(c_a))
+			np.trace(np.rint(a_b)) is not 0 or
+			np.trace(np.rint(b_c)) is not 0 or
+			np.trace(np.rint(c_a))
 	):
 		warnings.warn('Detected non-orthogonal semiaxes. Check inertia tensor.')
 		print(a_b, b_c, c_a, sep='\n')
