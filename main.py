@@ -65,6 +65,7 @@ def time_func(function):
 def main():
     import itertools
     import numpy as np
+    import sys
     import os
     from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
@@ -83,19 +84,19 @@ def main():
                       comovingframe=False,
                       requires=data_required)
 
-    halo_output = {
-            **cluster.group_fofinfo(aperture_radius=cluster.r200),
-            **cluster.group_dynamics(aperture_radius=cluster.r200),
-            **cluster.group_morphology(aperture_radius=cluster.r200)
-    }
-    alignment_dict = alignment.group_alignment(halo_output)
-    halo_output = {
-            **halo_output,
-            **alignment_dict
-    }
-
-    for key in halo_output:
-        print('\n', key, halo_output[key], sep='\n')
+    apertures = cluster.generate_apertures()
+    for r_a in apertures:
+        halo_output = {
+                **cluster.group_fofinfo(aperture_radius=r_a),
+                **cluster.group_dynamics(aperture_radius=r_a),
+                **cluster.group_morphology(aperture_radius=r_a)
+        }
+        alignment_dict = alignment.group_alignment(halo_output)
+        halo_output = {
+                **halo_output,
+                **alignment_dict
+        }
+        print(f"Aperture {r_a:2.2f} Mpc\tOutput size {sys.getsizeof(halo_output)/1024:d} kB")
 
 
     # def check_dirs(self) -> np.ndarray:
