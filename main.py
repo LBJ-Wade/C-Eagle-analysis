@@ -69,6 +69,7 @@ def main():
     from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
+    from rotvel_correlation import alignment
 
     data_required = {
             'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
@@ -78,7 +79,7 @@ def main():
 
     cluster = Cluster(simulation_name='bahamas',
                       clusterID=14000,
-                      redshift='z000p000',
+                      redshift='z003p000',
                       comovingframe=False,
                       requires=data_required)
 
@@ -86,6 +87,11 @@ def main():
             **cluster.group_fofinfo(aperture_radius=cluster.r200),
             **cluster.group_dynamics(aperture_radius=cluster.r200),
             **cluster.group_morphology(aperture_radius=cluster.r200)
+    }
+    alignment_dict = alignment.group_alignment(halo_output)
+    halo_output = {
+            **halo_output,
+            **alignment_dict
     }
 
     for key in halo_output:

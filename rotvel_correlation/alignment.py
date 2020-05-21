@@ -1,20 +1,15 @@
 import sys
 import os
-from typing import Dict
-import copy
-
 import warnings
-from itertools import product
 import numpy as np
-
+from typing import Dict
+from copy import deepcopy
+from itertools import product
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from import_toolkit.cluster import Cluster
+angle = deepcopy(Cluster.angle_between_vectors)
 
-
-angle = copy.deepcopy(Cluster.angle_between_vectors)
-print(angle.__name__)
-
-def group_morphology(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.ndarray]:
+def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.ndarray]:
 	"""
 	Method that computes the cluster's morphology information from particles within a
 	specified aperture.
@@ -106,6 +101,7 @@ def group_morphology(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.
 			np.count_nonzero(np.rint(c_a))
 	):
 		warnings.warn('Detected non-orthogonal semiaxes. Check inertia tensor.')
+		print(a_b, b_c, c_a, sep='\n')
 
 	angle_dict = {
 			'v_l' : v_l,
@@ -116,3 +112,4 @@ def group_morphology(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.
 			'a_w' : a_w
 	}
 	return angle_dict
+
