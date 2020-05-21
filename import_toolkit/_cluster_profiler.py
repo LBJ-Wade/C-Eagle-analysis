@@ -161,7 +161,6 @@ class Mixin:
         return eigensolution if eigenvalues else eigensolution[1]
 
     def generate_apertures(self):
-        physical = [0.07, 0.10]
         manual = [
                 0.1*self.r500,
                 self.r2500,
@@ -170,7 +169,7 @@ class Mixin:
                 1.5*self.r500,
         ]
         auto = np.logspace(np.log10(self.r200), np.log10(5 * self.r200), 11).tolist()
-        all_apertures = physical+manual+auto
+        all_apertures = manual+auto
         return np.asarray(all_apertures)
 
 
