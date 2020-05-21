@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.
 from import_toolkit.cluster import Cluster
 
 angle = staticmethod(Cluster.angle_between_vectors)
-print(angle.__name__)
+print(angle)
 
 def group_morphology(self, groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.ndarray]:
 	"""
