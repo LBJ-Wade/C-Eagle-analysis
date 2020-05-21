@@ -186,7 +186,6 @@ class Simulation:
                              "or, `bahamas`], got {}.".format(simulation_name)))
 
 
-
     def set_pathData(self, newPath: str):
         self.pathData = newPath
 

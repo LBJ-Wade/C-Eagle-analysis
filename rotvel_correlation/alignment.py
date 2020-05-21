@@ -72,7 +72,6 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 	c_a = np.zeros_like(v_l)
 
 	for i,j in product(list(range(4)), repeat=2):
-		#if i > j:
 		v_l[i, j] = angle(peculiar_velocity[i], angular_momentum[j])
 		v_w[i, j] = angle(peculiar_velocity[i], angular_velocity[j])
 		l_w[i, j] = angle(angular_momentum[i], angular_velocity[j])
@@ -91,7 +90,6 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 
 	# Check eigenvector orthogonality
 	for i,j in product(list(range(4)), repeat=2):
-		# if i >= j:
 		a_b[i, j] -= 90.
 		b_c[i, j] -= 90.
 		c_a[i, j] -= 90.

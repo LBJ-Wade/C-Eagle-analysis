@@ -161,7 +161,7 @@ class Mixin:
         return eigensolution if eigenvalues else eigensolution[1]
 
     def generate_apertures(self):
-        physical = [0.01, 0.03, 0.05, 0.07, 0.10]
+        physical = [0.07, 0.10]
         manual = [
                 0.1*self.r500,
                 self.r2500,
