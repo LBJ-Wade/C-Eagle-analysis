@@ -94,9 +94,9 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 		b_c[i, i] -= 90.
 		c_a[i, i] -= 90.
 	if (
-			np.trace(np.rint(a_b)) is not 0 or
-			np.trace(np.rint(b_c)) is not 0 or
-			np.trace(np.rint(c_a))
+			int(np.trace(a_b)) is not 0 or
+			int(np.trace(b_c)) is not 0 or
+			int(np.trace(c_a))
 	):
 		warnings.warn('Detected non-orthogonal semiaxes. Check inertia tensor.')
 		print(a_b, b_c, c_a, sep='\n')
