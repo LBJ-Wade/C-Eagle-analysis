@@ -11,7 +11,7 @@ from import_toolkit.cluster import Cluster
 angle = staticmethod(Cluster.angle_between_vectors)
 print(angle)
 
-def group_morphology(self, groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.ndarray]:
+def group_morphology(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.ndarray]:
 	"""
 	Method that computes the cluster's morphology information from particles within a
 	specified aperture.
