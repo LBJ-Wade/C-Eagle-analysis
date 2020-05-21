@@ -1038,7 +1038,11 @@ class Mixin:
             _circular_velocity = np.sqrt(gravitational_constant*self.mass_units(_aperture_mass)/self.length_units(aperture_radius))/1e3
             circular_velocity = np.append(circular_velocity, _circular_velocity)
 
-            _specific_angular_momentum_SI = _specific_angular_momentum*(1e6*parsec*1e3)
+            _specific_angular_momentum_SI = self.angular_momentum(
+                    self.mass_units(_mass),
+                    self.length_units(_coords_norm),
+                    self.velocity_units(_velocity_norm)
+            ) / np.sum(self.mass_units(_mass))
             _spin_parameter = _specific_angular_momentum_SI/(self.length_units(aperture_radius)*self.velocity_units(_circular_velocity)*np.sqrt(2))
             spin_parameter = np.append(spin_parameter, _spin_parameter)
 
@@ -1108,7 +1112,11 @@ class Mixin:
         _circular_velocity = np.sqrt(gravitational_constant * self.mass_units(_aperture_mass) / self.length_units(aperture_radius)) / 1e3
         circular_velocity = np.append(circular_velocity, _circular_velocity)
 
-        _specific_angular_momentum_SI = _specific_angular_momentum * (1e6 * parsec * 1e3)
+        _specific_angular_momentum_SI = self.angular_momentum(
+                self.mass_units(mass),
+                self.length_units(coords_norm),
+                self.velocity_units(velocity_norm)
+        )/np.sum(self.mass_units(mass))
         _spin_parameter = _specific_angular_momentum_SI/(self.length_units(aperture_radius)*self.velocity_units(_circular_velocity)*np.sqrt(2))
         spin_parameter = np.append(spin_parameter, _spin_parameter)
 
