@@ -27,3 +27,20 @@ def check_dirs(self) -> np.ndarray:
 
 sim = Simulation(simulation_name='ceagle')
 check_dirs(sim)
+
+
+def bahamas_mass_cut():
+    n_largeM = 0
+    n_total = 0
+    cluster = Cluster(simulation_name='bahamas',
+                      clusterID=0,
+                      redshift='z000p000',
+                      comovingframe=False,
+                      fastbrowsing=True)
+    for counter, file in enumerate(cluster.groups_filePaths()):
+        print(f"[+] Analysing eagle_subfind_tab file {counter}")
+        with h5py.File(file, 'r') as group_file:
+            m500 = group_file['/FOF/Group_M_Crit500'][:] * 10 ** 10
+            n_total += len(m500)
+            m_filter = np.where(m500 > 10 ** 13)[0]
+            n_largeM += len(m_filter)
