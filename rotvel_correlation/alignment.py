@@ -109,7 +109,13 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 			'l_w' : l_w,
 			'a_v' : a_v,
 			'a_l' : a_l,
-			'a_w' : a_w
+			'a_w' : a_w,
+			'b_v' : b_v,
+			'b_l' : b_l,
+			'b_w' : b_w,
+			'c_v' : c_v,
+			'c_l' : c_l,
+			'c_w' : c_w
 	}
 	return angle_dict
 
