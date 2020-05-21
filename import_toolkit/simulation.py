@@ -229,7 +229,10 @@ class Simulation:
                 return '%04d' % (n,)
 
     def bahamas_mass_cut(self):
-        for counter, file in enumerate(cluster.groups_filePaths()):
+        n_largeM = 0
+        n_total = 0
+        groups_filePaths =
+        for counter, file in enumerate(Cluster.groups_filePaths()):
             print(f"[+] Analysing eagle_subfind_tab file {counter}")
             with h5py.File(file, 'r') as group_file:
                 cop = group_file['/FOF/GroupCentreOfPotential'][:]

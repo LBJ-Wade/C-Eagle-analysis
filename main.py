@@ -87,9 +87,9 @@ def main():
     apertures = cluster.generate_apertures()
     for i,r_a in enumerate(apertures):
         halo_output = {
-                **cluster.group_fofinfo(aperture_radius=r_a),
-                **cluster.group_dynamics(aperture_radius=r_a),
-                **cluster.group_morphology(aperture_radius=r_a)
+                **cluster.group_fofinfo(aperture_radius=cluster.r200),
+                **cluster.group_dynamics(aperture_radius=cluster.r200),
+                **cluster.group_morphology(aperture_radius=cluster.r200)
         }
         alignment_dict = alignment.group_alignment(halo_output)
         halo_output = {
