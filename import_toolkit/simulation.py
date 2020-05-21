@@ -4,6 +4,7 @@ import h5py
 from copy import copy
 import os
 from ._cluster_retriever import redshift_str2num
+from .cluster import Cluster
 
 
 class Simulation:
@@ -231,13 +232,15 @@ class Simulation:
     def bahamas_mass_cut(self):
         n_largeM = 0
         n_total = 0
-        groups_filePaths =
-        for counter, file in enumerate(Cluster.groups_filePaths()):
+        cluster = Cluster(simulation_name='bahamas',
+                          clusterID=0,
+                          redshift='z000p000',
+                          comovingframe=False,
+                          fastbrowsing=True)
+        for counter, file in enumerate(cluster.groups_filePaths()):
             print(f"[+] Analysing eagle_subfind_tab file {counter}")
             with h5py.File(file, 'r') as group_file:
-                cop = group_file['/FOF/GroupCentreOfPotential'][:]
                 m500 = group_file['/FOF/Group_M_Crit500'][:] * 10 ** 10
-                r200 = group_file['/FOF/Group_R_Crit200'][:]
                 n_total += len(m500)
                 m_filter = np.where(m500 > 10 ** 13)[0]
                 n_largeM += len(m_filter)
