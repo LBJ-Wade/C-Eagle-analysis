@@ -216,7 +216,7 @@ class Simulation:
         Returns the halo number in format e.g. 00, 01, 02
         """
         if self.simulation_name is 'macsis' or self.simulation_name is 'bahamas':
-            return self.halo_num_catalogue_contiguous[n]
+            return str(self.halo_num_catalogue_contiguous[n])
         else:
             if self.totalClusters > 1 and self.totalClusters < 10:
                 return '%01d' % (n,)

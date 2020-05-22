@@ -148,7 +148,7 @@ class Mixin:
         if self.simulation_name == 'bahamas':
             Ngroups = 0
             file_counter = 0
-            element_counter = self.clusterID
+            element_counter = self.halo_num_catalogue_contiguous[self.clusterID]
             while True:
                 with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
                     Ngroups += h5file['Header'].attrs['Ngroups']
