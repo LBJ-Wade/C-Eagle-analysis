@@ -263,7 +263,7 @@ class Ghost:
         tag_name = f"Tagger: {tag_label:<15s}"
         mem_name = f"Memory: {mem_label:<15s}"
         tag_size = f"Size in memory: {sys.getsizeof(self.tagger):3.0f} Bytes"
-        mem_size = f"Size in memory: {sys.getsizeof(self.tagger)/1024/1024:3.2f} MB"
+        mem_size = f"Size in memory: {sys.getsizeof(self.memory)/1024/1024:3.2f} MB"
         print(f"{' Ghost class report ':-^100s}")
         print(f"{tag_name:<60s}{tag_size:<40s}")
         print(f"{mem_name:<60s}{mem_size:<40s}")
