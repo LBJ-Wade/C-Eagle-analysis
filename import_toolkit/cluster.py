@@ -2,7 +2,6 @@ from __future__ import print_function, division, absolute_import
 from typing import List, Dict
 import os
 import numpy as np
-import h5py as h5
 from . import simulation
 from . import _cluster_retriever
 from . import _cluster_profiler

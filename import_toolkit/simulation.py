@@ -225,6 +225,10 @@ class Simulation:
                 return '%03d' % (n,)
             elif self.totalClusters > 1000 and self.totalClusters < 10000:
                 return '%04d' % (n,)
+            elif self.totalClusters > 10000 and self.totalClusters < 100000:
+                return '%05d' % (n,)
+            elif self.totalClusters > 100000 and self.totalClusters < 1000000:
+                return '%06d' % (n,)
 
 
 class Ghost:
