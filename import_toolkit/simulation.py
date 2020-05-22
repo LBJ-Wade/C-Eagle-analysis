@@ -166,7 +166,7 @@ class Simulation:
             self.cluster_prefix = 'halo_'
             self.totalClusters = 14366
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
-            self.halo_num_catalogue_contiguous = [0]#np.load(os.path.join(self.CURRENT_PATH, 'import_toolkit/bahamas_fofnumber_list_10--13.npy'))
+            self.halo_num_catalogue_contiguous = np.load(os.path.join(self.CURRENT_PATH, 'import_toolkit/bahamas_fofnumber_list_10--13.npy'))
             self.subjectsAllowed = ['particledata', 'groups']
             self.zcat = {
                     'z_float'   :
