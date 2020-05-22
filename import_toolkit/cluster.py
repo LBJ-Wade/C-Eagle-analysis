@@ -314,4 +314,4 @@ class Cluster(simulation.Simulation,
                     ghost_mem[attr_name] = getattr(self, attr_name)
                     del attr_name
             self.ghost.memory = ghost_mem
-            self.ghost.show_yourself()
+            self.ghost.show_yourself(verbose=True)
