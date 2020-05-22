@@ -306,12 +306,9 @@ class Cluster(simulation.Simulation,
         if self.ghost.is_awake(self.redshift):
             del self.ghost.tagger, self.ghost.memory
             self.ghost.tagger = self.redshift
-            ghost_mem = dict()
             for key in self.requires:
                 if 'partType' in key:
                     attr_name = f"{key:s}_groupnumber"
                     assert hasattr(self, attr_name)
-                    ghost_mem[attr_name] = getattr(self, attr_name)
-                    del attr_name
-            self.ghost.memory = ghost_mem
+                    self.ghost.memory[attr_name] = getattr(self, attr_name)
             self.ghost.show_yourself(verbose=True)
