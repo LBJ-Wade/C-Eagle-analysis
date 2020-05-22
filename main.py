@@ -97,6 +97,7 @@ def main():
         print('n_total:', n_total)
         print('N_halos:', N_halos)
         print('gn_tot:', gn_tot)
+        np.save(f'import_toolkit/bahamas_fofnumber_list_10--13.npy', gn_tot)
 
     bahamas_mass_cut()
 

@@ -164,9 +164,10 @@ class Simulation:
             self.computer = 'virgo_nas@mizar.jb.man.ac.uk'
             self.pathData = '/scratch/nas_virgo/Cosmo-OWLS/AGN_TUNED_nu0_L400N1024_Planck'
             self.cluster_prefix = 'halo_'
-            self.totalClusters = 1465687
+            self.totalClusters = 14366
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
-            self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            # self.halo_num_catalogue_contiguous = np.load(os.path.join(self.CURRENT_PATH, 'import_toolkit/bahamas_fofnumber_list_10--13.npy'))
+            self.subjectsAllowed = ['particledata', 'groups']
             self.zcat = {
                     'z_float'   :
                         [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.749999, 0.499999, 0.374999,
@@ -214,7 +215,7 @@ class Simulation:
         """
         Returns the halo number in format e.g. 00, 01, 02
         """
-        if self.simulation_name == 'macsis':
+        if self.simulation_name is 'macsis' or self.simulation_name is 'bahamas':
             return self.halo_num_catalogue_contiguous[n]
         else:
             if self.totalClusters > 1 and self.totalClusters < 10:
