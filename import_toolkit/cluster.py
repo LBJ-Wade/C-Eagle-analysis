@@ -257,7 +257,7 @@ class Cluster(simulation.Simulation,
                     setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1]))
                 elif field == 'groupnumber' and not hasattr(self, part_type+'_'+field):
                     if hasattr(self.ghost, part_type+'_'+field):
-                        setattr(self, part_type+'_'+field, hasattr(self.ghost, part_type+'_'+field))
+                        setattr(self, part_type+'_'+field, getattr(self.ghost, part_type+'_'+field))
                     else:
                         setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
 
