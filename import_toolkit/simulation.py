@@ -1,9 +1,10 @@
 from __future__ import print_function, division, absolute_import
-import numpy as np
+import os
+import sys
+from copy import copy
 from typing import Union, Dict
 import h5py
-from copy import copy
-import os
+import numpy as np
 from ._cluster_retriever import redshift_str2num
 
 class Simulation:
@@ -256,4 +257,9 @@ class Ghost:
         self._memory = None
     def is_awake(self, newtagger: tagger_type) -> bool:
         return self._tagger != newtagger
+    def show_yourself(self, verbose: bool = False) -> None:
+        print(f"{' Ghost class report ':-^70s}")
+        print(f"Tagger: {self.tagger:<40}\tSize in memory: {sys.getsizeof(self.tagger)/1024:3.2f} kB")
+        print(f"Memory: {self.memory.keys()}\tSize in memory: {sys.getsizeof(self.tagger)/1024/1024:3.2f} MB")
+        if verbose: print(self.memory)
 

@@ -302,6 +302,7 @@ class Cluster(simulation.Simulation,
 
         """
         assert hasattr(self, 'ghost')
+        self.ghost.show_yourself()
         if self.ghost.is_awake(self.redshift):
             del self.ghost.tagger, self.ghost.memory
             self.ghost.tagger = self.redshift
@@ -313,3 +314,4 @@ class Cluster(simulation.Simulation,
                     ghost_mem[attr_name] = getattr(self, attr_name)
                     del attr_name
             self.ghost.memory = ghost_mem
+            self.ghost.show_yourself()
