@@ -2,9 +2,8 @@ import sys
 import itertools
 import numpy as np
 import h5py
-
-from .simulation import Simulation
-from .cluster import Cluster
+from . import simulation as s
+from . import cluster as c
 
 def check_dirs(self) -> np.ndarray:
     """
@@ -15,21 +14,17 @@ def check_dirs(self) -> np.ndarray:
     iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
     check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
     for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-        c = Cluster(simulation_name=self.simulation_name,
+        cluster = c.Cluster(simulation_name=self.simulation_name,
                           clusterID=halo_id,
                           redshift=halo_z)
 
-        test = c.is_cluster() * c.is_redshift()
+        test = cluster.is_cluster() * cluster.is_redshift()
         check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
 
         if not test:
             print(process_n, halo_id, halo_z)
 
     return check_matrix
-
-
-sim = Simulation(simulation_name='ceagle')
-check_dirs(sim)
 
 def get_size(obj, seen=None):
     """Recursively finds size of objects"""
@@ -51,11 +46,10 @@ def get_size(obj, seen=None):
         size += sum([get_size(i, seen) for i in obj])
     return size
 
-
 def bahamas_mass_cut():
     n_largeM = 0
     n_total = 0
-    cluster = Cluster(simulation_name='bahamas',
+    cluster = c.Cluster(simulation_name='bahamas',
                       clusterID=0,
                       redshift='z000p000',
                       comovingframe=False,
