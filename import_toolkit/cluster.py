@@ -313,4 +313,4 @@ class Cluster(simulation.Simulation,
                     assert hasattr(self, attr_name)
                     ghost_mem[attr_name] = getattr(self, attr_name)
             self.ghost.memory = ghost_mem
-            self.ghost.show_yourself()
+            self.ghost.show_yourself(verbose=True)
