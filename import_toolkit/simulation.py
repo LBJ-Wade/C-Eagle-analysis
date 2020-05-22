@@ -1,5 +1,6 @@
 from __future__ import print_function, division, absolute_import
 import numpy as np
+from typing import Union, Dict
 import h5py
 from copy import copy
 import os
@@ -17,6 +18,7 @@ class Simulation:
                                          'dark_matter': '1',
                                                'stars': '4',
                                          'black_holes': '5'}
+        self.ghost = Ghost()
 
 
         if self.simulation_name == 'ceagle':
@@ -228,4 +230,30 @@ class Simulation:
                 return '%04d' % (n,)
 
 
+class Ghost:
+    tagger_type = Union[str, int]
+    memory_type = Dict[str, Union[list, np.ndarray]]
+    def __init__(self, tagger: tagger_type = None, memory: memory_type = None):
+        self._tagger = tagger
+        self._memory = memory
+    @property
+    def tagger(self) -> tagger_type:
+        return self._tagger
+    @tagger.setter
+    def tagger(self, newtagger: tagger_type) -> None:
+        self._tagger = newtagger
+    @tagger.deleter
+    def tagger(self) -> None:
+        self._tagger = None
+    @property
+    def memory(self) -> memory_type:
+        return self._memory
+    @memory.setter
+    def memory(self, newmemory: memory_type) -> None:
+        self._memory = newmemory
+    @memory.deleter
+    def memory(self) -> None:
+        self._memory = None
+    def is_awake(self, newtagger: tagger_type) -> bool:
+        return self._tagger != newtagger
 

@@ -59,6 +59,7 @@ class Cluster(simulation.Simulation,
         # Import particle datasets
         if requires is not None:
             self.import_requires()
+            self.groupnumber_ghosting()
 
     def set_simulation_name(self, simulation_name: str) -> None:
         """
@@ -256,25 +257,24 @@ class Cluster(simulation.Simulation,
                 elif field == 'subgroupnumber' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1]))
                 elif field == 'groupnumber' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
+                    if hasattr(self.ghost, part_type+'_'+field):
+                        setattr(self, part_type+'_'+field, hasattr(self.ghost, part_type+'_'+field))
+                    else:
+                        setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
 
             radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
             clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
-
             if (part_type == 'partType0' and
                 hasattr(self, 'partType0_sphdensity') and
                 hasattr(self, 'partType0_temperature')):
-                log_temperature_cut = np.log10(self.density_units(self.partType0_sphdensity, unit_system='nHcgs')) / 3 + 13/3
-                equation_of_state_index = np.where(
-                    (self.partType0_temperature > 1e4) &
-                    (np.log10(self.partType0_temperature) > log_temperature_cut)
-                )[0]
-
-                intersected_index = equation_of_state_index#np.intersect1d(clean_radius_index, equation_of_state_index)
-
+                density = self.density_units(getattr(self, 'partType0_sphdensity'), unit_system='nHcgs')
+                temperature = getattr(self, 'partType0_temperature')
+                log_temperature_cut = np.log10(density) / 3 + 13/3
+                equation_of_state_index = np.where((temperature > 1e4) & (np.log10(temperature) > log_temperature_cut))[0]
+                del density, temperature, log_temperature_cut
+                intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
             else:
                 intersected_index = clean_radius_index
-
             for field in self.requires[part_type]:
                 filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
                 setattr(self, part_type + '_' + field, filtered_attribute)
@@ -295,3 +295,21 @@ class Cluster(simulation.Simulation,
                     setattr(self, field, self.subgroups_kin_energy())
                 elif field == 'subhalo_therm_energy' and not hasattr(self, field):
                     setattr(self, field, self.subgroups_therm_energy())
+
+
+    def groupnumber_ghosting(self) -> None:
+        """
+
+        """
+        assert hasattr(self, 'ghost')
+        if self.ghost.is_awake(self.redshift):
+            del self.ghost.tagger, self.ghost.memory
+            self.ghost.tagger = self.redshift
+            ghost_mem = dict()
+            for key in self.requires:
+                if 'partType' in key:
+                    attr_name = f"{key:s}_groupnumber"
+                    assert hasattr(self, attr_name)
+                    ghost_mem[attr_name] = getattr(self, attr_name)
+                    del attr_name
+            self.ghost.memory = ghost_mem
