@@ -265,7 +265,7 @@ class Ghost:
         tag_size = f"Size in memory: {sys.getsizeof(self.tagger):>10.0f} Bytes"
         mem_size = f"Size in memory: {sys.getsizeof(self.memory.values()):>10.0f} Bytes"
         print(f"{' Ghost class report ':-^100s}")
-        print(f"{tag_name:<60s}{tag_size:<40s}")
-        print(f"{mem_name:<60s}{mem_size:<40s}")
+        print(f"{tag_name:60s}{tag_size:<40s}")
+        print(f"{mem_name:60s}{mem_size:<40s}")
         if verbose: print(self.memory)
 

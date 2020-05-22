@@ -78,29 +78,34 @@ def main():
             'partType4': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity']
     }
 
-    cluster = Cluster(simulation_name='bahamas',
-                      clusterID=14000,
-                      redshift='z003p000',
-                      comovingframe=False,
-                      requires=data_required)
+    def call_cluster(i):
 
-    apertures = cluster.generate_apertures()
-    master_dict = {}
-    for i,r_a in enumerate(apertures):
-        halo_output = {
-                **cluster.group_fofinfo(aperture_radius=cluster.r200),
-                **cluster.group_dynamics(aperture_radius=cluster.r200),
-                **cluster.group_morphology(aperture_radius=cluster.r200)
-        }
-        alignment_dict = alignment.group_alignment(halo_output)
-        halo_output = {
-                **halo_output,
-                **alignment_dict
-        }
-        master_dict[f'aperture{i:02d}'] = halo_output
-        del halo_output, alignment_dict
-    print(f"\nmaster_dict: \tOutput size {sys.getsizeof(master_dict) / 1024:2.0f} kB")
-    for key in master_dict: print(key)
+        cluster = Cluster(simulation_name='bahamas',
+                          clusterID=i,
+                          redshift='z003p000',
+                          comovingframe=False,
+                          requires=data_required)
+
+        apertures = cluster.generate_apertures()
+        master_dict = {}
+        for i,r_a in enumerate(apertures):
+            halo_output = {
+                    **cluster.group_fofinfo(aperture_radius=cluster.r200),
+                    **cluster.group_dynamics(aperture_radius=cluster.r200),
+                    **cluster.group_morphology(aperture_radius=cluster.r200)
+            }
+            alignment_dict = alignment.group_alignment(halo_output)
+            halo_output = {
+                    **halo_output,
+                    **alignment_dict
+            }
+            master_dict[f'aperture{i:02d}'] = halo_output
+            del halo_output, alignment_dict
+        print(f"\nmaster_dict: \tOutput size {sys.getsizeof(master_dict) / 1024:2.0f} kB")
+        for key in master_dict: print(key)
+
+    for i in range(12):
+        call_cluster(i)
 
 
     # def check_dirs(self) -> np.ndarray:
