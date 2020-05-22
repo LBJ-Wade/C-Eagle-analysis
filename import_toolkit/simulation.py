@@ -1,11 +1,10 @@
 from __future__ import print_function, division, absolute_import
 import os
-import sys
 from copy import copy
 from typing import Union, Dict
-import h5py
 import numpy as np
 from ._cluster_retriever import redshift_str2num
+from .metadata import get_size
 
 class Simulation:
 
@@ -257,32 +256,13 @@ class Ghost:
         self._memory = None
     def is_awake(self, newtagger: tagger_type) -> bool:
         return self._tagger != newtagger
-    def get_size(self, seen=None):
-        """Recursively finds size of objects"""
-        size = sys.getsizeof(self)
-        if seen is None:
-            seen = set()
-        obj_id = id(self)
-        if obj_id in seen:
-            return 0
-        # Important mark as seen *before* entering recursion to gracefully handle
-        # self-referential objects
-        seen.add(self)
-        if isinstance(self, dict):
-            size += sum([self.get_size(v, seen) for v in self.values()])
-            size += sum([self.get_size(k, seen) for k in self.keys()])
-        elif hasattr(self, '__dict__'):
-            size += self.get_size(self.__dict__, seen)
-        elif hasattr(self, '__iter__') and not isinstance(self, (str, bytes, bytearray)):
-            size += sum([self.get_size(i, seen) for i in self])
-        return size
     def show_yourself(self, verbose: bool = False) -> None:
         tag_label = 'None' if not self.tagger else self.tagger
         mem_label = 'None' if not self.memory else ' '.join(self.memory.keys())
         tag_name = f"Tagger: {tag_label:<15s}"
         mem_name = f"Memory: {mem_label:<15s}"
-        tag_size = f"Size in memory: {self.tagger.__sizeof__():>10.0f} Bytes"
-        mem_size = f"Size in memory: {self.get_size():>10.0f} Bytes"
+        tag_size = f"Size in memory: {get_size(self.tagger):>10.0f} Bytes"
+        mem_size = f"Size in memory: {get_size(self.memory):>10.0f} Bytes"
         print(f"{' Ghost class report ':-^100s}")
         print(f"{tag_name:60s}{tag_size:<40s}")
         print(f"{mem_name:60s}{mem_size:<40s}")
