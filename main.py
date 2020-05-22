@@ -98,6 +98,8 @@ def main():
         print('N_halos:', N_halos)
         print('gn_tot:', gn_tot)
 
+    bahamas_mass_cut()
+
         # def call_cluster(i):
     #     data_required = {
     #             'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
