@@ -1,13 +1,11 @@
 from __future__ import print_function, division, absolute_import
 from typing import List, Dict
 import os
-import sys
 import numpy as np
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
-from import_toolkit import simulation
-from import_toolkit import _cluster_retriever
-from import_toolkit import _cluster_profiler
-from import_toolkit import _cluster_report
+from . import simulation
+from . import _cluster_retriever
+from . import _cluster_profiler
+from . import _cluster_report
 
 class Cluster(simulation.Simulation,
               _cluster_retriever.Mixin,
