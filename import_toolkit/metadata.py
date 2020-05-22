@@ -1,29 +1,29 @@
 import sys
+import os
 import itertools
 import numpy as np
 import h5py
-from . import simulation as s
-from . import cluster as c
 
-def check_dirs(self) -> np.ndarray:
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+from import_toolkit.cluster import Cluster
+from import_toolkit.simulation import Simulation
+
+def check_dirs(simulation_obj) -> np.ndarray:
     """
     Loops over all listed clusters and redshifts and returns a boolean for what clusters and redshifts
     are present in the simulation archive.
     :return:
     """
-    iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
-    check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
+    iterator = itertools.product(simulation_obj.clusterIDAllowed, simulation_obj.redshiftAllowed)
+    check_matrix = np.zeros((len(simulation_obj.clusterIDAllowed), len(simulation_obj.redshiftAllowed)), dtype=np.bool)
     for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
-        cluster = c.Cluster(simulation_name=self.simulation_name,
+        cluster = Cluster(simulation_name=simulation_obj.simulation_name,
                           clusterID=halo_id,
                           redshift=halo_z)
-
         test = cluster.is_cluster() * cluster.is_redshift()
-        check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
-
+        check_matrix[halo_id][simulation_obj.redshiftAllowed.index(halo_z)] = test
         if not test:
             print(process_n, halo_id, halo_z)
-
     return check_matrix
 
 def get_size(obj, seen=None):
@@ -46,14 +46,9 @@ def get_size(obj, seen=None):
         size += sum([get_size(i, seen) for i in obj])
     return size
 
-def bahamas_mass_cut():
+def bahamas_mass_cut(cluster):
     n_largeM = 0
     n_total = 0
-    cluster = c.Cluster(simulation_name='bahamas',
-                      clusterID=0,
-                      redshift='z000p000',
-                      comovingframe=False,
-                      fastbrowsing=True)
     for counter, file in enumerate(cluster.groups_filePaths()):
         print(f"[+] Analysing eagle_subfind_tab file {counter}")
         with h5py.File(file, 'r') as group_file:
