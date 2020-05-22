@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 > access.log
-/usr/local/bin/old-mpi/mpiexec -n 12 python -u ~/C-Eagle-analysis/main.py > ~/C-Eagle-analysis/main.log &
+/usr/local/openmpi-2.0.1-intel/bin/mpiexec -n 12 python -u ./main.py > ./main.log &
