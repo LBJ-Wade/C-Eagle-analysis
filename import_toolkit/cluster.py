@@ -58,7 +58,7 @@ class Cluster(simulation.Simulation,
         # Import particle datasets
         if requires is not None:
             self.import_requires()
-            self.groupnumber_ghosting()
+            # self.groupnumber_ghosting()
 
     def set_simulation_name(self, simulation_name: str) -> None:
         """
@@ -256,10 +256,7 @@ class Cluster(simulation.Simulation,
                 elif field == 'subgroupnumber' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1]))
                 elif field == 'groupnumber' and not hasattr(self, part_type+'_'+field):
-                    if hasattr(self.ghost, part_type+'_'+field):
-                        setattr(self, part_type+'_'+field, getattr(self.ghost, part_type+'_'+field))
-                    else:
-                        setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
 
             radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
             clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
@@ -296,21 +293,17 @@ class Cluster(simulation.Simulation,
                 elif field == 'subhalo_therm_energy' and not hasattr(self, field):
                     setattr(self, field, self.subgroups_therm_energy())
 
-
-    def groupnumber_ghosting(self) -> None:
-        """
-
-        """
-        assert hasattr(self, 'ghost')
-        self.ghost.show_yourself()
-        if self.ghost.is_awake(self.redshift):
-            del self.ghost.tagger, self.ghost.memory
-            self.ghost.tagger = self.redshift
-            ghost_mem = dict()
-            for key in self.requires:
-                if 'partType' in key:
-                    attr_name = f"{key:s}_groupnumber"
-                    assert hasattr(self, attr_name)
-                    ghost_mem[attr_name] = getattr(self, attr_name)
-            self.ghost.memory = ghost_mem
-            self.ghost.show_yourself(verbose=True)
+    # def groupnumber_ghosting(self) -> None:
+    #     assert hasattr(self, 'ghost')
+    #     self.ghost.show_yourself()
+    #     if self.ghost.is_awake(self.redshift):
+    #         del self.ghost.tagger, self.ghost.memory
+    #         self.ghost.tagger = self.redshift
+    #         ghost_mem = dict()
+    #         for key in self.requires:
+    #             if 'partType' in key:
+    #                 attr_name = f"{key:s}_groupnumber"
+    #                 assert hasattr(self, attr_name)
+    #                 ghost_mem[attr_name] = getattr(self, attr_name)
+    #         self.ghost.memory = ghost_mem
+    #         self.ghost.show_yourself(verbose=True)
