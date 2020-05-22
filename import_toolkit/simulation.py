@@ -258,8 +258,10 @@ class Ghost:
     def is_awake(self, newtagger: tagger_type) -> bool:
         return self._tagger != newtagger
     def show_yourself(self, verbose: bool = False) -> None:
+        tag_label = 'None' if not self.tagger else self.tagger
+        mem_label = 'None' if not self.memory else ' '.join(self.memory.keys())
         print(f"{' Ghost class report ':-^70s}")
-        print(f"Tagger: {self.tagger:<40}\tSize in memory: {sys.getsizeof(self.tagger)/1024:3.2f} kB")
-        print(f"Memory: {self.memory.keys()}\tSize in memory: {sys.getsizeof(self.tagger)/1024/1024:3.2f} MB")
+        print(f"Tagger: {tag_label:<40}\tSize in memory: {sys.getsizeof(self.tagger)/1024:3.2f} kB")
+        print(f"Memory: {mem_label}\tSize in memory: {sys.getsizeof(self.tagger)/1024/1024:3.2f} MB")
         if verbose: print(self.memory)
 
