@@ -31,7 +31,7 @@ class Cluster(simulation.Simulation,
         self.requires = requires
 
         if simulation_name == 'bahamas':
-            self.centralFOF_groupNumber = self.halo_num_catalogue_contiguous[self.clusterID+1]
+            self.centralFOF_groupNumber = self.halo_num_catalogue_contiguous[self.clusterID]+1
         self.file_counter, self.groupfof_counter = self.file_group_indexify()
 
         if not fastbrowsing:
