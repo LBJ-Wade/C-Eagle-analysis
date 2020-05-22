@@ -260,8 +260,12 @@ class Ghost:
     def show_yourself(self, verbose: bool = False) -> None:
         tag_label = 'None' if not self.tagger else self.tagger
         mem_label = 'None' if not self.memory else ' '.join(self.memory.keys())
-        print(f"{' Ghost class report ':-^70s}")
-        print(f"Tagger: {tag_label:<40}\tSize in memory: {sys.getsizeof(self.tagger)/1024:3.2f} kB")
-        print(f"Memory: {mem_label}\tSize in memory: {sys.getsizeof(self.tagger)/1024/1024:3.2f} MB")
+        tag_name = f"Tagger: {tag_label:<15s}"
+        mem_name = f"Memory: {mem_label:<15s}"
+        tag_size = f"Size in memory: {sys.getsizeof(self.tagger):3.0f} Bytes"
+        mem_size = f"Size in memory: {sys.getsizeof(self.tagger)/1024/1024:3.2f} MB"
+        print(f"{' Ghost class report ':-^100s}")
+        print(f"{tag_name:<80s}{tag_size:<30s}")
+        print(f"{mem_name:<80s}{mem_size:<30s}")
         if verbose: print(self.memory)
 
