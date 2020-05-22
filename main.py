@@ -91,7 +91,7 @@ def main():
                 m_filter = np.where(m500 > 10 ** 13)[0] + N_halos
                 gn_tot = np.append(gn_tot, m_filter)
                 n_largeM += len(m_filter)
-                N_halos = group_file['Header'].attrs['Ngroups']
+                N_halos += group_file['Header'].attrs['Ngroups']
 
         print('n_largeM:', n_largeM)
         print('n_total:', n_total)
