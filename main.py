@@ -73,6 +73,13 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
     from rotvel_correlation import alignment
+    from mpi4py import MPI
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size()
+    for i in range(12):
+        if rank == i%size:
+            alignment.save_report(i, 'z000p000')
 
     # def bahamas_mass_cut():
     #     cluster = Cluster(simulation_name='bahamas',
@@ -101,40 +108,6 @@ def main():
     #     np.save(f'import_toolkit/bahamas_fofnumber_list_10--13.npy', gn_tot)
     #
     # bahamas_mass_cut()
-
-    def call_cluster(i):
-        data_required = {
-                'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-                'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
-                'partType4': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity']
-        }
-
-        cluster = Cluster(simulation_name='bahamas',
-                          clusterID=14365,
-                          redshift='z000p000',
-                          comovingframe=False,
-                          requires=data_required)
-
-        apertures = cluster.generate_apertures()
-        master_dict = {}
-        for i,r_a in enumerate(apertures):
-            halo_output = {
-                    **cluster.group_fofinfo(aperture_radius=cluster.r200),
-                    **cluster.group_dynamics(aperture_radius=cluster.r200),
-                    **cluster.group_morphology(aperture_radius=cluster.r200)
-            }
-            alignment_dict = alignment.group_alignment(halo_output)
-            halo_output = {
-                    **halo_output,
-                    **alignment_dict
-            }
-            master_dict[f'aperture{i:02d}'] = halo_output
-            del halo_output, alignment_dict
-        print(f"\nmaster_dict: \tOutput size {get_size(master_dict) / 1024:2.0f} kB")
-        for key in master_dict: print(key)
-
-    for i in range(12):
-        call_cluster(i)
 
 
     # def check_dirs(self) -> np.ndarray:
