@@ -59,7 +59,6 @@ class Cluster(simulation.Simulation,
         # Import particle datasets
         if requires is not None:
             self.import_requires()
-            self.groupnumber_ghosting()
 
     def set_simulation_name(self, simulation_name: str) -> None:
         """
@@ -257,11 +256,7 @@ class Cluster(simulation.Simulation,
                 elif field == 'subgroupnumber' and not hasattr(self, part_type+'_'+field):
                     setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1]))
                 elif field == 'groupnumber' and not hasattr(self, part_type+'_'+field):
-                    if hasattr(self.ghost, part_type+'_'+field):
-                        fof_filter = np.where(getattr(self.ghost, part_type+'_'+field)==self.centralFOF_groupNumber)[0]
-                        setattr(self, part_type+'_'+field, getattr(self.ghost, part_type+'_'+field)[fof_filter])
-                    else:
-                        setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
+                    setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
 
             radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
             clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
@@ -299,19 +294,3 @@ class Cluster(simulation.Simulation,
                     setattr(self, field, self.subgroups_therm_energy())
 
 
-    def groupnumber_ghosting(self) -> None:
-        assert hasattr(self, 'ghost')
-        self.ghost.show_yourself()
-        if self.ghost.is_awake(self.redshift):
-            del self.ghost.tagger, self.ghost.memory
-            self.ghost.tagger = self.redshift
-            ghost_mem = dict()
-            for file in self.partdata_filePaths():
-                with h5.File(file, 'r') as h5file:
-                    for key in self.requires:
-                        if key.startswith('partType'):
-                            part_gn = h5file[f'/PartType{key[-1]:s}/GroupNumber'][:]
-                            ghost_mem[f"{key:s}_groupnumber"] = part_gn
-                            del part_gn
-            self.ghost.memory = ghost_mem
-            self.ghost.show_yourself()

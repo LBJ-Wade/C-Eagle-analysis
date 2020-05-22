@@ -18,9 +18,6 @@ class Simulation:
                                          'dark_matter': '1',
                                                'stars': '4',
                                          'black_holes': '5'}
-        self.ghost = Ghost()
-
-
         if self.simulation_name == 'ceagle':
             self.simulation = 'C-EAGLE'
             self.computer = 'cosma.dur.ac.uk'

@@ -38,3 +38,21 @@ def bahamas_mass_cut(cluster):
             n_total += len(m500)
             m_filter = np.where(m500 > 10 ** 13)[0]
             n_largeM += len(m_filter)
+
+# def groupnumber_ghosting(self) -> None:
+#     assert hasattr(self, 'ghost')
+#     self.ghost.show_yourself()
+#     if self.ghost.is_awake(self.redshift):
+#         del self.ghost.tagger, self.ghost.memory
+#         self.ghost.tagger = self.redshift
+#         ghost_mem = dict()
+#         print('Loading particle groupNumbers to ghost memory...')
+#         for file in self.partdata_filePaths():
+#             with h5.File(file, 'r') as h5file:
+#                 for key in self.requires:
+#                     if key.startswith('partType'):
+#                         part_gn = h5file[f'/PartType{key[-1]:s}/GroupNumber'][:]
+#                         ghost_mem[f"{key:s}_groupnumber"] = part_gn
+#                         del part_gn
+#         self.ghost.memory = ghost_mem
+#         self.ghost.show_yourself()
