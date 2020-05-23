@@ -440,14 +440,19 @@ class Mixin:
         if self.simulation_name is 'bahamas':
             for file in kwargs['file_list_sorted']:
                 with h5.File(file, 'r') as h5file:
-                    data_size = h5file['Header'].attrs['NumPart_ThisFile'][int(part_type)]
-                    for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
-                        index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size-1
-                        part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
-                        part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0] + index_start
-                        group_number = np.concatenate((group_number, part_gn_index), axis=0)
-                        yield ((counter + 1) / (length_operation*data_size/CHUNK_SIZE))  # Give control back to decorator
-                        counter += 1
+                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
+                    part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+                    group_number = np.concatenate((group_number, part_gn_index), axis=0)
+                    yield ((counter + 1) / (length_operation))  # Give control back to decorator
+                    counter += 1
+                    # data_size = h5file['Header'].attrs['NumPart_ThisFile'][int(part_type)]
+                    # for index_shift, index_start in enumerate(range(0, data_size, CHUNK_SIZE)):
+                    #     index_end = index_shift*(CHUNK_SIZE+1)-1 if (index_shift+1)*CHUNK_SIZE-1 < data_size else data_size-1
+                    #     part_gn = h5file[f'/PartType{part_type}/GroupNumber'][index_start:index_end]
+                    #     part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0] + index_start
+                    #     group_number = np.concatenate((group_number, part_gn_index), axis=0)
+                    #     yield ((counter + 1) / (length_operation*data_size/CHUNK_SIZE))  # Give control back to decorator
+                    #     counter += 1
 
         else:
             base_index_shift = 0

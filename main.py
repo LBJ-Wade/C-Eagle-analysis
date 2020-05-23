@@ -77,7 +77,7 @@ def main():
     comm = MPI.COMM_WORLD
     rank = comm.Get_rank()
     size = comm.Get_size()
-    for i in range(12):
+    for i in range(24):
         if rank == i%size:
             alignment.save_report(i, 'z000p000')
 

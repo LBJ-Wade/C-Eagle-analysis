@@ -153,3 +153,4 @@ def save_report(clusterID: int, redshift: str) -> None:
 	if not os.path.exists(pathFile):
 		os.makedirs(pathFile)
 	write.save_dict_to_hdf5(master_dict, os.path.join(pathFile, f"halo_{cluster.clusterID}"))
+	del cluster
