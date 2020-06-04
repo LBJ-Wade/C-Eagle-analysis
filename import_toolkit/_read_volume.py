@@ -422,8 +422,16 @@ class Mixin:
             part_type = self.particle_type_conversion[part_type] if len(part_type) > 1 else part_type
             counter = 0
             length_operation = len(kwargs['file_list_sorted'])
-            part_gn_index = getattr(self, f'pgn{part_type}')
-            print('Here!')
+            pathFile = os.path.join(
+                    self.pathSave,
+                    'alignment_project',
+                    'BAHAMAS_groupnumber_repo',
+                    'hydro',
+                    f"{self.redshift}",
+                    f"halo_{self.clusterID:0>5d}",
+                    f"partGroupNumber{part_type}.npy"
+            )
+            part_gn_index = np.load(pathFile)
             assert len(part_gn_index) > 0, "Array is empty."
             yield ((counter + 1) / (length_operation))  # Give control back to decorator
             counter += 1

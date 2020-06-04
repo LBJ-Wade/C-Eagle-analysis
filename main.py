@@ -44,7 +44,12 @@ __FILE__ = """
 
 __PROFILE__ = False
 
-
+import itertools
+import numpy as np
+import h5py as h5
+import sys
+import os
+from scipy.sparse import csr_matrix
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -67,13 +72,17 @@ def time_func(function):
         return function_result
     return new_func
 
+def compute_M(data):
+    cols = np.arange(data.size)
+    return csr_matrix((cols, (data.ravel(), cols)), shape=(data.max() + 1, data.size))
+
+def get_indices_sparse(data):
+    M = compute_M(data)
+    return [np.unravel_index(row.data, data.shape) for row in M]
+
 @time_func
 def main():
-    import itertools
-    import numpy as np
-    import h5py as h5
-    import sys
-    import os
+
     from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
@@ -150,9 +159,8 @@ def main():
     comm.Barrier()
     # Initialise the allocation for cluster reports
     clusterID_pool = np.arange(N_HALOS)
-    clusterID_pool_split = np.array_split(clusterID_pool, size)
-    if rank == clusterID_pool_split.index(rank):
-        for i in clusterID_pool_split[rank]:
+    for i in clusterID_pool:
+        if rank == i%size:
 
             print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
             cluster = Cluster(simulation_name=SIMULATION,
