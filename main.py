@@ -108,6 +108,10 @@ def main():
     print("Rank: ", rank, ". pgn1 is:\n", simulation.pgn1)
     print("Rank: ", rank, ". pgn4 is:\n", simulation.pgn4)
 
+    # Import particle datasets
+    if data_required:
+        cluster.import_requires()
+
     print(cluster.group_fofinfo())
 
     # for i in range(12):

@@ -73,10 +73,6 @@ class Cluster(simulation.Simulation,
 			if rank == 0:
 				print(f'[+] Creating global info file: glob.yaml. Contents:', documents)
 
-		# Import particle datasets
-		if requires is not None:
-			self.import_requires()
-
 	def set_simulation_name(self, simulation_name: str) -> None:
 		"""
         Function to set the simulation_name attribute and assign it to the Cluster object.
