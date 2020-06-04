@@ -2,13 +2,21 @@ from __future__ import print_function, division, absolute_import
 from typing import List, Dict
 import os
 import numpy as np
+import yaml
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
+
 from . import simulation
-from . import _cluster_retriever
+from . import _read_volume
+from . import _read_zoom
 from . import _cluster_profiler
 from . import _cluster_report
 
 class Cluster(simulation.Simulation,
-              _cluster_retriever.Mixin,
+              _read_volume.Mixin,
+              _read_zoom.Mixin,
               _cluster_profiler.Mixin,
               _cluster_report.Mixin):
 
@@ -293,3 +301,13 @@ class Cluster(simulation.Simulation,
                     setattr(self, field, self.subgroups_therm_energy())
 
 
+    def global_snapredshift_yaml(self):
+		dict_file = self.get_simyaml()
+		if dict_file['setup'] == 'volume':
+			dict_file['redshift'] = self.redshift
+	        with open(f'glob.yaml', 'w') as file:
+	            documents = yaml.dump(dict_file, file)
+	            if rank == 0:
+	                print(f'[+] Creating global info file: glob.yaml. Contents:')
+	                for item, doc in documents.items():
+	                    print("[+]\t", item, ":", doc)

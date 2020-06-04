@@ -4,6 +4,11 @@ import sys
 from copy import copy
 from typing import Union, Dict
 import numpy as np
+import yaml
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 from ._cluster_retriever import redshift_str2num
 
 class Simulation:
@@ -12,20 +17,24 @@ class Simulation:
 
     def __init__(self, simulation_name = 'celr_b'):
 
-        self.simulation_name = simulation_name
-        self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
         self.particle_type_conversion = {        'gas': '0',
                                          'dark_matter': '1',
                                                'stars': '4',
                                          'black_holes': '5'}
-        if self.simulation_name == 'ceagle':
+
+        if simulation_name == 'ceagle':
+            self.simulation_name = simulation_name
+            self.setup = 'zoom'
             self.simulation = 'C-EAGLE'
             self.computer = 'cosma.dur.ac.uk'
             self.pathData = '/cosma5/data/dp004/C-EAGLE/Complete_Sample'
+            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
             self.cluster_prefix = 'CE_'
             self.totalClusters = 30
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            self.centralFOF_groupNumber = 1
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH, f'{self.simulation_name}_sample_completeness.npy'))
             self.zcat = {
                 'z_value':
                     ['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825',
@@ -40,18 +49,21 @@ class Simulation:
                      '018', '019', '020', '021', '022', '023', '024', '025', '026',
                      '027', '028', '029'][::-1]}
             self.redshiftAllowed = self.zcat['z_value']
-            self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
 
-        elif self.simulation_name == 'celr_b':
+
+        elif simulation_name == 'celr_b':
+            self.simulation_name = simulation_name
+            self.setup = 'zoom'
             self.simulation = 'CELR-bahamas'
             self.computer = 'cosma.dur.ac.uk'
             self.pathData = '/cosma5/data/dp004/dc-pear3/data/bahamas'
+            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
             self.cluster_prefix = 'halo_'
             self.totalClusters = 45
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
+            self.centralFOF_groupNumber = 1
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH, f'{self.simulation_name}_sample_completeness.npy'))
             self.zcat = {
                 'z_value':
                     ['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825',
@@ -66,64 +78,64 @@ class Simulation:
                      '018', '019', '020', '021', '022', '023', '024', '025', '026',
                      '027', '028', '029'][::-1]}
             self.redshiftAllowed = self.zcat['z_value']
-            self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
 
 
-        elif self.simulation_name == 'celr_e':
+
+        elif simulation_name == 'celr_e':
+            self.simulation_name = simulation_name
+            self.setup = 'zoom'
             self.simulation = 'CELR-eagle'
             self.computer = 'cosma.dur.ac.uk'
             self.pathData = '/cosma5/data/dp004/dc-pear3/data/eagle'
+            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
             self.cluster_prefix = 'halo_'
             self.totalClusters = 45
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
-            self.zcat = {
-                'z_value':
-                    ['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825',
-                     'z002p348', 'z001p993', 'z001p716', 'z001p493', 'z001p308',
-                     'z001p151', 'z001p017', 'z000p899', 'z000p795', 'z000p703',
-                     'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366',
-                     'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155',
-                     'z000p113', 'z000p101', 'z000p073', 'z000p036', 'z000p000'][::-1],
-                'z_IDNumber':
-                    ['000', '001', '002', '003', '004', '005', '006', '007', '008',
-                     '009', '010', '011', '012', '013', '014', '015', '016', '017',
-                     '018', '019', '020', '021', '022', '023', '024', '025', '026',
-                     '027', '028', '029'][::-1]}
-            self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH, f'{self.simulation_name}_sample_completeness.npy'))
+            self.zcat = {
+                    'z_value'   :
+                        ['z014p003', 'z006p772', 'z004p614', 'z003p512', 'z002p825',
+                         'z002p348', 'z001p993', 'z001p716', 'z001p493', 'z001p308',
+                         'z001p151', 'z001p017', 'z000p899', 'z000p795', 'z000p703',
+                         'z000p619', 'z000p543', 'z000p474', 'z000p411', 'z000p366',
+                         'z000p352', 'z000p297', 'z000p247', 'z000p199', 'z000p155',
+                         'z000p113', 'z000p101', 'z000p073', 'z000p036', 'z000p000'][::-1],
+                    'z_IDNumber':
+                        ['000', '001', '002', '003', '004', '005', '006', '007', '008',
+                         '009', '010', '011', '012', '013', '014', '015', '016', '017',
+                         '018', '019', '020', '021', '022', '023', '024', '025', '026',
+                         '027', '028', '029'][::-1]}
+            self.redshiftAllowed = self.zcat['z_value']
 
 
-        elif self.simulation_name == 'macsis':
+        elif simulation_name == 'macsis':
+            self.simulation_name = simulation_name
+            self.setup = 'zoom'
             self.simulation = 'MACSIS'
             self.computer = 'cosma.dur.ac.uk'
             self.pathData = '/cosma5/data/dp004/dc-hens1/macsis/macsis_gas'
+            self.pathSave = '/cosma6/data/dp004/dc-alta2/C-Eagle-analysis-work'
             self.cluster_prefix = 'halo_'
             self.totalClusters = 390
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
-            self.zcat = {
-                'z_float':
-                    [49.0, 19.0, 4.68754, 4.06058, 3.5304, 3.07779, 2.68795, 2.34947, 2.05331, 1.79232, 1.56074,
-                     1.35389, 1.16792, 0.999664, 0.84648, 0.706144, 0.576777, 0.456775, 0.344769, 0.239577, 0.140172,
-                     0.0456642, 2.22045e-16][::-1],
-                'z_value':
-                    ['z049p000', 'z019p000', 'z004p688', 'z004p061', 'z003p053', 'z003p078', 'z002p688', 'z002p349',
-                     'z002p053', 'z001p792', 'z001p561', 'z001p354', 'z001p168', 'z001p000', 'z000p846', 'z000p706',
-                     'z000p577', 'z000p457', 'z000p345', 'z000p240', 'z000p140', 'z000p046', 'z000p000'][::-1],
-                'z_IDNumber':
-                    ['000', '001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011', '012', '013',
-                     '014', '015', '016', '017', '018', '019', '020', '021', '022'][::-1]}
-            self.redshiftAllowed = self.zcat['z_value']
             self.centralFOF_groupNumber = 1
-            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH,
-                                                            f'{self.simulation_name}_sample_completeness.npy'))
-
-
+            self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH, f'{self.simulation_name}_sample_completeness.npy'))
+            self.zcat = {
+                    'z_float'   :
+                        [49.0, 19.0, 4.68754, 4.06058, 3.5304, 3.07779, 2.68795, 2.34947, 2.05331, 1.79232, 1.56074,
+                         1.35389, 1.16792, 0.999664, 0.84648, 0.706144, 0.576777, 0.456775, 0.344769, 0.239577, 0.140172,
+                         0.0456642, 2.22045e-16][::-1],
+                    'z_value'   :
+                        ['z049p000', 'z019p000', 'z004p688', 'z004p061', 'z003p053', 'z003p078', 'z002p688', 'z002p349',
+                         'z002p053', 'z001p792', 'z001p561', 'z001p354', 'z001p168', 'z001p000', 'z000p846', 'z000p706',
+                         'z000p577', 'z000p457', 'z000p345', 'z000p240', 'z000p140', 'z000p046', 'z000p000'][::-1],
+                    'z_IDNumber':
+                        ['000', '001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011', '012', '013',
+                         '014', '015', '016', '017', '018', '019', '020', '021', '022'][::-1]}
+            self.redshiftAllowed = self.zcat['z_value']
             self.halo_num_catalogue_contiguous = [
                 '0000', '0001', '0002', '0003', '0004', '0005', '0006', '0007', '0008', '0009', '0010', '0011',
                 '0012', '0013', '0014', '0015', '0016', '0017', '0018', '0019', '0020', '0021', '0022', '0023',
@@ -159,15 +171,19 @@ class Simulation:
                 '7952', '8052', '8152', '8252', '8352', '8452', '8552', '8652', '8763', '8873', '8983', '9093',
                 '9203', '9313', '9423', '9533', '9643', '9753']
 
-        elif self.simulation_name == 'bahamas':
+        elif simulation_name == 'bahamas':
+            self.simulation_name = simulation_name
+            self.setup = 'volume'
             self.simulation = 'BAHAMAS'
             self.computer = 'virgo_nas@mizar.jb.man.ac.uk'
             self.pathData = '/scratch/nas_virgo/Cosmo-OWLS/AGN_TUNED_nu0_L400N1024_Planck'
+            self.pathSave = '/local/scratch/altamura/analysis_results'
             self.cluster_prefix = 'halo_'
             self.totalClusters = 14366
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.halo_num_catalogue_contiguous = np.load(os.path.join(self.CURRENT_PATH, 'bahamas_fofnumber_list_10--13.npy'))
             self.subjectsAllowed = ['particledata', 'groups']
+            self.centralFOF_groupNumber = None
             self.zcat = {
                     'z_float'   :
                         [3, 2.75, 2.5, 2.25, 2, 1.75, 1.5, 1.25, 1, 0.749999, 0.499999, 0.374999,
@@ -179,12 +195,6 @@ class Simulation:
                         ['018', '019', '020', '021', '022', '023', '024', '025', '026', '027', '028', '029', '030',
                          '031', '032'][::-1]}
             self.redshiftAllowed = self.zcat['z_value']
-            self.centralFOF_groupNumber = None
-
-        else:
-            raise(ValueError("Simulation name error: expected [`ceagle` or, `celr_b` or, `celr_e` or, `macsis` "
-                             "or, `bahamas`], got {}.".format(simulation_name)))
-
 
     def set_pathData(self, newPath: str):
         self.pathData = newPath
@@ -200,7 +210,6 @@ class Simulation:
             return [redshift_str2num(z) for z in self.redshiftAllowed]
 
     def info(self, verbose: bool = False):
-
         if not verbose:
             print('------------------------------------------------------------------')
             print('                           CLASS INFO                             ')
@@ -230,6 +239,22 @@ class Simulation:
                 return '%05d' % (n,)
             elif self.totalClusters > 100000 and self.totalClusters < 1000000:
                 return '%06d' % (n,)
+
+    def global_setup_yaml(self):
+        with open(f'glob.yaml', 'w') as file:
+            dict_file = {}
+            dict_file['setup'] = self.setup
+            documents = yaml.dump(dict_file, file)
+            if rank == 0:
+                print(f'[+] Creating global info file: glob.yaml. Contents:')
+                for item, doc in documents.items():
+                    print("[+]\t", item, ":", doc)
+
+    @staticmethod
+    def get_simyaml():
+        with open(f'glob.yaml', 'r') as file:
+            documents = yaml.full_load(file)
+            return documents
 
 
 class Ghost:

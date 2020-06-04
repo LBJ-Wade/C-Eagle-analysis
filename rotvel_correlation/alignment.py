@@ -120,7 +120,6 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 
 
 def save_report(clusterID: int, redshift: str) -> None:
-	pathSave = "/local/scratch/altamura/analysis_results/"
 	data_required = {
 			'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
 			'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
@@ -147,9 +146,9 @@ def save_report(clusterID: int, redshift: str) -> None:
 		master_dict[f'aperture{i:02d}'] = halo_output
 		del halo_output, alignment_dict
 
-	if not os.path.exists(os.path.join(pathSave, 'alignment_project')):
-		os.makedirs(os.path.join(pathSave, 'alignment_project'))
-	pathFile = os.path.join(pathSave, 'alignment_project', f"{cluster.redshift}")
+	if not os.path.exists(os.path.join(cluster.pathSave, 'alignment_project')):
+		os.makedirs(os.path.join(cluster.pathSave, 'alignment_project'))
+	pathFile = os.path.join(cluster.pathSave, 'alignment_project', f"{cluster.redshift}")
 	if not os.path.exists(pathFile):
 		os.makedirs(pathFile)
 	write.save_dict_to_hdf5(master_dict, os.path.join(pathFile, f"halo_{cluster.clusterID}"))
