@@ -106,10 +106,10 @@ def main():
             pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn0_0)]
         elif rank == 1:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (1)...")
-            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn0_0):]
+            pgn0_1[:] = h5file[f'/PartType0/GroupNumber'][len(pgn0_0):]
         elif rank == 2:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (0)...")
-            pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn1_0)]
+            pgn1_0[:] = h5file[f'/PartType1/GroupNumber'][:len(pgn1_0)]
         elif rank == 3:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
             pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn1_0):]
@@ -117,8 +117,8 @@ def main():
             print(f"[+] RANK {rank}: collecting star particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
 
-    comm.Barrier()
     # Merge arrays
+    comm.Barrier()
     if rank == 1:
         comm.Send([pgn0_1, MPI.INT], dest=0, tag=77)
     elif rank == 0:
@@ -131,6 +131,7 @@ def main():
         comm.Recv([pgn1_1, MPI.INT], source=3, tag=75)
         pgn1[:len(pgn1_0)] = pgn1_0
         pgn1[len(pgn1_0):] = pgn1_1
+
     comm.Barrier()
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=2)
