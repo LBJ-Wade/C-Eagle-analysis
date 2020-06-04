@@ -141,12 +141,11 @@ def main():
     # print(f"Rank: {rank}\tpgn0[10000] = {pgn0[10000]}")
     # print(f"Rank: {rank}\tpgn1[10000] = {pgn1[10000]}")
     # print(f"Rank: {rank}\tpgn4[10000] = {pgn4[10000]}")
-
-    comm.Barrier()
-    if rank == 0:
-        print('pgn0 == 1', np.where(pgn0 == 1)[0])
-        print('pgn1 == 1', np.where(pgn1 == 1)[0])
-        print('pgn4 == 1', np.where(pgn4 == 1)[0])
+    # comm.Barrier()
+    # if rank == 0:
+    #     print('pgn0 == 1', np.where(pgn0 == 1)[0])
+    #     print('pgn1 == 1', np.where(pgn1 == 1)[0])
+    #     print('pgn4 == 1', np.where(pgn4 == 1)[0])
 
     comm.Barrier()
     # Initialise the allocation for cluster reports

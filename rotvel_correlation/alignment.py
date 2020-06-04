@@ -121,22 +121,19 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 
 def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) -> None:
 	data_required = {
-			'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-			'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
-			'partType4': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity']
+			'partType0': ['subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
+			'partType1': ['subgroupnumber', 'mass', 'coordinates', 'velocity'],
+			'partType4': ['subgroupnumber', 'mass', 'coordinates', 'velocity']
 	}
 	cluster = Cluster(simulation_name='bahamas',
 	                  clusterID=clusterID,
 	                  redshift=redshift,
 	                  requires=data_required)
-
-	setattr(cluster, 'pgn0', np.where(glob[0]==cluster.centralFOF_groupNumber)[0])
-	setattr(cluster, 'pgn1', np.where(glob[1]==cluster.centralFOF_groupNumber)[0])
-	setattr(cluster, 'pgn4', np.where(glob[2]==cluster.centralFOF_groupNumber)[0])
+	print('cluster.centralFOF_groupNumber', cluster.centralFOF_groupNumber)
+	setattr(cluster, 'partType0_groupnumber', np.where(glob[0]==cluster.centralFOF_groupNumber)[0])
+	setattr(cluster, 'partType1_groupnumber', np.where(glob[1]==cluster.centralFOF_groupNumber)[0])
+	setattr(cluster, 'partType4_groupnumber', np.where(glob[2]==cluster.centralFOF_groupNumber)[0])
 	cluster.import_requires()
-	delattr(cluster, 'pgn0')
-	delattr(cluster, 'pgn1')
-	delattr(cluster, 'pgn4')
 	apertures = cluster.generate_apertures()
 	master_dict = {}
 	for i, r_a in enumerate(apertures):
