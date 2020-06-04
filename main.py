@@ -94,7 +94,7 @@ def main():
     pgn0 = None
     pgn1 = None
     pgn4 = None
-    with h5.File(file_GN, 'r', driver='mpio', comm=MPI.COMM_WORLD) as h5file:
+    with h5.File(file_GN, 'r') as h5file:
         if rank == 0:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
             pgn0 = h5file[f'/PartType0/GroupNumber'][:]
