@@ -120,7 +120,7 @@ def main():
 
     for i in range(N_HALOS):
         if rank == i%size:
-            print(f"[+] RANK {rank}: initializing report {SIMULATION:>10s} {i:<5s} {REDSHIFT:<10s}...")
+            print(f"[+] RANK {rank}: initializing report {SIMULATION:>10s} {i:<5d} {REDSHIFT:<10s}...")
             alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
 
     comm.Barrier()
