@@ -133,7 +133,6 @@ def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) ->
 	setattr(cluster, 'pgn0', glob[0])
 	setattr(cluster, 'pgn1', glob[1])
 	setattr(cluster, 'pgn4', glob[2])
-	cluster.info()
 	cluster.import_requires()
 	apertures = cluster.generate_apertures()
 	master_dict = {}

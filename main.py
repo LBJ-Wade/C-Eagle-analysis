@@ -79,44 +79,48 @@ def main():
     from import_toolkit._cluster_retriever import redshift_str2num
     from rotvel_correlation import alignment
 
+    SIMULATION = 'bahamas'
+    REDSHIFT = 'z000p000'
+    N_HALOS = 3
 
+    # -----------------------------------------------------------------------
 
-    cluster = Cluster(simulation_name='bahamas',
+    cluster = Cluster(simulation_name=SIMULATION,
                       clusterID=0,
-                      redshift='z003p000',
+                      redshift=REDSHIFT,
                       fastbrowsing=True)
     file_GN = cluster.partdata_filePaths()[0]
     del cluster
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
-    pgn0 = np.empty(3, dtype='i')
-    pgn1 = np.empty(3, dtype='i')
-    pgn4 = np.empty(3, dtype='i')
-    # pgn0 = np.empty(Nparticles[0], dtype='i')
-    # pgn1 = np.empty(Nparticles[1], dtype='i')
-    # pgn4 = np.empty(Nparticles[2], dtype='i')
+    # pgn0 = np.empty(3, dtype='i')
+    # pgn1 = np.empty(3, dtype='i')
+    # pgn4 = np.empty(3, dtype='i')
+    pgn0 = np.empty(Nparticles[0], dtype='i')
+    pgn1 = np.empty(Nparticles[1], dtype='i')
+    pgn4 = np.empty(Nparticles[2], dtype='i')
 
     with h5.File(file_GN, 'r') as h5file:
         if rank == 0:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
-            pgn0[:] = h5file[f'/PartType0/GroupNumber'][:3]
+            pgn0[:] = h5file[f'/PartType0/GroupNumber'][:]
         elif rank == 1:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
-            pgn1[:] = h5file[f'/PartType1/GroupNumber'][:3]
+            pgn1[:] = h5file[f'/PartType1/GroupNumber'][:]
         elif rank == 2:
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
-            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:3]
+            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
 
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=1)
     comm.Bcast([pgn4, MPI.INT], root=2)
-    print("Rank: ", rank, ". pgn0 is:", pgn0)
-    print("Rank: ", rank, ". pgn1 is:", pgn1)
-    print("Rank: ", rank, ". pgn4 is:", pgn4)
+    print(f"Rank: {rank}\tlen(pgn0) = {len(pgn0)}")
+    print(f"Rank: {rank}\tlen(pgn1) = {len(pgn1)}")
+    print(f"Rank: {rank}\tlen(pgn4) = {len(pgn4)}")
 
-    for i in range(3):
+    for i in range(N_HALOS):
         if rank == i%size:
-            alignment.save_report(i, 'z000p000', glob=[pgn0, pgn1, pgn4])
+            alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
 
     comm.Barrier()
 
