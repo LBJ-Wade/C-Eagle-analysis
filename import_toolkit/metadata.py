@@ -71,6 +71,17 @@ def ceagle2yaml() -> None:
     with open(f"{documents['simulation_name']}.yaml", 'w') as file:
         yaml.dump(eval(documents), file)
 
+def global_setup_yaml():
+    thisfile_path = os.path.abspath(os.path.dirname(__file__))
+    with open(os.path.join(thisfile_path, 'glob.yaml'), 'w') as file:
+        dict_file = {}
+        dict_file['setup'] = 'volume'
+        documents = yaml.dump(dict_file, file)
+        print(f'[+] Creating global info file: glob.yaml. Contents:')
+        for item, doc in documents.items():
+            print("[+]\t", item, ":", doc)
+global_setup_yaml()
+
 # def groupnumber_ghosting(self) -> None:
 #     assert hasattr(self, 'ghost')
 #     self.ghost.show_yourself()
