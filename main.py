@@ -80,7 +80,7 @@ def main():
     from rotvel_correlation import alignment
 
     SIMULATION = 'bahamas'
-    REDSHIFT = 'z000p000'
+    REDSHIFT = 'z003p000'
     N_HALOS = 3
 
     # -----------------------------------------------------------------------
