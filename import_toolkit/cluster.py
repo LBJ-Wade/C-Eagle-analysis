@@ -65,7 +65,6 @@ class Cluster(simulation.Simulation,
 			self.NumOfSubhalos = self.NumOfSubhalos()
 
 		# Setup yaml global file
-		self.global_setup_yaml()
 		if self.setup == 'volume':
 			dict_file = self.get_simyaml()
 			dict_file['redshift'] = self.redshift

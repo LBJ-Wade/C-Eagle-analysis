@@ -21,6 +21,11 @@ class Simulation:
                                          'dark_matter': '1',
                                                'stars': '4',
                                          'black_holes': '5'}
+        try:
+            self.get_simyaml()
+        except FileNotFoundError or FileExistsError:
+            self.global_setup_yaml()
+
 
         if simulation_name == 'ceagle':
             self.simulation_name = simulation_name
