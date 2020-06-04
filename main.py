@@ -118,14 +118,14 @@ def main():
     print("Rank: ", rank, ". pgn0 is:", pgn0)
     print("Rank: ", rank, ". pgn1 is:", pgn1)
     print("Rank: ", rank, ". pgn4 is:", pgn4)
-    comm.Barrier()
+    comm.Disconnect()
 
     # Import particle datasets
     if data_required:
         cluster.import_requires()
 
     print(cluster.group_fofinfo())
-    comm.Disconnect()
+
 
     # for i in range(12):
     #     if rank == i%size:
