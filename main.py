@@ -97,11 +97,11 @@ def main():
             pgn1 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][1], dtype='d')
             pgn4 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][4], dtype='d')
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
-            pgn0[:] = h5file[f'/PartType0/GroupNumber'][:]
+            pgn0[:] = h5file[f'/PartType0/GroupNumber'][:100]
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
-            pgn1[:] = h5file[f'/PartType1/GroupNumber'][:]
+            pgn1[:] = h5file[f'/PartType1/GroupNumber'][:100]
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
-            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
+            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:100]
 
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=0)
