@@ -138,19 +138,22 @@ def main():
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=2)
     comm.Bcast([pgn4, MPI.INT], root=4)
-    print(f"Rank: {rank}\tpgn0[10000] = {pgn0[10000]}")
-    print(f"Rank: {rank}\tpgn1[10000] = {pgn1[10000]}")
-    print(f"Rank: {rank}\tpgn4[10000] = {pgn4[10000]}")
+    # print(f"Rank: {rank}\tpgn0[10000] = {pgn0[10000]}")
+    # print(f"Rank: {rank}\tpgn1[10000] = {pgn1[10000]}")
+    # print(f"Rank: {rank}\tpgn4[10000] = {pgn4[10000]}")
 
     comm.Barrier()
     if rank == 0:
-        print('pgn0 == 0', np.where(pgn0 == 1)[0])
-        print('pgn1 == 0', np.where(pgn1 == 1)[0])
-        print('pgn4 == 0', np.where(pgn4 == 1)[0])
+        print('pgn0 == 1', np.where(pgn0 == 1)[0])
+        print('pgn1 == 1', np.where(pgn1 == 1)[0])
+        print('pgn4 == 1', np.where(pgn4 == 1)[0])
+
     comm.Barrier()
     # Initialise the allocation for cluster reports
-    for i in range(N_HALOS):
-        if rank == i%size:
+    clusterID_pool = np.arange(N_HALOS)
+    clusterID_pool_split = np.array_split(clusterID_pool, size)
+    if rank == clusterID_pool_split.index(rank):
+        for i in clusterID_pool_split[rank]:
             print(f"[+] RANK {rank}: initializing report {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}...")
             alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
 
