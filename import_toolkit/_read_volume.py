@@ -26,11 +26,11 @@ size = comm.Get_size()
 from .memory import free_memory
 from .progressbar import ProgressBar
 
-# thisfile_path = os.path.abspath(os.path.dirname(__file__))
-# with open(os.path.join(thisfile_path, 'glob.yaml'), 'r') as file:
-#     documents = yaml.full_load(file)
-#     SETUP = documents['setup']
-#     REDSHIFTSNAP = documents['redshift']
+thisfile_path = os.path.abspath(os.path.dirname(__file__))
+with open(os.path.join(thisfile_path, 'glob.yaml'), 'r') as file:
+    documents = yaml.full_load(file)
+    SETUP = documents['setup']
+    REDSHIFTSNAP = documents['redshift']
 
 if SETUP == 'volume':
 
