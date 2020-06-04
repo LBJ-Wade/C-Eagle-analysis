@@ -65,7 +65,7 @@ def time_func(function):
 def main():
     import itertools
     import numpy as np
-    import h5py
+    import h5py as h5
     import sys
     import os
     from import_toolkit.simulation import Simulation
@@ -91,15 +91,17 @@ def main():
                       redshift='z000p000',
                       requires=data_required)
 
-    if rank == 0:
-        print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
-        pgn0 = cluster.load_full_particleGN('0')
-    elif rank == 1:
-        print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
-        pgn1 = cluster.load_full_particleGN('1')
-    elif rank == 2:
-        print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
-        pgn4 = cluster.load_full_particleGN('4')
+    file_GN = cluster.partdata_filePaths()[0]
+    with h5.File(file_GN, 'r') as h5file:
+        if rank == 0:
+            print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
+            pgn0 = h5file[f'/PartType0/GroupNumber'][:]
+        elif rank == 1:
+            print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
+            pgn1 = h5file[f'/PartType1/GroupNumber'][:]
+        elif rank == 2:
+            print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
+            pgn4 = h5file[f'/PartType4/GroupNumber'][:]
 
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=1)
