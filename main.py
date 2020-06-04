@@ -91,6 +91,9 @@ def main():
                       requires=data_required)
 
     file_GN = cluster.partdata_filePaths()[0]
+    pgn0 = None
+    pgn1 = None
+    pgn4 = None
     with h5.File(file_GN, 'r') as h5file:
         if rank == 0:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
@@ -102,9 +105,6 @@ def main():
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
             pgn4 = h5file[f'/PartType4/GroupNumber'][:]
 
-    global pgn0
-    global pgn1
-    global pgn4
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=1)
     comm.Bcast([pgn4, MPI.INT], root=2)
