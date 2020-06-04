@@ -129,7 +129,6 @@ def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) ->
 	                  clusterID=clusterID,
 	                  redshift=redshift,
 	                  requires=data_required)
-	print('cluster.centralFOF_groupNumber', cluster.centralFOF_groupNumber)
 	setattr(cluster, 'partType0_groupnumber', np.where(glob[0]==cluster.centralFOF_groupNumber)[0])
 	setattr(cluster, 'partType1_groupnumber', np.where(glob[1]==cluster.centralFOF_groupNumber)[0])
 	setattr(cluster, 'partType4_groupnumber', np.where(glob[2]==cluster.centralFOF_groupNumber)[0])

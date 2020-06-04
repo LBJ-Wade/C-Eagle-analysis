@@ -153,8 +153,37 @@ def main():
     clusterID_pool_split = np.array_split(clusterID_pool, size)
     if rank == clusterID_pool_split.index(rank):
         for i in clusterID_pool_split[rank]:
-            print(f"[+] RANK {rank}: initializing report {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}...")
-            alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
+
+            print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+            cluster = Cluster(simulation_name=SIMULATION,
+                              clusterID=i,
+                              redshift=REDSHIFT,
+                              fastbrowsing=True)
+            fof_id = cluster.centralFOF_groupNumber
+
+            pathFile = os.path.join(cluster.pathSave, 'alignment_project', 'BAHAMAS_groupnumber_repo')
+            if not os.path.exists(pathFile):
+                os.makedirs(pathFile)
+            pathFile = os.path.join(pathFile, 'hydro')
+            if not os.path.exists(pathFile):
+                os.makedirs(pathFile)
+            pathFile = os.path.join(pathFile, f"{cluster.redshift}")
+            if not os.path.exists(pathFile):
+                os.makedirs(pathFile)
+            pathFile = os.path.join(pathFile, f"halo_{cluster.clusterID:0>5d}")
+            if not os.path.exists(pathFile):
+                os.makedirs(pathFile)
+
+            del cluster
+            partGroupNumber0 = np.where(pgn0 == fof_id)[0]
+            partGroupNumber1 = np.where(pgn1 == fof_id)[0]
+            partGroupNumber4 = np.where(pgn4 == fof_id)[0]
+            np.save('partGroupNumber0.npy', partGroupNumber0)
+            np.save('partGroupNumber1.npy', partGroupNumber1)
+            np.save('partGroupNumber4.npy', partGroupNumber4)
+
+            # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+            # alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
 
 
 
