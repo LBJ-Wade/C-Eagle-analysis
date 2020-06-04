@@ -64,14 +64,14 @@ class Cluster(simulation.Simulation,
 			self.M2500 = self.group_M2500()
 			self.NumOfSubhalos = self.NumOfSubhalos()
 
-		# Setup yaml global file
-		if self.setup == 'volume':
-			dict_file = self.get_simyaml()
-			dict_file['redshift'] = self.redshift
-			with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'w') as file:
-				documents = yaml.dump(dict_file, file)
-			if rank == 0:
-				print(f'[+] Creating global info file: glob.yaml. Contents:', documents)
+		# # Setup yaml global file
+		# if self.setup == 'volume':
+		# 	dict_file = self.get_simyaml()
+		# 	dict_file['redshift'] = self.redshift
+		# 	with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'w') as file:
+		# 		documents = yaml.dump(dict_file, file)
+		# 	if rank == 0:
+		# 		print(f'[+] Creating global info file: glob.yaml. Contents:', documents)
 
 	def set_simulation_name(self, simulation_name: str) -> None:
 		"""
