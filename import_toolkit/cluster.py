@@ -71,9 +71,7 @@ class Cluster(simulation.Simulation,
 			with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'w') as file:
 				documents = yaml.dump(dict_file, file)
 			if rank == 0:
-				print(f'[+] Creating global info file: glob.yaml. Contents:')
-				for item, doc in documents.items():
-					print("[+]\t", item, ":", doc)
+				print(f'[+] Creating global info file: glob.yaml. Contents:', documents)
 
 		# Import particle datasets
 		if requires is not None:

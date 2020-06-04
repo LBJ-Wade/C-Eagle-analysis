@@ -250,9 +250,7 @@ class Simulation:
             dict_file['setup'] = self.setup
             documents = yaml.dump(dict_file, file)
             if rank == 0:
-                print(f'[+] Creating global info file: glob.yaml. Contents:')
-                for item, doc in documents.items():
-                    print("[+]\t", item, ":", doc)
+                print(f'[+] Creating global info file: glob.yaml. Contents:', documents)
 
     def get_simyaml(self):
         with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'r') as file:
