@@ -112,7 +112,7 @@ def main():
             pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn1_0)]
         elif rank == 3:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
-            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn1_1):]
+            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn1_1)-1:]
         elif rank == 4:
             print(f"[+] RANK {rank}: collecting star particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
