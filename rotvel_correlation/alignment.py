@@ -130,10 +130,13 @@ def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) ->
 	                  redshift=redshift,
 	                  requires=data_required)
 
-	setattr(cluster, 'pgn0', glob[0])
-	setattr(cluster, 'pgn1', glob[1])
-	setattr(cluster, 'pgn4', glob[2])
+	setattr(cluster, 'pgn0', np.where(glob[0]==cluster.centralFOF_groupNumber)[0])
+	setattr(cluster, 'pgn1', np.where(glob[1]==cluster.centralFOF_groupNumber)[0])
+	setattr(cluster, 'pgn4', np.where(glob[2]==cluster.centralFOF_groupNumber)[0])
 	cluster.import_requires()
+	delattr(cluster, 'pgn0')
+	delattr(cluster, 'pgn1')
+	delattr(cluster, 'pgn4')
 	apertures = cluster.generate_apertures()
 	master_dict = {}
 	for i, r_a in enumerate(apertures):

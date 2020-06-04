@@ -422,8 +422,7 @@ class Mixin:
             part_type = self.particle_type_conversion[part_type] if len(part_type) > 1 else part_type
             counter = 0
             length_operation = len(kwargs['file_list_sorted'])
-            full_part_gn = getattr(self, f'pgn{part_type}')
-            part_gn_index = np.where(full_part_gn == self.centralFOF_groupNumber)[0]
+            part_gn_index = getattr(self, f'pgn{part_type}')
             print('Here!')
             assert len(part_gn_index) > 0, "Array is empty."
             yield ((counter + 1) / (length_operation))  # Give control back to decorator
