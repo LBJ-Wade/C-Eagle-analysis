@@ -121,6 +121,7 @@ def main():
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
 
+    comm.Barrier()
     # Merge arrays
     if rank == 1:
         comm.Send([pgn0_1, MPI.INT], dest=0, tag=77)
@@ -134,7 +135,7 @@ def main():
         comm.Recv([pgn1_1, MPI.INT], source=3, tag=75)
         pgn1[:int(Nparticles[1]/2)] = pgn1_0
         pgn1[int(Nparticles[1]/2):] = pgn1_1
-
+    comm.Barrier()
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=2)
     comm.Bcast([pgn4, MPI.INT], root=4)
@@ -147,7 +148,7 @@ def main():
             print(f"[+] RANK {rank}: initializing report {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}...")
             alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
 
-    comm.Barrier()
+
 
 
 
