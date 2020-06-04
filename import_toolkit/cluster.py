@@ -4,6 +4,7 @@ import os
 import numpy as np
 import yaml
 from mpi4py import MPI
+
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
@@ -14,61 +15,73 @@ from . import _read_zoom
 from . import _cluster_profiler
 from . import _cluster_report
 
+
 class Cluster(simulation.Simulation,
               _read_volume.Mixin,
               _read_zoom.Mixin,
               _cluster_profiler.Mixin,
               _cluster_report.Mixin):
 
-    def __init__(self,
-                 simulation_name: str = None,
-                 clusterID: int = 0,
-                 redshift: str = None,
-                 comovingframe: bool = False,
-                 requires: Dict[str, List[str]] = None,
-                 fastbrowsing: bool = False):
+	def __init__(self,
+	             simulation_name: str = None,
+	             clusterID: int = 0,
+	             redshift: str = None,
+	             comovingframe: bool = False,
+	             requires: Dict[str, List[str]] = None,
+	             fastbrowsing: bool = False):
 
-        # Link to the base class by initialising it
-        super().__init__(simulation_name = simulation_name)
+		# Link to the base class by initialising it
+		super().__init__(simulation_name=simulation_name)
 
-        # Initialise and validate attributes
-        self.set_simulation_name(simulation_name)
-        self.set_clusterID(clusterID)
-        self.set_redshift(redshift)
-        self.comovingframe = comovingframe
-        self.requires = requires
+		# Initialise and validate attributes
+		self.set_simulation_name(simulation_name)
+		self.set_clusterID(clusterID)
+		self.set_redshift(redshift)
+		self.comovingframe = comovingframe
+		self.requires = requires
 
-        if simulation_name == 'bahamas':
-            self.centralFOF_groupNumber = self.halo_num_catalogue_contiguous[self.clusterID]+1
-        self.file_counter, self.groupfof_counter = self.file_group_indexify()
+		if simulation_name == 'bahamas':
+			self.centralFOF_groupNumber = self.halo_num_catalogue_contiguous[self.clusterID] + 1
+		self.file_counter, self.groupfof_counter = self.file_group_indexify()
 
-        if not fastbrowsing:
+		if not fastbrowsing:
+			# Set additional cosmoloy attributes from methods
+			self.hubble_param = self.file_hubble_param()
+			self.comic_time = self.file_comic_time()
+			self.z = self.file_redshift()
+			self.OmegaBaryon = self.file_OmegaBaryon()
+			self.Omega0 = self.file_Omega0()
+			self.OmegaLambda = self.file_OmegaLambda()
 
-            # Set additional cosmoloy attributes from methods
-            self.hubble_param = self.file_hubble_param()
-            self.comic_time   = self.file_comic_time()
-            self.z            = self.file_redshift()
-            self.OmegaBaryon  = self.file_OmegaBaryon()
-            self.Omega0       = self.file_Omega0()
-            self.OmegaLambda  = self.file_OmegaLambda()
+			# Set FoF attributes
+			self.centre_of_potential = self.group_centre_of_potential()
+			self.r200 = self.group_r200()
+			self.r500 = self.group_r500()
+			self.r2500 = self.group_r2500()
+			self.Mtot = self.group_mass()
+			self.M200 = self.group_M200()
+			self.M500 = self.group_M500()
+			self.M2500 = self.group_M2500()
+			self.NumOfSubhalos = self.NumOfSubhalos()
 
-            # Set FoF attributes
-            self.centre_of_potential = self.group_centre_of_potential()
-            self.r200  = self.group_r200()
-            self.r500  = self.group_r500()
-            self.r2500 = self.group_r2500()
-            self.Mtot  = self.group_mass()
-            self.M200  = self.group_M200()
-            self.M500  = self.group_M500()
-            self.M2500 = self.group_M2500()
-            self.NumOfSubhalos = self.NumOfSubhalos()
+		# Setup yaml global file
+		self.global_setup_yaml()
+		if self.setup == 'volume':
+			dict_file = self.get_simyaml()
+			dict_file['redshift'] = self.redshift
+			with open(f'glob.yaml', 'w') as file:
+				documents = yaml.dump(dict_file, file)
+			if rank == 0:
+				print(f'[+] Creating global info file: glob.yaml. Contents:')
+				for item, doc in documents.items():
+					print("[+]\t", item, ":", doc)
 
-        # Import particle datasets
-        if requires is not None:
-            self.import_requires()
+		# Import particle datasets
+		if requires is not None:
+			self.import_requires()
 
-    def set_simulation_name(self, simulation_name: str) -> None:
-        """
+	def set_simulation_name(self, simulation_name: str) -> None:
+		"""
         Function to set the simulation_name attribute and assign it to the Cluster object.
 
         :param simulation_name: expect str
@@ -76,12 +89,12 @@ class Cluster(simulation.Simulation,
 
         :return: None type
         """
-        assert (simulation_name in ['ceagle', 'celr_b', 'celr_e', 'macsis', 'bahamas']), \
-            "`simulation_name` not recognised."
-        self.simulation_name = simulation_name
+		assert (simulation_name in ['ceagle', 'celr_b', 'celr_e', 'macsis', 'bahamas']), \
+			"`simulation_name` not recognised."
+		self.simulation_name = simulation_name
 
-    def set_clusterID(self, clusterID: int) -> None:
-        """
+	def set_clusterID(self, clusterID: int) -> None:
+		"""
         Function to set the cluster_ID attribute and assign it to the Cluster object.
 
         :param clusterID: expect int
@@ -89,11 +102,11 @@ class Cluster(simulation.Simulation,
 
         :return: None type
         """
-        assert (clusterID in self.clusterIDAllowed), 'clusterID out of bounds.'
-        self.clusterID = clusterID
+		assert (clusterID in self.clusterIDAllowed), 'clusterID out of bounds.'
+		self.clusterID = clusterID
 
-    def set_redshift(self, redshift: str) -> None:
-        """
+	def set_redshift(self, redshift: str) -> None:
+		"""
         Function to set the redshift_string attribute and assign it to the Cluster object.
 
         :param redshift: expect str
@@ -101,86 +114,85 @@ class Cluster(simulation.Simulation,
 
         :return: None type
         """
-        assert (redshift in self.redshiftAllowed), "`redshift` value not recognised."
-        self.redshift = redshift
+		assert (redshift in self.redshiftAllowed), "`redshift` value not recognised."
+		self.redshift = redshift
 
-    def set_requires(self, imports: dict) -> None:
-        self.requires = imports
-        if self.requires == None:
-            print('[ SetRequires ]\t==> Warning: no pull requests for cluster datasets.')
+	def set_requires(self, imports: dict) -> None:
+		self.requires = imports
+		if self.requires == None:
+			print('[ SetRequires ]\t==> Warning: no pull requests for cluster datasets.')
 
-
-    def path_from_cluster_name(self):
-        """
+	def path_from_cluster_name(self):
+		"""
         RETURNS: string type. Path of the hdf5 file to extract data from.
         """
-        # os.chdir(sys.path[0])	# Set working directory as the directory of this file.
-        if self.simulation_name == 'bahamas':
-            return self.pathData
-        else:
-            return os.path.join(self.pathData,
-                                self.cluster_prefix + self.halo_Num(self.clusterID),
-                                'data')
+		# os.chdir(sys.path[0])	# Set working directory as the directory of this file.
+		if self.simulation_name == 'bahamas':
+			return self.pathData
+		else:
+			return os.path.join(self.pathData,
+			                    self.cluster_prefix + self.halo_Num(self.clusterID),
+			                    'data')
 
-    def is_cluster(self) -> bool:
-        """
+	def is_cluster(self) -> bool:
+		"""
         Checks that the cluster's data directory exists.
         :return: Boolean
             True if exists.
         """
-        return os.path.isdir(self.path_from_cluster_name())
+		return os.path.isdir(self.path_from_cluster_name())
 
-    def is_redshift(self, dataset: str = None) -> bool:
-        """
+	def is_redshift(self, dataset: str = None) -> bool:
+		"""
         Checks that the cluster's data directory exists.
         :return: Boolean
             True if exists.
         """
-        if dataset is 'particledata':
-            return os.path.isdir(self.partdata_fileDir())
-        if dataset is 'groups':
-            return os.path.isdir(self.groups_fileDir())
-        if dataset is 'all' or dataset is None:
-            return os.path.isdir(self.partdata_fileDir()) * os.path.isdir(self.groups_fileDir())
+		if dataset is 'particledata':
+			return os.path.isdir(self.partdata_fileDir())
+		if dataset is 'groups':
+			return os.path.isdir(self.groups_fileDir())
+		if dataset is 'all' or dataset is None:
+			return os.path.isdir(self.partdata_fileDir()) * os.path.isdir(self.groups_fileDir())
 
-    def file_hubble_param(self):
-        _, attr_value = self.extract_header_attribute_name('HubbleParam')
-        return attr_value
+	def file_hubble_param(self):
+		_, attr_value = self.extract_header_attribute_name('HubbleParam')
+		return attr_value
 
-    def file_comic_time(self):
-        _, attr_value = self.extract_header_attribute_name('Time')
-        return attr_value
+	def file_comic_time(self):
+		_, attr_value = self.extract_header_attribute_name('Time')
+		return attr_value
 
-    def file_redshift(self):
-        _, attr_value = self.extract_header_attribute_name('Redshift')
-        return attr_value
+	def file_redshift(self):
+		_, attr_value = self.extract_header_attribute_name('Redshift')
+		return attr_value
 
-    def file_OmegaBaryon(self):
-        _, attr_value = self.extract_header_attribute_name('OmegaBaryon')
-        return attr_value
+	def file_OmegaBaryon(self):
+		_, attr_value = self.extract_header_attribute_name('OmegaBaryon')
+		return attr_value
 
-    def file_Omega0(self):
-        _, attr_value = self.extract_header_attribute_name('Omega0')
-        return attr_value
+	def file_Omega0(self):
+		_, attr_value = self.extract_header_attribute_name('Omega0')
+		return attr_value
 
-    def file_OmegaLambda(self):
-        _, attr_value = self.extract_header_attribute_name('OmegaLambda')
-        return attr_value
+	def file_OmegaLambda(self):
+		_, attr_value = self.extract_header_attribute_name('OmegaLambda')
+		return attr_value
 
-    def file_Ngroups(self):
-        _, attr_value = self.extract_header_attribute_name('TotNgroups')
-        return attr_value
+	def file_Ngroups(self):
+		_, attr_value = self.extract_header_attribute_name('TotNgroups')
+		return attr_value
 
-    def file_Nsubgroups(self):
-        _, attr_value = self.extract_header_attribute_name('TotNsubgroups')
-        return attr_value
+	def file_Nsubgroups(self):
+		_, attr_value = self.extract_header_attribute_name('TotNsubgroups')
+		return attr_value
 
-    def file_MassTable(self):
-        _, attr_value = self.extract_header_attribute_name('MassTable')
-        return attr_value
+	def file_MassTable(self):
+		_, attr_value = self.extract_header_attribute_name('MassTable')
+		return attr_value
 
-    def file_NumPart_Total(self):
-        """
+	def file_NumPart_Total(self):
+		"""
         [
             NumPart_Total(part_type0),
             NumPart_Total(part_type1),
@@ -192,17 +204,17 @@ class Cluster(simulation.Simulation,
 
         :return: array of 6 elements
         """
-        _, attr_value = self.extract_header_attribute_name('NumPart_Total')
-        return attr_value
+		_, attr_value = self.extract_header_attribute_name('NumPart_Total')
+		return attr_value
 
-    def DM_particleMass(self):
-        return self.file_MassTable()[1]
+	def DM_particleMass(self):
+		return self.file_MassTable()[1]
 
-    def DM_NumPart_Total(self):
-        return self.file_NumPart_Total()[1]
+	def DM_NumPart_Total(self):
+		return self.file_NumPart_Total()[1]
 
-    def import_requires(self):
-        """
+	def import_requires(self):
+		"""
         -------------------------------------------------------------------------
         Mask method to select only the particles used in the
         analysis, excluding all those which would be thrown out at some
@@ -235,79 +247,67 @@ class Cluster(simulation.Simulation,
             quickly accessed from the RAM.
         -------------------------------------------------------------------------
         """
-        # Subdivide into particle types and subhalo keywords
-        requires_particledata = list()
-        requires_subhalos = list()
-        for key in self.requires.keys():
-            if 'partType' in key:
-                requires_particledata.append(key)
-            if 'subhalo' in key:
-                requires_subhalos.append(key)
+		# Subdivide into particle types and subhalo keywords
+		requires_particledata = list()
+		requires_subhalos = list()
+		for key in self.requires.keys():
+			if 'partType' in key:
+				requires_particledata.append(key)
+			if 'subhalo' in key:
+				requires_subhalos.append(key)
 
-        for part_type in requires_particledata:
-            for field in self.requires[part_type]:
-                if field == 'mass' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_masses(part_type[-1]))
-                elif field == 'coordinates' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_coordinates(part_type[-1]))
-                elif field == 'velocity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_velocity(part_type[-1]))
-                elif field == 'temperature' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_temperature(part_type[-1]))
-                elif field == 'sphdensity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_SPH_density(part_type[-1]))
-                elif field == 'sphkernel' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_SPH_smoothinglength(part_type[-1]))
-                elif field == 'metallicity' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.particle_metallicity(part_type[-1]))
-                elif field == 'subgroupnumber' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.subgroup_number_part(part_type[-1]))
-                elif field == 'groupnumber' and not hasattr(self, part_type+'_'+field):
-                    setattr(self, part_type+'_'+field, self.group_number_part(part_type[-1]))
+		for part_type in requires_particledata:
+			for field in self.requires[part_type]:
+				if field == 'mass' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.particle_masses(part_type[-1]))
+				elif field == 'coordinates' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.particle_coordinates(part_type[-1]))
+				elif field == 'velocity' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.particle_velocity(part_type[-1]))
+				elif field == 'temperature' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.particle_temperature(part_type[-1]))
+				elif field == 'sphdensity' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.particle_SPH_density(part_type[-1]))
+				elif field == 'sphkernel' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.particle_SPH_smoothinglength(part_type[-1]))
+				elif field == 'metallicity' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.particle_metallicity(part_type[-1]))
+				elif field == 'subgroupnumber' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.subgroup_number_part(part_type[-1]))
+				elif field == 'groupnumber' and not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, self.group_number_part(part_type[-1]))
 
-            radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
-            clean_radius_index = np.where(radial_dist < 5*self.r200)[0]
-            if (part_type == 'partType0' and
-                hasattr(self, 'partType0_sphdensity') and
-                hasattr(self, 'partType0_temperature')):
-                density = self.density_units(getattr(self, 'partType0_sphdensity'), unit_system='nHcgs')
-                temperature = getattr(self, 'partType0_temperature')
-                log_temperature_cut = np.log10(density) / 3 + 13/3
-                equation_of_state_index = np.where((temperature > 1e4) & (np.log10(temperature) > log_temperature_cut))[0]
-                del density, temperature, log_temperature_cut
-                intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
-            else:
-                intersected_index = clean_radius_index
-            for field in self.requires[part_type]:
-                if 'groupnumber' not in field:
-                    filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
-                    setattr(self, part_type + '_' + field, filtered_attribute)
+			radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
+			clean_radius_index = np.where(radial_dist < 5 * self.r200)[0]
+			if (part_type == 'partType0' and
+					hasattr(self, 'partType0_sphdensity') and
+					hasattr(self, 'partType0_temperature')):
+				density = self.density_units(getattr(self, 'partType0_sphdensity'), unit_system='nHcgs')
+				temperature = getattr(self, 'partType0_temperature')
+				log_temperature_cut = np.log10(density) / 3 + 13 / 3
+				equation_of_state_index = np.where((temperature > 1e4) & (np.log10(temperature) > log_temperature_cut))[0]
+				del density, temperature, log_temperature_cut
+				intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
+			else:
+				intersected_index = clean_radius_index
+			for field in self.requires[part_type]:
+				if 'groupnumber' not in field:
+					filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
+					setattr(self, part_type + '_' + field, filtered_attribute)
 
-        for subhalo_key in requires_subhalos:
-            for field in self.requires[subhalo_key]:
-                if field == 'subhalo_groupNumber' and not hasattr(self, field):
-                    setattr(self, field, self.subhalo_groupNumber())
-                elif field == 'subhalo_centre_of_potential' and not hasattr(self, field):
-                    setattr(self, field, self.subgroups_centre_of_potential())
-                elif field == 'subhalo_centre_of_mass' and not hasattr(self, field):
-                    setattr(self, field, self.subgroups_centre_of_mass())
-                elif field == 'subhalo_velocity' and not hasattr(self, field):
-                    setattr(self, field, self.subgroups_velocity())
-                elif field == 'subhalo_mass' and not hasattr(self, field):
-                    setattr(self, field, self.subgroups_mass())
-                elif field == 'subhalo_kin_energy' and not hasattr(self, field):
-                    setattr(self, field, self.subgroups_kin_energy())
-                elif field == 'subhalo_therm_energy' and not hasattr(self, field):
-                    setattr(self, field, self.subgroups_therm_energy())
-
-
-    def global_snapredshift_yaml(self):
-		dict_file = self.get_simyaml()
-		if dict_file['setup'] == 'volume':
-			dict_file['redshift'] = self.redshift
-	        with open(f'glob.yaml', 'w') as file:
-	            documents = yaml.dump(dict_file, file)
-	            if rank == 0:
-	                print(f'[+] Creating global info file: glob.yaml. Contents:')
-	                for item, doc in documents.items():
-	                    print("[+]\t", item, ":", doc)
+		for subhalo_key in requires_subhalos:
+			for field in self.requires[subhalo_key]:
+				if field == 'subhalo_groupNumber' and not hasattr(self, field):
+					setattr(self, field, self.subhalo_groupNumber())
+				elif field == 'subhalo_centre_of_potential' and not hasattr(self, field):
+					setattr(self, field, self.subgroups_centre_of_potential())
+				elif field == 'subhalo_centre_of_mass' and not hasattr(self, field):
+					setattr(self, field, self.subgroups_centre_of_mass())
+				elif field == 'subhalo_velocity' and not hasattr(self, field):
+					setattr(self, field, self.subgroups_velocity())
+				elif field == 'subhalo_mass' and not hasattr(self, field):
+					setattr(self, field, self.subgroups_mass())
+				elif field == 'subhalo_kin_energy' and not hasattr(self, field):
+					setattr(self, field, self.subgroups_kin_energy())
+				elif field == 'subhalo_therm_energy' and not hasattr(self, field):
+					setattr(self, field, self.subgroups_therm_energy())

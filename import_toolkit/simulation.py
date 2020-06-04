@@ -254,7 +254,7 @@ class Simulation:
     def get_simyaml():
         with open(f'glob.yaml', 'r') as file:
             documents = yaml.full_load(file)
-            return documents
+        return documents
 
 
 class Ghost:
