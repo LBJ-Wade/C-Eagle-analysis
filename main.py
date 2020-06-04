@@ -96,15 +96,19 @@ def main():
             # pgn0 = np.empty(h5file['Header'].attrs['NumPart_ThisFile'][0], dtype='d')
             # pgn1 = np.empty(h5file['Header'].attrs['NumPart_ThisFile'][1], dtype='d')
             # pgn4 = np.empty(h5file['Header'].attrs['NumPart_ThisFile'][4], dtype='d')
-            pgn0 = np.empty(100, dtype='d')
-            pgn1 = np.empty(100, dtype='d')
-            pgn4 = np.empty(100, dtype='d')
+            pgn0 = np.empty(10, dtype='d')
+            pgn1 = np.empty(10, dtype='d')
+            pgn4 = np.empty(10, dtype='d')
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
-            pgn0[:] = h5file[f'/PartType0/GroupNumber'][:100]
+            pgn0[:] = h5file[f'/PartType0/GroupNumber'][:10]
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
-            pgn1[:] = h5file[f'/PartType1/GroupNumber'][:100]
+            pgn1[:] = h5file[f'/PartType1/GroupNumber'][:10]
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
-            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:100]
+            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:10]
+    else:
+        pgn0 = np.empty(10, dtype='d')
+        pgn1 = np.empty(10, dtype='d')
+        pgn4 = np.empty(10, dtype='d')
 
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=0)
