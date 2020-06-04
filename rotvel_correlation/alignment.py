@@ -155,5 +155,5 @@ def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) ->
 	pathFile = os.path.join(cluster.pathSave, 'alignment_project', f"{cluster.redshift}")
 	if not os.path.exists(pathFile):
 		os.makedirs(pathFile)
-	write.save_dict_to_hdf5(master_dict, os.path.join(pathFile, f"halo_{cluster.clusterID}"))
+	write.save_dict_to_hdf5(master_dict, os.path.join(pathFile, f"halo_{cluster.clusterID}.hdf5"))
 	del cluster
