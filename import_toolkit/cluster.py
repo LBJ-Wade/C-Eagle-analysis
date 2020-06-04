@@ -68,7 +68,7 @@ class Cluster(simulation.Simulation,
 		if self.setup == 'volume':
 			dict_file = self.get_simyaml()
 			dict_file['redshift'] = self.redshift
-			with open(f'glob.yaml', 'w') as file:
+			with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'w') as file:
 				documents = yaml.dump(dict_file, file)
 			if rank == 0:
 				print(f'[+] Creating global info file: glob.yaml. Contents:')

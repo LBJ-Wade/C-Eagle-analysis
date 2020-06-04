@@ -246,7 +246,7 @@ class Simulation:
                 return '%06d' % (n,)
 
     def global_setup_yaml(self):
-        with open(f'glob.yaml', 'w') as file:
+        with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'w') as file:
             dict_file = {}
             dict_file['setup'] = self.setup
             documents = yaml.dump(dict_file, file)
@@ -255,9 +255,8 @@ class Simulation:
                 for item, doc in documents.items():
                     print("[+]\t", item, ":", doc)
 
-    @staticmethod
-    def get_simyaml():
-        with open(f'glob.yaml', 'r') as file:
+    def get_simyaml(self):
+        with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'r') as file:
             documents = yaml.full_load(file)
         return documents
 
