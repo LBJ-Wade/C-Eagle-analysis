@@ -22,10 +22,6 @@ class Simulation:
                                                'stars': '4',
                                          'black_holes': '5'}
 
-        if not os.path.isfile(os.path.join(self.CURRENT_PATH, 'glob.yaml')):
-            self.global_setup_yaml()
-
-
         if simulation_name == 'ceagle':
             self.simulation_name = simulation_name
             self.setup = 'zoom'
@@ -200,6 +196,10 @@ class Simulation:
                          '031', '032'][::-1]}
             self.redshiftAllowed = self.zcat['z_value']
 
+
+        if not os.path.isfile(os.path.join(self.CURRENT_PATH, 'glob.yaml')):
+            self.global_setup_yaml()
+
     def set_pathData(self, newPath: str):
         self.pathData = newPath
 
@@ -256,63 +256,3 @@ class Simulation:
         with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'r') as file:
             documents = yaml.full_load(file)
         return documents
-
-
-class Ghost:
-    tagger_type = Union[str, int]
-    memory_type = Dict[str, Union[list, np.ndarray]]
-    def __init__(self, tagger: tagger_type = None, memory: memory_type = None):
-        self._tagger = tagger
-        self._memory = memory
-    @property
-    def tagger(self) -> tagger_type:
-        return self._tagger
-    @tagger.setter
-    def tagger(self, newtagger: tagger_type) -> None:
-        self._tagger = newtagger
-    @tagger.deleter
-    def tagger(self) -> None:
-        self._tagger = None
-    @property
-    def memory(self) -> memory_type:
-        return self._memory
-    @memory.setter
-    def memory(self, newmemory: memory_type) -> None:
-        self._memory = newmemory
-    @memory.deleter
-    def memory(self) -> None:
-        self._memory = None
-    def is_awake(self, newtagger: tagger_type) -> bool:
-        return self._tagger != newtagger
-    def show_yourself(self, verbose: bool = False) -> None:
-        tag_label = 'None' if not self.tagger else self.tagger
-        mem_label = 'None' if not self.memory else ' '.join(self.memory.keys())
-        tag_name = f"Tagger: {tag_label:<15s}"
-        mem_name = f"Memory: {mem_label:<15s}"
-        tag_size = f"Size in memory: {get_size(self.tagger):>10.0f} Bytes"
-        mem_size = f"Size in memory: {get_size(self.memory):>10.0f} Bytes"
-        print(f"{' Ghost class report ':-^100s}")
-        print(f"{tag_name:60s}{tag_size:<40s}")
-        print(f"{mem_name:60s}{mem_size:<40s}")
-        if verbose: print(self.memory)
-
-
-def get_size(obj, seen=None):
-    """Recursively finds size of objects"""
-    size = sys.getsizeof(obj)
-    if seen is None:
-        seen = set()
-    obj_id = id(obj)
-    if obj_id in seen:
-        return 0
-    # Important mark as seen *before* entering recursion to gracefully handle
-    # self-referential objects
-    seen.add(obj_id)
-    if isinstance(obj, dict):
-        size += sum([get_size(v, seen) for v in obj.values()])
-        size += sum([get_size(k, seen) for k in obj.keys()])
-    elif hasattr(obj, '__dict__'):
-        size += get_size(obj.__dict__, seen)
-    elif hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes, bytearray)):
-        size += sum([get_size(i, seen) for i in obj])
-    return size

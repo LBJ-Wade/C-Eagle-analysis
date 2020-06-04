@@ -80,22 +80,65 @@ def global_setup_yaml():
         print(f'[+] Creating global info file: glob.yaml. Contents:')
         for item, doc in documents.items():
             print("[+]\t", item, ":", doc)
-global_setup_yaml()
 
-# def groupnumber_ghosting(self) -> None:
-#     assert hasattr(self, 'ghost')
-#     self.ghost.show_yourself()
-#     if self.ghost.is_awake(self.redshift):
-#         del self.ghost.tagger, self.ghost.memory
-#         self.ghost.tagger = self.redshift
-#         ghost_mem = dict()
-#         print('Loading particle groupNumbers to ghost memory...')
-#         for file in self.partdata_filePaths():
-#             with h5.File(file, 'r') as h5file:
-#                 for key in self.requires:
-#                     if key.startswith('partType'):
-#                         part_gn = h5file[f'/PartType{key[-1]:s}/GroupNumber'][:]
-#                         ghost_mem[f"{key:s}_groupnumber"] = part_gn
-#                         del part_gn
-#         self.ghost.memory = ghost_mem
-#         self.ghost.show_yourself()
+
+# def bahamas_mass_cut():
+    #     cluster = Cluster(simulation_name='bahamas',
+    #                     clusterID=0,
+    #                     redshift='z000p000',
+    #                     comovingframe=False,
+    #                     fastbrowsing=True)
+    #     n_largeM = 0
+    #     n_total = 0
+    #     gn_tot = np.zeros(0, dtype=np.int)
+    #     N_halos = 0
+    #     for counter, file in enumerate(cluster.groups_filePaths()):
+    #         print(f"[+] Analysing eagle_subfind_tab file {counter}")
+    #         with h5py.File(file, 'r') as group_file:
+    #             m500 = group_file['/FOF/Group_M_Crit500'][:] * 10 ** 10
+    #             n_total += len(m500)
+    #             m_filter = np.where(m500 > 10 ** 13)[0] + N_halos
+    #             gn_tot = np.append(gn_tot, m_filter)
+    #             n_largeM += len(m_filter)
+    #             N_halos += group_file['Header'].attrs['Ngroups']
+    #
+    #     print('n_largeM:', n_largeM)
+    #     print('n_total:', n_total)
+    #     print('N_halos:', N_halos)
+    #     print('gn_tot:', gn_tot)
+    #     np.save(f'import_toolkit/bahamas_fofnumber_list_10--13.npy', gn_tot)
+    #
+    # bahamas_mass_cut()
+
+
+    # def check_dirs(self) -> np.ndarray:
+    #     """
+    #     Loops over all listed clusters and redshifts and returns a boolean for what clusters and redshifts
+    #     are present in the simulation archive.
+    #     :return:
+    #     """
+    #     iterator = itertools.product(self.clusterIDAllowed, self.redshiftAllowed)
+    #     check_matrix = np.zeros((len(self.clusterIDAllowed), len(self.redshiftAllowed)), dtype=np.bool)
+    #     for process_n, (halo_id, halo_z) in enumerate(list(iterator)):
+    #         c = Cluster(simulation_name=self.simulation_name,
+    #                     clusterID=halo_id,
+    #                     redshift=halo_z)
+    #
+    #         redshift_threshold = redshift_str2num(halo_z) < 1.8
+    #         test = c.is_cluster() * c.is_redshift() * redshift_threshold
+    #         check_matrix[halo_id][self.redshiftAllowed.index(halo_z)] = test
+    #         print(process_n, halo_id, halo_z, test)
+    #
+    #     np.save(f'import_toolkit/{c.simulation_name}_sample_completeness.npy', check_matrix)
+    #     print(len(np.where(check_matrix == True)[0])/np.product(check_matrix.shape)*100)
+    #     for i in check_matrix:
+    #         print([int(j) for j in i])
+    #     return check_matrix
+    #
+    # s = Simulation(simulation_name='macsis')
+    # for n in s.clusterIDAllowed:
+    #     path1 = os.path.join(s.pathSave, s.simulation_name,
+    #                         f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p024')
+    #     path2 = os.path.join(s.pathSave, s.simulation_name,
+    #                          f'halo{s.halo_Num(n)}', f'halo{s.halo_Num(n)}_z000p240')
+    #     os.rename(path1, path2)
