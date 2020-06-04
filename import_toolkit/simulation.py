@@ -21,9 +21,8 @@ class Simulation:
                                          'dark_matter': '1',
                                                'stars': '4',
                                          'black_holes': '5'}
-        try:
-            self.get_simyaml()
-        except FileNotFoundError or FileExistsError:
+
+        if not os.path.isfile(os.path.join(self.CURRENT_PATH, 'glob.yaml')):
             self.global_setup_yaml()
 
 
