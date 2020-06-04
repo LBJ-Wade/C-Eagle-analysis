@@ -44,20 +44,26 @@ __FILE__ = """
 
 __PROFILE__ = False
 
+
+from mpi4py import MPI
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
+
 def time_func(function):
     # create a new function based on the existing one,
     # that includes the new timing behaviour
     def new_func(*args, **kwargs):
         start = datetime.datetime.now()
-        print('Start: {}'.format(start))
+        if rank == 0: print('[x] Start: {}'.format(start))
 
         function_result = function(*args, **kwargs)
         # Calculate the elapsed time and add it to the function
         # attributes.
         end = datetime.datetime.now()
         new_func.elapsed = end - start
-        print('End: {}'.format(end))
-        print('Elapsed: {}'.format(new_func.elapsed))
+        if rank == 0: print('[x] End: {}'.format(end))
+        if rank == 0: print('[x] Elapsed: {}'.format(new_func.elapsed))
         return function_result
     return new_func
 
@@ -72,13 +78,6 @@ def main():
     from import_toolkit.cluster import Cluster
     from import_toolkit._cluster_retriever import redshift_str2num
     from rotvel_correlation import alignment
-    from mpi4py import MPI
-    comm = MPI.COMM_WORLD
-    rank = comm.Get_rank()
-    size = comm.Get_size()
-
-    simulation = Simulation('bahamas')
-
 
 
     data_required = {
