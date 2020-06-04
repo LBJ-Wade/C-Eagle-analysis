@@ -80,8 +80,8 @@ def main():
     from rotvel_correlation import alignment
 
     SIMULATION = 'bahamas'
-    REDSHIFT = 'z003p000'
-    N_HALOS = 5
+    REDSHIFT = 'z000p000'
+    N_HALOS = 14
 
     # -----------------------------------------------------------------------
     # Initialise a sample cluster to get Subfind file metadata
