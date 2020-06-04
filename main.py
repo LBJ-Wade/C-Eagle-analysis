@@ -84,7 +84,7 @@ def main():
     N_HALOS = 5
 
     # -----------------------------------------------------------------------
-
+    # Initialise a sample cluster to get Subfind file metadata
     cluster = Cluster(simulation_name=SIMULATION,
                       clusterID=0,
                       redshift=REDSHIFT,
@@ -144,9 +144,10 @@ def main():
 
     comm.Barrier()
     if rank == 0:
-        print('pgn0 == 0', np.where(pgn0 == 0)[0])
-        print('pgn1 == 0', np.where(pgn1 == 0)[0])
-        print('pgn4 == 0', np.where(pgn4 == 0)[0])
+        print('pgn0 == 0', np.where(pgn0 == 1)[0])
+        print('pgn1 == 0', np.where(pgn1 == 1)[0])
+        print('pgn4 == 0', np.where(pgn4 == 1)[0])
+    comm.Barrier()
     # Initialise the allocation for cluster reports
     for i in range(N_HALOS):
         if rank == i%size:
