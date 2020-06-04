@@ -161,6 +161,7 @@ def main():
                               fastbrowsing=True)
             fof_id = cluster.centralFOF_groupNumber
 
+            # Make folder hierarchy
             pathFile = os.path.join(cluster.pathSave, 'alignment_project', 'BAHAMAS_groupnumber_repo')
             if not os.path.exists(pathFile):
                 os.makedirs(pathFile)
@@ -178,9 +179,9 @@ def main():
             partGroupNumber0 = np.where(pgn0 == fof_id)[0]
             partGroupNumber1 = np.where(pgn1 == fof_id)[0]
             partGroupNumber4 = np.where(pgn4 == fof_id)[0]
-            np.save('partGroupNumber0.npy', partGroupNumber0)
-            np.save('partGroupNumber1.npy', partGroupNumber1)
-            np.save('partGroupNumber4.npy', partGroupNumber4)
+            np.save(os.path.join(pathFile, 'partGroupNumber0.npy'), partGroupNumber0)
+            np.save(os.path.join(pathFile, 'partGroupNumber1.npy'), partGroupNumber1)
+            np.save(os.path.join(pathFile, 'partGroupNumber4.npy'), partGroupNumber4)
 
             # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
             # alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
