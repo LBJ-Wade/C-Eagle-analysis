@@ -93,12 +93,12 @@ def main():
     file_GN = cluster.partdata_filePaths()[0]
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
-    pgn0 = np.empty(3, dtype='d')
-    pgn1 = np.empty(3, dtype='d')
-    pgn4 = np.empty(3, dtype='d')
-    # pgn0 = np.empty(Nparticles[0], dtype='d')
-    # pgn1 = np.empty(Nparticles[1], dtype='d')
-    # pgn4 = np.empty(Nparticles[2], dtype='d')
+    pgn0 = np.empty(3, dtype='i')
+    pgn1 = np.empty(3, dtype='i')
+    pgn4 = np.empty(3, dtype='i')
+    # pgn0 = np.empty(Nparticles[0], dtype='i')
+    # pgn1 = np.empty(Nparticles[1], dtype='i')
+    # pgn4 = np.empty(Nparticles[2], dtype='i')
 
 
     with h5.File(file_GN, 'r') as h5file:
@@ -125,6 +125,7 @@ def main():
         cluster.import_requires()
 
     print(cluster.group_fofinfo())
+    comm.Disconnect()
 
     # for i in range(12):
     #     if rank == i%size:
