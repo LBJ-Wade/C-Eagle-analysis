@@ -94,12 +94,14 @@ def main():
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
 
+    # Initialize empty arrays across all ranks
     pgn0 = np.empty(Nparticles[0], dtype='i')
     pgn0_0, pgn0_1 = np.array_split(pgn0, 2)
     pgn1 = np.empty(Nparticles[1], dtype='i')
     pgn1_0, pgn1_1 = np.array_split(pgn1, 2)
     pgn4 = np.empty(Nparticles[2], dtype='i')
 
+    # Read the particle groupNumbers with 5 cores (2 allocated for gas and CDM)
     with h5.File(file_GN, 'r') as h5file:
         if rank == 0:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (0)...")
@@ -107,38 +109,45 @@ def main():
         elif rank == 1:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (1)...")
             pgn0_1[:] = h5file[f'/PartType0/GroupNumber'][len(pgn0_0):]
-            comm.Send([pgn0_1, MPI.INT], dest=0, tag=77)
         elif rank == 2:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (0)...")
             pgn1_0[:] = h5file[f'/PartType1/GroupNumber'][:len(pgn1_0)]
         elif rank == 3:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
             pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn1_0):]
-            comm.Send([pgn1_1, MPI.INT], dest=2, tag=75)
         elif rank == 4:
             print(f"[+] RANK {rank}: collecting star particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
 
-    # Merge arrays
     comm.Barrier()
+    # Merge arrays for gas and CDM and broadcast to all cores
     if rank == 0:
         comm.Recv([pgn0_1, MPI.INT], source=1, tag=77)
         pgn0[:len(pgn0_0)] = pgn0_0
         pgn0[len(pgn0_0):] = pgn0_1
+    elif rank == 1:
+        comm.Send([pgn0_1, MPI.INT], dest=0, tag=77)
     elif rank == 2:
         comm.Recv([pgn1_1, MPI.INT], source=3, tag=75)
         pgn1[:len(pgn1_0)] = pgn1_0
         pgn1[len(pgn1_0):] = pgn1_1
+    elif rank == 3:
+        comm.Send([pgn1_1, MPI.INT], dest=2, tag=75)
 
-    comm.Barrier()
     del pgn0_0, pgn0_1, pgn1_0, pgn1_1
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=2)
     comm.Bcast([pgn4, MPI.INT], root=4)
-    print(f"Rank: {rank}\tlen(pgn0) = {len(pgn0)}")
-    print(f"Rank: {rank}\tlen(pgn1) = {len(pgn1)}")
-    print(f"Rank: {rank}\tlen(pgn4) = {len(pgn4)}")
+    print(f"Rank: {rank}\tpgn0[10000] = {pgn0[10000]}")
+    print(f"Rank: {rank}\tpgn1[10000] = {pgn1[10000]}")
+    print(f"Rank: {rank}\tpgn4[10000] = {pgn4[10000]}")
 
+    comm.Barrier()
+    if rank == 0:
+        print('pgn0 == 0', np.where(pgn0 == 0)[0])
+        print('pgn1 == 0', np.where(pgn1 == 0)[0])
+        print('pgn4 == 0', np.where(pgn4 == 0)[0])
+    # Initialise the allocation for cluster reports
     for i in range(N_HALOS):
         if rank == i%size:
             print(f"[+] RANK {rank}: initializing report {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}...")
