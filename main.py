@@ -123,14 +123,14 @@ def main():
         comm.Send([pgn0_1, MPI.INT], dest=0, tag=77)
     elif rank == 0:
         comm.Recv([pgn0_1, MPI.INT], source=1, tag=77)
-        pgn0[:len(pgn0_0)] = pgn0_0
-        pgn0[len(pgn0_1):] = pgn0_1
+        pgn0[:len(pgn0_0)-1] = pgn0_0
+        pgn0[len(pgn0_1)-1:] = pgn0_1
     elif rank == 3:
         comm.Send([pgn1_1, MPI.INT], dest=2, tag=75)
     elif rank == 2:
         comm.Recv([pgn1_1, MPI.INT], source=3, tag=75)
-        pgn1[:len(pgn1_0)] = pgn1_0
-        pgn1[len(pgn1_1):] = pgn1_1
+        pgn1[:len(pgn1_0)-1] = pgn1_0
+        pgn1[len(pgn1_1)-1:] = pgn1_1
     comm.Barrier()
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=2)
