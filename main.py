@@ -103,13 +103,13 @@ def main():
     with h5.File(file_GN, 'r') as h5file:
         if rank == 0:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (0)...")
-            pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn0_0)]
+            pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn0_0)-1]
         elif rank == 1:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (1)...")
-            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn0_1):]
+            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn0_1)-1:]
         elif rank == 2:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (0)...")
-            pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn1_0)]
+            pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn1_0)-1]
         elif rank == 3:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
             pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn1_1)-1:]
