@@ -115,6 +115,7 @@ def main():
     print("Rank: ", rank, ". pgn0 is:\n", pgn0)
     print("Rank: ", rank, ". pgn1 is:\n", pgn1)
     print("Rank: ", rank, ". pgn4 is:\n", pgn4)
+    comm.Barrier()
 
     # Import particle datasets
     if data_required:
