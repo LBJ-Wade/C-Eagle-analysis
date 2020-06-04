@@ -112,9 +112,9 @@ def main():
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=0)
     comm.Bcast([pgn4, MPI.INT], root=0)
-    print("Rank: ", rank, ". pgn0 is:\n", pgn0)
-    print("Rank: ", rank, ". pgn1 is:\n", pgn1)
-    print("Rank: ", rank, ". pgn4 is:\n", pgn4)
+    print("Rank: ", rank, ". pgn0 is:", pgn0)
+    print("Rank: ", rank, ". pgn1 is:", pgn1)
+    print("Rank: ", rank, ". pgn4 is:", pgn4)
     comm.Barrier()
 
     # Import particle datasets
