@@ -93,11 +93,13 @@ def main():
     del cluster
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
+        Nparticles_0 = [int(n/2) for n in Nparticles]
+        Nparticles_1 = [n-int(n/2) for n in Nparticles]
 
-    pgn0_0 = np.empty(int(Nparticles[0]/2), dtype='i')
-    pgn0_1 = np.empty(Nparticles[0]-int(Nparticles[0]/2), dtype='i')
-    pgn1_0 = np.empty(int(Nparticles[1]/2), dtype='i')
-    pgn1_1 = np.empty(Nparticles[1]-int(Nparticles[1]/2), dtype='i')
+    pgn0_0 = np.empty(Nparticles_0[0], dtype='i')
+    pgn0_1 = np.empty(Nparticles_1[0], dtype='i')
+    pgn1_0 = np.empty(Nparticles_0[1], dtype='i')
+    pgn1_1 = np.empty(Nparticles_1[1], dtype='i')
     pgn0 = np.empty(Nparticles[0], dtype='i')
     pgn1 = np.empty(Nparticles[1], dtype='i')
     pgn4 = np.empty(Nparticles[2], dtype='i')
@@ -105,16 +107,16 @@ def main():
     with h5.File(file_GN, 'r') as h5file:
         if rank == 0:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (0)...")
-            pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:int(Nparticles[0]/2)]
+            pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:Nparticles_0[0]]
         elif rank == 1:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (1)...")
-            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles[0]/2-int(Nparticles[0]/2):]
+            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles_1[0]:]
         elif rank == 2:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (0)...")
-            pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:int(Nparticles[1]/2)]
+            pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:Nparticles_0[1]]
         elif rank == 3:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
-            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles[1]-int(Nparticles[1]/2):]
+            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles_1[1]:]
         elif rank == 4:
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
