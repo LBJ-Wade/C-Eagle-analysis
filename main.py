@@ -127,14 +127,14 @@ def main():
         comm.Send([pgn0_1, MPI.INT], dest=0, tag=77)
     elif rank == 0:
         comm.Recv([pgn0_1, MPI.INT], source=1, tag=77)
-        pgn0[:int(Nparticles[0]/2)] = pgn0_0
-        pgn0[int(Nparticles[0]/2):] = pgn0_1
+        pgn0[:Nparticles_0[0]] = pgn0_0
+        pgn0[Nparticles_1[0]:] = pgn0_1
     elif rank == 3:
         comm.Send([pgn1_1, MPI.INT], dest=2, tag=75)
     elif rank == 2:
         comm.Recv([pgn1_1, MPI.INT], source=3, tag=75)
-        pgn1[:int(Nparticles[1]/2)] = pgn1_0
-        pgn1[int(Nparticles[1]/2):] = pgn1_1
+        pgn1[:Nparticles_0[1]] = pgn1_0
+        pgn1[Nparticles_1[1]:] = pgn1_1
     comm.Barrier()
     comm.Bcast([pgn0, MPI.INT], root=0)
     comm.Bcast([pgn1, MPI.INT], root=2)
