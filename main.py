@@ -93,20 +93,20 @@ def main():
 
     if rank == 0:
         print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
-        setattr(simulation, 'pgn0', cluster.load_full_particleGN('0'))
+        pgn0 = cluster.load_full_particleGN('0')
     elif rank == 1:
         print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
-        setattr(simulation, 'pgn1', cluster.load_full_particleGN('1'))
+        pgn1 = cluster.load_full_particleGN('1')
     elif rank == 2:
         print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
-        setattr(simulation, 'pgn4', cluster.load_full_particleGN('4'))
+        pgn4 = cluster.load_full_particleGN('4')
 
-    comm.Bcast([simulation.pgn0, MPI.INT], root=0)
-    comm.Bcast([simulation.pgn1, MPI.INT], root=1)
-    comm.Bcast([simulation.pgn4, MPI.INT], root=2)
-    print("Rank: ", rank, ". pgn0 is:\n", simulation.pgn0)
-    print("Rank: ", rank, ". pgn1 is:\n", simulation.pgn1)
-    print("Rank: ", rank, ". pgn4 is:\n", simulation.pgn4)
+    comm.Bcast([pgn0, MPI.INT], root=0)
+    comm.Bcast([pgn1, MPI.INT], root=1)
+    comm.Bcast([pgn4, MPI.INT], root=2)
+    print("Rank: ", rank, ". pgn0 is:\n", pgn0)
+    print("Rank: ", rank, ". pgn1 is:\n", pgn1)
+    print("Rank: ", rank, ". pgn4 is:\n", pgn4)
 
     # Import particle datasets
     if data_required:
