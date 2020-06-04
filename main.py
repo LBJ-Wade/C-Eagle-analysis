@@ -98,7 +98,6 @@ def main():
     pgn0_1 = np.empty(Nparticles[0]-int(Nparticles[0]/2), dtype='i')
     pgn1_0 = np.empty(int(Nparticles[1]/2), dtype='i')
     pgn1_1 = np.empty(Nparticles[1]-int(Nparticles[1]/2), dtype='i')
-
     pgn0 = np.empty(Nparticles[0], dtype='i')
     pgn1 = np.empty(Nparticles[1], dtype='i')
     pgn4 = np.empty(Nparticles[2], dtype='i')
@@ -109,13 +108,13 @@ def main():
             pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:int(Nparticles[0]/2)]
         elif rank == 1:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (1)...")
-            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][int(Nparticles[0]/2):]
+            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles[0]/2-int(Nparticles[0]/2):]
         elif rank == 2:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (0)...")
             pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:int(Nparticles[1]/2)]
         elif rank == 3:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
-            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][int(Nparticles[1]/2):]
+            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles[1]-int(Nparticles[1]/2):]
         elif rank == 4:
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
