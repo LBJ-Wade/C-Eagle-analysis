@@ -110,15 +110,15 @@ def main():
             pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:Nparticles_0[0]]
         elif rank == 1:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber (1)...")
-            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles_1[0]:]
+            pgn0_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles_0[0]:]
         elif rank == 2:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (0)...")
             pgn1_0[:] = h5file[f'/PartType0/GroupNumber'][:Nparticles_0[1]]
         elif rank == 3:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
-            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles_1[1]:]
+            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][Nparticles_0[1]:]
         elif rank == 4:
-            print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
+            print(f"[+] RANK {rank}: collecting star particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
 
     comm.Barrier()
