@@ -80,17 +80,13 @@ def main():
     from rotvel_correlation import alignment
 
 
-    data_required = {
-            'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-            'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
-            'partType4': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity']
-    }
+
     cluster = Cluster(simulation_name='bahamas',
                       clusterID=0,
                       redshift='z003p000',
-                      requires=data_required)
-
+                      fastbrowsing=True)
     file_GN = cluster.partdata_filePaths()[0]
+    del cluster
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
     pgn0 = np.empty(3, dtype='i')
@@ -99,7 +95,6 @@ def main():
     # pgn0 = np.empty(Nparticles[0], dtype='i')
     # pgn1 = np.empty(Nparticles[1], dtype='i')
     # pgn4 = np.empty(Nparticles[2], dtype='i')
-
 
     with h5.File(file_GN, 'r') as h5file:
         if rank == 0:
@@ -118,19 +113,12 @@ def main():
     print("Rank: ", rank, ". pgn0 is:", pgn0)
     print("Rank: ", rank, ". pgn1 is:", pgn1)
     print("Rank: ", rank, ". pgn4 is:", pgn4)
-    comm.Disconnect()
 
-    # Import particle datasets
-    if data_required:
-        cluster.import_requires()
+    for i in range(3):
+        if rank == i%size:
+            alignment.save_report(i, 'z000p000', glob=[pgn0, pgn1, pgn4])
 
-    print(cluster.group_fofinfo())
-
-
-    # for i in range(12):
-    #     if rank == i%size:
-    #         alignment.save_report(i, 'z000p000')
-
+    comm.Barrier()
 
 
 

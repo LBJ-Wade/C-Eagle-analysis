@@ -2,7 +2,7 @@ import sys
 import os
 import warnings
 import numpy as np
-from typing import Dict
+from typing import Dict, List
 from copy import deepcopy
 from itertools import product
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
@@ -119,7 +119,7 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 	return angle_dict
 
 
-def save_report(clusterID: int, redshift: str) -> None:
+def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) -> None:
 	data_required = {
 			'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
 			'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
@@ -128,8 +128,13 @@ def save_report(clusterID: int, redshift: str) -> None:
 	cluster = Cluster(simulation_name='bahamas',
 	                  clusterID=clusterID,
 	                  redshift=redshift,
-	                  comovingframe=False,
 	                  requires=data_required)
+
+	setattr(cluster, 'pgn0', glob[0])
+	setattr(cluster, 'pgn1', glob[1])
+	setattr(cluster, 'pgn4', glob[2])
+	cluster.info()
+	cluster.import_requires()
 	apertures = cluster.generate_apertures()
 	master_dict = {}
 	for i, r_a in enumerate(apertures):

@@ -416,13 +416,6 @@ class Mixin:
             free_memory(['thermal'], invert=True)
             return thermal
 
-        @data_subject(subject="particledata")
-        def load_full_particleGN(self, part_type, **kwargs):
-            part_type = self.particle_type_conversion[part_type] if len(part_type) > 1 else part_type
-            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-                part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
-            return part_gn
-
         @ProgressBar()
         @data_subject(subject="particledata")
         def group_number_part(self, part_type, **kwargs):
