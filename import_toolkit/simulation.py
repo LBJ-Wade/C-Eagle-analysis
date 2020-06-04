@@ -196,10 +196,6 @@ class Simulation:
                          '031', '032'][::-1]}
             self.redshiftAllowed = self.zcat['z_value']
 
-
-        # if not os.path.isfile(os.path.join(self.CURRENT_PATH, 'glob.yaml')):
-        #     self.global_setup_yaml()
-
     def set_pathData(self, newPath: str):
         self.pathData = newPath
 
@@ -243,16 +239,3 @@ class Simulation:
                 return '%05d' % (n,)
             elif self.totalClusters > 100000 and self.totalClusters < 1000000:
                 return '%06d' % (n,)
-
-    # def global_setup_yaml(self):
-    #     with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'w') as file:
-    #         dict_file = {}
-    #         dict_file['setup'] = self.setup
-    #         documents = yaml.dump(dict_file, file)
-    #         if rank == 0:
-    #             print(f'[+] Creating global info file: glob.yaml. Contents:', documents)
-    #
-    # def get_simyaml(self):
-    #     with open(os.path.join(self.CURRENT_PATH, 'glob.yaml'), 'r') as file:
-    #         documents = yaml.full_load(file)
-    #     return documents
