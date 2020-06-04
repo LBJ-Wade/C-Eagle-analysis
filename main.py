@@ -100,18 +100,21 @@ def main():
     # pgn1 = np.empty(Nparticles[1], dtype='d')
     # pgn4 = np.empty(Nparticles[2], dtype='d')
 
-    if rank == 0:
-        with h5.File(file_GN, 'r') as h5file:
+
+    with h5.File(file_GN, 'r') as h5file:
+        if rank == 0:
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
             pgn0[:] = h5file[f'/PartType0/GroupNumber'][:3]
+        elif rank == 1:
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
             pgn1[:] = h5file[f'/PartType1/GroupNumber'][:3]
+        elif rank == 2:
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
             pgn4[:] = h5file[f'/PartType4/GroupNumber'][:3]
 
     comm.Bcast([pgn0, MPI.INT], root=0)
-    comm.Bcast([pgn1, MPI.INT], root=0)
-    comm.Bcast([pgn4, MPI.INT], root=0)
+    comm.Bcast([pgn1, MPI.INT], root=1)
+    comm.Bcast([pgn4, MPI.INT], root=2)
     print("Rank: ", rank, ". pgn0 is:", pgn0)
     print("Rank: ", rank, ". pgn1 is:", pgn1)
     print("Rank: ", rank, ". pgn4 is:", pgn4)
