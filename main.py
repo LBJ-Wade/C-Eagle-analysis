@@ -93,13 +93,13 @@ def main():
 
     if rank == 0:
         print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
-        simulation.pgn0 = cluster.load_full_particleGN('0')
+        setattr(simulation, 'pgn0', cluster.load_full_particleGN('0'))
     elif rank == 1:
-        simulation.pgn1 = cluster.load_full_particleGN('1')
         print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
+        setattr(simulation, 'pgn1', cluster.load_full_particleGN('1'))
     elif rank == 2:
-        simulation.pgn4 = cluster.load_full_particleGN('4')
         print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
+        setattr(simulation, 'pgn4', cluster.load_full_particleGN('4'))
 
     comm.Bcast([simulation.pgn0, MPI.INT], root=0)
     comm.Bcast([simulation.pgn1, MPI.INT], root=1)
