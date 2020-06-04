@@ -90,24 +90,22 @@ def main():
                       redshift='z000p000',
                       requires=data_required)
 
-    file_GN = cluster.partdata_filePaths()[0]
-    pgn0 = None
-    pgn1 = None
-    pgn4 = None
-    with h5.File(file_GN, 'r') as h5file:
-        if rank == 0:
+    if rank == 0:
+        file_GN = cluster.partdata_filePaths()[0]
+        with h5.File(file_GN, 'r') as h5file:
+            pgn0 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][0], dtype='d')
+            pgn1 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][1], dtype='d')
+            pgn4 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][4], dtype='d')
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
-            pgn0 = h5file[f'/PartType0/GroupNumber'][:]
-        elif rank == 1:
+            pgn0[:] = h5file[f'/PartType0/GroupNumber'][:]
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
-            pgn1 = h5file[f'/PartType1/GroupNumber'][:]
-        elif rank == 2:
+            pgn1[:] = h5file[f'/PartType1/GroupNumber'][:]
             print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
-            pgn4 = h5file[f'/PartType4/GroupNumber'][:]
+            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
 
     comm.Bcast([pgn0, MPI.INT], root=0)
-    comm.Bcast([pgn1, MPI.INT], root=1)
-    comm.Bcast([pgn4, MPI.INT], root=2)
+    comm.Bcast([pgn1, MPI.INT], root=0)
+    comm.Bcast([pgn4, MPI.INT], root=0)
     print("Rank: ", rank, ". pgn0 is:\n", pgn0)
     print("Rank: ", rank, ". pgn1 is:\n", pgn1)
     print("Rank: ", rank, ". pgn4 is:\n", pgn4)
