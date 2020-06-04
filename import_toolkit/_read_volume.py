@@ -416,24 +416,21 @@ class Mixin:
             free_memory(['thermal'], invert=True)
             return thermal
 
+        @data_subject(subject="particledata")
+        def load_full_particleGN(self, part_type, **kwargs):
+            part_type = self.particle_type_conversion[part_type] if len(part_type) > 1 else part_type
+            with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
+                part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
+            return part_gn
+
         @ProgressBar()
         @data_subject(subject="particledata")
         def group_number_part(self, part_type, **kwargs):
+            part_type = self.particle_type_conversion[part_type] if len(part_type) > 1 else part_type
             counter = 0
             length_operation = len(kwargs['file_list_sorted'])
-            part_type = self.particle_type_conversion[part_type] if len(part_type) > 1 else part_type
-
-            # If particle groupnumber not imported in globals for that snapshot
-            if f'PARTICLE_GROUPNUMBER{part_type}' in globals():
-                exec(f"part_gn = PARTICLE_GROUPNUMBER{part_type}")
-
-            elif f'PARTICLE_GROUPNUMBER{part_type}' not in globals() and rank == 0:
-                with h5.File(kwargs['file_list_sorted'][0], 'r') as h5file:
-                    part_gn = h5file[f'/PartType{part_type}/GroupNumber'][:]
-                exec(f"part_gn = PARTICLE_GROUPNUMBER{part_type}")
-                exec(f"global PARTICLE_GROUPNUMBER{part_type}")
-
-            part_gn_index = np.where(part_gn == self.centralFOF_groupNumber)[0]
+            full_part_gn = getattr(self, f'pgn{part_type}')
+            part_gn_index = np.where(full_part_gn == self.centralFOF_groupNumber)[0]
             assert len(part_gn_index) > 0, "Array is empty."
             yield ((counter + 1) / (length_operation))  # Give control back to decorator
             counter += 1

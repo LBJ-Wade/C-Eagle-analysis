@@ -308,3 +308,4 @@ class Cluster(simulation.Simulation,
 					setattr(self, field, self.subgroups_kin_energy())
 				elif field == 'subhalo_therm_energy' and not hasattr(self, field):
 					setattr(self, field, self.subgroups_therm_energy())
+

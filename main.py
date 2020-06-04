@@ -77,6 +77,10 @@ def main():
     rank = comm.Get_rank()
     size = comm.Get_size()
 
+    simulation = Simulation('bahamas')
+
+
+
     data_required = {
             'partType0': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
             'partType1': ['groupnumber', 'subgroupnumber', 'mass', 'coordinates', 'velocity'],
@@ -86,6 +90,24 @@ def main():
                       clusterID=0,
                       redshift='z000p000',
                       requires=data_required)
+
+    if rank == 0:
+        print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
+        simulation.pgn0 = cluster.load_full_particleGN('0')
+    elif rank == 1:
+        simulation.pgn1 = cluster.load_full_particleGN('1')
+        print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
+    elif rank == 2:
+        simulation.pgn4 = cluster.load_full_particleGN('4')
+        print(f"[+] RANK {rank}: collecting stars particles groupNumber...")
+
+    comm.Bcast([simulation.pgn0, MPI.INT], root=0)
+    comm.Bcast([simulation.pgn1, MPI.INT], root=1)
+    comm.Bcast([simulation.pgn4, MPI.INT], root=2)
+    print("Rank: ", rank, ". pgn0 is:\n", simulation.pgn0)
+    print("Rank: ", rank, ". pgn1 is:\n", simulation.pgn1)
+    print("Rank: ", rank, ". pgn4 is:\n", simulation.pgn4)
+
     print(cluster.group_fofinfo())
 
     # for i in range(12):

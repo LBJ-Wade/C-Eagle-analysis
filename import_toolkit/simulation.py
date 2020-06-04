@@ -15,7 +15,7 @@ class Simulation:
 
     CURRENT_PATH = copy(os.path.abspath(os.path.dirname(__file__)))
 
-    def __init__(self, simulation_name = 'celr_b'):
+    def __init__(self, simulation_name: str):
 
         self.particle_type_conversion = {        'gas': '0',
                                          'dark_matter': '1',
