@@ -93,9 +93,12 @@ def main():
     if rank == 0:
         file_GN = cluster.partdata_filePaths()[0]
         with h5.File(file_GN, 'r') as h5file:
-            pgn0 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][0], dtype='d')
-            pgn1 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][1], dtype='d')
-            pgn4 = np.empty( h5file['Header'].attrs['NumPart_ThisFile'][4], dtype='d')
+            # pgn0 = np.empty(h5file['Header'].attrs['NumPart_ThisFile'][0], dtype='d')
+            # pgn1 = np.empty(h5file['Header'].attrs['NumPart_ThisFile'][1], dtype='d')
+            # pgn4 = np.empty(h5file['Header'].attrs['NumPart_ThisFile'][4], dtype='d')
+            pgn0 = np.empty(100, dtype='d')
+            pgn1 = np.empty(100, dtype='d')
+            pgn4 = np.empty(100, dtype='d')
             print(f"[+] RANK {rank}: collecting gas particles groupNumber...")
             pgn0[:] = h5file[f'/PartType0/GroupNumber'][:100]
             print(f"[+] RANK {rank}: collecting CDM particles groupNumber...")
