@@ -424,6 +424,7 @@ class Mixin:
             length_operation = len(kwargs['file_list_sorted'])
             full_part_gn = getattr(self, f'pgn{part_type}')
             part_gn_index = np.where(full_part_gn == self.centralFOF_groupNumber)[0]
+            print('Here!')
             assert len(part_gn_index) > 0, "Array is empty."
             yield ((counter + 1) / (length_operation))  # Give control back to decorator
             counter += 1
