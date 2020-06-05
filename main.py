@@ -161,19 +161,31 @@ def main():
     file_GN = cluster.partdata_filePaths()[0]
     del cluster
 
-    groupnumber_csrm = []
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
-        for i, n_particles in enumerate(Nparticles):
-            pprint(f"[+] Collecting gas particles GroupNumber {i}...")
-            st, fh = split(nproc, rank, n_particles)
-            pgn_slice = h5file[f'/PartType0/GroupNumber'][st:fh]
 
-            # Clip out negative values and exceeding values
-            pprint(f"[+] Computing CSR indexing matrix {i}...")
-            pgn_slice = np.clip(pgn_slice, 0, np.max(halo_num_catalogue_contiguous)+2)
-            csrm = get_indices_sparse(pgn_slice)
-            groupnumber_csrm.append(csrm)
+        pprint(f"[+] Collecting gas particles GroupNumber...")
+        st, fh = split(nproc, rank, Nparticles[0])
+        groupnumber0 = h5file[f'/PartType0/GroupNumber'][st:fh]
+        # Clip out negative values and exceeding values
+        pprint(f"[+] Computing CSR indexing matrix...")
+        groupnumber0 = np.clip(groupnumber0, 0, np.max(halo_num_catalogue_contiguous) + 2)
+        groupnumber0_csrm = get_indices_sparse(groupnumber0)
+
+        pprint(f"[+] Collecting CDM particles GroupNumber...")
+        st, fh = split(nproc, rank, Nparticles[1])
+        groupnumber1 = h5file[f'/PartType1/GroupNumber'][st:fh]
+        pprint(f"[+] Computing CSR indexing matrix...")
+        groupnumber1 = np.clip(groupnumber1, 0, np.max(halo_num_catalogue_contiguous) + 2)
+        groupnumber1_csrm = get_indices_sparse(groupnumber1)
+
+        pprint(f"[+] Collecting star particles GroupNumber...")
+        st, fh = split(nproc, rank, Nparticles[2])
+        groupnumber4 = h5file[f'/PartType4/GroupNumber'][st:fh]
+        pprint(f"[+] Computing CSR indexing matrix...")
+        groupnumber4 = np.clip(groupnumber4, 0, np.max(halo_num_catalogue_contiguous) + 2)
+        groupnumber4_csrm = get_indices_sparse(groupnumber4)
+
 
     # Initialise the allocation for cluster reports
     clusterID_pool = np.arange(N_HALOS)
@@ -182,9 +194,13 @@ def main():
         # if rank == i%nproc:
         pprint(f"[+] Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
         fof_id = halo_num_catalogue_contiguous[i]+1
-        for partType in range(3):
-            gn = commune(comm, nproc, rank, groupnumber_csrm[partType][fof_id][0])
-            pprint(partType, gn)
+        gn = commune(comm, nproc, rank, groupnumber0_csrm[fof_id][0])
+        pprint('gas', gn)
+        gn = commune(comm, nproc, rank, groupnumber1_csrm[fof_id][0])
+        pprint('CDM', gn)
+        gn = commune(comm, nproc, rank, groupnumber4_csrm[fof_id][0])
+        pprint('stars', gn)
+
 
 
             # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
