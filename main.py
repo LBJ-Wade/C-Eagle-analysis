@@ -188,6 +188,7 @@ def main():
 
 
     # Initialise the allocation for cluster reports
+    pprint('Test whether the np.where results and the CSRM results are the same. Results are displayed for each partType.')
     clusterID_pool = np.arange(N_HALOS)
     comm.Barrier()
     for i in clusterID_pool:
@@ -197,15 +198,15 @@ def main():
         gn = commune(comm, nproc, rank, groupnumber0_csrm[fof_id][0])
         npwh = np.where(groupnumber0==fof_id)[0]
         npwh_gathered = commune(comm, nproc, rank, npwh)
-        pprint('gas', gn==npwh_gathered)
+        pprint('gas', (gn==npwh_gathered).all())
         gn = commune(comm, nproc, rank, groupnumber1_csrm[fof_id][0])
         npwh = np.where(groupnumber1==fof_id)[0]
         npwh_gathered = commune(comm, nproc, rank, npwh)
-        pprint('CDM', gn==npwh_gathered)
+        pprint('CDM', (gn==npwh_gathered).all())
         gn = commune(comm, nproc, rank, groupnumber4_csrm[fof_id][0])
         npwh = np.where(groupnumber4==fof_id)[0]
         npwh_gathered = commune(comm, nproc, rank, npwh)
-        pprint('stars', gn==npwh_gathered)
+        pprint('stars', (gn==npwh_gathered).all())
 
 
 
