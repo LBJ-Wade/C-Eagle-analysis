@@ -182,9 +182,8 @@ def main():
         # if rank == i%nproc:
         pprint(f"[+] Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
         fof_id = halo_num_catalogue_contiguous[i]+1
-        idx = groupnumber_csrm[:][fof_id][0]
         for partType in range(3):
-            gn = commune(comm, nproc, rank, idx[partType])
+            gn = commune(comm, nproc, rank, groupnumber_csrm[partType][fof_id][0])
             pprint(partType, gn)
 
 
