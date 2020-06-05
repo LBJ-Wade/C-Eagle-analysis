@@ -83,14 +83,14 @@ def get_indices_sparse(data):
 @time_func
 def main():
 
-    from import_toolkit.simulation import Simulation
+    # from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
-    from import_toolkit._cluster_retriever import redshift_str2num
-    from rotvel_correlation import alignment
+    # from import_toolkit._cluster_retriever import redshift_str2num
+    # from rotvel_correlation import alignment
 
     SIMULATION = 'bahamas'
     REDSHIFT = 'z000p000'
-    N_HALOS = 1000
+    N_HALOS = 100
 
     # -----------------------------------------------------------------------
     # Initialise a sample cluster to get Subfind file metadata
@@ -98,6 +98,8 @@ def main():
                       clusterID=0,
                       redshift=REDSHIFT,
                       fastbrowsing=True)
+    cluster_pathSave = cluster.pathSave
+    halo_num_catalogue_contiguous = cluster.halo_num_catalogue_contiguous
     file_GN = cluster.partdata_filePaths()[0]
     del cluster
     with h5.File(file_GN, 'r') as h5file:
@@ -161,35 +163,30 @@ def main():
     clusterID_pool = np.arange(N_HALOS)
     for i in clusterID_pool:
         if rank == i%size:
-
             print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
-            cluster = Cluster(simulation_name=SIMULATION,
-                              clusterID=i,
-                              redshift=REDSHIFT,
-                              fastbrowsing=True)
-            fof_id = cluster.centralFOF_groupNumber
 
             # Make folder hierarchy
-            pathFile = os.path.join(cluster.pathSave, 'alignment_project', 'BAHAMAS_groupnumber_repo')
+            pathFile = os.path.join(cluster_pathSave, 'alignment_project', 'BAHAMAS_groupnumber_repo')
             if not os.path.exists(pathFile):
                 os.makedirs(pathFile)
             pathFile = os.path.join(pathFile, 'hydro')
             if not os.path.exists(pathFile):
                 os.makedirs(pathFile)
-            pathFile = os.path.join(pathFile, f"{cluster.redshift}")
+            pathFile = os.path.join(pathFile, f"{REDSHIFT}")
             if not os.path.exists(pathFile):
                 os.makedirs(pathFile)
-            pathFile = os.path.join(pathFile, f"halo_{cluster.clusterID:0>5d}")
+            pathFile = os.path.join(pathFile, f"halo_{i:0>5d}")
             if not os.path.exists(pathFile):
                 os.makedirs(pathFile)
 
-            del cluster
+            fof_id = halo_num_catalogue_contiguous[i]+1
             partGroupNumber0 = np.where(pgn0 == fof_id)[0]
             partGroupNumber1 = np.where(pgn1 == fof_id)[0]
             partGroupNumber4 = np.where(pgn4 == fof_id)[0]
             np.save(os.path.join(pathFile, 'partGroupNumber0.npy'), partGroupNumber0)
             np.save(os.path.join(pathFile, 'partGroupNumber1.npy'), partGroupNumber1)
             np.save(os.path.join(pathFile, 'partGroupNumber4.npy'), partGroupNumber4)
+            print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
 
             # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
             # alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
