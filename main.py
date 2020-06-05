@@ -145,8 +145,12 @@ def main():
             print(f"[+] RANK {rank}: collecting gas particles groupNumber {i}...")
             st, fh = split(nproc, rank, n_particles)
             pgn_slice = h5file[f'/PartType0/GroupNumber'][st:fh]
+
+            # Clip out negative values and exceeding values
+            pgn_slice = np.clip(pgn_slice, 0, np.max(halo_num_catalogue_contiguous)+2)
             csrm = get_indices_sparse(pgn_slice)
             groupnumber_csrm.append(csrm)
+            comm.Barrier()
 
     # Initialise the allocation for cluster reports
     clusterID_pool = np.arange(N_HALOS)
