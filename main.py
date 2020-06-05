@@ -121,7 +121,7 @@ def gather_and_isolate(comm,NProcs,MyRank,data,toRank):
     del data,cnts,dspl
     if MyRank != toRank:
         # rslt = np.zeros_like(rslt)
-        del rslt
+        rslt = None
     return rslt
 
 def compute_M(data):
