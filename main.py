@@ -142,7 +142,7 @@ def main():
     # from import_toolkit.simulation import Simulation
     from import_toolkit.cluster import Cluster
     # from import_toolkit._cluster_retriever import redshift_str2num
-    # from rotvel_correlation import alignment
+    from rotvel_correlation import alignment
 
     SIMULATION = 'bahamas'
     REDSHIFT = 'z003p000'
@@ -192,26 +192,13 @@ def main():
     clusterID_pool = np.arange(N_HALOS)
     comm.Barrier()
     for i in clusterID_pool:
-        # if rank == i%nproc:
         pprint(f"[+] Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
         fof_id = halo_num_catalogue_contiguous[i]+1
-        gn = commune(comm, nproc, rank, groupnumber0_csrm[fof_id][0])
-        npwh = np.where(groupnumber0==fof_id)[0]
-        npwh_gathered = commune(comm, nproc, rank, npwh)
-        pprint('gas', (gn==npwh_gathered).all())
-        gn = commune(comm, nproc, rank, groupnumber1_csrm[fof_id][0])
-        npwh = np.where(groupnumber1==fof_id)[0]
-        npwh_gathered = commune(comm, nproc, rank, npwh)
-        pprint('CDM', (gn==npwh_gathered).all())
-        gn = commune(comm, nproc, rank, groupnumber4_csrm[fof_id][0])
-        npwh = np.where(groupnumber4==fof_id)[0]
-        npwh_gathered = commune(comm, nproc, rank, npwh)
-        pprint('stars', (gn==npwh_gathered).all())
-
-
-
-            # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
-            # alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
+        pgn0 = commune(comm, nproc, rank, groupnumber0_csrm[fof_id][0])
+        pgn1 = commune(comm, nproc, rank, groupnumber1_csrm[fof_id][0])
+        pgn4 = commune(comm, nproc, rank, groupnumber4_csrm[fof_id][0])
+        pprint(f"[+] Initializing report generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+        alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
     comm.Barrier()
 
 
