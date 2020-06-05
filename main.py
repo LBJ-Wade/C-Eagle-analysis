@@ -75,6 +75,10 @@ def time_func(function):
         return function_result
     return new_func
 
+def pprint(*args, **kwargs):
+    if rank == 0:
+        print(*args, **kwargs)
+
 def split(NProcs,MyRank,nfiles):
     nfiles=int(nfiles)
     nf=int(nfiles/NProcs)
@@ -161,30 +165,31 @@ def main():
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
         for i, n_particles in enumerate(Nparticles):
-            print(f"[+] RANK {rank}: collecting gas particles groupNumber {i}...")
+            pprint(f"[+] Collecting gas particles GroupNumber {i}...")
             st, fh = split(nproc, rank, n_particles)
             pgn_slice = h5file[f'/PartType0/GroupNumber'][st:fh]
 
             # Clip out negative values and exceeding values
+            pprint(f"[+] Computing CSR indexing matrix {i}...")
             pgn_slice = np.clip(pgn_slice, 0, np.max(halo_num_catalogue_contiguous)+2)
             csrm = get_indices_sparse(pgn_slice)
             groupnumber_csrm.append(csrm)
-            comm.Barrier()
 
     # Initialise the allocation for cluster reports
     clusterID_pool = np.arange(N_HALOS)
     for i in clusterID_pool:
         if rank == i%nproc:
-            print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+            print(f"[+] RANK {rank} | Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+            idx = groupnumber_csrm[:][fof_id][0]
             fof_id = halo_num_catalogue_contiguous[i]+1
             for partType in range(3):
-                gn = gather_and_isolate(comm, nproc, rank, groupnumber_csrm[partType][fof_id][0], toRank=rank)
+                gn = gather_and_isolate(comm, nproc, rank, idx[partType] , toRank=rank)
                 print(partType, gn)
 
 
             # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
             # alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
-
+    comm.Barrier()
 
 
 
