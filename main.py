@@ -171,6 +171,7 @@ def main():
         pprint(f"[+] Computing CSR indexing matrix...")
         groupnumber0 = np.clip(groupnumber0, 0, np.max(halo_num_catalogue_contiguous) + 2)
         groupnumber0_csrm = get_indices_sparse(groupnumber0)
+        del groupnumber0
 
         pprint(f"[+] Collecting CDM particles GroupNumber...")
         st, fh = split(nproc, rank, Nparticles[1])
@@ -178,6 +179,7 @@ def main():
         pprint(f"[+] Computing CSR indexing matrix...")
         groupnumber1 = np.clip(groupnumber1, 0, np.max(halo_num_catalogue_contiguous) + 2)
         groupnumber1_csrm = get_indices_sparse(groupnumber1)
+        del groupnumber1
 
         pprint(f"[+] Collecting star particles GroupNumber...")
         st, fh = split(nproc, rank, Nparticles[2])
@@ -185,10 +187,10 @@ def main():
         pprint(f"[+] Computing CSR indexing matrix...")
         groupnumber4 = np.clip(groupnumber4, 0, np.max(halo_num_catalogue_contiguous) + 2)
         groupnumber4_csrm = get_indices_sparse(groupnumber4)
+        del groupnumber4
 
 
     # Initialise the allocation for cluster reports
-    pprint('Test whether the np.where results and the CSRM results are the same. Results are displayed for each partType.')
     clusterID_pool = np.arange(N_HALOS)
     comm.Barrier()
     for i in clusterID_pool:
@@ -197,7 +199,7 @@ def main():
         pgn0 = commune(comm, nproc, rank, groupnumber0_csrm[fof_id][0])
         pgn1 = commune(comm, nproc, rank, groupnumber1_csrm[fof_id][0])
         pgn4 = commune(comm, nproc, rank, groupnumber4_csrm[fof_id][0])
-        pprint(f"[+] Initializing report generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+        pprint(f"\tInitializing report generation...")
         alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
     comm.Barrier()
 

@@ -129,9 +129,9 @@ def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) ->
 	                  clusterID=clusterID,
 	                  redshift=redshift,
 	                  requires=data_required)
-	setattr(cluster, 'partType0_groupnumber', np.where(glob[0]==cluster.centralFOF_groupNumber)[0])
-	setattr(cluster, 'partType1_groupnumber', np.where(glob[1]==cluster.centralFOF_groupNumber)[0])
-	setattr(cluster, 'partType4_groupnumber', np.where(glob[2]==cluster.centralFOF_groupNumber)[0])
+	setattr(cluster, 'partType0_groupnumber', glob[0])
+	setattr(cluster, 'partType1_groupnumber', glob[1])
+	setattr(cluster, 'partType4_groupnumber', glob[2])
 	cluster.import_requires()
 	apertures = cluster.generate_apertures()
 	master_dict = {}
