@@ -120,7 +120,8 @@ def gather_and_isolate(comm,NProcs,MyRank,data,toRank):
     comm.Allgatherv([data,cnts[MyRank]],[rslt,cnts,dspl,MPI._typedict[data.dtype.char]])
     del data,cnts,dspl
     if MyRank != toRank:
-        rslt = np.zeros_like(rslt)
+        # rslt = np.zeros_like(rslt)
+        del rslt
     return rslt
 
 def compute_M(data):
