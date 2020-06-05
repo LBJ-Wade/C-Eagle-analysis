@@ -90,7 +90,7 @@ def main():
 
     SIMULATION = 'bahamas'
     REDSHIFT = 'z000p000'
-    N_HALOS = 14
+    N_HALOS = 1000
 
     # -----------------------------------------------------------------------
     # Initialise a sample cluster to get Subfind file metadata
