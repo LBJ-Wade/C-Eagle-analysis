@@ -44,16 +44,19 @@ __FILE__ = """
 
 __PROFILE__ = False
 
-import itertools
-import numpy as np
-import h5py as h5
 import sys
 import os
-from scipy.sparse import csr_matrix
+import itertools
+import argparse
 from mpi4py import MPI
+import numpy as np
+import h5py as h5
+import datetime
+from scipy.sparse import csr_matrix
+
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
-size = comm.Get_size()
+nproc = comm.Get_size()
 
 def time_func(function):
     # create a new function based on the existing one,
@@ -72,6 +75,36 @@ def time_func(function):
         return function_result
     return new_func
 
+def split(NProcs,MyRank,nfiles):
+    nfiles=int(nfiles)
+    nf=int(nfiles/NProcs)
+    rmd=nfiles % NProcs
+    st=MyRank*nf
+    fh=(MyRank+1)*nf
+    if MyRank < rmd:
+        st+=MyRank
+        fh+=(MyRank+1)
+    else:
+        st+=rmd
+        fh+=rmd
+    return st,fh
+
+def commune(comm,NProcs, MyRank,data):
+    tmp=np.zeros(NProcs,dtype=np.int)
+    tmp[MyRank]=len(data)
+    cnts=np.zeros(NProcs,dtype=np.int)
+    comm.Allreduce([tmp,MPI.INT],[cnts,MPI.INT],op=MPI.SUM)
+    del tmp
+    dspl=np.zeros(NProcs,dtype=np.int)
+    i=0
+    for j in range(0,NProcs,1):
+        dspl[j]=i
+        i+=cnts[j]
+    rslt=np.zeros(i,dtype=data.dtype)
+    comm.Allgatherv([data,cnts[MyRank]],[rslt,cnts,dspl,MPI._typedict[data.dtype.char]])
+    del data,cnts,dspl
+    return rslt
+
 def compute_M(data):
     cols = np.arange(data.size)
     return csr_matrix((cols, (data.ravel(), cols)), shape=(data.max() + 1, data.size))
@@ -89,10 +122,12 @@ def main():
     # from rotvel_correlation import alignment
 
     SIMULATION = 'bahamas'
-    REDSHIFT = 'z000p000'
-    N_HALOS = 100
+    REDSHIFT = 'z003p000'
+    N_HALOS = 4
 
     # -----------------------------------------------------------------------
+
+
     # Initialise a sample cluster to get Subfind file metadata
     cluster = Cluster(simulation_name=SIMULATION,
                       clusterID=0,
@@ -102,91 +137,27 @@ def main():
     halo_num_catalogue_contiguous = cluster.halo_num_catalogue_contiguous
     file_GN = cluster.partdata_filePaths()[0]
     del cluster
+
+    groupnumber_csrm = []
     with h5.File(file_GN, 'r') as h5file:
         Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
+        for i, n_particles in enumerate(Nparticles):
+            print(f"[+] RANK {rank}: collecting gas particles groupNumber {i}...")
+            st, fh = split(nproc, rank, n_particles)
+            pgn_slice = h5file[f'/PartType0/GroupNumber'][st:fh]
+            csrm = get_indices_sparse(pgn_slice)
+            groupnumber_csrm.append(csrm)
 
-    # Initialize empty arrays across all ranks
-    pgn0 = np.empty(Nparticles[0], dtype='i')
-    pgn0_0, pgn0_1 = np.array_split(pgn0, 2)
-    pgn1 = np.empty(Nparticles[1], dtype='i')
-    pgn1_0, pgn1_1 = np.array_split(pgn1, 2)
-    pgn4 = np.empty(Nparticles[2], dtype='i')
-
-    # Read the particle groupNumbers with 5 cores (2 allocated for gas and CDM)
-    with h5.File(file_GN, 'r') as h5file:
-        if rank == 0:
-            print(f"[+] RANK {rank}: collecting gas particles groupNumber (0)...")
-            pgn0_0[:] = h5file[f'/PartType0/GroupNumber'][:len(pgn0_0)]
-        elif rank == 1:
-            print(f"[+] RANK {rank}: collecting gas particles groupNumber (1)...")
-            pgn0_1[:] = h5file[f'/PartType0/GroupNumber'][len(pgn0_0):]
-        elif rank == 2:
-            print(f"[+] RANK {rank}: collecting CDM particles groupNumber (0)...")
-            pgn1_0[:] = h5file[f'/PartType1/GroupNumber'][:len(pgn1_0)]
-        elif rank == 3:
-            print(f"[+] RANK {rank}: collecting CDM particles groupNumber (1)...")
-            pgn1_1[:] = h5file[f'/PartType1/GroupNumber'][len(pgn1_0):]
-        elif rank == 4:
-            print(f"[+] RANK {rank}: collecting star particles groupNumber...")
-            pgn4[:] = h5file[f'/PartType4/GroupNumber'][:]
-
-    comm.Barrier()
-    # Merge arrays for gas and CDM and broadcast to all cores
-    if rank == 0:
-        comm.Recv([pgn0_1, MPI.INT], source=1, tag=77)
-        pgn0[:len(pgn0_0)] = pgn0_0
-        pgn0[len(pgn0_0):] = pgn0_1
-    elif rank == 1:
-        comm.Send([pgn0_1, MPI.INT], dest=0, tag=77)
-    elif rank == 2:
-        comm.Recv([pgn1_1, MPI.INT], source=3, tag=75)
-        pgn1[:len(pgn1_0)] = pgn1_0
-        pgn1[len(pgn1_0):] = pgn1_1
-    elif rank == 3:
-        comm.Send([pgn1_1, MPI.INT], dest=2, tag=75)
-
-    del pgn0_0, pgn0_1, pgn1_0, pgn1_1
-    comm.Bcast([pgn0, MPI.INT], root=0)
-    comm.Bcast([pgn1, MPI.INT], root=2)
-    comm.Bcast([pgn4, MPI.INT], root=4)
-    # print(f"Rank: {rank}\tpgn0[10000] = {pgn0[10000]}")
-    # print(f"Rank: {rank}\tpgn1[10000] = {pgn1[10000]}")
-    # print(f"Rank: {rank}\tpgn4[10000] = {pgn4[10000]}")
-    # comm.Barrier()
-    # if rank == 0:
-    #     print('pgn0 == 1', np.where(pgn0 == 1)[0])
-    #     print('pgn1 == 1', np.where(pgn1 == 1)[0])
-    #     print('pgn4 == 1', np.where(pgn4 == 1)[0])
-
-    comm.Barrier()
     # Initialise the allocation for cluster reports
     clusterID_pool = np.arange(N_HALOS)
     for i in clusterID_pool:
-        if rank == i%size:
+        if rank == i%nproc:
             print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
-
-            # Make folder hierarchy
-            pathFile = os.path.join(cluster_pathSave, 'alignment_project', 'BAHAMAS_groupnumber_repo')
-            if not os.path.exists(pathFile):
-                os.makedirs(pathFile)
-            pathFile = os.path.join(pathFile, 'hydro')
-            if not os.path.exists(pathFile):
-                os.makedirs(pathFile)
-            pathFile = os.path.join(pathFile, f"{REDSHIFT}")
-            if not os.path.exists(pathFile):
-                os.makedirs(pathFile)
-            pathFile = os.path.join(pathFile, f"halo_{i:0>5d}")
-            if not os.path.exists(pathFile):
-                os.makedirs(pathFile)
-
             fof_id = halo_num_catalogue_contiguous[i]+1
-            partGroupNumber0 = np.where(pgn0 == fof_id)[0]
-            partGroupNumber1 = np.where(pgn1 == fof_id)[0]
-            partGroupNumber4 = np.where(pgn4 == fof_id)[0]
-            np.save(os.path.join(pathFile, 'partGroupNumber0.npy'), partGroupNumber0)
-            np.save(os.path.join(pathFile, 'partGroupNumber1.npy'), partGroupNumber1)
-            np.save(os.path.join(pathFile, 'partGroupNumber4.npy'), partGroupNumber4)
-            print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+            for partType in range(3):
+                gn = commune(comm, nproc, rank, groupnumber_csrm[partType][fof_id][0])
+                print(partType, gn)
+
 
             # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
             # alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
@@ -196,10 +167,6 @@ def main():
 
 
 if __name__ == "__main__":
-
-    import datetime
-    import argparse
-
     my_parser = argparse.ArgumentParser()
     my_parser.add_argument('-p',
                            '--profile',
