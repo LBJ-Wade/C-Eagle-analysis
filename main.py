@@ -146,7 +146,7 @@ def main():
 
     SIMULATION = 'bahamas'
     REDSHIFT = 'z003p000'
-    N_HALOS = 12
+    N_HALOS = 20
 
     # -----------------------------------------------------------------------
 
@@ -195,11 +195,17 @@ def main():
         pprint(f"[+] Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
         fof_id = halo_num_catalogue_contiguous[i]+1
         gn = commune(comm, nproc, rank, groupnumber0_csrm[fof_id][0])
-        pprint('gas', gn)
+        npwh = np.where(groupnumber0==fof_id)[0]
+        npwh_gathered = commune(comm, nproc, rank, npwh)
+        pprint('gas', gn==npwh_gathered)
         gn = commune(comm, nproc, rank, groupnumber1_csrm[fof_id][0])
-        pprint('CDM', gn)
+        npwh = np.where(groupnumber1==fof_id)[0]
+        npwh_gathered = commune(comm, nproc, rank, npwh)
+        pprint('CDM', gn==npwh_gathered)
         gn = commune(comm, nproc, rank, groupnumber4_csrm[fof_id][0])
-        pprint('stars', gn)
+        npwh = np.where(groupnumber4==fof_id)[0]
+        npwh_gathered = commune(comm, nproc, rank, npwh)
+        pprint('stars', gn==npwh_gathered)
 
 
 
