@@ -105,6 +105,24 @@ def commune(comm,NProcs, MyRank,data):
     del data,cnts,dspl
     return rslt
 
+def gather_and_isolate(comm,NProcs,MyRank,data,toRank):
+    tmp=np.zeros(NProcs,dtype=np.int)
+    tmp[MyRank]=len(data)
+    cnts=np.zeros(NProcs,dtype=np.int)
+    comm.Allreduce([tmp,MPI.INT],[cnts,MPI.INT],op=MPI.SUM)
+    del tmp
+    dspl=np.zeros(NProcs,dtype=np.int)
+    i=0
+    for j in range(0,NProcs,1):
+        dspl[j]=i
+        i+=cnts[j]
+    rslt=np.zeros(i,dtype=data.dtype)
+    comm.Allgatherv([data,cnts[MyRank]],[rslt,cnts,dspl,MPI._typedict[data.dtype.char]])
+    del data,cnts,dspl
+    if MyRank != toRank:
+        rslt = np.zeros_like(rslt)
+    return rslt
+
 def compute_M(data):
     cols = np.arange(data.size)
     return csr_matrix((cols, (data.ravel(), cols)), shape=(data.max() + 1, data.size))
@@ -159,7 +177,7 @@ def main():
             print(f"[+] RANK {rank}: initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
             fof_id = halo_num_catalogue_contiguous[i]+1
             for partType in range(3):
-                gn = commune(comm, nproc, rank, groupnumber_csrm[partType][fof_id][0])
+                gn = gather_and_isolate(comm, nproc, rank, groupnumber_csrm[partType][fof_id][0], toRank=rank)
                 print(partType, gn)
 
 
