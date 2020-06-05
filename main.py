@@ -177,14 +177,15 @@ def main():
 
     # Initialise the allocation for cluster reports
     clusterID_pool = np.arange(N_HALOS)
+    comm.Barrier()
     for i in clusterID_pool:
-        if rank == i%nproc:
-            print(f"[+] RANK {rank} | Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
-            idx = groupnumber_csrm[:][fof_id][0]
-            fof_id = halo_num_catalogue_contiguous[i]+1
-            for partType in range(3):
-                gn = gather_and_isolate(comm, nproc, rank, idx[partType] , toRank=rank)
-                print(partType, gn)
+        # if rank == i%nproc:
+        pprint(f"[+] Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
+        fof_id = halo_num_catalogue_contiguous[i]+1
+        idx = groupnumber_csrm[:][fof_id][0]
+        for partType in range(3):
+            gn = commune(comm, nproc, rank, idx[partType])
+            pprint(partType, gn)
 
 
             # print(f"[+] RANK {rank}: initializing report... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
