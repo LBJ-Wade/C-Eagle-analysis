@@ -191,7 +191,7 @@ def snap_groupnumbers(files, fofgroups: Dict[str, np.ndarray]):
 	return [groupnumber0_csrm, groupnumber1_csrm, groupnumber4_csrm]
 
 
-def cluster_particles(files, groupNumbers: List[np.ndarray,np.ndarray,np.ndarray] = None):
+def cluster_particles(files, groupNumbers = None):
 	with h5.File(files[1], 'r') as h5file:
 		data_out = {}
 		partTypes = ['0', '1', '4']
