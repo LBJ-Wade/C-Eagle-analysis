@@ -280,21 +280,21 @@ def cluster_data(clusterID: int,
 	return {**header,**group_data,**part_data}
 
 
-def glance_cluster(cluster_dict: dict, verbose: bool = False) -> None:
+def glance_cluster(cluster_dict: dict, verbose: bool = False, indent: int = 1) -> None:
 	if not verbose:
 		for key, value in cluster_dict.items():
-			pprint('\t' + str(key))
 			if isinstance(value, dict):
-				glance_cluster(value)
+				pprint('\t'*indent + str(key))
+				glance_cluster(value, indent=indent+1)
 			elif (isinstance(value, int) or
 			      isinstance(value, float) or
 			      isinstance(value, str) or
 			      (isinstance(value, np.ndarray) and len(value) < 10)):
-				pprint('\t' + str(value))
+				pprint('\t'*indent + str(key) +' : '+ str(value))
 	if verbose:
 		for key, value in cluster_dict.items():
-			pprint('\t' + str(key))
 			if isinstance(value, dict):
-				glance_cluster(value)
+				pprint('\t'*indent + str(key))
+				glance_cluster(value, indent=indent+1)
 			else:
-				pprint('\t' + str(value))
+				pprint('\t'*indent + str(key) +' : '+ str(value))
