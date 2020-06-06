@@ -43,17 +43,11 @@ __FILE__ = """
 """
 
 __PROFILE__ = False
-
 import sys
-import os
-import itertools
+import os.path
+import datetime
 import argparse
 from mpi4py import MPI
-import numpy as np
-import h5py as h5
-import datetime
-from scipy.sparse import csr_matrix
-
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 nproc = comm.Get_size()
@@ -75,136 +69,11 @@ def time_func(function):
         return function_result
     return new_func
 
-def pprint(*args, **kwargs):
-    if rank == 0:
-        print(*args, **kwargs)
-
-def split(NProcs,MyRank,nfiles):
-    nfiles=int(nfiles)
-    nf=int(nfiles/NProcs)
-    rmd=nfiles % NProcs
-    st=MyRank*nf
-    fh=(MyRank+1)*nf
-    if MyRank < rmd:
-        st+=MyRank
-        fh+=(MyRank+1)
-    else:
-        st+=rmd
-        fh+=rmd
-    return st,fh
-
-def commune(comm,NProcs, MyRank,data):
-    tmp=np.zeros(NProcs,dtype=np.int)
-    tmp[MyRank]=len(data)
-    cnts=np.zeros(NProcs,dtype=np.int)
-    comm.Allreduce([tmp,MPI.INT],[cnts,MPI.INT],op=MPI.SUM)
-    del tmp
-    dspl=np.zeros(NProcs,dtype=np.int)
-    i=0
-    for j in range(0,NProcs,1):
-        dspl[j]=i
-        i+=cnts[j]
-    rslt=np.zeros(i,dtype=data.dtype)
-    comm.Allgatherv([data,cnts[MyRank]],[rslt,cnts,dspl,MPI._typedict[data.dtype.char]])
-    del data,cnts,dspl
-    return rslt
-
-def gather_and_isolate(comm,NProcs,MyRank,data,toRank):
-    tmp=np.zeros(NProcs,dtype=np.int)
-    tmp[MyRank]=len(data)
-    cnts=np.zeros(NProcs,dtype=np.int)
-    comm.Allreduce([tmp,MPI.INT],[cnts,MPI.INT],op=MPI.SUM)
-    del tmp
-    dspl=np.zeros(NProcs,dtype=np.int)
-    i=0
-    for j in range(0,NProcs,1):
-        dspl[j]=i
-        i+=cnts[j]
-    rslt=np.zeros(i,dtype=data.dtype)
-    comm.Allgatherv([data,cnts[MyRank]],[rslt,cnts,dspl,MPI._typedict[data.dtype.char]])
-    del data,cnts,dspl
-    if MyRank != toRank:
-        # rslt = np.zeros_like(rslt)
-        rslt = None
-    return rslt
-
-def compute_M(data):
-    cols = np.arange(data.size)
-    return csr_matrix((cols, (data.ravel(), cols)), shape=(data.max() + 1, data.size))
-
-def get_indices_sparse(data):
-    M = compute_M(data)
-    return [np.unravel_index(row.data, data.shape) for row in M]
-
 @time_func
 def main():
-
-    # from import_toolkit.simulation import Simulation
-    from import_toolkit.cluster import Cluster
-    # from import_toolkit._cluster_retriever import redshift_str2num
-    from rotvel_correlation import alignment
-
-    SIMULATION = 'bahamas'
-    REDSHIFT = 'z003p000'
-    N_HALOS = 100
-
-    # -----------------------------------------------------------------------
-
-
-    # Initialise a sample cluster to get Subfind file metadata
-    cluster = Cluster(simulation_name=SIMULATION,
-                      clusterID=0,
-                      redshift=REDSHIFT,
-                      fastbrowsing=True)
-    cluster_pathSave = cluster.pathSave
-    halo_num_catalogue_contiguous = cluster.halo_num_catalogue_contiguous
-    file_GN = cluster.partdata_filePaths()[0]
-    del cluster
-
-    with h5.File(file_GN, 'r') as h5file:
-        Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0,1,4]]
-
-        pprint(f"[+] Collecting gas particles GroupNumber...")
-        st, fh = split(nproc, rank, Nparticles[0])
-        groupnumber0 = h5file[f'/PartType0/GroupNumber'][st:fh]
-        # Clip out negative values and exceeding values
-        pprint(f"[+] Computing CSR indexing matrix...")
-        groupnumber0 = np.clip(groupnumber0, 0, np.max(halo_num_catalogue_contiguous) + 2)
-        groupnumber0_csrm = get_indices_sparse(groupnumber0)
-        del groupnumber0
-
-        pprint(f"[+] Collecting CDM particles GroupNumber...")
-        st, fh = split(nproc, rank, Nparticles[1])
-        groupnumber1 = h5file[f'/PartType1/GroupNumber'][st:fh]
-        pprint(f"[+] Computing CSR indexing matrix...")
-        groupnumber1 = np.clip(groupnumber1, 0, np.max(halo_num_catalogue_contiguous) + 2)
-        groupnumber1_csrm = get_indices_sparse(groupnumber1)
-        del groupnumber1
-
-        pprint(f"[+] Collecting star particles GroupNumber...")
-        st, fh = split(nproc, rank, Nparticles[2])
-        groupnumber4 = h5file[f'/PartType4/GroupNumber'][st:fh]
-        pprint(f"[+] Computing CSR indexing matrix...")
-        groupnumber4 = np.clip(groupnumber4, 0, np.max(halo_num_catalogue_contiguous) + 2)
-        groupnumber4_csrm = get_indices_sparse(groupnumber4)
-        del groupnumber4
-
-
-    # Initialise the allocation for cluster reports
-    clusterID_pool = np.arange(N_HALOS)
-    comm.Barrier()
-    for i in clusterID_pool:
-        pprint(f"[+] Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
-        fof_id = halo_num_catalogue_contiguous[i]+1
-        pgn0 = commune(comm, nproc, rank, groupnumber0_csrm[fof_id][0])
-        pgn1 = commune(comm, nproc, rank, groupnumber1_csrm[fof_id][0])
-        pgn4 = commune(comm, nproc, rank, groupnumber4_csrm[fof_id][0])
-        pprint(f"\tInitializing report generation...")
-        alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
-    comm.Barrier()
-
-
-
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+    from bahamas import main as bah
+    bah.main()
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser()
@@ -213,12 +82,8 @@ if __name__ == "__main__":
                            action='store_true',
                            help='Triggers the cProfile for the main() function.')
     args = my_parser.parse_args()
-
-
     if vars(args)['profile']:
         import cProfile
         cProfile.run('main()')
-
     else:
-        # print(__FILE__)
         main()
