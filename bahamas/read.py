@@ -215,9 +215,11 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 	with h5.File(files[1], 'r') as h5file:
 		data_out = {}
 		partTypes = ['0', '1', '4']
+		Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0, 1, 4]]
 
 		for pt in partTypes:
-			groupNumber = groupNumbers[partTypes.index(pt)]
+			st, fh = split(Nparticles[partTypes.index(pt)])
+			groupNumber = groupNumbers[partTypes.index(pt)] + st
 			fof_id = fofgroup['idx'] + 1
 			pgn = commune(groupNumber[fof_id][0])
 
