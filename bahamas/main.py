@@ -1,6 +1,7 @@
-
+import warnings
 from mpi4py import MPI
 from .__init__ import pprint
+warnings.filterwarnings("ignore")
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 nproc = comm.Get_size()
@@ -18,7 +19,8 @@ def main():
     fof_groups = fof_groups(files, header)
     # snap_groupnumbers = snap_groupnumbers(files, fof_groups)
     # cluster_particles = cluster_particles(files, groupNumbers=snap_groupnumbers)
-    print(fof_groups.keys())
+    pprint(fof_groups.keys())
+    comm.Barrier()
 
 
 
