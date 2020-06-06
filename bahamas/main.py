@@ -25,6 +25,6 @@ def main():
     groupnumbers = snap_groupnumbers(files, fofgroups = fofs)
 
     # for i in range(NHALOS):
-    halo_data = cluster_data(NHALOS, files, header, fofgroups = fof_groups, groupNumbers = groupnumbers)
+    halo_data = cluster_data(NHALOS, files, header, fofgroups = fofs, groupNumbers = groupnumbers)
     pprint(halo_data)
     MPI.COMM_WORLD.Barrier()
