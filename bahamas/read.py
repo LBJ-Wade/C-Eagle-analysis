@@ -219,9 +219,9 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 
 		for pt in partTypes:
 			st, fh = split(Nparticles[partTypes.index(pt)])
-			groupNumber = groupNumbers[partTypes.index(pt)] + st
 			fof_id = fofgroup['idx'] + 1
-			pgn = commune(groupNumber[fof_id][0])
+			groupNumber = groupNumbers[partTypes.index(pt)][fof_id][0] + st
+			pgn = commune(groupNumber)
 
 			data_out[f'partType{pt}'] = {}
 			data_out[f'partType{pt}']['subgroup_number'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn]
