@@ -277,7 +277,13 @@ def cluster_data(clusterID: int,
 
 	group_data = fof_group(clusterID, fofgroups = fofgroups)
 	part_data = cluster_particles(files, header, fofgroup=group_data, groupNumbers= groupNumbers)
-	return {**header,**group_data,**part_data}
+
+	out = {}
+	out['Header'] = {**header}
+	out['FOF'] = {**group_data}
+	for pt in ['0', '1', '4']:
+		out[f'partType{pt}'] = {**part_data[f'partType{pt}']}
+	return out
 
 
 def glance_cluster(cluster_dict: dict, verbose: bool = False, indent: int = 1) -> None:
