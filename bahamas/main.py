@@ -2,14 +2,10 @@ import warnings
 from mpi4py import MPI
 from .__init__ import pprint
 warnings.filterwarnings("ignore")
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-nproc = comm.Get_size()
 
 def main():
     from .read import (
         find_files,
-        commune,
         fof_header,
         fof_groups,
         fof_group,
@@ -18,7 +14,7 @@ def main():
     )
 
     REDSHIFT = 'z003p000'
-    CLUSTERID = 100
+    NHALOS = 10
 
     # -----------------------------------------------------------------------
     pprint('[+] BAHAMAS HYDRO')
@@ -26,11 +22,13 @@ def main():
     header = fof_header(files)
     fof_groups = fof_groups(files, header)
     snap_groupnumbers = snap_groupnumbers(files, fofgroups = fof_groups)
-    fof_group = fof_group(CLUSTERID, fofgroups = fof_groups)
-    pprint(fof_group)
-    cluster_particles = cluster_particles(files, header, fofgroup=fof_group, groupNumbers=snap_groupnumbers)
-    pprint(cluster_particles.keys())
-    comm.Barrier()
+
+    for i in range(NHALOS):
+        fof_group = fof_group(i, fofgroups = fof_groups)
+        pprint(fof_group)
+        cluster_particles = cluster_particles(files, header, fofgroup=fof_group, groupNumbers=snap_groupnumbers)
+        pprint(cluster_particles)
+    MPI.COMM_WORLD.Barrier()
 
 
 
