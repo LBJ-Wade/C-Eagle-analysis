@@ -27,5 +27,6 @@ def main():
 
     # for i in range(NHALOS):
     halo_data = cluster_data(NHALOS, files, header, fofgroups = fofs, groupNumbers = groupnumbers)
+    pprint('[+] Glance cluster info')
     glance_cluster(halo_data)
     MPI.COMM_WORLD.Barrier()

@@ -281,20 +281,16 @@ def cluster_data(clusterID: int,
 
 
 def glance_cluster(cluster_dict: dict, verbose: bool = False, indent: int = 1) -> None:
-	pprint('[+] Glance cluster info')
+
 	if not verbose:
 		for key, value in cluster_dict.items():
 			if isinstance(value, dict):
 				pprint('\t'*indent + str(key))
 				glance_cluster(value, indent=indent+1)
-			elif (isinstance(value, int) or
-			      isinstance(value, float) or
-			      isinstance(value, str)):
-				if isinstance(value, np.ndarray) and len(value) > 10:
-					pprint('\t' * indent + str(key) + ' : ' + f"len({len(value):d})\t val({value[0]} ... {value[-1]})")
-				else:
-					pprint('\t' * indent + str(key) + ' : ' + str(value))
-
+			elif isinstance(value, np.ndarray) and len(value) > 10:
+				pprint('\t' * indent + str(key) + ' : ' + f"len({len(value):d})\t val({value[0]} ... {value[-1]})")
+			else:
+				pprint('\t' * indent + str(key) + ' : ' + str(value))
 
 	if verbose:
 		for key, value in cluster_dict.items():
