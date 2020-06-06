@@ -235,8 +235,17 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 				data_out[f'partType{pt}']['sphdensity'] = h5file[f'/PartType{pt}/Density'][pgn]
 				data_out[f'partType{pt}']['sphlength'] = h5file[f'/PartType{pt}/SmoothingLength'][pgn]
 
+			# Conversion
+			data_out[f'partType{pt}']['velocity'] = comoving_velocity(header, data_out[f'partType{pt}']['velocity'])
+			data_out[f'partType{pt}']['coordinates'] = comoving_length(header, data_out[f'partType{pt}']['coordinates'])
+			data_out[f'partType{pt}']['mass'] = comoving_mass(header, data_out[f'partType{pt}']['mass'] * 1.0e10)
+			if pt == '0':
+				den_conv = h5file[f'/PartType{pt}/Density'].attrs['CGSConversionFactor']
+				data_out[f'partType{pt}']['sphdensity'] = comoving_density(header, data_out[f'partType{pt}']['sphdensity'] * den_conv)
+				data_out[f'partType{pt}']['sphlength'] = comoving_length(header, data_out[f'partType{pt}']['sphlength'])
+
 			# Periodic boundary wrapping
-			boxsize = h5file['Header'].attrs['BoxSize']
+			boxsize = comoving_length(header, h5file['Header'].attrs['BoxSize'])
 			coords = data_out[f'partType{pt}']['coordinates']
 			for coord_axis in range(3):
 				# Right boundary
@@ -253,13 +262,14 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 			data_out[f'partType{pt}']['coordinates'] = coords
 			del coords
 
-			# Conversion
-			data_out[f'partType{pt}']['velocity'] = comoving_velocity(header, data_out[f'partType{pt}']['velocity'])
-			data_out[f'partType{pt}']['coordinates'] = comoving_length(header, data_out[f'partType{pt}']['coordinates'])
-			data_out[f'partType{pt}']['mass'] = comoving_mass(header, data_out[f'partType{pt}']['mass']*1.0e10)
-			if pt == '0':
-				den_conv = h5file[f'/PartType{pt}/Density'].attrs['CGSConversionFactor']
-				data_out[f'partType{pt}']['sphdensity'] = comoving_density(header, data_out[f'partType{pt}']['sphdensity']*den_conv)
-				data_out[f'partType{pt}']['sphlength'] = comoving_length(header, data_out[f'partType{pt}']['sphlength'])
-
 	return data_out
+
+def cluster_data(clusterID: int,
+                 files: list,
+                 header: Dict[str, float],
+                 fofgroups: Dict[str, np.ndarray] = None,
+                 groupNumbers: List[np.ndarray] = None):
+
+	group_data = fof_group(clusterID, fofgroups = fofgroups)
+	part_data = cluster_particles(files, header, fofgroup=group_data, groupNumbers= groupNumbers)
+	return {**header,**group_data,**part_data}

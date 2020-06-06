@@ -10,7 +10,8 @@ def main():
         fof_groups,
         fof_group,
         snap_groupnumbers,
-        cluster_particles
+        cluster_particles,
+        cluster_data
     )
 
     REDSHIFT = 'z003p000'
@@ -20,16 +21,10 @@ def main():
     pprint('[+] BAHAMAS HYDRO')
     files = find_files(REDSHIFT)
     header = fof_header(files)
-    fof_groups = fof_groups(files, header)
-    snap_groupnumbers = snap_groupnumbers(files, fofgroups = fof_groups)
+    fofs = fof_groups(files, header)
+    groupnumbers = snap_groupnumbers(files, fofgroups = fofs)
 
     for i in range(NHALOS):
-        fof_group = fof_group(i, fofgroups = fof_groups)
-        pprint(fof_group)
-        cluster_particles = cluster_particles(files, header, fofgroup=fof_group, groupNumbers=snap_groupnumbers)
-        pprint(cluster_particles)
-    MPI.COMM_WORLD.Barrier()
-
-
-
-
+        halo_data = cluster_data(i, files, header, fofgroups = fof_groups, groupNumbers = groupnumbers)
+        pprint(halo_data)
+        MPI.COMM_WORLD.Barrier()
