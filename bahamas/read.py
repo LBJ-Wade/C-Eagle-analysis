@@ -218,11 +218,15 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 		Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0, 1, 4]]
 
 		for pt in partTypes:
+
+			# Gather groupnumbers from cores
 			st, fh = split(Nparticles[partTypes.index(pt)])
 			fof_id = fofgroup['idx'] + 1
 			groupNumber = groupNumbers[partTypes.index(pt)][fof_id][0] + st
 			pgn = commune(groupNumber)
+			del groupNumber
 
+			# Filter particle data with collected groupNumber indexing
 			data_out[f'partType{pt}'] = {}
 			data_out[f'partType{pt}']['subgroup_number'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn]
 			data_out[f'partType{pt}']['velocity'] = h5file[f'/PartType{pt}/Velocity'][pgn]
@@ -237,7 +241,7 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 				data_out[f'partType{pt}']['sphdensity'] = h5file[f'/PartType{pt}/Density'][pgn]
 				data_out[f'partType{pt}']['sphlength'] = h5file[f'/PartType{pt}/SmoothingLength'][pgn]
 
-			# Conversion
+			# Conversion from comoving units to physical units
 			data_out[f'partType{pt}']['velocity'] = comoving_velocity(header, data_out[f'partType{pt}']['velocity'])
 			data_out[f'partType{pt}']['coordinates'] = comoving_length(header, data_out[f'partType{pt}']['coordinates'])
 			data_out[f'partType{pt}']['mass'] = comoving_mass(header, data_out[f'partType{pt}']['mass'] * 1.0e10)
@@ -246,7 +250,7 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 				data_out[f'partType{pt}']['sphdensity'] = comoving_density(header, data_out[f'partType{pt}']['sphdensity'] * den_conv)
 				data_out[f'partType{pt}']['sphlength'] = comoving_length(header, data_out[f'partType{pt}']['sphlength'])
 
-			# Periodic boundary wrapping
+			# Periodic boundary wrapping of particle coordinates
 			boxsize = comoving_length(header, h5file['Header'].attrs['BoxSize'])
 			coords = data_out[f'partType{pt}']['coordinates']
 			for coord_axis in range(3):
@@ -255,7 +259,6 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 					beyond_index = np.where(coords[:, coord_axis] < boxsize / 2)[0]
 					coords[beyond_index, coord_axis] = coords[beyond_index, coord_axis] + boxsize
 					del beyond_index
-
 				# Left boundary
 				elif fofgroup['COP'][coord_axis] - 5 * fofgroup['R200'] < 0.:
 					beyond_index = np.where(coords[:, coord_axis] > boxsize / 2)[0]
@@ -275,3 +278,23 @@ def cluster_data(clusterID: int,
 	group_data = fof_group(clusterID, fofgroups = fofgroups)
 	part_data = cluster_particles(files, header, fofgroup=group_data, groupNumbers= groupNumbers)
 	return {**header,**group_data,**part_data}
+
+
+def glance_cluster(cluster_dict: dict, verbose: bool = False) -> None:
+	if not verbose:
+		for key, value in cluster_dict.items():
+			pprint('\t' + str(key))
+			if isinstance(value, dict):
+				glance_cluster(value)
+			elif (isinstance(value, int) or
+			      isinstance(value, float) or
+			      isinstance(value, str) or
+			      (isinstance(value, np.ndarray) and len(value) < 10)):
+				pprint('\t' + str(value))
+	if verbose:
+		for key, value in cluster_dict.items():
+			pprint('\t' + str(key))
+			if isinstance(value, dict):
+				glance_cluster(value)
+			else:
+				pprint('\t' + str(value))

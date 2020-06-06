@@ -11,7 +11,8 @@ def main():
         fof_group,
         snap_groupnumbers,
         cluster_particles,
-        cluster_data
+        cluster_data,
+        glance_cluster
     )
 
     REDSHIFT = 'z003p000'
@@ -26,5 +27,5 @@ def main():
 
     # for i in range(NHALOS):
     halo_data = cluster_data(NHALOS, files, header, fofgroups = fofs, groupNumbers = groupnumbers)
-    pprint(halo_data)
+    glance_cluster(halo_data)
     MPI.COMM_WORLD.Barrier()
