@@ -175,7 +175,7 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 	return new_data
 
 
-def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray]):
+def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 	halo_num_catalogue_contiguous = np.max(fofgroups['idx'])
 
 	with h5.File(files[1], 'r') as h5file:

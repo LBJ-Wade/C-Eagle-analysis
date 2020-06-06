@@ -26,9 +26,8 @@ def main():
     header = fof_header(files)
     fof_groups = fof_groups(files, header)
     fof_group = fof_group(10, fofgroups = fof_groups)
-    pprint(fof_groups.keys())
     pprint(fof_group)
-    # snap_groupnumbers = snap_groupnumbers(files, fof_groups)
+    snap_groupnumbers = snap_groupnumbers(files, fofgroups = fof_groups)
     # cluster_particles = cluster_particles(files, groupNumbers=snap_groupnumbers)
     comm.Barrier()
 
