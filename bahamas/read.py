@@ -230,7 +230,7 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 			data_out[f'partType{pt}'] = {}
 			data_out[f'partType{pt}']['subgroup_number'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn]
 			data_out[f'partType{pt}']['velocity'] = h5file[f'/PartType{pt}/Velocity'][pgn]
-			data_out[f'partType{pt}']['coordinates'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn]
+			data_out[f'partType{pt}']['coordinates'] = h5file[f'/PartType{pt}/Coordinates'][pgn]
 			if pt == '1':
 				particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
 				data_out[f'partType{pt}']['mass'] = np.ones(len(pgn), dtype=np.float) * particle_mass_DM
