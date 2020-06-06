@@ -91,7 +91,7 @@ def find_files(redshift: str):
     sd=list(np.array(sd)[so])
     return [sd,pd]
 
-def fof_header(fil: listes):
+def fof_header(files: list):
 	pprint(f"[+] Find header information...")
 	header = {}
 	with h5.File(files[1], 'r') as f:
