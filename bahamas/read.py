@@ -2,7 +2,7 @@ import sys
 import os
 import itertools
 import argparse
-from typing import List, Dict, Tuple
+from typing import List, Dict, Union
 from mpi4py import MPI
 import numpy as np
 import h5py as h5
@@ -91,7 +91,7 @@ def find_files(redshift: str):
     sd=list(np.array(sd)[so])
     return [sd,pd]
 
-def fof_header(files: List[list, str]):
+def fof_header(files: List[Union[list, str]]):
 	pprint(f"[+] Find header information...")
 	header = {}
 	with h5.File(files[1], 'r') as f:
@@ -103,7 +103,7 @@ def fof_header(files: List[list, str]):
 		header['OmgB'] = f['Header'].attrs['OmegaBaryon']
 	return header
 
-def fof_groups(files: List[list, str], header: Dict[str, float]):
+def fof_groups(files: List[Union[list, str]], header: Dict[str, float]):
 	pprint(f"[+] Find group information for whole snapshot...")
 	st, fh = split(len(files[0]))
 	Mfof = np.empty(0)
@@ -157,7 +157,7 @@ def fof_groups(files: List[list, str], header: Dict[str, float]):
 	data['idx'] = np.where(M500 > 1.0e13)[0]
 	return data
 
-def snap_groupnumbers(files: List[list, str], fofgroups: Dict[str, np.ndarray]):
+def snap_groupnumbers(files: List[Union[list, str]], fofgroups: Dict[str, np.ndarray]):
 	halo_num_catalogue_contiguous = np.max(fofgroups['idx'])
 
 	with h5.File(files[1], 'r') as h5file:
@@ -191,7 +191,7 @@ def snap_groupnumbers(files: List[list, str], fofgroups: Dict[str, np.ndarray]):
 	return [groupnumber0_csrm, groupnumber1_csrm, groupnumber4_csrm]
 
 
-def cluster_particles(files: List[list, str], groupNumbers: List[np.ndarray,np.ndarray,np.ndarray] = None):
+def cluster_particles(files: List[Union[list, str]], groupNumbers: List[np.ndarray,np.ndarray,np.ndarray] = None):
 	with h5.File(files[1], 'r') as h5file:
 		data_out = {}
 		partTypes = ['0', '1', '4']
