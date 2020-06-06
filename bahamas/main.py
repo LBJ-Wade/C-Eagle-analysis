@@ -18,17 +18,18 @@ def main():
     )
 
     REDSHIFT = 'z003p000'
-    N_HALOS = 100
+    CLUSTERID = 100
 
     # -----------------------------------------------------------------------
     pprint('[+] BAHAMAS HYDRO')
     files = find_files(REDSHIFT)
     header = fof_header(files)
     fof_groups = fof_groups(files, header)
-    fof_group = fof_group(10, fofgroups = fof_groups)
-    pprint(fof_group)
     snap_groupnumbers = snap_groupnumbers(files, fofgroups = fof_groups)
-    # cluster_particles = cluster_particles(files, groupNumbers=snap_groupnumbers)
+    fof_group = fof_group(CLUSTERID, fofgroups = fof_groups)
+    pprint(fof_group)
+    cluster_particles = cluster_particles(files, header, fofgroup=fof_group, groupNumbers=snap_groupnumbers)
+    pprint(cluster_particles.keys())
     comm.Barrier()
 
 

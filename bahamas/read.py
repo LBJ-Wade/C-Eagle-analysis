@@ -132,15 +132,15 @@ def fof_groups(files: list, header: Dict[str, float]):
 			SCOP = np.append(SCOP, f['Subhalo/CentreOfPotential'][:])
 
 			# Conversion
-			Mfof = comoving_mass(header, mass_units(Mfof, unit_system='astro'))
-			M2500 = comoving_mass(header, mass_units(M2500, unit_system='astro'))
-			R2500 = comoving_length(header, length_units(R2500, unit_system='astro'))
-			M500 = comoving_mass(header, mass_units(M500, unit_system='astro'))
-			R500 = comoving_length(header, length_units(R500, unit_system='astro'))
-			M200 = comoving_mass(header, mass_units(M200, unit_system='astro'))
-			R200 = comoving_length(header, length_units(R200, unit_system='astro'))
-			COP = comoving_length(header, length_units(COP, unit_system='astro'))
-			SCOP = comoving_length(header, length_units(SCOP, unit_system='astro'))
+			Mfof = comoving_mass(header, Mfof*1.0e10)
+			M2500 = comoving_mass(header, M2500*1.0e10)
+			R2500 = comoving_length(header, R2500)
+			M500 = comoving_mass(header, M500*1.0e10)
+			R500 = comoving_length(header, R500)
+			M200 = comoving_mass(header, M200*1.0e10)
+			R200 = comoving_length(header, R200)
+			COP = comoving_length(header, COP)
+			SCOP = comoving_length(header, SCOP)
 
 	data = {}
 	data['Mfof'] = commune(Mfof)
@@ -158,8 +158,9 @@ def fof_groups(files: list, header: Dict[str, float]):
 	return data
 
 def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
-	pprint(f"[+] Find information for cluster {clusterID}")
+	pprint(f"[+] Find group information for cluster {clusterID}")
 	new_data = {}
+	new_data['clusterID'] = clusterID
 	new_data['idx'] = fofgroups['idx'][clusterID]
 	new_data['Mfof'] = fofgroups['Mfof'][new_data['idx']]
 	new_data['M2500'] = fofgroups['M2500'][new_data['idx']]
@@ -209,41 +210,56 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 	return [groupnumber0_csrm, groupnumber1_csrm, groupnumber4_csrm]
 
 
-def cluster_particles(files: list, groupNumbers: List[np.ndarray] = None):
+def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
+	pprint(f"[+] Find particle information for cluster {fofgroup['clusterID']}")
 	with h5.File(files[1], 'r') as h5file:
 		data_out = {}
 		partTypes = ['0', '1', '4']
+
 		for pt in partTypes:
 			groupNumber = groupNumbers[partTypes.index(pt)]
+			fof_id = fofgroup['idx'] + 1
+			pgn = commune(groupNumber[fof_id][0])
+
 			data_out[f'partType{pt}'] = {}
-			data_out[f'partType{pt}']['subgroup_number'] = h5file[f'/PartType{pt}/SubGroupNumber'][groupNumber]
-			data_out[f'partType{pt}']['velocity'] = h5file[f'/PartType{pt}/Velocity'][groupNumber]
-			data_out[f'partType{pt}']['coordinates'] = h5file[f'/PartType{pt}/SubGroupNumber'][groupNumber]
+			data_out[f'partType{pt}']['subgroup_number'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn]
+			data_out[f'partType{pt}']['velocity'] = h5file[f'/PartType{pt}/Velocity'][pgn]
+			data_out[f'partType{pt}']['coordinates'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn]
 			if pt == '1':
 				particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
-				data_out[f'partType{pt}']['mass'] = np.ones(len(groupNumber), dtype=np.float) * particle_mass_DM
+				data_out[f'partType{pt}']['mass'] = np.ones(len(pgn), dtype=np.float) * particle_mass_DM
 			else:
-				data_out[f'partType{pt}']['mass'] = h5file[f'/PartType{pt}/Mass'][groupNumber]
+				data_out[f'partType{pt}']['mass'] = h5file[f'/PartType{pt}/Mass'][pgn]
 			if pt == '0':
-				data_out[f'partType{pt}']['temperature'] = h5file[f'/PartType{pt}/Temperature'][groupNumber]
-				data_out[f'partType{pt}']['sphdensity'] = h5file[f'/PartType{pt}/Density'][groupNumber]
-				data_out[f'partType{pt}']['sphlength'] = h5file[f'/PartType{pt}/SmoothingLength'][groupNumber]
+				data_out[f'partType{pt}']['temperature'] = h5file[f'/PartType{pt}/Temperature'][pgn]
+				data_out[f'partType{pt}']['sphdensity'] = h5file[f'/PartType{pt}/Density'][pgn]
+				data_out[f'partType{pt}']['sphlength'] = h5file[f'/PartType{pt}/SmoothingLength'][pgn]
 
-		boxsize = h5file['Header'].attrs['BoxSize']
+			# Periodic boundary wrapping
+			boxsize = h5file['Header'].attrs['BoxSize']
+			coords = data_out[f'partType{pt}']['coordinates']
+			for coord_axis in range(3):
+				# Right boundary
+				if fofgroup['COP'][coord_axis] + 5 * fofgroup['R200'] > boxsize:
+					beyond_index = np.where(coords[:, coord_axis] < boxsize / 2)[0]
+					coords[beyond_index, coord_axis] = coords[beyond_index, coord_axis] + boxsize
+					del beyond_index
 
+				# Left boundary
+				elif fofgroup['COP'][coord_axis] - 5 * fofgroup['R200'] < 0.:
+					beyond_index = np.where(coords[:, coord_axis] > boxsize / 2)[0]
+					coords[beyond_index, coord_axis] = coords[beyond_index, coord_axis] - boxsize
+					del beyond_index
+			data_out[f'partType{pt}']['coordinates'] = coords
+			del coords
 
-# def cluster_data(halo_ID):
-# 	data = {}
-#
-# 	# Initialise the allocation for cluster reports
-# 	clusterID_pool = np.arange(N_HALOS)
-# 	comm.Barrier()
-# 	for i in clusterID_pool:
-# 		pprint(f"[+] Initializing partGN generation... {SIMULATION:>10s} {i:<5d} {REDSHIFT:s}")
-# 		fof_id = halo_num_catalogue_contiguous[i] + 1
-# 		pgn0 = commune(groupnumber0_csrm[fof_id][0])
-# 		pgn1 = commune(groupnumber1_csrm[fof_id][0])
-# 		pgn4 = commune(groupnumber4_csrm[fof_id][0])
-# 		pprint(f"\tInitializing report generation...")
-# 		alignment.save_report(i, REDSHIFT, glob=[pgn0, pgn1, pgn4])
-# 	comm.Barrier()
+			# Conversion
+			data_out[f'partType{pt}']['velocity'] = comoving_velocity(header, data_out[f'partType{pt}']['velocity'])
+			data_out[f'partType{pt}']['coordinates'] = comoving_length(header, data_out[f'partType{pt}']['coordinates'])
+			data_out[f'partType{pt}']['mass'] = comoving_mass(header, data_out[f'partType{pt}']['mass']*1.0e10)
+			if pt == '0':
+				den_conv = h5file[f'/PartType{pt}/Density'].attrs['CGSConversionFactor']
+				data_out[f'partType{pt}']['sphdensity'] = comoving_density(header, data_out[f'partType{pt}']['sphdensity']*den_conv)
+				data_out[f'partType{pt}']['sphlength'] = comoving_length(header, data_out[f'partType{pt}']['sphlength'])
+
+	return data_out
