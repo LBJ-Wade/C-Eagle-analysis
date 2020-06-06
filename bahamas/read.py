@@ -157,6 +157,24 @@ def fof_groups(files: list, header: Dict[str, float]):
 	data['idx'] = np.where(M500 > 1.0e13)[0]
 	return data
 
+def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
+	pprint(f"[+] Find information for cluster {clusterID}")
+	new_data = {}
+	new_data['idx'] = fofgroups['idx'][clusterID]
+	new_data['Mfof'] = fofgroups['Mfof'][new_data['idx']]
+	new_data['M2500'] = fofgroups['M2500'][new_data['idx']]
+	new_data['R2500'] = fofgroups['R2500'][new_data['idx']]
+	new_data['M500'] = fofgroups['M500'][new_data['idx']]
+	new_data['R500'] = fofgroups['R500'][new_data['idx']]
+	new_data['M200'] = fofgroups['M200'][new_data['idx']]
+	new_data['R200'] = fofgroups['R200'][new_data['idx']]
+	new_data['COP'] = fofgroups['COP'][new_data['idx']]
+	new_data['NSUB'] = fofgroups['NSUB'][new_data['idx']]
+	new_data['FSID'] = fofgroups['FSID'][new_data['idx']]
+	new_data['SCOP'] = fofgroups['SCOP'][new_data['idx']]
+	return new_data
+
+
 def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray]):
 	halo_num_catalogue_contiguous = np.max(fofgroups['idx'])
 
