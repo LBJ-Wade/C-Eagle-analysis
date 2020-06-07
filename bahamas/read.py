@@ -325,7 +325,8 @@ def cluster_data(clusterID: int,
                  groupNumbers: List[np.ndarray] = None):
 
 	group_data = fof_group(clusterID, fofgroups = fofgroups)
-	part_data = cluster_particles(fofgroup=group_data, groupNumbers= groupNumbers)
+	halo_partgn = cluster_partgroupnumbers(fofgroup=group_data, groupNumbers=groupNumbers)
+	part_data = cluster_particles(fofgroup=group_data, groupNumbers= halo_partgn)
 
 	out = {}
 	out['Header'] = {**header}
