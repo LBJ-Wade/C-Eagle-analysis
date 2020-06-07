@@ -130,7 +130,7 @@ def fof_groups(files: list, header: Dict[str, float]):
 			NSUB = np.append(NSUB, f['FOF/NumOfSubhalos'][:])
 			FSID = np.append(FSID, f['FOF/FirstSubhaloID'][:])
 			SCOP = np.append(SCOP, f['Subhalo/CentreOfPotential'][:])
-			print(M500)
+			print(Mfof)
 
 		# Conversion
 		Mfof = comoving_mass(header, Mfof * 1.0e10)
