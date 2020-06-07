@@ -248,62 +248,71 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 		header['zred'] = h5file['Header'].attrs['Redshift']
 
 		for pt in partTypes:
-			pgn = groupNumbers[partTypes.index(pt)]
+
+			# Initialise arrays
+			subgroup_number = np.empty(0)
+			velocity = np.empty(0)
+			coordinates = np.empty(0)
+			mass = np.empty(0)
+			if pt == '0':
+				temperature = np.empty(0)
+				sphdensity = np.empty(0)
+				sphlength = np.empty(0)
 
 			# Let each CPU core import a portion of the pgn data
+			pgn = groupNumbers[partTypes.index(pt)]
 			st, fh = split(len(pgn))
 			pgn_core = pgn[st:fh]
 
 			# Filter particle data with collected groupNumber indexing
-			data_out[f'partType{pt}'] = {}
-			data_out[f'partType{pt}']['subgroup_number'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn_core]
-			data_out[f'partType{pt}']['velocity']        = h5file[f'/PartType{pt}/Velocity'][pgn_core]
-			data_out[f'partType{pt}']['coordinates']     = h5file[f'/PartType{pt}/Coordinates'][pgn_core]
+			subgroup_number = h5file[f'/PartType{pt}/SubGroupNumber'][pgn_core]
+			velocity        = h5file[f'/PartType{pt}/Velocity'][pgn_core]
+			coordinates     = h5file[f'/PartType{pt}/Coordinates'][pgn_core]
 			if pt == '0':
-				data_out[f'partType{pt}']['temperature'] = h5file[f'/PartType{pt}/Temperature'][pgn_core]
-				data_out[f'partType{pt}']['sphdensity']  = h5file[f'/PartType{pt}/Density'][pgn_core]
-				data_out[f'partType{pt}']['sphlength']   = h5file[f'/PartType{pt}/SmoothingLength'][pgn_core]
+				temperature = h5file[f'/PartType{pt}/Temperature'][pgn_core]
+				sphdensity  = h5file[f'/PartType{pt}/Density'][pgn_core]
+				sphlength   = h5file[f'/PartType{pt}/SmoothingLength'][pgn_core]
 			if pt == '1':
 				particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
-				data_out[f'partType{pt}']['mass'] = np.ones(len(pgn_core), dtype=np.float) * particle_mass_DM
+				mass = np.ones(len(pgn_core), dtype=np.float) * particle_mass_DM
 			else:
-				data_out[f'partType{pt}']['mass'] = h5file[f'/PartType{pt}/Mass'][pgn_core]
+				mass = h5file[f'/PartType{pt}/Mass'][pgn_core]
 
 			# Conversion from comoving units to physical units
-			data_out[f'partType{pt}']['velocity'] = comoving_velocity(header, data_out[f'partType{pt}']['velocity'])
-			data_out[f'partType{pt}']['coordinates'] = comoving_length(header, data_out[f'partType{pt}']['coordinates'])
-			data_out[f'partType{pt}']['mass'] = comoving_mass(header, data_out[f'partType{pt}']['mass'] * 1.0e10)
+			velocity = comoving_velocity(header, velocity)
+			coordinates = comoving_length(header, coordinates)
+			mass = comoving_mass(header, mass * 1.0e10)
 			if pt == '0':
 				den_conv = h5file[f'/PartType{pt}/Density'].attrs['CGSConversionFactor']
-				data_out[f'partType{pt}']['sphdensity'] = comoving_density(header, data_out[f'partType{pt}']['sphdensity'] * den_conv)
-				data_out[f'partType{pt}']['sphlength'] = comoving_length(header, data_out[f'partType{pt}']['sphlength'])
+				sphdensity = comoving_density(header, sphdensity * den_conv)
+				sphlength = comoving_length(header, sphlength)
 
 			# Periodic boundary wrapping of particle coordinates
 			boxsize = comoving_length(header, h5file['Header'].attrs['BoxSize'])
-			coords = data_out[f'partType{pt}']['coordinates']
 			for coord_axis in range(3):
 				# Right boundary
 				if fofgroup['COP'][coord_axis] + 5 * fofgroup['R200'] > boxsize:
-					beyond_index = np.where(coords[:, coord_axis] < boxsize / 2)[0]
-					coords[beyond_index, coord_axis] += boxsize
+					beyond_index = np.where(coordinates[:, coord_axis] < boxsize / 2)[0]
+					coordinates[beyond_index, coord_axis] += boxsize
 					del beyond_index
 				# Left boundary
 				elif fofgroup['COP'][coord_axis] - 5 * fofgroup['R200'] < 0.:
-					beyond_index = np.where(coords[:, coord_axis] > boxsize / 2)[0]
-					coords[beyond_index, coord_axis] -= boxsize
+					beyond_index = np.where(coordinates[:, coord_axis] > boxsize / 2)[0]
+					coordinates[beyond_index, coord_axis] -= boxsize
 					del beyond_index
-			data_out[f'partType{pt}']['coordinates'] = coords
-			del coords
 
 			# Gather the imports across cores
-			data_out[f'partType{pt}']['subgroup_number'] = commune(data_out[f'partType{pt}']['subgroup_number'])
-			data_out[f'partType{pt}']['velocity']        = commune(data_out[f'partType{pt}']['velocity'])
-			data_out[f'partType{pt}']['coordinates']     = commune(data_out[f'partType{pt}']['coordinates'])
-			data_out[f'partType{pt}']['mass']            = commune(data_out[f'partType{pt}']['mass'])
+			data_out[f'partType{pt}'] = {}
+			data_out[f'partType{pt}']['subgroup_number'] = commune(subgroup_number)
+			data_out[f'partType{pt}']['velocity']        = commune(velocity)
+			data_out[f'partType{pt}']['coordinates']     = commune(coordinates)
+			data_out[f'partType{pt}']['mass']            = commune(mass)
 			if pt == '0':
-				data_out[f'partType{pt}']['temperature'] = commune(data_out[f'partType{pt}']['temperature'])
-				data_out[f'partType{pt}']['sphdensity']  = commune(data_out[f'partType{pt}']['sphdensity'])
-				data_out[f'partType{pt}']['sphlength']   = commune(data_out[f'partType{pt}']['sphlength'])
+				data_out[f'partType{pt}']['temperature'] = commune(temperature)
+				data_out[f'partType{pt}']['sphdensity']  = commune(sphdensity)
+				data_out[f'partType{pt}']['sphlength']   = commune(sphlength)
+
+			del subgroup_number, velocity, coordinates, mass, temperature, sphdensity, sphlength
 
 	return data_out
 
