@@ -188,8 +188,8 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 			st, fh = split(Nparticles)
 			groupnumber = h5file[f'/PartType{pt}/GroupNumber'][st:fh]
 			# Clip out negative values and exceeding values
-			pprint(f"[+] Computing CSR indexing matrix...")
 			groupnumber = np.clip(groupnumber, 0, 15000)
+			pprint(f"[+] Computing CSR indexing matrix...")
 			pgn.append(get_indices_sparse(groupnumber))
 			del groupnumber
 
