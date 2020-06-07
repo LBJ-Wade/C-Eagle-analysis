@@ -131,17 +131,6 @@ def fof_groups(files: list, header: Dict[str, float]):
 			FSID = np.append(FSID, f['FOF/FirstSubhaloID'][:])
 			SCOP = np.append(SCOP, f['Subhalo/CentreOfPotential'][:])
 
-			# Conversion
-			Mfof = comoving_mass(header, Mfof*1.0e10)
-			M2500 = comoving_mass(header, M2500*1.0e10)
-			R2500 = comoving_length(header, R2500)
-			M500 = comoving_mass(header, M500*1.0e10)
-			R500 = comoving_length(header, R500)
-			M200 = comoving_mass(header, M200*1.0e10)
-			R200 = comoving_length(header, R200)
-			COP = comoving_length(header, COP)
-			SCOP = comoving_length(header, SCOP)
-
 	data = {}
 	data['Mfof'] = commune(Mfof)
 	data['M2500'] = commune(M2500)
@@ -150,11 +139,24 @@ def fof_groups(files: list, header: Dict[str, float]):
 	data['R500'] = commune(R500)
 	data['M200'] = commune(M200)
 	data['R200'] = commune(R200)
-	data['COP'] = commune(COP.reshape(-1, 1)).reshape(-1, 3)
+	data['COP']  = commune(COP.reshape(-1, 1)).reshape(-1, 3)
 	data['NSUB'] = commune(NSUB)
 	data['FSID'] = commune(FSID)
 	data['SCOP'] = commune(SCOP.reshape(-1, 1)).reshape(-1, 3)
+
+	# Conversion
+	data['Mfof'] = comoving_mass(header, data['Mfof']* 1.0e10)
+	data['M2500'] = comoving_mass(header, data['M2500']* 1.0e10)
+	data['M500'] = comoving_mass(header, data['M500']* 1.0e10)
+	data['M200'] = comoving_mass(header, data['M200']* 1.0e10)
+	data['R2500'] = comoving_length(header, data['R2500'])
+	data['R500'] = comoving_length(header, data['R500'])
+	data['R200'] = comoving_length(header, data['R200'])
+	data['COP']  = comoving_length(header, data['COP'])
+	data['SCOP'] = comoving_length(header, data['SCOP'])
+
 	data['idx'] = np.where(M500 > 1.0e13)[0]
+
 	return data
 
 def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
