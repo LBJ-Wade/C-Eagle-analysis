@@ -179,35 +179,21 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 
 def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 
+	pgn = []
 	with h5.File(files[1], 'r') as h5file:
-		Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0, 1, 4]]
 
-		pprint(f"[+] Collecting gas particles GroupNumber...")
-		st, fh = split(Nparticles[0])
-		groupnumber0 = h5file[f'/PartType0/GroupNumber'][st:fh]
-		# Clip out negative values and exceeding values
-		pprint(f"[+] Computing CSR indexing matrix...")
-		groupnumber0 = np.clip(groupnumber0, 0, fofgroups['idx'][-1] + 1)
-		groupnumber0_csrm = get_indices_sparse(groupnumber0)
-		del groupnumber0
+		for pt in ['0', '1', '4']:
+			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
+			pprint(f"[+] Collecting particleType {pt} GroupNumber...")
+			st, fh = split(Nparticles)
+			groupnumber = h5file[f'/PartType{pt}/GroupNumber'][st:fh]
+			# Clip out negative values and exceeding values
+			pprint(f"[+] Computing CSR indexing matrix...")
+			groupnumber = np.clip(groupnumber, 0, 15000)
+			pgn.append(get_indices_sparse(groupnumber))
+			del groupnumber
 
-		pprint(f"[+] Collecting CDM particles GroupNumber...")
-		st, fh = split(Nparticles[1])
-		groupnumber1 = h5file[f'/PartType1/GroupNumber'][st:fh]
-		pprint(f"[+] Computing CSR indexing matrix...")
-		groupnumber1 = np.clip(groupnumber1, 0, fofgroups['idx'][-1] + 1)
-		groupnumber1_csrm = get_indices_sparse(groupnumber1)
-		del groupnumber1
-
-		pprint(f"[+] Collecting star particles GroupNumber...")
-		st, fh = split(Nparticles[2])
-		groupnumber4 = h5file[f'/PartType4/GroupNumber'][st:fh]
-		pprint(f"[+] Computing CSR indexing matrix...")
-		groupnumber4 = np.clip(groupnumber4, 0, fofgroups['idx'][-1] + 1)
-		groupnumber4_csrm = get_indices_sparse(groupnumber4)
-		del groupnumber4
-
-	return [groupnumber0_csrm, groupnumber1_csrm, groupnumber4_csrm]
+	return pgn
 
 
 def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
