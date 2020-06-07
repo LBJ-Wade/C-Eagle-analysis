@@ -220,6 +220,21 @@ def snap_groupnumbers(fofgroups: Dict[str, np.ndarray] = None):
 
 	return pgn
 
+def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
+	pprint(f"[+] Find particle groupnumbers for cluster {fofgroup['clusterID']}")
+	pgn = []
+	partTypes = ['0', '1', '4']
+	with h5.File(fofgroup['particlefiles'], 'r') as h5file:
+		for pt in partTypes:
+			# Gather groupnumbers from cores
+			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
+			st, fh = split(Nparticles)
+			gn_cores = groupNumbers[partTypes.index(pt)][fofgroup['idx']][0] + st
+			gn_comm = commune(gn_cores)
+			pgn.append(gn_comm)
+			pprint(f"\t PartType {pt} found {len(gn_comm)} particles")
+			del gn_cores, gn_comm
+	return pgn
 
 def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
 	pprint(f"[+] Find particle information for cluster {fofgroup['clusterID']}")
@@ -233,13 +248,7 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 		header['zred'] = h5file['Header'].attrs['Redshift']
 
 		for pt in partTypes:
-
-			# Gather groupnumbers from cores
-			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
-			st, fh = split(Nparticles)
-			gn_cores = groupNumbers[partTypes.index(pt)][fofgroup['idx']][0] + st
-			pgn = commune(gn_cores)
-			del gn_cores, st, fh
+			pgn = groupNumbers[partTypes.index(pt)]
 
 			# Filter particle data with collected groupNumber indexing
 			data_out[f'partType{pt}'] = {}

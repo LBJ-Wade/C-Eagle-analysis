@@ -11,6 +11,7 @@ def main():
         fof_groups,
         fof_group,
         snap_groupnumbers,
+        cluster_partgroupnumbers,
         cluster_particles,
         cluster_data,
         glance_cluster
@@ -25,15 +26,24 @@ def main():
     files = find_files(REDSHIFT)
     header = fof_header(files)
     fofs = fof_groups(files)
-    part_gn = snap_groupnumbers(fofgroups = fofs)
-    pprint(part_gn[0][10][0])
+    snap_partgn = snap_groupnumbers(fofgroups = fofs)
+    pprint(snap_partgn[0][10][0])
     halo_load_time = []
     # for i in range(NHALOS):
+
     start = datetime.datetime.now()
+
+
+
     fof = fof_group(NHALOS, fofgroups = fofs)
     pprint('[+] Glance cluster info:')
     glance_cluster(fof)
-    halo_data = cluster_particles(fofgroup = fof, groupNumbers = part_gn)
+
+    halo_partgn = cluster_partgroupnumbers(fofgroup = fof, groupNumbers = snap_partgn)
+    pprint(halo_partgn)
+
+
+    halo_data = cluster_particles(fofgroup = fof, groupNumbers = halo_partgn)
     pprint('[+] Glance cluster info:')
     glance_cluster(halo_data)
     del halo_data
