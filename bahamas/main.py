@@ -32,22 +32,15 @@ def main():
     # for i in range(NHALOS):
 
     start = datetime.datetime.now()
-
-
-
     fof = fof_group(NHALOS, fofgroups = fofs)
     pprint('[+] Glance cluster info:')
     glance_cluster(fof)
 
     halo_partgn = cluster_partgroupnumbers(fofgroup = fof, groupNumbers = snap_partgn)
-    pprint(halo_partgn)
-
-
     halo_data = cluster_particles(fofgroup = fof, groupNumbers = halo_partgn)
     pprint('[+] Glance cluster info:')
     glance_cluster(halo_data)
     del halo_data
-
 
     # Time it
     end = datetime.datetime.now()
