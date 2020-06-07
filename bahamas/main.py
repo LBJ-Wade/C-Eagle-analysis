@@ -56,7 +56,7 @@ def main():
 
         # Print benckmarks to file
         with open(timing_filename, "a") as benchmarks:
-            print(f"{i},{elapsed}", file=benchmarks)
+            pprint(f"{i},{elapsed}", file=benchmarks)
 
     MPI.COMM_WORLD.Barrier()
     display_benchmarks(REDSHIFT)
