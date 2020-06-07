@@ -7,6 +7,16 @@ from .__init__ import pprint, rank
 
 pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
 
+
+def redshift_str2num(z: str):
+	"""
+	Converts the redshift of the snapshot from text to numerical,
+	in a format compatible with the file names.
+	E.g. float z = 2.16 <--- str z = 'z002p160'.
+	"""
+	z = z.strip('z').replace('p', '.')
+	return round(float(z), 3)
+
 def file_benchmarks(redshift: str) -> str:
 	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
 	with open(timing_filename, "a") as benchmarks:
@@ -26,7 +36,7 @@ def display_benchmarks(redshift: str):
 		ax.set_ylabel('Computation time [seconds]')
 
 		lines = np.loadtxt(timing_filename, comments="#", delimiter=",", unpack=False).T
-		ax.scatter(lines[0], lines[1], marker = '.', label=f'{redshift}')
+		ax.scatter(lines[0], lines[1], marker = '.', label=f'z = {redshift_str2num(redshift)}')
 
 		plt.legend()
 		plt.savefig(plot_filename, dpi=300)
