@@ -249,20 +249,21 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 
 		for pt in partTypes:
 
-			# Initialise arrays
-			subgroup_number = np.empty(0)
-			velocity = np.empty(0)
-			coordinates = np.empty(0)
-			mass = np.empty(0)
-			if pt == '0':
-				temperature = np.empty(0)
-				sphdensity = np.empty(0)
-				sphlength = np.empty(0)
+			# Initialise particledata arrays
+			pgn_core = np.empty(0, dtype=np.int)
+			subgroup_number = np.empty(0, dtype=np.int)
+			velocity = np.empty(0, dtype=np.float)
+			coordinates = np.empty(0, dtype=np.float)
+			mass = np.empty(0, dtype=np.float)
+			temperature = np.empty(0, dtype=np.float)
+			sphdensity = np.empty(0, dtype=np.float)
+			sphlength = np.empty(0, dtype=np.float)
 
 			# Let each CPU core import a portion of the pgn data
 			pgn = groupNumbers[partTypes.index(pt)]
 			st, fh = split(len(pgn))
 			pgn_core = pgn[st:fh]
+			del pgn
 
 			# Filter particle data with collected groupNumber indexing
 			subgroup_number = h5file[f'/PartType{pt}/SubGroupNumber'][pgn_core]
@@ -277,6 +278,8 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 				mass = np.ones(len(pgn_core), dtype=np.float) * particle_mass_DM
 			else:
 				mass = h5file[f'/PartType{pt}/Mass'][pgn_core]
+
+			del pgn_core
 
 			# Conversion from comoving units to physical units
 			velocity = comoving_velocity(header, velocity)
@@ -312,7 +315,7 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 				data_out[f'partType{pt}']['sphdensity']  = commune(sphdensity)
 				data_out[f'partType{pt}']['sphlength']   = commune(sphlength)
 
-			del subgroup_number, velocity, coordinates, mass, temperature, sphdensity, sphlength
+			del subgroup_number, velocity, coordinates, mass, temperature, sphdensity, sphlength, boxsize
 
 	return data_out
 
