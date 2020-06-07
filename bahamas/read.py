@@ -108,7 +108,7 @@ def fof_mass_cut():
 		with h5.File(files[x], 'r') as f:
 			hub_par = f['Header'].attrs['HubbleParam']
 			M500 = np.append(M500, f['FOF/Group_M_Crit500'][:])
-	M500 = M500/hub_par * 1.0e10
+	M500 = M500 * 1.0e10#/hub_par
 	M500_comm = commune(M500)
 	del M500, hub_par, st, fh
 	idx = np.where(M500_comm > 1.0e13)[0]
@@ -116,7 +116,7 @@ def fof_mass_cut():
 	return idx
 
 def fof_groups(files: list):
-	pprint(f"[+] Find group information for whole snapshot...")
+	pprint(f"[+] Find groups information...")
 	st, fh = split(len(files[0]))
 	Mfof = np.empty(0, dtype=np.float32)
 	M2500 = np.empty(0, dtype=np.float32)
@@ -213,7 +213,9 @@ def snap_groupnumbers(fofgroups: Dict[str, np.ndarray] = None):
 			# Clip out negative values and exceeding values
 			groupnumber = np.clip(groupnumber, 0, fofgroups['idx'][-1]+1)
 			pprint(f"\t Computing CSR indexing matrix...")
-			pgn.append(get_indices_sparse(groupnumber))
+			groupnumber_csrm = get_indices_sparse(groupnumber)
+			del groupnumber_csrm[0], groupnumber_csrm[-1]
+			pgn.append(groupnumber_csrm)
 			del groupnumber
 
 	return pgn
@@ -235,10 +237,9 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 			# Gather groupnumbers from cores
 			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
 			st, fh = split(Nparticles)
-			fof_id = fofgroup['idx'] + 1
-			gn_cores = groupNumbers[partTypes.index(pt)][fof_id][0] + st
+			gn_cores = groupNumbers[partTypes.index(pt)][fofgroup['idx']][0] + st
 			pgn = commune(gn_cores)
-			del gn_cores, st, fh, fof_id
+			del gn_cores, st, fh
 
 			# Filter particle data with collected groupNumber indexing
 			data_out[f'partType{pt}'] = {}

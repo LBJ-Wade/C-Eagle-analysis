@@ -26,6 +26,7 @@ def main():
     header = fof_header(files)
     fofs = fof_groups(files)
     part_gn = snap_groupnumbers(fofgroups = fofs)
+    pprint(part_gn[0][10][0])
     halo_load_time = []
     # for i in range(NHALOS):
     start = datetime.datetime.now()
