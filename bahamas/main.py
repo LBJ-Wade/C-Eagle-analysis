@@ -33,8 +33,10 @@ def main():
         pprint('[+] Glance cluster info:')
         glance_cluster(halo_data)
         del halo_data
-        end = datetime.datetime.now()
+
+
         # Time it
+        end = datetime.datetime.now()
         halo_load_time.append((end - start).total_seconds())
         del start, end
         if NHALOS < 5 or len(halo_load_time) < 5:
