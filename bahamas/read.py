@@ -263,7 +263,6 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 			pgn = groupNumbers[partTypes.index(pt)]
 			st, fh = split(len(pgn))
 			pgn_core = np.append(pgn_core, pgn[st:fh])
-			print(pgn_core)
 			del pgn
 
 			# Filter particle data with collected groupNumber indexing
