@@ -232,7 +232,7 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 			data_out[f'partType{pt}']['coordinates'] = commune(h5file[f'/PartType{pt}/Coordinates'][st:fh][pgn])
 			if pt == '1':
 				particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
-				data_out[f'partType{pt}']['mass'] = np.ones(len(pgn), dtype=np.float) * particle_mass_DM
+				data_out[f'partType{pt}']['mass'] = np.ones(len(commune(pgn)), dtype=np.float) * particle_mass_DM
 			else:
 				data_out[f'partType{pt}']['mass'] = commune(h5file[f'/PartType{pt}/Mass'][st:fh][pgn])
 			if pt == '0':
