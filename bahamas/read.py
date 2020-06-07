@@ -307,7 +307,7 @@ def glance_cluster(cluster_dict: dict, verbose: bool = False, indent: int = 1) -
 			if isinstance(value, dict):
 				pprint('\t'*indent + str(key))
 				glance_cluster(value, indent=indent+1)
-			elif isinstance(value, np.ndarray) and len(value) > 10:
+			elif (isinstance(value, np.ndarray) or isinstance(value, list)) and len(value) > 10:
 				pprint('\t' * indent + str(key) + ' : ' + f"len({len(value):d})\t val({value[0]} ... {value[-1]})")
 			else:
 				pprint('\t' * indent + str(key) + ' : ' + str(value))
