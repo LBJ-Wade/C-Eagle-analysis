@@ -143,19 +143,20 @@ def fof_groups(files: list, header: Dict[str, float]):
 	data['NSUB'] = commune(NSUB)
 	data['FSID'] = commune(FSID)
 	data['SCOP'] = commune(SCOP.reshape(-1, 1)).reshape(-1, 3)
-
-	# Conversion
-	data['Mfof'] = comoving_mass(header, data['Mfof']* 1.0e10)
-	data['M2500'] = comoving_mass(header, data['M2500']* 1.0e10)
-	data['M500'] = comoving_mass(header, data['M500']* 1.0e10)
-	data['M200'] = comoving_mass(header, data['M200']* 1.0e10)
-	data['R2500'] = comoving_length(header, data['R2500'])
-	data['R500'] = comoving_length(header, data['R500'])
-	data['R200'] = comoving_length(header, data['R200'])
-	data['COP']  = comoving_length(header, data['COP'])
-	data['SCOP'] = comoving_length(header, data['SCOP'])
-
 	data['idx'] = np.where(M500 > 1.0e13)[0]
+
+	# Conversion and filter by mass
+	data['Mfof'] = comoving_mass(header, data['Mfof'][data['idx']]* 1.0e10)
+	data['M2500'] = comoving_mass(header, data['M2500'][data['idx']]* 1.0e10)
+	data['M500'] = comoving_mass(header, data['M500'][data['idx']]* 1.0e10)
+	data['M200'] = comoving_mass(header, data['M200'][data['idx']]* 1.0e10)
+	data['R2500'] = comoving_length(header, data['R2500'][data['idx']])
+	data['R500'] = comoving_length(header, data['R500'][data['idx']])
+	data['R200'] = comoving_length(header, data['R200'][data['idx']])
+	data['COP']  = comoving_length(header, data['COP'][data['idx']])
+	data['SCOP'] = comoving_length(header, data['SCOP'][data['idx']])
+
+
 
 	return data
 
@@ -163,18 +164,18 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 	pprint(f"[+] Find group information for cluster {clusterID}")
 	new_data = {}
 	new_data['clusterID'] = clusterID
-	new_data['idx'] = fofgroups['idx'][clusterID]
-	new_data['Mfof'] = fofgroups['Mfof'][new_data['idx']]
-	new_data['M2500'] = fofgroups['M2500'][new_data['idx']]
-	new_data['R2500'] = fofgroups['R2500'][new_data['idx']]
-	new_data['M500'] = fofgroups['M500'][new_data['idx']]
-	new_data['R500'] = fofgroups['R500'][new_data['idx']]
-	new_data['M200'] = fofgroups['M200'][new_data['idx']]
-	new_data['R200'] = fofgroups['R200'][new_data['idx']]
-	new_data['COP'] = fofgroups['COP'][new_data['idx']]
-	new_data['NSUB'] = fofgroups['NSUB'][new_data['idx']]
-	new_data['FSID'] = fofgroups['FSID'][new_data['idx']]
-	new_data['SCOP'] = fofgroups['SCOP'][new_data['idx']]
+	new_data['idx']   = fofgroups['idx'][clusterID]
+	new_data['Mfof']  = fofgroups['Mfof'][clusterID]
+	new_data['M2500'] = fofgroups['M2500'][clusterID]
+	new_data['R2500'] = fofgroups['R2500'][clusterID]
+	new_data['M500']  = fofgroups['M500'][clusterID]
+	new_data['R500']  = fofgroups['R500'][clusterID]
+	new_data['M200']  = fofgroups['M200'][clusterID]
+	new_data['R200']  = fofgroups['R200'][clusterID]
+	new_data['COP']   = fofgroups['COP'][clusterID]
+	new_data['NSUB']  = fofgroups['NSUB'][clusterID]
+	new_data['FSID']  = fofgroups['FSID'][clusterID]
+	new_data['SCOP']  = fofgroups['SCOP'][clusterID]
 	return new_data
 
 
