@@ -178,6 +178,7 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 
 
 def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
+	pprint(fofgroups['idx'], fofgroups['idx'][-1])
 
 	with h5.File(files[1], 'r') as h5file:
 		Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0, 1, 4]]
