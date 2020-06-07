@@ -23,6 +23,7 @@ def main():
     files = find_files(REDSHIFT)
     header = fof_header(files)
     fofs = fof_groups(files, header)
+    pprint(fofs)
     groupnumbers = snap_groupnumbers(files, fofgroups = fofs)
 
     # for i in range(NHALOS):

@@ -178,7 +178,6 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 
 
 def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
-	halo_num_catalogue_contiguous = np.max(fofgroups['idx'])
 
 	with h5.File(files[1], 'r') as h5file:
 		Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][[0, 1, 4]]
@@ -188,7 +187,7 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 		groupnumber0 = h5file[f'/PartType0/GroupNumber'][st:fh]
 		# Clip out negative values and exceeding values
 		pprint(f"[+] Computing CSR indexing matrix...")
-		groupnumber0 = np.clip(groupnumber0, 0, halo_num_catalogue_contiguous + 2)
+		groupnumber0 = np.clip(groupnumber0, 0, np.max(fofgroups['idx']) + 2)
 		groupnumber0_csrm = get_indices_sparse(groupnumber0)
 		del groupnumber0
 
@@ -196,7 +195,7 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 		st, fh = split(Nparticles[1])
 		groupnumber1 = h5file[f'/PartType1/GroupNumber'][st:fh]
 		pprint(f"[+] Computing CSR indexing matrix...")
-		groupnumber1 = np.clip(groupnumber1, 0, halo_num_catalogue_contiguous + 2)
+		groupnumber1 = np.clip(groupnumber1, 0, np.max(fofgroups['idx']) + 2)
 		groupnumber1_csrm = get_indices_sparse(groupnumber1)
 		del groupnumber1
 
@@ -204,7 +203,7 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 		st, fh = split(Nparticles[2])
 		groupnumber4 = h5file[f'/PartType4/GroupNumber'][st:fh]
 		pprint(f"[+] Computing CSR indexing matrix...")
-		groupnumber4 = np.clip(groupnumber4, 0, halo_num_catalogue_contiguous + 2)
+		groupnumber4 = np.clip(groupnumber4, 0, np.max(fofgroups['idx']) + 2)
 		groupnumber4_csrm = get_indices_sparse(groupnumber4)
 		del groupnumber4
 
