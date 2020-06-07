@@ -252,32 +252,33 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 			# Initialise particledata arrays
 			pgn_core = np.empty(0, dtype=np.int)
 			subgroup_number = np.empty(0, dtype=np.int)
-			velocity = np.empty(0, dtype=np.float)
-			coordinates = np.empty(0, dtype=np.float)
-			mass = np.empty(0, dtype=np.float)
-			temperature = np.empty(0, dtype=np.float)
-			sphdensity = np.empty(0, dtype=np.float)
-			sphlength = np.empty(0, dtype=np.float)
+			velocity = np.empty(0, dtype=np.float32)
+			coordinates = np.empty(0, dtype=np.float32)
+			mass = np.empty(0, dtype=np.float32)
+			temperature = np.empty(0, dtype=np.float32)
+			sphdensity = np.empty(0, dtype=np.float32)
+			sphlength = np.empty(0, dtype=np.float32)
 
 			# Let each CPU core import a portion of the pgn data
 			pgn = groupNumbers[partTypes.index(pt)]
 			st, fh = split(len(pgn))
 			pgn_core = pgn[st:fh]
+			print(pgn_core)
 			del pgn
 
 			# Filter particle data with collected groupNumber indexing
 			subgroup_number = h5file[f'/PartType{pt}/SubGroupNumber'][pgn_core]
 			velocity        = h5file[f'/PartType{pt}/Velocity'][pgn_core]
 			coordinates     = h5file[f'/PartType{pt}/Coordinates'][pgn_core]
+			if pt == '1':
+				particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
+				mass = np.ones(len(pgn_core), dtype=np.float32) * particle_mass_DM
+			else:
+				mass = h5file[f'/PartType{pt}/Mass'][pgn_core]
 			if pt == '0':
 				temperature = h5file[f'/PartType{pt}/Temperature'][pgn_core]
 				sphdensity  = h5file[f'/PartType{pt}/Density'][pgn_core]
 				sphlength   = h5file[f'/PartType{pt}/SmoothingLength'][pgn_core]
-			if pt == '1':
-				particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
-				mass = np.ones(len(pgn_core), dtype=np.float) * particle_mass_DM
-			else:
-				mass = h5file[f'/PartType{pt}/Mass'][pgn_core]
 
 			del pgn_core
 
