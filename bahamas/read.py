@@ -114,8 +114,10 @@ def fof_mass_cut():
 			M500 = np.append(M500, f['FOF/Group_M_Crit500'][:])
 	M500 = M500/hub_par * 1.0e10
 	M500_comm = commune(M500)
-	del M500
-	return np.where(M500_comm > 1.0e13)[0]
+	del M500, hub_par, st, fh
+	idx = np.where(M500_comm > 1.0e13)[0]
+	pprint(f"\t Found {len(idx)} clusters with M500 > 10^13 M_sun")
+	return idx
 
 def fof_groups(files: list, header: Dict[str, float]):
 	pprint(f"[+] Find group information for whole snapshot...")
@@ -203,7 +205,7 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 			groupnumber = h5file[f'/PartType{pt}/GroupNumber'][st:fh]
 			# Clip out negative values and exceeding values
 			groupnumber = np.clip(groupnumber, 0, fofgroups['idx'][-1]+1)
-			pprint(f"[+] Computing CSR indexing matrix...")
+			pprint(f"\t Computing CSR indexing matrix...")
 			pgn.append(get_indices_sparse(groupnumber))
 			del groupnumber
 
@@ -223,7 +225,6 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 			st, fh = split(Nparticles)
 			fof_id = fofgroup['idx'] + 1
 			pgn = groupNumbers[partTypes.index(pt)][fof_id][0]
-			del st, fh, fof_id
 
 			# Filter particle data with collected groupNumber indexing
 			data_out[f'partType{pt}'] = {}
