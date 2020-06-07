@@ -18,7 +18,7 @@ def main():
     )
 
     REDSHIFT = 'z000p000'
-    NHALOS = 10000
+    NHALOS = 10
 
     # -----------------------------------------------------------------------
     # Load snapshot data
@@ -29,28 +29,28 @@ def main():
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
     pprint(snap_partgn[0][10][0])
     halo_load_time = []
-    # for i in range(NHALOS):
+    for i in range(NHALOS):
 
-    start = datetime.datetime.now()
-    fof = fof_group(NHALOS, fofgroups = fofs)
-    pprint('[+] Glance cluster info:')
-    glance_cluster(fof)
+        start = datetime.datetime.now()
+        fof = fof_group(NHALOS, fofgroups = fofs)
+        pprint('[+] Glance cluster info:')
+        glance_cluster(fof)
 
-    halo_partgn = cluster_partgroupnumbers(fofgroup = fof, groupNumbers = snap_partgn)
-    halo_data = cluster_particles(fofgroup = fof, groupNumbers = halo_partgn)
-    pprint('[+] Glance cluster info:')
-    glance_cluster(halo_data)
-    del halo_data
+        halo_partgn = cluster_partgroupnumbers(fofgroup = fof, groupNumbers = snap_partgn)
+        halo_data = cluster_particles(fofgroup = fof, groupNumbers = halo_partgn)
+        pprint('[+] Glance cluster info:')
+        glance_cluster(halo_data)
+        del halo_data
 
-    # Time it
-    end = datetime.datetime.now()
-    halo_load_time.append((end - start).total_seconds())
-    del start, end
-    if NHALOS < 5 or len(halo_load_time) < 5:
-        completion_time = sum(halo_load_time)/len(halo_load_time) * NHALOS
-    else:
-        completion_time = sum(halo_load_time[-4:]) / 4 * NHALOS
-    pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
+        # Time it
+        end = datetime.datetime.now()
+        halo_load_time.append((end - start).total_seconds())
+        del start, end
+        if NHALOS < 5 or len(halo_load_time) < 5:
+            completion_time = sum(halo_load_time)/len(halo_load_time) * NHALOS
+        else:
+            completion_time = sum(halo_load_time[-4:]) / 4 * NHALOS
+        pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
 
     MPI.COMM_WORLD.Barrier()
 
