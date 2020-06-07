@@ -26,7 +26,6 @@ def main():
     header = fof_header(files)
     fofs = fof_groups(files, header)
     part_gn = snap_groupnumbers(files, fofgroups = fofs)
-    MPI.COMM_WORLD.Barrier()
     halo_load_time = []
     for i in range(NHALOS):
         start = datetime.datetime.now()
@@ -35,7 +34,6 @@ def main():
         glance_cluster(halo_data)
         del halo_data
         end = datetime.datetime.now()
-        MPI.COMM_WORLD.Barrier()
         # Time it
         halo_load_time.append((end - start).total_seconds())
         del start, end
@@ -44,4 +42,6 @@ def main():
         else:
             completion_time = sum(halo_load_time[-4:]) / 4 * NHALOS
         pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
+
+    MPI.COMM_WORLD.Barrier()
 
