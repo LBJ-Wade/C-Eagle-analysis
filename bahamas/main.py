@@ -17,14 +17,14 @@ def main():
         glance_cluster
     )
 
-    REDSHIFT = 'z000p000'
-    NHALOS = 10
+    REDSHIFT = 'z003p000'
+    NHALOS = 3
 
     # -----------------------------------------------------------------------
     # Load snapshot data
     pprint('[+] BAHAMAS HYDRO')
     files = find_files(REDSHIFT)
-    # header = fof_header(files)
+    header = fof_header(files)
     fofs = fof_groups(files)
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
     halo_load_time = []
