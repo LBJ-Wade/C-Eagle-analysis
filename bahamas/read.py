@@ -132,16 +132,16 @@ def fof_groups(files: list, header: Dict[str, float]):
 			SCOP = np.append(SCOP, f['Subhalo/CentreOfPotential'][:])
 			print(Mfof)
 
-		# Conversion
-		Mfof = comoving_mass(header, Mfof * 1.0e10)
-		M2500 = comoving_mass(header, M2500 * 1.0e10)
-		M500 = comoving_mass(header, M500 * 1.0e10)
-		M200 = comoving_mass(header, M200 * 1.0e10)
-		R2500 = comoving_length(header, R2500)
-		R500 = comoving_length(header, R500)
-		R200 = comoving_length(header, R200)
-		COP = comoving_length(header, COP)
-		SCOP = comoving_length(header, SCOP)
+	# Conversion
+	Mfof = comoving_mass(header, Mfof * 1.0e10)
+	M2500 = comoving_mass(header, M2500 * 1.0e10)
+	M500 = comoving_mass(header, M500 * 1.0e10)
+	M200 = comoving_mass(header, M200 * 1.0e10)
+	R2500 = comoving_length(header, R2500)
+	R500 = comoving_length(header, R500)
+	R200 = comoving_length(header, R200)
+	COP = comoving_length(header, COP)
+	SCOP = comoving_length(header, SCOP)
 
 	data = {}
 	data['Mfof'] = commune(Mfof)
