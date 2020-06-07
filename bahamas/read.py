@@ -1,12 +1,8 @@
-import sys
 import os
-import itertools
-import argparse
 from typing import List, Dict, Union
 from mpi4py import MPI
 import numpy as np
 import h5py as h5
-import datetime
 from scipy.sparse import csr_matrix
 
 from .__init__ import pprint
@@ -52,7 +48,7 @@ def commune(data):
     del tmp
     dspl=np.zeros(nproc,dtype=np.int)
     i=0
-    for j in range(0,nproc,1):
+    for j in range(nproc):
         dspl[j]=i
         i+=cnts[j]
     rslt=np.zeros(i,dtype=data.dtype)
@@ -224,22 +220,24 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
 			st, fh = split(Nparticles)
 			fof_id = fofgroup['idx'] + 1
-			pgn = groupNumbers[partTypes.index(pt)][fof_id][0]
+			gn_cores = groupNumbers[partTypes.index(pt)][fof_id][0] + st
+			pgn = commune(gn_cores)
+			del gn_cores, st, fh, fof_id
 
 			# Filter particle data with collected groupNumber indexing
 			data_out[f'partType{pt}'] = {}
-			data_out[f'partType{pt}']['subgroup_number'] = commune(h5file[f'/PartType{pt}/SubGroupNumber'][st:fh][pgn])
-			data_out[f'partType{pt}']['velocity'] = commune(h5file[f'/PartType{pt}/Velocity'][st:fh][pgn])
-			data_out[f'partType{pt}']['coordinates'] = commune(h5file[f'/PartType{pt}/Coordinates'][st:fh][pgn])
+			data_out[f'partType{pt}']['subgroup_number'] = h5file[f'/PartType{pt}/SubGroupNumber'][pgn]
+			data_out[f'partType{pt}']['velocity']        = h5file[f'/PartType{pt}/Velocity'][pgn]
+			data_out[f'partType{pt}']['coordinates']     = h5file[f'/PartType{pt}/Coordinates'][pgn]
+			if pt == '0':
+				data_out[f'partType{pt}']['temperature'] = h5file[f'/PartType{pt}/Temperature'][pgn]
+				data_out[f'partType{pt}']['sphdensity']  = h5file[f'/PartType{pt}/Density'][pgn]
+				data_out[f'partType{pt}']['sphlength']   = h5file[f'/PartType{pt}/SmoothingLength'][pgn]
 			if pt == '1':
 				particle_mass_DM = h5file['Header'].attrs['MassTable'][1]
-				data_out[f'partType{pt}']['mass'] = np.ones(len(commune(pgn)), dtype=np.float) * particle_mass_DM
+				data_out[f'partType{pt}']['mass'] = np.ones(len(pgn), dtype=np.float) * particle_mass_DM
 			else:
-				data_out[f'partType{pt}']['mass'] = commune(h5file[f'/PartType{pt}/Mass'][st:fh][pgn])
-			if pt == '0':
-				data_out[f'partType{pt}']['temperature'] = commune(h5file[f'/PartType{pt}/Temperature'][st:fh][pgn])
-				data_out[f'partType{pt}']['sphdensity'] = commune(h5file[f'/PartType{pt}/Density'][st:fh][pgn])
-				data_out[f'partType{pt}']['sphlength'] = commune(h5file[f'/PartType{pt}/SmoothingLength'][st:fh][pgn])
+				data_out[f'partType{pt}']['mass'] = h5file[f'/PartType{pt}/Mass'][pgn]
 
 			# Conversion from comoving units to physical units
 			data_out[f'partType{pt}']['velocity'] = comoving_velocity(header, data_out[f'partType{pt}']['velocity'])
