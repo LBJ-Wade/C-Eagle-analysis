@@ -11,7 +11,6 @@ from .__init__ import (
 	rank,
 	nproc,
 )
-
 from .conversion import (
 	comoving_density,
 	comoving_length,
@@ -202,7 +201,11 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 
 
 def snap_groupnumbers(fofgroups: Dict[str, np.ndarray] = None):
+	"""
 
+	:param fofgroups:
+	:return:
+	"""
 	pgn = []
 	with h5.File(fofgroups['particlefiles'], 'r') as h5file:
 
@@ -223,6 +226,12 @@ def snap_groupnumbers(fofgroups: Dict[str, np.ndarray] = None):
 	return pgn
 
 def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
+	"""
+
+	:param fofgroup:
+	:param groupNumbers:
+	:return:
+	"""
 	pprint(f"[+] Find particle groupnumbers for cluster {fofgroup['clusterID']}")
 	pgn = []
 	partTypes = ['0', '1', '4']
@@ -239,6 +248,12 @@ def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None, groupNumber
 	return pgn
 
 def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
+	"""
+
+	:param fofgroup:
+	:param groupNumbers:
+	:return:
+	"""
 	pprint(f"[+] Find particle information for cluster {fofgroup['clusterID']}")
 	data_out = {}
 	header = {}
@@ -322,13 +337,21 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 	return data_out
 
 def cluster_data(clusterID: int,
-                 header: Dict[str, float],
+                 header: Dict[str, float] = None,
                  fofgroups: Dict[str, np.ndarray] = None,
                  groupNumbers: List[np.ndarray] = None):
+	"""
 
-	group_data = fof_group(clusterID, fofgroups = fofgroups)
+	:param clusterID:
+	:param header:
+	:param fofgroups:
+	:param groupNumbers:
+	:return:
+	"""
+
+	group_data  = fof_group(clusterID, fofgroups = fofgroups)
 	halo_partgn = cluster_partgroupnumbers(fofgroup=group_data, groupNumbers=groupNumbers)
-	part_data = cluster_particles(fofgroup=group_data, groupNumbers= halo_partgn)
+	part_data   = cluster_particles(fofgroup=group_data, groupNumbers= halo_partgn)
 
 	out = {}
 	out['Header'] = {**header}
@@ -339,7 +362,13 @@ def cluster_data(clusterID: int,
 
 
 def glance_cluster(cluster_dict: dict, verbose: bool = False, indent: int = 1) -> None:
+	"""
 
+	:param cluster_dict:
+	:param verbose:
+	:param indent:
+	:return:
+	"""
 	if not verbose:
 		for key, value in cluster_dict.items():
 			if isinstance(value, dict):

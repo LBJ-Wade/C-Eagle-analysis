@@ -22,7 +22,7 @@ def main():
     )
 
     REDSHIFT = 'z003p000'
-    NHALOS = 1000
+    NHALOS = 3
 
     # -----------------------------------------------------------------------
     # Initialise benckmarks
