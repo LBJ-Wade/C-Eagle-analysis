@@ -1,5 +1,11 @@
 import numpy as np
-from unyt import hydrogen_mass, boltzmann_constant, gravitational_constant, parsec, solar_mass
+from unyt import (
+    hydrogen_mass,
+    boltzmann_constant,
+    gravitational_constant,
+    parsec,
+    solar_mass,
+)
 
 # Delete the units from Unyt constants
 hydrogen_mass = float(hydrogen_mass.value)

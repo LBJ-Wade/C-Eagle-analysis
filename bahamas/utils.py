@@ -8,11 +8,10 @@ from .__init__ import pprint, rank
 pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
 
 def file_benchmarks(redshift: str) -> str:
-	if rank == 0:
-		timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
-		with open(timing_filename, "a") as benchmarks:
-			pprint(f"#{redshift}", file=benchmarks)
-		return timing_filename
+	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
+	with open(timing_filename, "a") as benchmarks:
+		pprint(f"#{redshift}", file=benchmarks)
+	return timing_filename
 
 def display_benchmarks(redshift: str):
 	if rank == 0:

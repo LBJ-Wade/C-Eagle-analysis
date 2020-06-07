@@ -1,11 +1,17 @@
 import os
-from typing import List, Dict, Union
-from mpi4py import MPI
+from typing import List, Dict
 import numpy as np
 import h5py as h5
 from scipy.sparse import csr_matrix
+from mpi4py import MPI
 
-from .__init__ import pprint
+from .__init__ import (
+	pprint,
+	comm,
+	rank,
+	nproc,
+)
+
 from .conversion import (
 	comoving_density,
 	comoving_length,
@@ -21,10 +27,6 @@ from .conversion import (
 	momentum_units,
 	energy_units,
 )
-
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-nproc = comm.Get_size()
 
 def split(nfiles):
     nfiles=int(nfiles)
