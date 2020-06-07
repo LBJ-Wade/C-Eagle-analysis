@@ -103,6 +103,22 @@ def fof_header(files: list):
 		header['OmgB'] = f['Header'].attrs['OmegaBaryon']
 	return header
 
+def fof_mass_cut():
+	pprint(f"[+] Find group information at z=0 for mass cut...")
+
+	files = find_files('z000p000')
+	header = fof_header(files)
+
+	st, fh = split(len(files[0]))
+	M500 = np.empty(0, dtype=np.float32)
+	for x in range(st, fh, 1):
+		with h5.File(files[0][x], 'r') as f:
+			M500 = np.append(M500, f['FOF/Group_M_Crit500'][:])
+	M500 = comoving_mass(header, M500 * 1.0e10)
+	M500_comm = commune(M500)
+	del M500
+	return np.where(M500_comm > 1.0e13)[0]
+
 def fof_groups(files: list, header: Dict[str, float]):
 	pprint(f"[+] Find group information for whole snapshot...")
 	st, fh = split(len(files[0]))
@@ -154,7 +170,7 @@ def fof_groups(files: list, header: Dict[str, float]):
 	data['NSUB'] = commune(NSUB)
 	data['FSID'] = commune(FSID)
 	data['SCOP'] = commune(SCOP.reshape(-1, 1)).reshape(-1, 3)
-	data['idx'] = np.where(M500 > 1.0e13)[0]
+	data['idx'] = fof_mass_cut()
 
 	return data
 
@@ -188,7 +204,7 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 			st, fh = split(Nparticles)
 			groupnumber = h5file[f'/PartType{pt}/GroupNumber'][st:fh]
 			# Clip out negative values and exceeding values
-			groupnumber = np.clip(groupnumber, 0, 15000)
+			groupnumber = np.clip(groupnumber, 0, fofgroups['idx'][-1]+1)
 			pprint(f"[+] Computing CSR indexing matrix...")
 			pgn.append(get_indices_sparse(groupnumber))
 			del groupnumber
