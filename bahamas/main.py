@@ -24,12 +24,15 @@ def main():
     pprint('[+] BAHAMAS HYDRO')
     files = find_files(REDSHIFT)
     header = fof_header(files)
-    fofs = fof_groups(files, header)
-    part_gn = snap_groupnumbers(files, fofgroups = fofs)
+    fofs = fof_groups(files)
+    part_gn = snap_groupnumbers(fofgroups = fofs)
     halo_load_time = []
     # for i in range(NHALOS):
     start = datetime.datetime.now()
-    halo_data = cluster_data(NHALOS, files, header, fofgroups = fofs, groupNumbers = part_gn)
+    fof = fof_group(NHALOS, fofgroups = fofs)
+    pprint('[+] Glance cluster info:')
+    glance_cluster(fof)
+    halo_data = cluster_particles(fofgroup = fof, groupNumbers = part_gn)
     pprint('[+] Glance cluster info:')
     glance_cluster(halo_data)
     del halo_data

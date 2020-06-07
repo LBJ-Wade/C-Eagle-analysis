@@ -115,7 +115,7 @@ def fof_mass_cut():
 	pprint(f"\t Found {len(idx)} clusters with M500 > 10^13 M_sun")
 	return idx
 
-def fof_groups(files: list, header: Dict[str, float]):
+def fof_groups(files: list):
 	pprint(f"[+] Find group information for whole snapshot...")
 	st, fh = split(len(files[0]))
 	Mfof = np.empty(0, dtype=np.float32)
@@ -143,6 +143,12 @@ def fof_groups(files: list, header: Dict[str, float]):
 			FSID = np.append(FSID, f['FOF/FirstSubhaloID'][:])
 			SCOP = np.append(SCOP, f['Subhalo/CentreOfPotential'][:])
 
+	header = {}
+	with h5.File(files[0][0], 'r') as f:
+		header['Hub'] =  f['Header'].attrs['HubbleParam']
+		header['aexp'] = f['Header'].attrs['ExpansionFactor']
+		header['zred'] = f['Header'].attrs['Redshift']
+
 	# Conversion
 	Mfof = comoving_mass(header, Mfof * 1.0e10)
 	M2500 = comoving_mass(header, M2500 * 1.0e10)
@@ -155,6 +161,8 @@ def fof_groups(files: list, header: Dict[str, float]):
 	SCOP = comoving_length(header, SCOP)
 
 	data = {}
+	data['groupfiles'] = files[0]
+	data['particlefiles'] = files[1]
 	data['Mfof'] = commune(Mfof)
 	data['M2500'] = commune(M2500)
 	data['R2500'] = commune(R2500)
@@ -186,19 +194,22 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 	new_data['NSUB']  = fofgroups['NSUB'][new_data['idx']]
 	new_data['FSID']  = fofgroups['FSID'][new_data['idx']]
 	new_data['SCOP']  = fofgroups['SCOP'][new_data['idx']]
+	new_data['groupfiles']  = fofgroups['groupfiles']
+	new_data['particlefiles'] = fofgroups['particlefiles']
 	return new_data
 
 
-def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
+def snap_groupnumbers(fofgroups: Dict[str, np.ndarray] = None):
 
 	pgn = []
-	with h5.File(files[1], 'r') as h5file:
+	with h5.File(fofgroups['particlefiles'], 'r') as h5file:
 
 		for pt in ['0', '1', '4']:
 			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
-			pprint(f"[+] Collecting particleType {pt} GroupNumber...")
 			st, fh = split(Nparticles)
+			pprint(f"[+] Collecting particleType {pt} GroupNumber...")
 			groupnumber = h5file[f'/PartType{pt}/GroupNumber'][st:fh]
+
 			# Clip out negative values and exceeding values
 			groupnumber = np.clip(groupnumber, 0, fofgroups['idx'][-1]+1)
 			pprint(f"\t Computing CSR indexing matrix...")
@@ -208,11 +219,16 @@ def snap_groupnumbers(files: list, fofgroups: Dict[str, np.ndarray] = None):
 	return pgn
 
 
-def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
+def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
 	pprint(f"[+] Find particle information for cluster {fofgroup['clusterID']}")
-	with h5.File(files[1], 'r') as h5file:
-		data_out = {}
-		partTypes = ['0', '1', '4']
+	data_out = {}
+	header = {}
+	partTypes = ['0', '1', '4']
+	with h5.File(fofgroup['particlefiles'], 'r') as h5file:
+
+		header['Hub']  = h5file['Header'].attrs['HubbleParam']
+		header['aexp'] = h5file['Header'].attrs['ExpansionFactor']
+		header['zred'] = h5file['Header'].attrs['Redshift']
 
 		for pt in partTypes:
 
@@ -268,13 +284,12 @@ def cluster_particles(files: list, header: Dict[str, float], fofgroup: Dict[str,
 	return data_out
 
 def cluster_data(clusterID: int,
-                 files: list,
                  header: Dict[str, float],
                  fofgroups: Dict[str, np.ndarray] = None,
                  groupNumbers: List[np.ndarray] = None):
 
 	group_data = fof_group(clusterID, fofgroups = fofgroups)
-	part_data = cluster_particles(files, header, fofgroup=group_data, groupNumbers= groupNumbers)
+	part_data = cluster_particles(fofgroup=group_data, groupNumbers= groupNumbers)
 
 	out = {}
 	out['Header'] = {**header}
