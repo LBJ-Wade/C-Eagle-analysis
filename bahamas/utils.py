@@ -49,10 +49,10 @@ def display_benchmarks(redshift: str):
 			idx = np.where(lines[0] == i)[0]
 			if len(idx) == 1:
 				n_fit.append(lines[0,idx][0]+1)
-				dat_fit.append(lines[0,idx][0])
+				dat_fit.append(lines[1,idx][0])
 			elif len(idx) > 1:
 				n_fit.append(np.mean(lines[0,idx])+1)
-				dat_fit.append(np.median(lines[0,idx]))
+				dat_fit.append(np.median(lines[1,idx]))
 
 		print(n_fit , dat_fit )
 		n_fit = np.asarray([np.log10(i+1) for i in n_fit])
