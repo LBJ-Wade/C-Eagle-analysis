@@ -43,7 +43,7 @@ def display_benchmarks(redshift: str):
 
 
 		# Fit function to benchmarks
-		n_fit = np.logspace(0, np.log10(15000), 200)
+		n_fit = np.linspace(np.min(lines[0]), np.max(lines[0]), np.max(lines[0])+1)
 		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, lines[1])
 		sigma = [fitCovariances[0, 0], fitCovariances[1, 1], fitCovariances[2, 2]]
 		ax.plot(n_fit, fitFunc(n_fit, fitParams[0], fitParams[1], fitParams[2]))
@@ -64,5 +64,3 @@ def display_benchmarks(redshift: str):
 		)
 
 
-if __name__ == "__main__":
-	display_benchmarks('z000p000')
