@@ -9,7 +9,7 @@ from .__init__ import pprint, rank
 pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
 
 def fitFunc(t, a, b, c):
-	return a*np.exp(-b*t.float()) + c
+	return a*np.exp(-b*t.astype(np.float32)) + c
 
 def redshift_str2num(z: str):
 	"""
