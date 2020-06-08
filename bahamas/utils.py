@@ -39,7 +39,7 @@ def display_benchmarks(redshift: str):
 		ax.set_ylabel('Computation time [seconds]')
 
 		lines = np.loadtxt(timing_filename, comments="#", delimiter=",", unpack=False).T
-		ax.scatter(lines[0], lines[1], marker = ',', label=f'z = {redshift_str2num(redshift)}')
+		ax.scatter(lines[0]+1, lines[1], marker = ',', label=f'z = {redshift_str2num(redshift)}')
 
 
 		# Fit function to benchmarks
