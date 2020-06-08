@@ -48,13 +48,13 @@ def display_benchmarks(redshift: str):
 		for i in range(int(np.max(lines[0]))):
 			idx = np.where(lines[0] == i)[0]
 			if len(idx) == 1:
-				n_fit.append(lines[0][idx]+1)
+				n_fit.append(lines[0][idx])
 				dat_fit.append(lines[0][idx])
 			elif len(idx) > 1:
-				n_fit.append(lines[0][idx[0]]+1)
+				n_fit.append(lines[0][idx[0]])
 				dat_fit.append(np.median(lines[0][idx]))
 
-		n_fit = np.log10(np.asarray(n_fit))
+		n_fit = np.log10(np.asarray([i+1 for i in n_fit]))
 		dat_fit = np.log10(np.asarray(dat_fit))
 		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, dat_fit)
 		sigma = [fitCovariances[0, 0], fitCovariances[1, 1]]
