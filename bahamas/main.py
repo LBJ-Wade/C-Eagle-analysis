@@ -22,7 +22,7 @@ def main():
     )
 
     REDSHIFT = 'z003p000'
-    HALOSTART = 26
+    HALOSTART = 0
     NHALOS = 300
 
     # -----------------------------------------------------------------------
@@ -53,7 +53,7 @@ def main():
         if NHALOS < 5 or len(halo_load_time) < 5:
             completion_time = sum(halo_load_time)/len(halo_load_time) * NHALOS
         else:
-            completion_time = sum(halo_load_time[-4:]) / 4 * NHALOS
+            completion_time = sum(halo_load_time[-4:]) / 4 * (HALOSTART+NHALOS-i)
         pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
 
         # Print benckmarks to file

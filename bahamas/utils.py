@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy.optimize import curve_fit
 import slack
 
 from .__init__ import pprint, rank
@@ -7,6 +8,8 @@ from .__init__ import pprint, rank
 
 pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
 
+def fitFunc(t, a, b, c):
+	return a*np.exp(-b*t) + c
 
 def redshift_str2num(z: str):
 	"""
@@ -30,13 +33,22 @@ def display_benchmarks(redshift: str):
 
 		fig = plt.figure()
 		ax = fig.add_subplot(111)
-		# ax.set_xscale("log")
-		# ax.set_yscale("log")
+		ax.set_xscale("log")
+		ax.set_yscale("log")
 		ax.set_xlabel('FOF cluster index')
 		ax.set_ylabel('Computation time [seconds]')
 
 		lines = np.loadtxt(timing_filename, comments="#", delimiter=",", unpack=False).T
 		ax.scatter(lines[0], lines[1], marker = '.', label=f'z = {redshift_str2num(redshift)}')
+
+
+		# Fit function to benchmarks
+		n_fit = np.logspace(0, np.log10(15000), 200)
+		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, lines[1])
+		sigma = [fitCovariances[0, 0], fitCovariances[1, 1], fitCovariances[2, 2]]
+		ax.plot(n_fit, fitFunc(n_fit, fitParams[0], fitParams[1], fitParams[2]))
+		ax.plot(n_fit, fitFunc(n_fit, fitParams[0] + sigma[0], fitParams[1] - sigma[1], fitParams[2] + sigma[2]))
+		ax.plot(n_fit, fitFunc(n_fit, fitParams[0] - sigma[0], fitParams[1] + sigma[1], fitParams[2] - sigma[2]))
 
 		plt.legend()
 		plt.savefig(plot_filename, dpi=300)
@@ -50,3 +62,7 @@ def display_benchmarks(redshift: str):
 				initial_comment=f"This file was sent upon completion of the plot factory pipeline.\nAttachments: {plot_filename}",
 				channels='#personal'
 		)
+
+
+if __name__ == "__main__":
+	display_benchmarks('z000p000')

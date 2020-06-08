@@ -296,3 +296,9 @@ class Cluster(simulation.Simulation,
 				elif field == 'subhalo_therm_energy' and not hasattr(self, field):
 					setattr(self, field, self.subgroups_therm_energy())
 
+
+	@classmethod
+	def from_dict(cls, data: dict):
+		self = cls(simulation_name: str = None,
+		 clusterID: int = 0,
+		 redshift: str = None)
