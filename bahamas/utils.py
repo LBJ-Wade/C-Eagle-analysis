@@ -58,7 +58,7 @@ def display_benchmarks(redshift: str):
 		dat_fit = np.log10(np.asarray(dat_fit))
 		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, dat_fit)
 		sigma = [fitCovariances[0, 0], fitCovariances[1, 1]]
-		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0], fitParams[1]), color='red')
+		ax.plot(10**n_fit, 10**fitFunc(10**n_fit, fitParams[0], fitParams[1]), color='red')
 		ax.plot(10 ** n_fit, 10 ** dat_fit, color='red')
 		# ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] + sigma[0], fitParams[1] - sigma[1]), color='red')
 		# ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] - sigma[0], fitParams[1] + sigma[1]), color='red')
