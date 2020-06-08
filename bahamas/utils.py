@@ -63,8 +63,9 @@ def display_benchmarks(redshift: str):
 
 		# Compute total computing time estimate
 		time_tot = np.sum(10 ** fitFunc(np.log10(np.linspace(1,14401,14401, dtype=np.int)), fitParams[0], fitParams[1]))
-		time_tot = datetime.timedelta(seconds=time_tot).strftime("%dd%Hh%Mm")
-		ax.scatter(lines[0] + 1, lines[1], marker='.', s=3, alpha=0.5, label=f'z = {redshift_str2num(redshift)} ETA = {time_tot}')
+		time_tot -= (time_tot%60) # Round to minutes
+		time_tot = datetime.timedelta(seconds=time_tot)
+		ax.scatter(lines[0] + 1, lines[1], marker='.', s=3, alpha=0.5, label=f'z = {redshift_str2num(redshift)}\tETA = {time_tot}')
 
 		plt.legend()
 		plt.savefig(plot_filename, dpi=300)
