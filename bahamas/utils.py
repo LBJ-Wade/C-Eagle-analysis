@@ -57,8 +57,8 @@ def display_benchmarks(redshift: str):
 		n_fit = np.log10(np.asarray(n_fit))
 		dat_fit = np.log10(np.asarray(dat_fit))
 		fitParams, _ = curve_fit(fitFunc, n_fit, dat_fit)
-		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0], fitParams[1]), color='red')
-		ax.plot(10 ** n_fit, 10 ** dat_fit, color='red')
+		n_display = np.logspace(0, 4.5, 10)
+		ax.plot(n_display, 10**fitFunc(np.log10(n_display), fitParams[0], fitParams[1]), color='red')
 
 		plt.legend()
 		plt.savefig(plot_filename, dpi=300)
