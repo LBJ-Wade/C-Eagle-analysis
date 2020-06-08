@@ -307,6 +307,19 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 				sphdensity = comoving_density(header, sphdensity * den_conv)
 				sphlength = comoving_length(header, sphlength)
 
+			# Gather the imports across cores
+			data_out[f'partType{pt}'] = {}
+			data_out[f'partType{pt}']['subgroup_number'] = commune(subgroup_number)
+			data_out[f'partType{pt}']['velocity']        = commune(velocity.reshape(-1, 1)).reshape(-1, 3)
+			data_out[f'partType{pt}']['coordinates']     = commune(coordinates.reshape(-1, 1)).reshape(-1, 3)
+			data_out[f'partType{pt}']['mass']            = commune(mass)
+			if pt == '0':
+				data_out[f'partType{pt}']['temperature'] = commune(temperature)
+				data_out[f'partType{pt}']['sphdensity']  = commune(sphdensity)
+				data_out[f'partType{pt}']['sphlength']   = commune(sphlength)
+
+			del subgroup_number, velocity, mass, temperature, sphdensity, sphlength
+
 			# Periodic boundary wrapping of particle coordinates
 			pprint(coordinates)
 			boxsize = comoving_length(header, h5file['Header'].attrs['BoxSize'])
@@ -322,18 +335,7 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 					coordinates[beyond_index, coord_axis] -= boxsize
 					del beyond_index
 
-			# Gather the imports across cores
-			data_out[f'partType{pt}'] = {}
-			data_out[f'partType{pt}']['subgroup_number'] = commune(subgroup_number)
-			data_out[f'partType{pt}']['velocity']        = commune(velocity)
-			data_out[f'partType{pt}']['coordinates']     = commune(coordinates)
-			data_out[f'partType{pt}']['mass']            = commune(mass)
-			if pt == '0':
-				data_out[f'partType{pt}']['temperature'] = commune(temperature)
-				data_out[f'partType{pt}']['sphdensity']  = commune(sphdensity)
-				data_out[f'partType{pt}']['sphlength']   = commune(sphlength)
-
-			del subgroup_number, velocity, coordinates, mass, temperature, sphdensity, sphlength, boxsize
+			del coordinates, boxsize
 
 	return data_out
 
