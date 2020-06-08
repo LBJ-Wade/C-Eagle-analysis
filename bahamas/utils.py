@@ -35,11 +35,13 @@ def display_benchmarks(redshift: str):
 		ax = fig.add_subplot(111)
 		ax.set_xscale("log")
 		ax.set_yscale("log")
+		ax.set_xlim(1, 1e5)
+		ax.set_ylim(1e-2, 15)
 		ax.set_xlabel('FOF cluster index')
 		ax.set_ylabel('Computation time [seconds]')
 
 		lines = np.loadtxt(timing_filename, comments="#", delimiter=",", unpack=False).T
-		ax.scatter(lines[0]+1, lines[1], marker = ',', label=f'z = {redshift_str2num(redshift)}')
+		ax.scatter(lines[0]+1, lines[1], marker = '.', markersize = 2, alpha=0.5, label=f'z = {redshift_str2num(redshift)}')
 
 
 		# Fit function to benchmarks
