@@ -21,9 +21,9 @@ def main():
         display_benchmarks
     )
 
-    REDSHIFT = 'z003p000'
+    REDSHIFT = 'z000p000'
     HALOSTART = 0
-    NHALOS = 300
+    NHALOS = 14300
 
     # -----------------------------------------------------------------------
     # Initialise benckmarks
@@ -42,8 +42,8 @@ def main():
         start = datetime.datetime.now()
         halo_data = cluster_data(i, header, fofgroups = fofs, groupNumbers = snap_partgn)
         end = datetime.datetime.now()
-        pprint('[+] Glance cluster info:')
-        glance_cluster(halo_data)
+        # pprint('[+] Glance cluster info:')
+        # glance_cluster(halo_data)
         del halo_data
 
         # Time it
