@@ -54,6 +54,8 @@ def display_benchmarks(redshift: str):
 				n_fit.append(np.median(lines[0][idx]))
 				dat_fit.append(np.median(lines[0][idx]))
 
+		n_fit = np.asarray(n_fit)
+		dat_fit = np.asarray(dat_fit)
 		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, dat_fit)
 		sigma = [fitCovariances[0, 0], fitCovariances[1, 1], fitCovariances[2, 2]]
 		ax.plot(n_fit, fitFunc(n_fit, fitParams[0], fitParams[1], fitParams[2]))
