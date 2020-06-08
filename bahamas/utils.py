@@ -54,14 +54,13 @@ def display_benchmarks(redshift: str):
 				n_fit.append(np.mean(lines[0,idx])+1)
 				dat_fit.append(np.median(lines[1,idx]))
 
-		print(n_fit , dat_fit )
-		n_fit = np.asarray([np.log10(i+1) for i in n_fit])
+		n_fit = np.log10(np.asarray(n_fit))
 		dat_fit = np.log10(np.asarray(dat_fit))
 		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, dat_fit)
 		sigma = [fitCovariances[0, 0], fitCovariances[1, 1]]
-		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0], fitParams[1]))
-		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] + sigma[0], fitParams[1] - sigma[1]))
-		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] - sigma[0], fitParams[1] + sigma[1]))
+		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0], fitParams[1]), color='red')
+		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] + sigma[0], fitParams[1] - sigma[1]), color='red')
+		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] - sigma[0], fitParams[1] + sigma[1]), color='red')
 
 		plt.legend()
 		plt.savefig(plot_filename, dpi=300)
