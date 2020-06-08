@@ -318,24 +318,26 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 				data_out[f'partType{pt}']['sphdensity']  = commune(sphdensity)
 				data_out[f'partType{pt}']['sphlength']   = commune(sphlength)
 
-			del subgroup_number, velocity, mass, temperature, sphdensity, sphlength
+			del subgroup_number, velocity, mass, coordinates, temperature, sphdensity, sphlength
 
 			# Periodic boundary wrapping of particle coordinates
+			coords = data_out[f'partType{pt}']['coordinates']
 			pprint(coordinates)
 			boxsize = comoving_length(header, h5file['Header'].attrs['BoxSize'])
 			for coord_axis in range(3):
 				# Right boundary
 				if fofgroup['COP'][coord_axis] + 5 * fofgroup['R200'] > boxsize:
-					beyond_index = np.where(coordinates[:, coord_axis] < boxsize / 2)[0]
-					coordinates[beyond_index, coord_axis] += boxsize
+					beyond_index = np.where(coords[:, coord_axis] < boxsize / 2)[0]
+					coords[beyond_index, coord_axis] += boxsize
 					del beyond_index
 				# Left boundary
 				elif fofgroup['COP'][coord_axis] - 5 * fofgroup['R200'] < 0.:
-					beyond_index = np.where(coordinates[:, coord_axis] > boxsize / 2)[0]
-					coordinates[beyond_index, coord_axis] -= boxsize
+					beyond_index = np.where(coords[:, coord_axis] > boxsize / 2)[0]
+					coords[beyond_index, coord_axis] -= boxsize
 					del beyond_index
 
-			del coordinates, boxsize
+			data_out[f'partType{pt}']['coordinates'] = coords
+			del coords, boxsize
 
 	return data_out
 

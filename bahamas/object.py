@@ -9,7 +9,7 @@ from save import dict2hdf as write
 from rotvel_correlation.alignment import group_alignment
 
 
-def data2cluster(cluster: Cluster, data: dict) -> Cluster:
+def data2cluster(data: dict) -> Cluster:
 	pass
 
 def alignment_report(cluster: Cluster):
