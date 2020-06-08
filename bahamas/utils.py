@@ -43,8 +43,18 @@ def display_benchmarks(redshift: str):
 
 
 		# Fit function to benchmarks
-		n_fit = np.linspace(np.min(lines[0]), np.max(lines[0]), np.max(lines[0])+1)
-		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, lines[1])
+		n_fit = []
+		dat_fit = []
+		for i in range(np.max(lines[0])):
+			idx = np.where(lines[0] == i)[0]
+			if len(idx) == 1:
+				n_fit.append(lines[0][idx])
+				dat_fit.append(lines[0][idx])
+			elif len(idx) > 1:
+				n_fit.append(np.median(lines[0][idx]))
+				dat_fit.append(np.median(lines[0][idx]))
+
+		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, dat_fit)
 		sigma = [fitCovariances[0, 0], fitCovariances[1, 1], fitCovariances[2, 2]]
 		ax.plot(n_fit, fitFunc(n_fit, fitParams[0], fitParams[1], fitParams[2]))
 		ax.plot(n_fit, fitFunc(n_fit, fitParams[0] + sigma[0], fitParams[1] - sigma[1], fitParams[2] + sigma[2]))
