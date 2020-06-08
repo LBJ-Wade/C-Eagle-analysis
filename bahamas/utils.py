@@ -45,7 +45,7 @@ def display_benchmarks(redshift: str):
 		# Fit function to benchmarks
 		n_fit = []
 		dat_fit = []
-		for i in range(1,int(np.max(lines[0]))):
+		for i in range(int(np.max(lines[0]))):
 			idx = np.where(lines[0] == i)[0]
 			if len(idx) == 1:
 				n_fit.append(lines[0][idx])
@@ -54,7 +54,7 @@ def display_benchmarks(redshift: str):
 				n_fit.append(np.median(lines[0][idx]))
 				dat_fit.append(np.median(lines[0][idx]))
 
-		n_fit = np.log10(np.asarray(n_fit))
+		n_fit = np.log10(np.asarray(n_fit)+1)
 		dat_fit = np.log10(np.asarray(dat_fit))
 		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, dat_fit)
 		sigma = [fitCovariances[0, 0], fitCovariances[1, 1]]
