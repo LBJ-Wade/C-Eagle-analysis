@@ -45,7 +45,7 @@ def display_benchmarks(redshift: str):
 		# Fit function to benchmarks
 		n_fit = []
 		dat_fit = []
-		for i in range(np.max(lines[0])):
+		for i in range(int(np.max(lines[0]))):
 			idx = np.where(lines[0] == i)[0]
 			if len(idx) == 1:
 				n_fit.append(lines[0][idx])
