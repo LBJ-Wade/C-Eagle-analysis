@@ -28,8 +28,9 @@ def main():
     # -----------------------------------------------------------------------
     # Initialise benckmarks
     timing_filename = file_benchmarks(REDSHIFT)
-    display_benchmarks(REDSHIFT)
+    # display_benchmarks(REDSHIFT)
     halo_load_time = []
+
 
     # Load snapshot data
     pprint('[+] BAHAMAS HYDRO')
