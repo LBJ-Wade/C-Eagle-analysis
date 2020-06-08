@@ -9,7 +9,7 @@ from .__init__ import pprint, rank
 pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
 
 def fitFunc(t, a, b):
-	return a*t.astype(np.float32)+b
+	return a*t+b
 
 def redshift_str2num(z: str):
 	"""
@@ -39,7 +39,7 @@ def display_benchmarks(redshift: str):
 		ax.set_ylabel('Computation time [seconds]')
 
 		lines = np.loadtxt(timing_filename, comments="#", delimiter=",", unpack=False).T
-		ax.scatter(lines[0], lines[1], marker = '.', label=f'z = {redshift_str2num(redshift)}')
+		ax.scatter(lines[0], lines[1], marker = ',', label=f'z = {redshift_str2num(redshift)}')
 
 
 		# Fit function to benchmarks
@@ -56,13 +56,9 @@ def display_benchmarks(redshift: str):
 
 		n_fit = np.log10(np.asarray(n_fit))
 		dat_fit = np.log10(np.asarray(dat_fit))
-		guess = np.array([-0.2, 0.1])
-		fitParams, fitCovariances = curve_fit(fitFunc, n_fit, dat_fit, guess)
-		sigma = [fitCovariances[0, 0], fitCovariances[1, 1]]
+		fitParams, _ = curve_fit(fitFunc, n_fit, dat_fit)
 		ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0], fitParams[1]), color='red')
 		ax.plot(10 ** n_fit, 10 ** dat_fit, color='red')
-		# ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] + sigma[0], fitParams[1] - sigma[1]), color='red')
-		# ax.plot(10**n_fit, 10**fitFunc(n_fit, fitParams[0] - sigma[0], fitParams[1] + sigma[1]), color='red')
 
 		plt.legend()
 		plt.savefig(plot_filename, dpi=300)
