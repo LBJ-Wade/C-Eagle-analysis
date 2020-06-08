@@ -48,8 +48,8 @@ def display_benchmarks(redshift: str):
 		for i in range(int(np.max(lines[0]))):
 			idx = np.where(lines[0] == i)[0]
 			if len(idx) == 1:
-				n_fit.append(lines[0,idx]+1)
-				dat_fit.append(lines[0,idx])
+				n_fit.append(lines[0,idx][0]+1)
+				dat_fit.append(lines[0,idx][0])
 			elif len(idx) > 1:
 				n_fit.append(np.mean(lines[0,idx])+1)
 				dat_fit.append(np.median(lines[0,idx]))
