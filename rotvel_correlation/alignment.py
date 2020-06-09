@@ -136,12 +136,4 @@ def save_report(cluster: Cluster) -> dict:
 		}
 		master_dict[f'aperture{i:02d}'] = halo_output
 		del alignment_dict, halo_output
-
-	if not os.path.exists(os.path.join(cluster.pathSave, 'alignment_project')):
-		os.makedirs(os.path.join(cluster.pathSave, 'alignment_project'))
-	pathFile = os.path.join(cluster.pathSave, 'alignment_project', f"{cluster.redshift}")
-	if not os.path.exists(pathFile):
-		os.makedirs(pathFile)
-	write.save_dict_to_hdf5(master_dict, os.path.join(pathFile, f"halo_{cluster.clusterID}.hdf5"))
-	del cluster
 	return master_dict

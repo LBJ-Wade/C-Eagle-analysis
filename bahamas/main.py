@@ -29,7 +29,7 @@ def main():
 
     REDSHIFT = 'z003p000'
     HALOSTART = 0
-    NHALOS = 10#14366
+    NHALOS = 14365
 
     # -----------------------------------------------------------------------
     # Initialise benchmarks
