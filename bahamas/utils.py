@@ -37,7 +37,7 @@ def display_benchmarks(redshift: str):
 		ax.set_xscale("log")
 		ax.set_yscale("log")
 		ax.set_xlim(1, 14400)
-		ax.set_ylim(1e-2, 15)
+		ax.set_ylim(0.1, 30)
 		ax.set_xlabel('FOF cluster index')
 		ax.set_ylabel('Computation time [seconds]')
 

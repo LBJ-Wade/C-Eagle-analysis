@@ -2,7 +2,6 @@ from __future__ import print_function, division, absolute_import
 from typing import List, Dict
 import os
 import numpy as np
-import yaml
 from mpi4py import MPI
 
 comm = MPI.COMM_WORLD
@@ -14,6 +13,8 @@ from . import _read_volume
 from . import _read_zoom
 from . import _cluster_profiler
 from . import _cluster_report
+
+from .__init__ import redshift_num2str
 
 
 class Cluster(simulation.Simulation,
@@ -298,7 +299,62 @@ class Cluster(simulation.Simulation,
 
 
 	@classmethod
-	def from_dict(cls, data: dict):
-		self = cls(simulation_name: str = None,
-		 clusterID: int = 0,
-		 redshift: str = None)
+	def from_dict(cls, simulation_name: str = None, data: dict = None):
+		self = cls(
+				simulation_name = simulation_name,
+				clusterID = data['FOF']['clusterID'],
+				redshift = redshift_num2str(data['Header']['zred']),
+				fastbrowsing = True
+		)
+		del self.centralFOF_groupNumber , self.file_counter, self.groupfof_counter
+
+		self.hubble_param = data['Header']['Hub']
+		self.aexp = data['Header']['aexp']
+		self.z = data['Header']['zred']
+		self.OmegaBaryon = data['Header']['OmgB']
+		self.Omega0 = data['Header']['OmgM']
+		self.OmegaLambda = data['Header']['OmgL']
+
+		# Set FoF
+		self.centre_of_potential = data['FOF']['COP']
+		self.r200 = data['FOF']['R200']
+		self.r500 = data['FOF']['R500']
+		self.r2500 = data['FOF']['R2500']
+		self.Mtot = data['FOF']['Mfof']
+		self.M200 = data['FOF']['M200']
+		self.M500 = data['FOF']['M500']
+		self.M2500 = data['FOF']['M2500']
+		self.NumOfSubhalos  = data['FOF']['NSUB']
+
+		requires_particledata = list()
+		requires_subhalos = list()
+		for key in data:
+			if 'partType' in key:
+				requires_particledata.append(key)
+			if 'subhalo' in key:
+				requires_subhalos.append(key)
+
+		for part_type in requires_particledata:
+			for field in data[part_type]:
+				if not hasattr(self, part_type + '_' + field):
+					setattr(self, part_type + '_' + field, data[f'partType{part_type[-1]}'][field])
+
+			radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
+			clean_radius_index = np.where(radial_dist < 5 * self.r200)[0]
+			if (part_type == 'partType0' and
+					hasattr(self, 'partType0_sphdensity') and
+					hasattr(self, 'partType0_temperature')):
+				density = self.density_units(getattr(self, 'partType0_sphdensity'), unit_system='nHcgs')
+				temperature = getattr(self, 'partType0_temperature')
+				log_temperature_cut = np.log10(density) / 3 + 13 / 3
+				equation_of_state_index = np.where((temperature > 1e4) & (np.log10(temperature) > log_temperature_cut))[0]
+				del density, temperature, log_temperature_cut
+				intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
+			else:
+				intersected_index = clean_radius_index
+			for field in self.requires[part_type]:
+				if 'groupnumber' not in field:
+					filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
+					setattr(self, part_type + '_' + field, filtered_attribute)
+
+		return self

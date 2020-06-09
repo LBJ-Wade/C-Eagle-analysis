@@ -23,12 +23,12 @@ def main():
 
     REDSHIFT = 'z000p000'
     HALOSTART = 0
-    NHALOS = 14300
+    NHALOS = 14366
 
     # -----------------------------------------------------------------------
     # Initialise benckmarks
     timing_filename = file_benchmarks(REDSHIFT)
-    # display_benchmarks(REDSHIFT)
+    display_benchmarks(REDSHIFT)
     halo_load_time = []
 
 
@@ -39,7 +39,7 @@ def main():
     fofs = fof_groups(files)
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
-    for i in range(HALOSTART, HALOSTART+NHALOS, 1):
+    for i in range(HALOSTART, HALOSTART+NHALOS+1, 1):
         start = datetime.datetime.now()
         halo_data = cluster_data(i, header, fofgroups = fofs, groupNumbers = snap_partgn)
         end = datetime.datetime.now()
