@@ -322,7 +322,6 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 
 			# Periodic boundary wrapping of particle coordinates
 			coords = data_out[f'partType{pt}']['coordinates']
-			pprint(coords)
 			boxsize = comoving_length(header, h5file['Header'].attrs['BoxSize'])
 			for coord_axis in range(3):
 				# Right boundary

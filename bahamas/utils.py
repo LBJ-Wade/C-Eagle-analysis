@@ -34,9 +34,9 @@ def file_benchmarks(redshift: str) -> str:
 
 def record_benchmarks(redshift: str, data: tuple):
 	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
-	row = f""
-	for item in data:
-		row += f"{item}, "
+	data = list(data)
+	data = [f"{item}" for item in data]
+	row = ','.join(data)
 	# Print benckmarks to file
 	with open(timing_filename, "a") as benchmarks:
 		pprint(row, file=benchmarks)
