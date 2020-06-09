@@ -1,3 +1,4 @@
+import os
 import warnings
 import datetime
 from mpi4py import MPI
@@ -24,16 +25,19 @@ def main():
     )
 
     # Upper level relative imports
-    from .__init__ import Cluster, save_alignment_report
+    from .__init__ import Cluster, save_report, write
 
     REDSHIFT = 'z003p000'
     HALOSTART = 0
-    NHALOS = 5#14366
+    NHALOS = 14366
 
     # -----------------------------------------------------------------------
-    # Initialise benckmarks
+    # Initialise benchmarks
     file_benchmarks(REDSHIFT)
     halo_load_time = []
+    # -----------------------------------------------------------------------
+    # Initialise snapshot output file
+    snap_output = {}
     # -----------------------------------------------------------------------
 
 
@@ -45,28 +49,16 @@ def main():
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
     for i in range(HALOSTART, HALOSTART+NHALOS+1, 1):
+
         start = datetime.datetime.now()
-
         halo_data = cluster_data(i, header, fofgroups=fofs, groupNumbers=snap_partgn)
-
         record_benchmarks(REDSHIFT, ('load', i, time_checkpoint(start)))
 
-        pprint('[+] Glance cluster info:')
-        glance_cluster(halo_data)
         start = datetime.datetime.now()
-
         cluster = Cluster.from_dict(simulation_name='bahamas', data=halo_data)
         del halo_data
-        align_report = save_alignment_report(cluster)
-
+        snap_output[f"halo_{i:d}"] = save_report(cluster)
         record_benchmarks(REDSHIFT, ('compute', i, time_checkpoint(start)))
-
-
-
-
-
-
-
 
         # -----------------------------------------------------------------------
         # Time it
@@ -76,7 +68,14 @@ def main():
         else:
             completion_time = sum(halo_load_time[-4:]) / 4 * (HALOSTART+NHALOS-i)
         pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
+        # -----------------------------------------------------------------------
 
     MPI.COMM_WORLD.Barrier()
+    # Save snapshot resutls
+    pathFile = os.path.join(cluster.pathSave, 'alignment_project')
+    if not os.path.exists(pathFile):
+        os.makedirs(pathFile)
+    write.save_dict_to_hdf5(snap_output, os.path.join(pathFile, f"snap_alignment_{REDSHIFT}.hdf5"))
+
     display_benchmarks(REDSHIFT)
 
