@@ -28,7 +28,7 @@ def main():
 
     REDSHIFT = 'z003p000'
     HALOSTART = 0
-    NHALOS = 2#14366
+    NHALOS = 20#14366
 
     # -----------------------------------------------------------------------
     # Initialise benckmarks
@@ -60,7 +60,6 @@ def main():
         align_report = save_alignment_report(cluster)
 
         record_benchmarks(REDSHIFT, ('compute', i, time_checkpoint(start)))
-        glance_cluster(align_report)
 
 
 
