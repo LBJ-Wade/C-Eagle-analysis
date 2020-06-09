@@ -1,9 +1,13 @@
 import numpy as np
 import h5py
-import os
+
+from .__init__ import pprint, rank
+
+
 def save_dict_to_hdf5(dic, filename):
-    with h5py.File(filename, 'w') as h5file:
-        recursively_save_dict_contents_to_group(h5file, '/', dic)
+    if rank == 0:
+        with h5py.File(filename, 'w') as h5file:
+            recursively_save_dict_contents_to_group(h5file, '/', dic)
 
 def recursively_save_dict_contents_to_group(h5file, path, dic):
     for key, item in dic.items():
