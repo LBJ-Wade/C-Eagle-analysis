@@ -55,31 +55,48 @@ def display_benchmarks(redshift: str):
 		ax.set_xlabel('FOF cluster index')
 		ax.set_ylabel('Computation time [seconds]')
 
+		# Organise data and make halo_id start from 1 for log-scale plot
 		lines = np.loadtxt(timing_filename, comments="#", delimiter=",", unpack=False).T
+		tag = lines[0]
+		lines[1] += 1
+		n_load = lines[1][np.where(tag == 'load')[0]]
+		n_compute = lines[1][np.where(tag == 'compute')[0]]
+		t_load = lines[2][np.where(tag=='load')[0]]
+		t_compute = lines[2][np.where(tag=='compute')[0]]
+		n_tot = n_load
+		t_tot = t_load+t_compute
+
+		# Display raw data
+		ax.scatter(n_load, t_load, marker='.', c='yellowgreen', s=3, alpha=0.3, label=f'z = {redshift_str2num(redshift)}, load')
+		ax.scatter(n_compute, t_compute, marker='.', c='orchid', s=3, alpha=0.3, label=f'z = {redshift_str2num(redshift)}, compute')
+		ax.scatter(n_tot, t_tot, marker='.', c='grey', s=3, alpha=0.3, label=f'z = {redshift_str2num(redshift)}, total')
+		del n_load, t_load, n_compute, t_compute
 
 		# Fit function to benchmarks
 		n_fit = []
-		dat_fit = []
-		for i in range(int(np.max(lines[0]))):
-			idx = np.where(lines[0] == i)[0]
+		t_fit = []
+		for i in range(int(np.max(n_tot))):
+			idx = np.where(n_tot == i)[0]
 			if len(idx) == 1:
-				n_fit.append(lines[0,idx][0]+1)
-				dat_fit.append(lines[1,idx][0])
+				n_fit.append(n_tot[idx][0])
+				t_fit.append(t_tot[idx][0])
 			elif len(idx) > 1:
-				n_fit.append(np.mean(lines[0,idx])+1)
-				dat_fit.append(np.median(lines[1,idx]))
+				n_fit.append(np.mean(n_tot[idx]))
+				t_fit.append(np.median(t_tot[idx]))
 
+		# Make power-law fot
 		n_fit = np.log10(np.asarray(n_fit))
-		dat_fit = np.log10(np.asarray(dat_fit))
-		fitParams, _ = curve_fit(fitFunc, n_fit, dat_fit)
+		t_fit = np.log10(np.asarray(t_fit))
+		fitParams, _ = curve_fit(fitFunc, n_fit, t_fit)
 		n_display = np.logspace(0, np.log10(14400), 10)
-		ax.plot(n_display, 10**fitFunc(np.log10(n_display), fitParams[0], fitParams[1]), color='red')
+		t_display = 10 ** fitFunc(np.log10(n_display), fitParams[0], fitParams[1])
+		del n_fit, t_fit
 
 		# Compute total computing time estimate
-		time_tot = np.sum(10 ** fitFunc(np.log10(np.linspace(1,14401,14401, dtype=np.int)), fitParams[0], fitParams[1]))
-		time_tot -= (time_tot%60) # Round to minutes
-		time_tot = datetime.timedelta(seconds=time_tot)
-		ax.scatter(lines[0] + 1, lines[1], marker='.', s=3, alpha=0.5, label=f'z = {redshift_str2num(redshift)}, ETA = {time_tot}')
+		eta_tot = np.sum(10**fitFunc(np.log10(np.linspace(1,14401,14401,dtype=np.int)), fitParams[0], fitParams[1]))
+		eta_tot -= (eta_tot%60) # Round to minutes
+		eta_tot = datetime.timedelta(seconds=eta_tot)
+		ax.plot(n_display, t_display, color='red', label=f'z = {redshift_str2num(redshift)}, ETA = {eta_tot}')
 
 		plt.legend()
 		plt.savefig(plot_filename, dpi=300)
