@@ -35,6 +35,8 @@ def file_benchmarks(redshift: str) -> str:
 def record_benchmarks(redshift: str, data: tuple):
 	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
 	data = list(data)
+	if data[0] == 'load': data[0] = 0
+	elif data[0] == 'compute': data[0] = 1
 	data = [f"{item}" for item in data]
 	row = ','.join(data)
 	# Print benckmarks to file
@@ -59,10 +61,10 @@ def display_benchmarks(redshift: str):
 		lines = np.loadtxt(timing_filename, comments="#", delimiter=",", unpack=False).T
 		tag = lines[0]
 		lines[1] += 1
-		n_load = lines[1][np.where(tag == 'load')[0]]
-		n_compute = lines[1][np.where(tag == 'compute')[0]]
-		t_load = lines[2][np.where(tag=='load')[0]]
-		t_compute = lines[2][np.where(tag=='compute')[0]]
+		n_load = lines[1][np.where(tag == 0)[0]]
+		n_compute = lines[1][np.where(tag == 1)[0]]
+		t_load = lines[2][np.where(tag==0)[0]]
+		t_compute = lines[2][np.where(tag==1)[0]]
 		n_tot = n_load
 		t_tot = t_load+t_compute
 
