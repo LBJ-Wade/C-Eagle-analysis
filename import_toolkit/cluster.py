@@ -339,6 +339,7 @@ class Cluster(simulation.Simulation,
 				if not hasattr(self, part_type + '_' + field):
 					setattr(self, part_type + '_' + field, data[f'partType{part_type[-1]}'][field])
 
+			# Filter the arrays according to phase diagram and 5xR200 radius
 			radial_dist = self.radial_distance_CoP(getattr(self, f'{part_type}_coordinates'))
 			clean_radius_index = np.where(radial_dist < 5 * self.r200)[0]
 			if (part_type == 'partType0' and
@@ -352,9 +353,10 @@ class Cluster(simulation.Simulation,
 				intersected_index = np.intersect1d(clean_radius_index, equation_of_state_index)
 			else:
 				intersected_index = clean_radius_index
-			for field in self.requires[part_type]:
-				if 'groupnumber' not in field:
-					filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
-					setattr(self, part_type + '_' + field, filtered_attribute)
+
+			# Filter arrays accordintg to previous rules
+			for field in data[part_type]:
+				filtered_attribute = getattr(self, part_type + '_' + field)[intersected_index]
+				setattr(self, part_type + '_' + field, filtered_attribute)
 
 		return self
