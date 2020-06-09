@@ -309,7 +309,7 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 
 			# Gather the imports across cores
 			data_out[f'partType{pt}'] = {}
-			data_out[f'partType{pt}']['subgroup_number'] = commune(subgroup_number)
+			data_out[f'partType{pt}']['subgroupnumber'] = commune(subgroup_number)
 			data_out[f'partType{pt}']['velocity']        = commune(velocity.reshape(-1, 1)).reshape(-1, 3)
 			data_out[f'partType{pt}']['coordinates']     = commune(coordinates.reshape(-1, 1)).reshape(-1, 3)
 			data_out[f'partType{pt}']['mass']            = commune(mass)
