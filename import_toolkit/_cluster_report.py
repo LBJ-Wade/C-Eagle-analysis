@@ -34,7 +34,6 @@ class Mixin:
 		if aperture_radius is None: warnings.warn(f'Aperture radius not defined.')
 		fof_dict = {
 				'hubble_param'       : self.hubble_param,
-				'comic_time'         : self.comic_time,
 				'redshift'           : self.z,
 				'OmegaBaryon'        : self.OmegaBaryon,
 				'Omega0'             : self.Omega0,
