@@ -1,6 +1,5 @@
 import sys
 import os.path
-import h5py
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
@@ -8,9 +7,9 @@ from import_toolkit.cluster import Cluster
 from save import dict2hdf as write
 from rotvel_correlation.alignment import group_alignment
 
-
-def data2cluster(data: dict) -> Cluster:
-	pass
+def make_object(**kwargs) -> Cluster:
+	obj = Cluster.from_dict(**kwargs)
+	return obj
 
 def alignment_report(cluster: Cluster):
 	apertures = cluster.generate_apertures()

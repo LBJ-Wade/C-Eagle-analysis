@@ -119,20 +119,8 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 	return angle_dict
 
 
-def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) -> None:
-	data_required = {
-			'partType0': ['subgroupnumber', 'mass', 'coordinates', 'velocity', 'temperature', 'sphdensity'],
-			'partType1': ['subgroupnumber', 'mass', 'coordinates', 'velocity'],
-			'partType4': ['subgroupnumber', 'mass', 'coordinates', 'velocity']
-	}
-	cluster = Cluster(simulation_name='bahamas',
-	                  clusterID=clusterID,
-	                  redshift=redshift,
-	                  requires=data_required)
-	setattr(cluster, 'partType0_groupnumber', glob[0])
-	setattr(cluster, 'partType1_groupnumber', glob[1])
-	setattr(cluster, 'partType4_groupnumber', glob[2])
-	cluster.import_requires()
+def save_report(cluster: Cluster) -> dict:
+
 	apertures = cluster.generate_apertures()
 	master_dict = {}
 	for i, r_a in enumerate(apertures):
@@ -147,7 +135,7 @@ def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) ->
 				**alignment_dict
 		}
 		master_dict[f'aperture{i:02d}'] = halo_output
-		del halo_output, alignment_dict
+		del alignment_dict, halo_output
 
 	if not os.path.exists(os.path.join(cluster.pathSave, 'alignment_project')):
 		os.makedirs(os.path.join(cluster.pathSave, 'alignment_project'))
@@ -156,3 +144,4 @@ def save_report(clusterID: int, redshift: str, glob: List[np.ndarray] = None) ->
 		os.makedirs(pathFile)
 	write.save_dict_to_hdf5(master_dict, os.path.join(pathFile, f"halo_{cluster.clusterID}.hdf5"))
 	del cluster
+	return master_dict

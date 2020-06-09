@@ -12,7 +12,7 @@ pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
 def fitFunc(t, a, b):
 	return a*t+b
 
-def redshift_str2num(z: str):
+def redshift_str2num(z: str) -> float:
 	"""
 	Converts the redshift of the snapshot from text to numerical,
 	in a format compatible with the file names.
@@ -21,11 +21,25 @@ def redshift_str2num(z: str):
 	z = z.strip('z').replace('p', '.')
 	return round(float(z), 3)
 
+def time_checkpoint(start: datetime.datetime) -> float:
+	end = datetime.datetime.now()
+	elapsed = (end - start).total_seconds()
+	return elapsed
+
 def file_benchmarks(redshift: str) -> str:
 	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
 	with open(timing_filename, "a") as benchmarks:
 		pprint(f"#{redshift}", file=benchmarks)
 	return timing_filename
+
+def record_benchmarks(redshift: str, data: tuple):
+	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
+	row = f""
+	for item in data:
+		row += f"{item}, "
+	# Print benckmarks to file
+	with open(timing_filename, "a") as benchmarks:
+		pprint(row, file=benchmarks)
 
 def display_benchmarks(redshift: str):
 	if rank == 0:
