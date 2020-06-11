@@ -28,7 +28,7 @@ def main():
     from .__init__ import Cluster, save_report, write
 
     REDSHIFT = 'z003p000'
-    HALOSTART = 0
+    HALOSTART = 7478
     NHALOS = 14365
 
     # -----------------------------------------------------------------------
