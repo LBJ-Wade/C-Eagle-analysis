@@ -28,8 +28,8 @@ def main():
     from .__init__ import Cluster, save_report, write
 
     REDSHIFT = 'z001p000'
-    HALOSTART = 7478
-    NHALOS = 14365
+    HALOSTART = 0
+    NHALOS = 14366
 
     # -----------------------------------------------------------------------
     # Initialise benchmarks
