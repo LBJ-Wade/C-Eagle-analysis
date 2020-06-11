@@ -27,7 +27,7 @@ def main():
     # Upper level relative imports
     from .__init__ import Cluster, save_report, write
 
-    REDSHIFT = 'z003p000'
+    REDSHIFT = 'z001p000'
     HALOSTART = 7478
     NHALOS = 14365
 
