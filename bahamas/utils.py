@@ -13,10 +13,11 @@ pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
 
 
 def report_file(redshift: str) -> h5py.File:
-	pathFile = '/local/scratch/altamura/analysis_results/alignment_project'
-	if not os.path.exists(pathFile): os.makedirs(pathFile)
-	h5file = h5py.File(os.path.join(pathFile, f"snap_alignment_{redshift}.hdf5"), 'w')
-	return h5file
+	if rank==0:
+		pathFile = '/local/scratch/altamura/analysis_results/alignment_project'
+		if not os.path.exists(pathFile): os.makedirs(pathFile)
+		h5file = h5py.File(os.path.join(pathFile, f"snap_alignment_{redshift}.hdf5"), 'w')
+		return h5file
 
 def fitFunc(t, a, b):
 	return a*t+b
