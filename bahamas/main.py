@@ -57,7 +57,11 @@ def main():
         start = datetime.datetime.now()
         cluster = Cluster.from_dict(simulation_name='bahamas', data=halo_data)
         del halo_data
-        snap_output[f"halo_{i:d}"] = save_report(cluster)
+        try:
+            snap_output[f"halo_{i:d}"] = save_report(cluster)
+        except:
+            with open('errors.txt', "a") as errors:
+                pprint(f"{REDSHIFT}, {i}", file=errors)
         record_benchmarks(REDSHIFT, ('compute', i, time_checkpoint(start)))
 
         # -----------------------------------------------------------------------
