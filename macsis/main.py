@@ -31,8 +31,8 @@ def main():
     # -----------------------------------------------------------------------
     # Set simulation parameters
     REDSHIFT = 'z001p000'
-    HALOSTART = 0
-    NHALOS = 14366
+    HALOSTART = 7703
+    NHALOS = 100#14366
 
 
     # -----------------------------------------------------------------------
@@ -74,7 +74,7 @@ def main():
         except:
             error_id.append(i)
         else:
-            if rank == 0: save_group(snap_file, f"/halo_{i:d}/", halo_report)
+            if rank == 0: save_group(snap_file, f"/halo_{i:d}", halo_report)
             del halo_report
 
         record_benchmarks(REDSHIFT, ('compute', i, time_checkpoint(start_2)))
