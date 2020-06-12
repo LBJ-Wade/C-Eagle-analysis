@@ -1,5 +1,7 @@
+import os
 import numpy as np
 import datetime
+import h5py
 from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 import slack
@@ -8,6 +10,13 @@ from .__init__ import pprint, rank
 
 
 pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
+
+
+def report_file(redshift: str) -> h5py.File:
+	pathFile = '/local/scratch/altamura/analysis_results/alignment_project'
+	if not os.path.exists(pathFile): os.makedirs(pathFile)
+	h5file = h5py.File(os.path.join(pathFile, f"snap_alignment_{redshift}.hdf5"), 'w')
+	return h5file
 
 def fitFunc(t, a, b):
 	return a*t+b
