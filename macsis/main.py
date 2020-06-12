@@ -11,7 +11,6 @@ def main():
         fof_header,
         fof_groups,
         fof_group,
-        snap_groupnumbers,
         cluster_partgroupnumbers,
         cluster_particles,
         cluster_data,
@@ -31,8 +30,8 @@ def main():
     # -----------------------------------------------------------------------
     # Set simulation parameters
     REDSHIFT = 'z001p000'
-    HALOSTART = 7703
-    NHALOS = 100#14366
+    HALOSTART = 0
+    NHALOS = 1
 
 
     # -----------------------------------------------------------------------
@@ -53,13 +52,12 @@ def main():
     files = find_files(REDSHIFT)
     header = fof_header(files)
     fofs = fof_groups(files)
-    snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
     for i in range(HALOSTART, HALOSTART+NHALOS+1, 1):
 
         # Extract data from subfind output
         start_1 = datetime.datetime.now()
-        halo_data = cluster_data(i, header, fofgroups=fofs, groupNumbers=snap_partgn)
+        halo_data = cluster_data(i, header, fofgroups=fofs)
         record_benchmarks(REDSHIFT, ('load', i, time_checkpoint(start_1)))
 
         # Parse data into Cluster object

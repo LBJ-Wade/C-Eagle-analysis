@@ -65,7 +65,7 @@ def get_indices_sparse(data):
     M = compute_M(data)
     return [np.unravel_index(row.data, data.shape) for row in M]
 
-def find_files(redshift: str):
+def find_files(redshift: str) -> list:
     z_value = ['z004p688', 'z004p061', 'z003p053', 'z003p078', 'z002p688', 'z002p349',
             'z002p053', 'z001p792', 'z001p561', 'z001p354', 'z001p168', 'z001p000', 'z000p846', 'z000p706',
             'z000p577', 'z000p457', 'z000p345', 'z000p240', 'z000p140', 'z000p046', 'z000p000']
@@ -75,40 +75,31 @@ def find_files(redshift: str):
     path='/cosma5/data/dp004/dc-hens1/macsis/macsis_gas'
     pprint(f"[+] Find simulation files {redshift:s}...")
 
-    # Find all halo folders
-    halos = []
-    for x in os.listdir(path):
-		if x.startswith('halo_'):
-			halos.append(path+x)
-
-	# Collect subfind_tab files
-	groups = []
+    halos = [x for x in os.listdir(path) if x.startswith('halo_')]
+	master_files = []
 	for halo in halos:
-		for x in os.listdir(os.path.join(halo, f'data/groups_{sn}')):
+		groups = []
+		for x in os.listdir(os.path.join(path, halo, f'data/groups_{sn}')):
 			if x.startswith('eagle_subfind_tab'):
-				groups.append(os.path.join(halo, f'data/groups_{sn}/{x}'))
+				complete_path = os.path.join(path, halo, f'data/groups_{sn}/{x}')
+				groups.append(complete_path)
+
+		particle = []
+		for x in os.listdir(os.path.join(path, halo, f'data/particledata_{sn}')):
+			if x.startswith('eagle_subfind_particles'):
+				complete_path = os.path.join(path, halo, f'data/particledata_{sn}/{x}')
+				particle.append(complete_path)
+
+		master_files.append([groups[0], particle[0]])
+
+	return master_files
 
 
-
-    pd = ''
-    if os.path.isfile(path+'/particledata_'+sn+'/eagle_subfind_particles_'+sn+'.0.hdf5'):
-        pd=path+'/particledata_'+sn+'/eagle_subfind_particles_'+sn+'.0.hdf5'
-    sd=[]
-    for x in os.listdir(path+'/groups_'+sn+'/'):
-        if x.startswith('eagle_subfind_tab_'):
-            sd.append(path+'/groups_'+sn+'/'+x)
-    odr=[]
-    for x in sd:
-        odr.append(int(x[94:-5]))
-    odr=np.array(odr)
-    so=np.argsort(odr)
-    sd=list(np.array(sd)[so])
-    return [sd,pd]
 
 def fof_header(files: list):
 	pprint(f"[+] Find header information...")
 	header = {}
-	with h5.File(files[1], 'r') as f:
+	with h5.File(files[0][1], 'r') as f:
 		header['Hub']  = f['Header'].attrs['HubbleParam']
 		header['aexp'] = f['Header'].attrs['ExpansionFactor']
 		header['zred'] = f['Header'].attrs['Redshift']
@@ -117,25 +108,12 @@ def fof_header(files: list):
 		header['OmgB'] = f['Header'].attrs['OmegaBaryon']
 	return header
 
-def fof_mass_cut():
-	pprint(f"[+] Find group information at z=0 for mass cut...")
-	files = find_files('z000p000')[0]
-	st, fh = split(len(files))
-	M500 = np.empty(0, dtype=np.float32)
-	for x in range(st, fh, 1):
-		with h5.File(files[x], 'r') as f:
-			hub_par = f['Header'].attrs['HubbleParam']
-			M500 = np.append(M500, f['FOF/Group_M_Crit500'][:])
-	M500 = M500 * 1.0e10#/hub_par
-	M500_comm = commune(M500)
-	del M500, hub_par, st, fh
-	idx = np.where(M500_comm > 1.0e13)[0]
-	pprint(f"\t Found {len(idx)} clusters with M500 > 10^13 M_sun")
-	return idx
+
 
 def fof_groups(files: list):
 	pprint(f"[+] Find groups information...")
-	st, fh = split(len(files[0]))
+	group_files = [pair[0] for pair in files]
+	st, fh = split(len(group_files))
 	Mfof = np.empty(0, dtype=np.float32)
 	M2500 = np.empty(0, dtype=np.float32)
 	M500 = np.empty(0, dtype=np.float32)
@@ -148,7 +126,7 @@ def fof_groups(files: list):
 	FSID = np.empty(0, dtype=np.int)
 	SCOP = np.empty(0, dtype=np.float32)
 	for x in range(st, fh, 1):
-		with h5.File(files[0][x], 'r') as f:
+		with h5.File(group_files[x], 'r') as f:
 			Mfof = np.append(Mfof, f['FOF/GroupMass'][:])
 			M2500 = np.append(M2500, f['FOF/Group_M_Crit2500'][:])
 			R2500 = np.append(R2500, f['FOF/Group_R_Crit2500'][:])
@@ -162,7 +140,7 @@ def fof_groups(files: list):
 			SCOP = np.append(SCOP, f['Subhalo/CentreOfPotential'][:])
 
 	header = {}
-	with h5.File(files[0][0], 'r') as f:
+	with h5.File(group_files[0], 'r') as f:
 		header['Hub'] =  f['Header'].attrs['HubbleParam']
 		header['aexp'] = f['Header'].attrs['ExpansionFactor']
 		header['zred'] = f['Header'].attrs['Redshift']
@@ -179,8 +157,8 @@ def fof_groups(files: list):
 	SCOP = comoving_length(header, SCOP)
 
 	data = {}
-	data['groupfiles'] = files[0]
-	data['particlefiles'] = files[1]
+	data['groupfiles'] = np.asarray(group_files)
+	data['particlefiles'] = np.asarray([pair[1] for pair in files])
 	data['Mfof'] = commune(Mfof)
 	data['M2500'] = commune(M2500)
 	data['R2500'] = commune(R2500)
@@ -192,7 +170,6 @@ def fof_groups(files: list):
 	data['NSUB'] = commune(NSUB)
 	data['FSID'] = commune(FSID)
 	data['SCOP'] = commune(SCOP.reshape(-1, 1)).reshape(-1, 3)
-	data['idx'] = fof_mass_cut()
 
 	return data
 
@@ -200,31 +177,30 @@ def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
 	pprint(f"[+] Find group information for cluster {clusterID}")
 	new_data = {}
 	new_data['clusterID'] = clusterID
-	new_data['idx']   = fofgroups['idx'][clusterID]
-	new_data['Mfof']  = fofgroups['Mfof'][new_data['idx']]
-	new_data['M2500'] = fofgroups['M2500'][new_data['idx']]
-	new_data['R2500'] = fofgroups['R2500'][new_data['idx']]
-	new_data['M500']  = fofgroups['M500'][new_data['idx']]
-	new_data['R500']  = fofgroups['R500'][new_data['idx']]
-	new_data['M200']  = fofgroups['M200'][new_data['idx']]
-	new_data['R200']  = fofgroups['R200'][new_data['idx']]
-	new_data['COP']   = fofgroups['COP'][new_data['idx']]
-	new_data['NSUB']  = fofgroups['NSUB'][new_data['idx']]
-	new_data['FSID']  = fofgroups['FSID'][new_data['idx']]
-	new_data['SCOP']  = fofgroups['SCOP'][new_data['idx']]
-	new_data['groupfiles']  = fofgroups['groupfiles']
-	new_data['particlefiles'] = fofgroups['particlefiles']
+	new_data['Mfof']  = fofgroups['Mfof'][clusterID]
+	new_data['M2500'] = fofgroups['M2500'][clusterID]
+	new_data['R2500'] = fofgroups['R2500'][clusterID]
+	new_data['M500']  = fofgroups['M500'][clusterID]
+	new_data['R500']  = fofgroups['R500'][clusterID]
+	new_data['M200']  = fofgroups['M200'][clusterID]
+	new_data['R200']  = fofgroups['R200'][clusterID]
+	new_data['COP']   = fofgroups['COP'][clusterID]
+	new_data['NSUB']  = fofgroups['NSUB'][clusterID]
+	new_data['FSID']  = fofgroups['FSID'][clusterID]
+	new_data['SCOP']  = fofgroups['SCOP'][clusterID]
+	new_data['groupfiles']  = fofgroups['groupfiles'][clusterID]
+	new_data['particlefiles'] = fofgroups['particlefiles'][clusterID]
 	return new_data
 
 
-def snap_groupnumbers(fofgroups: Dict[str, np.ndarray] = None):
+def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None):
 	"""
 
 	:param fofgroups:
 	:return:
 	"""
 	pgn = []
-	with h5.File(fofgroups['particlefiles'], 'r') as h5file:
+	with h5.File(fofgroup['particlefiles'], 'r') as h5file:
 
 		for pt in ['0', '1', '4']:
 			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
@@ -233,35 +209,13 @@ def snap_groupnumbers(fofgroups: Dict[str, np.ndarray] = None):
 			groupnumber = h5file[f'/PartType{pt}/GroupNumber'][st:fh]
 
 			# Clip out negative values and exceeding values
-			groupnumber = np.clip(groupnumber, 0, fofgroups['idx'][-1]+1)
+			groupnumber = np.clip(groupnumber, 0, 6)
 			pprint(f"\t Computing CSR indexing matrix...")
 			groupnumber_csrm = get_indices_sparse(groupnumber)
 			del groupnumber_csrm[0], groupnumber_csrm[-1]
 			pgn.append(groupnumber_csrm)
 			del groupnumber
 
-	return pgn
-
-def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
-	"""
-
-	:param fofgroup:
-	:param groupNumbers:
-	:return:
-	"""
-	pprint(f"[+] Find particle groupnumbers for cluster {fofgroup['clusterID']}")
-	pgn = []
-	partTypes = ['0', '1', '4']
-	with h5.File(fofgroup['particlefiles'], 'r') as h5file:
-		for pt in partTypes:
-			# Gather groupnumbers from cores
-			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
-			st, fh = split(Nparticles)
-			gn_cores = groupNumbers[partTypes.index(pt)][fofgroup['idx']][0] + st
-			gn_comm = commune(gn_cores)
-			pgn.append(gn_comm)
-			pprint(f"\t PartType {pt} found {len(gn_comm)} particles")
-			del gn_cores, gn_comm
 	return pgn
 
 def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
@@ -337,30 +291,11 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 
 			del subgroup_number, velocity, mass, coordinates, temperature, sphdensity, sphlength
 
-			# Periodic boundary wrapping of particle coordinates
-			coords = data_out[f'partType{pt}']['coordinates']
-			boxsize = comoving_length(header, h5file['Header'].attrs['BoxSize'])
-			for coord_axis in range(3):
-				# Right boundary
-				if fofgroup['COP'][coord_axis] + 5 * fofgroup['R200'] > boxsize:
-					beyond_index = np.where(coords[:, coord_axis] < boxsize / 2)[0]
-					coords[beyond_index, coord_axis] += boxsize
-					del beyond_index
-				# Left boundary
-				elif fofgroup['COP'][coord_axis] - 5 * fofgroup['R200'] < 0.:
-					beyond_index = np.where(coords[:, coord_axis] > boxsize / 2)[0]
-					coords[beyond_index, coord_axis] -= boxsize
-					del beyond_index
-
-			data_out[f'partType{pt}']['coordinates'] = coords
-			del coords, boxsize
-
 	return data_out
 
 def cluster_data(clusterID: int,
                  header: Dict[str, float] = None,
-                 fofgroups: Dict[str, np.ndarray] = None,
-                 groupNumbers: List[np.ndarray] = None):
+                 fofgroups: Dict[str, np.ndarray] = None):
 	"""
 
 	:param clusterID:
@@ -371,7 +306,7 @@ def cluster_data(clusterID: int,
 	"""
 
 	group_data  = fof_group(clusterID, fofgroups = fofgroups)
-	halo_partgn = cluster_partgroupnumbers(fofgroup=group_data, groupNumbers=groupNumbers)
+	halo_partgn = cluster_partgroupnumbers(fofgroup=group_data)
 	part_data   = cluster_particles(fofgroup=group_data, groupNumbers= halo_partgn)
 
 	out = {}
