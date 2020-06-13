@@ -16,8 +16,16 @@ def report_file(redshift: str) -> h5py.File:
 	if rank==0:
 		pathFile = '/local/scratch/altamura/analysis_results/alignment_project'
 		if not os.path.exists(pathFile): os.makedirs(pathFile)
-		h5file = h5py.File(os.path.join(pathFile, f"MAC_alignment_{redshift}.hdf5"), 'w')
+		h5file = h5py.File(os.path.join(pathFile, f"macsis_hyd_alignment_{redshift}.hdf5"), 'w')
 		return h5file
+
+def error_file(redshift: str, errors: list) -> None:
+	if rank==0:
+		pathFile = '/local/scratch/altamura/analysis_results/alignment_project'
+		if not os.path.exists(pathFile): os.makedirs(pathFile)
+		with open(os.path.join(pathFile, f"macsis_hyd_alignment_{redshift}.txt"), 'w') as e:
+			for i in errors:
+				print(f"{redshift}, {i}", file=e)
 
 def fitFunc(t, a, b):
 	return a*t+b

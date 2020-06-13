@@ -49,9 +49,9 @@ def main():
     # -----------------------------------------------------------------------
     # Load snapshot data
     pprint('[+] BAHAMAS HYDRO')
-    files = find_files(REDSHIFT)
+    files  = find_files(REDSHIFT)
     header = fof_header(files)
-    fofs = fof_groups(files)
+    fofs   = fof_groups(files)
 
     for i in range(HALOSTART, HALOSTART+NHALOS+1, 1):
 
@@ -62,7 +62,7 @@ def main():
 
         # Parse data into Cluster object
         start_2 = datetime.datetime.now()
-        cluster = Cluster.from_dict(simulation_name='bahamas', data=halo_data)
+        cluster = Cluster.from_dict(simulation_name='macsis', data=halo_data)
         del halo_data
 
         # Try pushing results into an h5 file
@@ -72,7 +72,7 @@ def main():
         except:
             error_id.append(i)
         else:
-            if rank == 0: save_group(snap_file, f"/halo_{i:d}", halo_report)
+            if rank == 0: save_group(snap_file, f"/halo_{i:03d}", halo_report)
             del halo_report
 
         record_benchmarks(REDSHIFT, ('compute', i, time_checkpoint(start_2)))
