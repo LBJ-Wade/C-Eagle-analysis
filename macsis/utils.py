@@ -9,14 +9,14 @@ import slack
 from .__init__ import pprint, rank
 
 
-pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
+pathSave = '/local/scratch/altamura/analysis_results/macsis_timing/'
 
 
 def report_file(redshift: str) -> h5py.File:
 	if rank==0:
 		pathFile = '/local/scratch/altamura/analysis_results/alignment_project'
 		if not os.path.exists(pathFile): os.makedirs(pathFile)
-		h5file = h5py.File(os.path.join(pathFile, f"snap_alignment_{redshift}.hdf5"), 'w')
+		h5file = h5py.File(os.path.join(pathFile, f"MAC_alignment_{redshift}.hdf5"), 'w')
 		return h5file
 
 def fitFunc(t, a, b):
@@ -37,13 +37,13 @@ def time_checkpoint(start: datetime.datetime) -> float:
 	return elapsed
 
 def file_benchmarks(redshift: str) -> str:
-	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
+	timing_filename = pathSave + f"macsis_timing_{redshift}.txt"
 	with open(timing_filename, "a") as benchmarks:
 		pprint(f"#{redshift}", file=benchmarks)
 	return timing_filename
 
 def record_benchmarks(redshift: str, data: tuple):
-	timing_filename = pathSave + f"bahamas_timing_{redshift}.txt"
+	timing_filename = pathSave + f"macsis_timing_{redshift}.txt"
 	data = list(data)
 	if data[0] == 'load': data[0] = 0
 	elif data[0] == 'compute': data[0] = 1
@@ -55,8 +55,8 @@ def record_benchmarks(redshift: str, data: tuple):
 
 def display_benchmarks(redshift: str):
 	if rank == 0:
-		timing_filename = pathSave+f"bahamas_timing_{redshift}.txt"
-		plot_filename = pathSave+f"bahamas_timing_{redshift}.png"
+		timing_filename = pathSave+f"macsis_timing_{redshift}.txt"
+		plot_filename = pathSave+f"macsis_timing_{redshift}.png"
 
 		fig = plt.figure()
 		ax = fig.add_subplot(111)

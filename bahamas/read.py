@@ -180,7 +180,7 @@ def fof_groups(files: list):
 	return data
 
 def fof_group(clusterID: int, fofgroups: Dict[str, np.ndarray] = None):
-	pprint(f"[+] Find group information for cluster {clusterID}")
+	# pprint(f"[+] Find group information for cluster {clusterID}")
 	new_data = {}
 	new_data['clusterID'] = clusterID
 	new_data['idx']   = fofgroups['idx'][clusterID]
@@ -232,7 +232,7 @@ def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None, groupNumber
 	:param groupNumbers:
 	:return:
 	"""
-	pprint(f"[+] Find particle groupnumbers for cluster {fofgroup['clusterID']}")
+	# pprint(f"[+] Find particle groupnumbers for cluster {fofgroup['clusterID']}")
 	pgn = []
 	partTypes = ['0', '1', '4']
 	with h5.File(fofgroup['particlefiles'], 'r') as h5file:

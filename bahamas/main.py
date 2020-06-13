@@ -22,7 +22,8 @@ def main():
         display_benchmarks,
         record_benchmarks,
         time_checkpoint,
-        report_file
+        report_file,
+        error_file
     )
 
     # Upper level relative imports
@@ -32,7 +33,7 @@ def main():
     # Set simulation parameters
     REDSHIFT = 'z001p000'
     HALOSTART = 0
-    NHALOS = 14366
+    NHALOS = 14365
 
 
     # -----------------------------------------------------------------------
@@ -74,7 +75,7 @@ def main():
         except:
             error_id.append(i)
         else:
-            if rank == 0: save_group(snap_file, f"/halo_{i:d}/", halo_report)
+            if rank == 0: save_group(snap_file, f"/halo_{i:05d}/", halo_report)
             del halo_report
 
         record_benchmarks(REDSHIFT, ('compute', i, time_checkpoint(start_2)))
@@ -93,9 +94,6 @@ def main():
     if rank==0: snap_file.close()
 
     # Save IDs of halos with errors
-    with open('errors.txt', "a") as errors:
-        for i in error_id:
-            pprint(f"{REDSHIFT}, {i}", file=errors)
-
+    error_file(REDSHIFT, error_id)
     display_benchmarks(REDSHIFT)
 
