@@ -31,7 +31,7 @@ def main():
 
     # -----------------------------------------------------------------------
     # Set simulation parameters
-    REDSHIFT = 'z001p000'
+    REDSHIFT = 'z000p500'
     HALOSTART = 0
     NHALOS = 14365
 
@@ -86,7 +86,7 @@ def main():
         if NHALOS < 5 or len(halo_load_time) < 5:
             completion_time = sum(halo_load_time)/len(halo_load_time) * NHALOS
         else:
-            completion_time = sum(halo_load_time[-4:]) / 4 * (HALOSTART+NHALOS-i)
+            completion_time = sum(halo_load_time[-4:]) / 4 * (HALOSTART+NHALOS-i+1)
         pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
         # -----------------------------------------------------------------------
 
