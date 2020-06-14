@@ -31,9 +31,9 @@ def main():
 
     # -----------------------------------------------------------------------
     # Set simulation parameters
-    REDSHIFT = 'z000p500'
+    REDSHIFT = 'z000p000'
     HALOSTART = 0
-    NHALOS = 14365
+    HALOEND = 14365
 
 
     # -----------------------------------------------------------------------
@@ -56,7 +56,7 @@ def main():
     fofs = fof_groups(files)
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
-    for i in range(HALOSTART, HALOSTART+NHALOS+1, 1):
+    for i in range(HALOSTART, HALOEND+1, 1):
 
         # Extract data from subfind output
         start_1 = datetime.datetime.now()
@@ -82,12 +82,12 @@ def main():
 
         # -----------------------------------------------------------------------
         # Time it
-        halo_load_time.append((datetime.datetime.now() - start_1).total_seconds())
-        if NHALOS < 5 or len(halo_load_time) < 5:
-            completion_time = sum(halo_load_time)/len(halo_load_time) * NHALOS
-        else:
-            completion_time = sum(halo_load_time[-4:]) / 4 * (HALOSTART+NHALOS-i+1)
-        pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
+        # halo_load_time.append((datetime.datetime.now() - start_1).total_seconds())
+        # if NHALOS < 5 or len(halo_load_time) < 5:
+        #     completion_time = sum(halo_load_time)/len(halo_load_time) * NHALOS
+        # else:
+        #     completion_time = sum(halo_load_time[-4:]) / 4 * (HALOSTART+NHALOS-i+1)
+        # pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
         # -----------------------------------------------------------------------
 
     MPI.COMM_WORLD.Barrier()
