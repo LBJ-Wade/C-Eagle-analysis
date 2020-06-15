@@ -33,7 +33,7 @@ def main():
     # Set simulation parameters
     REDSHIFT = 'z001p750'
     HALOSTART = 0
-    HALOEND = 14366
+    HALOEND = 14365
 
 
     # -----------------------------------------------------------------------
