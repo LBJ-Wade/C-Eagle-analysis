@@ -89,9 +89,10 @@ c_l = []
 m500 = []
 
 with h5py.File(os.path.join(basepath, snapname), 'r') as f:
-	for halo in f:
-		c_l.append(f[halo][f'aperture{aperture:02d}/c_l'][1])
-		m500.append(f[halo][f'aperture{aperture:02d}/m500'][:])
+	for i in range(14400):
+		if f'halo_{i:05d}' in f:
+			c_l.append(f[f'halo_{i:05d}/aperture{aperture:02d}/c_l'][1])
+			m500.append(f[f'halo_{i:05d}/aperture{aperture:02d}/m500'][:])
 
 
 fig = plt.figure()
