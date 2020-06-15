@@ -100,25 +100,25 @@ def fof_header(files: list):
 		header['OmgB'] = f['Header'].attrs['OmegaBaryon']
 	return header
 
-def fof_mass_cut(files: list):
-	st, fh = split(len(files))
-	M500 = np.empty(0, dtype=np.float32)
-	for x in range(st, fh, 1):
-		with h5.File(files[x], 'r') as f:
-			M500 = np.append(M500, f['FOF/Group_M_Crit500'][:])
-
-	header = {}
-	with h5.File(files[0][0], 'r') as f:
-		header['Hub'] = f['Header'].attrs['HubbleParam']
-		header['aexp'] = f['Header'].attrs['ExpansionFactor']
-		header['zred'] = f['Header'].attrs['Redshift']
-
-	M500 = comoving_mass(header, M500 * 1.0e10)
-	M500_comm = commune(M500)
-	del M500, st, fh, header
-	idx = np.where(M500_comm > 1.0e13)[0]
-	pprint(f"\t Found {len(idx)} clusters with M500 > 10^13 M_sun")
-	return idx
+# def fof_mass_cut(files: list):
+# 	st, fh = split(len(files))
+# 	M500 = np.empty(0, dtype=np.float32)
+# 	for x in range(st, fh, 1):
+# 		with h5.File(files[x], 'r') as f:
+# 			M500 = np.append(M500, f['FOF/Group_M_Crit500'][:])
+#
+# 	header = {}
+# 	with h5.File(files[0][0], 'r') as f:
+# 		header['Hub'] = f['Header'].attrs['HubbleParam']
+# 		header['aexp'] = f['Header'].attrs['ExpansionFactor']
+# 		header['zred'] = f['Header'].attrs['Redshift']
+#
+# 	M500 = comoving_mass(header, M500 * 1.0e10)
+# 	M500_comm = commune(M500)
+# 	del M500, st, fh, header
+# 	idx = np.where(M500_comm > 1.0e13)[0]
+# 	pprint(f"\t Found {len(idx)} clusters with M500 > 10^13 M_sun")
+# 	return idx
 
 def fof_groups(files: list):
 	pprint(f"[+] Find groups information...")
@@ -179,7 +179,7 @@ def fof_groups(files: list):
 	data['NSUB'] = commune(NSUB)
 	data['FSID'] = commune(FSID)
 	data['SCOP'] = commune(SCOP.reshape(-1, 1)).reshape(-1, 3)
-	data['idx'] = fof_mass_cut(files)
+	data['idx'] = np.where(data['M500'] > 1.0e13)[0]
 
 	return data
 
