@@ -9,8 +9,7 @@ rank = comm.Get_rank()
 size = comm.Get_size()
 
 from . import simulation
-from . import _read_volume
-from . import _read_zoom
+from . import _cluster_retriever
 from . import _cluster_profiler
 from . import _cluster_report
 
@@ -18,8 +17,7 @@ from .__init__ import redshift_num2str
 
 
 class Cluster(simulation.Simulation,
-              _read_volume.Mixin,
-              _read_zoom.Mixin,
+              _cluster_retriever.Mixin,
               _cluster_profiler.Mixin,
               _cluster_report.Mixin):
 
