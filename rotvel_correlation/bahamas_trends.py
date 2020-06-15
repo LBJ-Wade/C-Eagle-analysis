@@ -91,6 +91,7 @@ m500 = []
 with h5py.File(os.path.join(basepath, snapname), 'r') as file:
 	for i in range(14366):
 		if f'halo_{i:05d}' in file:
+			print(file[f'halo_{i:05d}/aperture{aperture:02d}/c_l'][:])
 			c_l.append(file[f'halo_{i:05d}/aperture{aperture:02d}/c_l'][1])
 			m500.append(file[f'halo_{i:05d}/aperture{aperture:02d}/m500'][()])
 		else:
