@@ -100,16 +100,14 @@ def fof_header(files: list):
 		header['OmgB'] = f['Header'].attrs['OmegaBaryon']
 	return header
 
-def fof_mass_cut():
-	pprint(f"[+] Find group information at z=0 for mass cut...")
-	files = find_files('z000p000')[0]
+def fof_mass_cut(files: list):
 	st, fh = split(len(files))
 	M500 = np.empty(0, dtype=np.float32)
 	for x in range(st, fh, 1):
 		with h5.File(files[x], 'r') as f:
 			hub_par = f['Header'].attrs['HubbleParam']
 			M500 = np.append(M500, f['FOF/Group_M_Crit500'][:])
-	M500 = M500 * 1.0e10#/hub_par
+	M500 = M500*1.0e10/hub_par
 	M500_comm = commune(M500)
 	del M500, hub_par, st, fh
 	idx = np.where(M500_comm > 1.0e13)[0]
@@ -175,7 +173,7 @@ def fof_groups(files: list):
 	data['NSUB'] = commune(NSUB)
 	data['FSID'] = commune(FSID)
 	data['SCOP'] = commune(SCOP.reshape(-1, 1)).reshape(-1, 3)
-	data['idx'] = fof_mass_cut()
+	data['idx'] = fof_mass_cut(files)
 
 	return data
 

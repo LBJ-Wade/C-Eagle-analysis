@@ -10,10 +10,7 @@ def main():
         find_files,
         fof_header,
         fof_groups,
-        fof_group,
         snap_groupnumbers,
-        cluster_partgroupnumbers,
-        cluster_particles,
         cluster_data,
         glance_cluster
     )
@@ -31,22 +28,18 @@ def main():
 
     # -----------------------------------------------------------------------
     # Set simulation parameters
-    REDSHIFT = 'z001p750'
+    REDSHIFT = 'z000p000'
     HALOSTART = 0
-    HALOEND = 14365
-
 
     # -----------------------------------------------------------------------
     # Initialise benchmarks
     file_benchmarks(REDSHIFT)
-    halo_load_time = []
-
+    # halo_load_time = []
 
     # -----------------------------------------------------------------------
     # Initialise snapshot output file
     snap_file = report_file(REDSHIFT)
     error_id = []
-
 
     # -----------------------------------------------------------------------
     # Load snapshot data
@@ -54,9 +47,10 @@ def main():
     files = find_files(REDSHIFT)
     header = fof_header(files)
     fofs = fof_groups(files)
+    number_halos = len(fofs['idx'])
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
-    for i in range(HALOSTART, HALOEND+1, 1):
+    for i in range(HALOSTART, number_halos, 1):
 
         # Extract data from subfind output
         start_1 = datetime.datetime.now()
@@ -91,9 +85,9 @@ def main():
         # -----------------------------------------------------------------------
 
     MPI.COMM_WORLD.Barrier()
-    if rank==0: snap_file.close()
-
-    # Save IDs of halos with errors
-    error_file(REDSHIFT, error_id)
-    display_benchmarks(REDSHIFT)
+    if rank==0:
+        snap_file.close()
+        # Save IDs of halos with errors
+        error_file(REDSHIFT, error_id)
+        display_benchmarks(REDSHIFT)
 
