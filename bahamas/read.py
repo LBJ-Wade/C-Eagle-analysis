@@ -247,7 +247,7 @@ def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None, groupNumber
 			gn_cores = groupNumbers[partTypes.index(pt)][fofgroup['idx']][0] + st
 			gn_comm = commune(gn_cores)
 			pgn.append(gn_comm)
-			pprint(f"\t PartType {pt} found {len(gn_comm)} particles")
+			# pprint(f"\t PartType {pt} found {len(gn_comm)} particles")
 			del gn_cores, gn_comm
 	return pgn
 
