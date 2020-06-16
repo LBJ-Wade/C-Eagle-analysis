@@ -13,7 +13,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-redshift = 'z000p000'
+redshift = 'z000p500'
 aperture = 7
 
 """
