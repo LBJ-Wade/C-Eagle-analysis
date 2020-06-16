@@ -145,20 +145,6 @@ class Mixin:
 
     @data_subject(subject="groups")
     def file_group_indexify(self, **kwargs):
-        if self.simulation_name == 'bahamas':
-            Ngroups = 0
-            file_counter = 0
-            element_counter = self.halo_num_catalogue_contiguous[self.clusterID]
-            while True:
-                with h5.File(kwargs['file_list_sorted'][file_counter], 'r') as h5file:
-                    Ngroups += h5file['Header'].attrs['Ngroups']
-                    if element_counter < h5file['Header'].attrs['Ngroups']:
-                        break
-                    else:
-                        file_counter += 1
-                        element_counter -= h5file['Header'].attrs['Ngroups']
-            return file_counter, element_counter
-        else:
             return 0, 0
 
     @data_subject(subject="groups")
