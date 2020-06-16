@@ -48,6 +48,7 @@ def main():
     header = fof_header(files)
     fofs = fof_groups(files)
     number_halos = len(fofs['idx'])
+    pprint('Number of halos', number_halos)
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
     for i in range(HALOSTART, number_halos, 1):
