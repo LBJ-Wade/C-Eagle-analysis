@@ -28,8 +28,7 @@ def main():
 
     # -----------------------------------------------------------------------
     # Set simulation parameters
-    REDSHIFT = 'z000p500'
-    # HALOSTART = 0
+    REDSHIFT = 'z000p000'
 
     # -----------------------------------------------------------------------
     # Initialise benchmarks
@@ -39,7 +38,6 @@ def main():
     # -----------------------------------------------------------------------
     # Initialise snapshot output file
     snap_file = report_file(REDSHIFT)
-    error_id = []
 
     # -----------------------------------------------------------------------
     # Load snapshot data
@@ -68,7 +66,7 @@ def main():
             halo_report = save_report(cluster)
             del cluster
         except:
-            error_id.append(i)
+            pprint(f"[-] ERROR Processing cluster{i} failed")
         else:
             if rank == 0: save_group(snap_file, f"/halo_{i:05d}/", halo_report)
             del halo_report
@@ -78,17 +76,15 @@ def main():
         # -----------------------------------------------------------------------
         # Time it
         # halo_load_time.append((datetime.datetime.now() - start_1).total_seconds())
-        # if NHALOS < 5 or len(halo_load_time) < 5:
-        #     completion_time = sum(halo_load_time)/len(halo_load_time) * NHALOS
+        # if number_halos < 5 or len(halo_load_time) < 5:
+        #     completion_time = sum(halo_load_time)/len(halo_load_time) * number_halos
         # else:
-        #     completion_time = sum(halo_load_time[-4:]) / 4 * (HALOSTART+NHALOS-i+1)
-        # pprint(f"[x] ({len(halo_load_time):d}/{NHALOS:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
+        #     completion_time = sum(halo_load_time[-4:]) / 4 * (number_halos-i+1)
+        # pprint(f"[x] ({len(halo_load_time):d}/{number_halos:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
         # -----------------------------------------------------------------------
 
     MPI.COMM_WORLD.Barrier()
     if rank==0:
         snap_file.close()
-        # Save IDs of halos with errors
-        error_file(REDSHIFT, error_id)
-        display_benchmarks(REDSHIFT)
+
 
