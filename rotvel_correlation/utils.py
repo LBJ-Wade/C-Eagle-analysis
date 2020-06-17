@@ -98,7 +98,7 @@ def equal_number_FD(x: np.ndarray) -> np.ndarray:
                      np.arange(npt),
                      np.sort(x))
 
-def kde_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None) -> tuple:
+def kde_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, gridbins: int = None) -> tuple:
     """
     Function to compute the 2D kernel density eatimate of a 2D dataset.
     It accepts linear and logarithmic scales on both axes and rescales the kde accordingly.
@@ -107,14 +107,16 @@ def kde_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None) -> tuple:
     :param axscales: A list with 2 string entries with the scales of the axes
     :return: Tuple with the x and y gridmesh for the KDE and the z-values for contours
     """
+    if not gridbins:
+        gridbins = 101
     if not axscales:
         axscales = ['linear', 'linear']
-    x_space = np.linspace(np.min(x), np.max(x), 101)
-    y_space = np.linspace(np.min(y), np.max(y), 101)
+    x_space = np.linspace(np.min(x), np.max(x), gridbins)
+    y_space = np.linspace(np.min(y), np.max(y), gridbins)
     if axscales[0] == 'log':
-        x_space = np.linspace(np.log10(np.min(x)), np.log10(np.max(x)), 101)
+        x_space = np.linspace(np.log10(np.min(x)), np.log10(np.max(x)), gridbins)
     if axscales[1] == 'log':
-        y_space = np.linspace(np.log10(np.min(y)), np.log10(np.max(y)), 101)
+        y_space = np.linspace(np.log10(np.min(y)), np.log10(np.max(y)), gridbins)
     xx, yy = np.meshgrid(x_space, y_space)
     positions = np.vstack([xx.ravel(), yy.ravel()])
     values = np.vstack([x if axscales[0] == 'linear' else np.log10(x), y])
@@ -165,6 +167,19 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
     median_stats['err_y'] = std_y/np.sqrt(count_y)
     del median_y, percent84_y, percent16_y, count_y, std_y, median_x
     return median_stats
+
+
+"""
+clevels = ax.contour(xmesh,ymesh,H.T,lw=.9,cmap='winter')#,zorder=90)
+
+# Identify points within contours
+p = clevels.collections[0].get_paths()
+inside = np.full_like(x,False,dtype=bool)
+for level in p:
+    inside |= level.contains_points(zip(*(x,y)))
+
+ax.plot(x[~inside],y[~inside],'kx')
+"""
 
 
 output_datasets = [

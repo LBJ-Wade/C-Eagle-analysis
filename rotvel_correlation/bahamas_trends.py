@@ -16,7 +16,7 @@ import matplotlib.pyplot as plt
 plt.style.use("mnras.mplstyle")
 
 # Internal packages
-from .utils import datasets_names, aperture_labels
+from .utils import datasets_names, aperture_labels, kde_2d, medians_2d
 
 
 redshift = 'z000p000'
