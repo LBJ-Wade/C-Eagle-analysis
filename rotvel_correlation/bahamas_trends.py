@@ -13,7 +13,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
-redshift = 'z001p000'
+redshift = 'z000p000'
 aperture = 7
 
 """
@@ -89,7 +89,7 @@ c_l = []
 m500 = []
 
 with h5py.File(os.path.join(basepath, snapname), 'r') as file:
-	for i in range(14366):
+	for i in range(30000):
 		if f'halo_{i:05d}' in file:
 			print(file[f'halo_{i:05d}/aperture{aperture:02d}/c_l'][1,1])
 			c_l.append(file[f'halo_{i:05d}/aperture{aperture:02d}/c_l'][1,1])
