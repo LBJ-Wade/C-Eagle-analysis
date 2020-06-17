@@ -258,7 +258,7 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 	:param groupNumbers:
 	:return:
 	"""
-	pprint(f"[+] Find particle information for cluster {fofgroup['clusterID']}")
+	# pprint(f"[+] Find particle information for cluster {fofgroup['clusterID']}")
 	data_out = {}
 	header = {}
 	partTypes = ['0', '1', '4']
@@ -356,7 +356,7 @@ def cluster_data(clusterID: int,
 	:param groupNumbers:
 	:return:
 	"""
-
+	pprint(f"[+] Running cluster {clusterID}")
 	group_data  = fof_group(clusterID, fofgroups = fofgroups)
 	halo_partgn = cluster_partgroupnumbers(fofgroup=group_data, groupNumbers=groupNumbers)
 	part_data   = cluster_particles(fofgroup=group_data, groupNumbers= halo_partgn)

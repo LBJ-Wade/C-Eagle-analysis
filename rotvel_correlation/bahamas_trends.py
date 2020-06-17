@@ -105,7 +105,7 @@ ax.set_yscale("linear")
 
 ax.scatter(m500, c_l, marker='.', c='yellowgreen', s=3, alpha=0.3, label='load')
 
-ax.set_xlabel('M_{500}')
+ax.set_xlabel('$M_{500}$')
 ax.set_ylabel('C - L')
 plt.savefig(os.path.join(basepath, figname), dpi=300)
 

@@ -29,7 +29,7 @@ def main():
     # -----------------------------------------------------------------------
     # Set simulation parameters
     REDSHIFT = 'z001p750'
-    HALOSTART = 0
+    # HALOSTART = 0
 
     # -----------------------------------------------------------------------
     # Initialise benchmarks
@@ -43,7 +43,7 @@ def main():
 
     # -----------------------------------------------------------------------
     # Load snapshot data
-    pprint('[+] BAHAMAS HYDRO')
+    pprint(f'[+] BAHAMAS HYDRO: redshift {REDSHIFT}')
     files = find_files(REDSHIFT)
     header = fof_header(files)
     fofs = fof_groups(files)
@@ -51,7 +51,7 @@ def main():
     pprint('Number of halos', number_halos)
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
-    for i in range(HALOSTART, number_halos, 1):
+    for i in range(number_halos):
 
         # Extract data from subfind output
         start_1 = datetime.datetime.now()
