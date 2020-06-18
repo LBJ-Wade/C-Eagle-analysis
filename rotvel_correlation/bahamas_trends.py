@@ -89,14 +89,13 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 		for kp, path in reversed(list(enumerate(level.get_paths()))):
 			inside |= path.contains_points(tuple(zip(*(x,y))))
 			points_in_level.append(len(inside[inside==True]))
-	print([i/len(x) for i in points_in_level])
 
-	# Plot colorbat
+	# Plot colorbar
 	divider = make_axes_locatable(axes)
 	cax = divider.append_axes('right', size='5%', pad=0.05)
 	cbar = plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
 	cbar.ax.invert_yaxis()
-	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::2]])
+	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::-1][::2]])
 
 
 
