@@ -220,10 +220,9 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 		x_bin_stats = x_binning(x)
 	elif axscales[0] == 'log':
 		x_bin_stats = 10 ** x_binning(np.log10(x))
-		print(x_bin_stats)
 
 	# Remove duplicate bin edges
-	x_bin_stats = np.sort(list(set(x_bin_stats)))
+	# x_bin_stats = np.sort(list(set(x_bin_stats)))
 
 	median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
 	percent84_y, _, _ = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
