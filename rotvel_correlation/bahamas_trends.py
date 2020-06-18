@@ -126,7 +126,7 @@ if __name__ == '__main__':
 	y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
-	w, h = plt.figaspect(2.)
+	w, h = plt.figaspect(0.875)
 	fig = plt.figure(figsize=(w, h))
 	ax = fig.add_subplot(111)
 	ax.set_ylim(0, 180)
