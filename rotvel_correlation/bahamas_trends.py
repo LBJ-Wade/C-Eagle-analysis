@@ -64,7 +64,6 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 	kde_results = utils.kde_2d(x, y, **kwargs)
-	print(np.sum(kde_results[-1]), np.max(kde_results[-1]))
 	clevels = axes.contourf(*kde_results, 10, cmap='YlGn_r')
 
 	# Delete outer levels
@@ -95,8 +94,9 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	# Plot colorbat
 	divider = make_axes_locatable(axes)
 	cax = divider.append_axes('right', size='5%', pad=0.05)
-	plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
-
+	cbar = plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
+	cbar.ax.invert_yaxis()
+	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::2]])
 
 
 
