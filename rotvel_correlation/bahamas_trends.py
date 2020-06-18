@@ -82,6 +82,14 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 			inside |= path.contains_points(tuple(zip(*(x,y))))
 	ax.scatter(x[~inside], y[~inside], marker='.', color='g', s=2, alpha=0.1)
 
+	# Count points within each level
+	points_in_level = []
+	for level in clevels.collections:
+		for kp, path in reversed(list(enumerate(level.get_paths()))):
+			points_in_level.append(np.sum(path.contains_points(tuple(zip(*(x,y))))))
+	print([i/len(x) for i in points_in_level])
+
+
 
 def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 	label = f"BAHAMAS$^\mathrm{{h}}$\n$z={utils.redshift_str2num(redshift):2.2f}$\n$R_\\mathrm{{aperture}}=${utils.aperture_labels[aperture]}"
