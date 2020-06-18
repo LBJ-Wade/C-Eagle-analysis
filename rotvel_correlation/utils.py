@@ -185,7 +185,7 @@ def freedman_diaconis(x: np.ndarray) -> np.ndarray:
     """
     return np.histogram_bin_edges(x, bins='fd')
 
-def equal_number_FD(x: np.ndarray) -> np.ndarray:
+def equal_number(x: np.ndarray) -> np.ndarray:
     """
     Takes the number of bins computed using the FD method, but then selects the bin edges splitting
     the dataset in bins with equal number of data-points.
@@ -195,7 +195,7 @@ def equal_number_FD(x: np.ndarray) -> np.ndarray:
     :return: np.ndarray
         The bins edges computed using the equal-N method.
     """
-    nbin = len(np.histogram_bin_edges(x, bins='fd')) - 1
+    nbin = 20
     npt = len(x)
     return np.interp(np.linspace(0, npt, nbin + 1),
                      np.arange(npt),
@@ -248,7 +248,7 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 	elif binning_method == 'freedman':
 		x_binning = freedman_diaconis
 	elif binning_method == 'equalnumber':
-		x_binning = equal_number_FD
+		x_binning = equal_number
 	elif binning_method == 'shimazaki_shinomoto':
 		x_binning = shimazaki_shinomoto
 	elif binning_method == None:
