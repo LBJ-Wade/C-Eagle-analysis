@@ -62,7 +62,7 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 
 def contour_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, axscales: List[str] = None,  **kwargs):
 
-	xx, yy, zz = utils.kde_2d(x, y, **kwargs)
+	xx, yy, zz = utils.kde_2d(x, y, axscales=axscales, **kwargs)
 	if not axscales:
 		axscales = ['linear', 'linear']
 	if axscales[0] == 'linear':
