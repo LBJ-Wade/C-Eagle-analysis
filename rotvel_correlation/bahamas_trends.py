@@ -96,10 +96,10 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	cax = divider.append_axes('right', size='5%', pad=0.05)
 	cbar = plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
 	N_levels = len(points_in_level)
-	kde_ticks = np.linspace(np.min(kde_results[-1]), np.max(kde_results[-1]), N_levels+1)
+	kde_ticks = np.linspace(np.min(kde_results[2]), np.max(kde_results[2]), N_levels+1)
 	cbar.ax.set_yticks(kde_ticks[::2])
 	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::2][::-1]])
-	cbar.ax.set_ylabel(r"$\frac{n}{N}$", rotation=0, fontsize=15)
+	cbar.ax.set_ylabel(r"$\frac{n}{N}$", rotation=0, fontsize=13, labelpad=15)
 
 
 
@@ -108,12 +108,13 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 	axes.text(0.97, 0.97, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top')
 
 
-redshift = 'z000p000'
-aperture = 1
+redshift = 'z001p000'
+aperture = 0
 #-----------------------------------------------------------------
 
 ptype = (2,2)
 m500 = utils.read_snap_output(redshift, apertureID=aperture, dataset='m500')
+# m500 = utils.read_snap_output(redshift, apertureID=aperture, dataset='specific_angular_momentum')
 c_l  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')[:, ptype[0], ptype[1]]
 figname = f'bahamas_hyd_alignment_{redshift}.png'
 
