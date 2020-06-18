@@ -115,7 +115,7 @@ aperture = 1
 ptype = (2,2)
 m500 = utils.read_snap_output(redshift, apertureID=aperture, dataset='m500')
 c_l  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')[:, ptype[0], ptype[1]]
-figname = f'bahamas_hyd_alignment_{redshift}.pdf'
+figname = f'bahamas_hyd_alignment_{redshift}.png'
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
@@ -129,7 +129,7 @@ ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', 
 plt.axhline(90, color='grey', linestyle='-')
 ax.set_yticks(np.arange(0, 210, 30))
 
-kde_plot(ax, m500, c_l, axscales = ['log', 'linear'], gridbins=300)
+kde_plot(ax, m500, c_l, axscales = ['log', 'linear'], gridbins=400)
 median_plot(ax, m500, c_l, axscales = ['log', 'linear'], binning_method = 'equalnumber')
 snap_label(ax, redshift, aperture)
-save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=300)
+save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)
