@@ -121,7 +121,7 @@ figname = f'bahamas_hyd_alignment_{redshift}.png'
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.set_ylim(0, 180)
-ax.set_xscale("log")
+# ax.set_xscale("log")
 ax.set_yscale("linear")
 ax.set_xlabel(utils.datasets_names['dynamical_merging_index'])
 ax.set_ylabel(utils.datasets_names['c_l'])
@@ -130,7 +130,7 @@ ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', 
 plt.axhline(90, color='grey', linestyle='-')
 ax.set_yticks(np.arange(0, 210, 30))
 
-kde_plot(ax, x, y, axscales = ['log', 'linear'], gridbins=400)
-median_plot(ax, x, y, axscales = ['log', 'linear'], binning_method = 'equalnumber')
+kde_plot(ax, x, y, axscales = ['linear', 'linear'], gridbins=400)
+median_plot(ax, x, y, axscales = ['linear', 'linear'], binning_method = 'equalnumber')
 snap_label(ax, redshift, aperture)
 save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)
