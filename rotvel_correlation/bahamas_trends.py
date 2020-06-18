@@ -95,7 +95,6 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	divider = make_axes_locatable(axes)
 	cax = divider.append_axes('right', size='5%', pad=0.05)
 	cbar = plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
-
 	N_levels = len(points_in_level)
 	kde_ticks = np.linspace(np.min(kde_results[-1]), np.max(kde_results[-1]), N_levels+1)
 	cbar.ax.set_yticks(kde_ticks[::2])
@@ -116,7 +115,7 @@ aperture = 7
 ptype = (2,2)
 m500 = utils.read_snap_output(redshift, apertureID=aperture, dataset='m500')
 c_l  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')[:, ptype[0], ptype[1]]
-figname = f'bahamas_hyd_alignment_{redshift}.png'
+figname = f'bahamas_hyd_alignment_{redshift}.pdf'
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
