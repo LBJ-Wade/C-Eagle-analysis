@@ -84,7 +84,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 
 def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
-	label = f"BAHAMAS\n$z$={utils.redshift_str2num(redshift):2.2f}\n$R_\\mathrm{{aperture}}$={utils.aperture_labels[aperture]}"
+	label = f"BAHAMAS\n$z={utils.redshift_str2num(redshift):2.2f}$\n$R_\\mathrm{{aperture}}={utils.aperture_labels[aperture]}$"
 	axes.text(0.95, 0.95, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top',)
 
 
