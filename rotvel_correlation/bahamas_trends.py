@@ -79,7 +79,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	inside = np.full_like(x, False, dtype=bool)
 	for level in p:
 		inside |= level.contains_points(tuple(zip(*(x,y))))
-	ax.scatter(x[~inside], y[~inside], 'g,')
+	ax.scatter(x[~inside], y[~inside], marker=',', color='g')
 
 
 
