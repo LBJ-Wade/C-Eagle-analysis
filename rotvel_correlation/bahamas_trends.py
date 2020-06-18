@@ -82,24 +82,24 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 			inside |= path.contains_points(tuple(zip(*(x,y))))
 	ax.scatter(x[~inside], y[~inside], marker='.', color='g', s=2, alpha=0.1)
 
-	# Count points within each level
-	points_in_level = []
-	inside = np.full_like(x, False, dtype=bool)
-	for level in clevels.collections:
-		for kp, path in reversed(list(enumerate(level.get_paths()))):
-			inside |= path.contains_points(tuple(zip(*(x,y))))
-			points_in_level.append(len(inside[inside==True]))
-	points_in_level.append(len(x))
-
-	# Plot colorbar
-	divider = make_axes_locatable(axes)
-	cax = divider.append_axes('right', size='5%', pad=0.05)
-	cbar = plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
-	N_levels = len(points_in_level)
-	kde_ticks = np.linspace(np.min(kde_results[2]), np.max(kde_results[2]), N_levels+1)
-	cbar.ax.set_yticks(kde_ticks[::2])
-	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::2][::-1]])
-	cbar.ax.set_ylabel(r"$\frac{n}{N}$", rotation=0, fontsize=13, labelpad=15)
+	# # Count points within each level
+	# points_in_level = []
+	# inside = np.full_like(x, False, dtype=bool)
+	# for level in clevels.collections:
+	# 	for kp, path in reversed(list(enumerate(level.get_paths()))):
+	# 		inside |= path.contains_points(tuple(zip(*(x,y))))
+	# 		points_in_level.append(len(inside[inside==True]))
+	# points_in_level.append(len(x))
+	#
+	# # Plot colorbar
+	# divider = make_axes_locatable(axes)
+	# cax = divider.append_axes('right', size='5%', pad=0.05)
+	# cbar = plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
+	# N_levels = len(points_in_level)
+	# kde_ticks = np.linspace(np.min(kde_results[2]), np.max(kde_results[2]), N_levels+1)
+	# cbar.ax.set_yticks(kde_ticks[::2])
+	# cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::2][::-1]])
+	# cbar.ax.set_ylabel(r"$\frac{n}{N}$", rotation=0, fontsize=13, labelpad=15)
 
 
 
@@ -126,8 +126,7 @@ if __name__ == '__main__':
 	y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
-	w, h = plt.figaspect(0.875)
-	fig = plt.figure(figsize=(w, h))
+	fig = plt.figure()
 	ax = fig.add_subplot(111)
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
