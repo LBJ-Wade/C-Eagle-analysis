@@ -96,7 +96,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	divider = make_axes_locatable(axes)
 	cax = divider.append_axes('right', size='5%', pad=0.05)
 	plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
-plt
+
 
 
 
