@@ -89,6 +89,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 		for kp, path in reversed(list(enumerate(level.get_paths()))):
 			inside |= path.contains_points(tuple(zip(*(x,y))))
 			points_in_level.append(len(inside[inside==True]))
+	points_in_level.append(len(x))
 
 	# Plot colorbar
 	divider = make_axes_locatable(axes)
@@ -98,7 +99,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	N_levels = len(points_in_level)
 	kde_ticks = np.linspace(np.min(kde_results[-1]), np.max(kde_results[-1]), N_levels+1)
 	cbar.ax.set_yticks(kde_ticks[::2])
-	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::-1][::2]])
+	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::2][::-1]])
 
 
 
