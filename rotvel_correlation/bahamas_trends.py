@@ -44,20 +44,14 @@ def save_plot(filepath: str, to_slack: bool = False, **kwargs) -> None:
 		except:
 			warnings.warn("[-] Failed to broadcast plot to Slack channel.")
 
-def median_plot(axes: plt.Axes, *args, **kwargs):
-	"""
+def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 
-	:param axes:
-	:param args:
-	:param kwargs:
-	:return:
-	"""
 	perc84 = Line2D([], [], color='k', marker='^', linestyle='-.', markersize=12, label=r'$84^{th}$ percentile')
 	perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=12, label=r'median')
 	perc16 = Line2D([], [], color='k', marker='v', linestyle='--', markersize=12, label=r'$16^{th}$ percentile')
 	legend = axes.legend(handles=[perc84, perc50, perc16], loc='center right', handlelength=2, fontsize=20)
 	axes.add_artist(legend)
-	data_plot = utils.medians_2d(*args, **kwargs)
+	data_plot = utils.medians_2d(x, y, **kwargs)
 	axes.errorbar(data_plot['median_x'], data_plot['median_y'], yerr=data_plot['err_y'],
 	              marker='o', ms=8, alpha=1, linestyle='-', capsize=0)
 	axes.errorbar(data_plot['median_x'], data_plot['percent16_y'], yerr=data_plot['err_y'],
