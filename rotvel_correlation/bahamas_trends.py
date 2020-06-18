@@ -62,8 +62,9 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
-	kde_results = utils.kde_2d(x, y, **kwargs)
-	cset = axes.contourf(*kde_results, 10, cmap='YlGn_r', alpha=0.5)
+	X,Y,Z = utils.kde_2d(x, y, **kwargs)
+	threshold = np.where(Z>0.1)[0]
+	cset = axes.contourf(X[threshold],Y[threshold],Z[threshold], 10, cmap='YlGn_r')
 	# axes.contour(cset, levels=cset.levels[::2], cmap='YlGn_r')
 
 
@@ -83,6 +84,6 @@ ax.set_xscale("log")
 ax.set_yscale("linear")
 ax.set_xlabel(utils.datasets_names['m500'])
 ax.set_ylabel(utils.datasets_names['c_l'])
-kde_plot(ax, m500, c_l[:,1,1], axscales = ['log', 'linear'], gridbins=200)
+kde_plot(ax, m500, c_l[:,1,1], axscales = ['log', 'linear'], gridbins=300)
 median_plot(ax, m500, c_l[:,1,1], axscales = ['log', 'linear'], binning_method = 'equalnumber')
 save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=300)
