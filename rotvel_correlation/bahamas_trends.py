@@ -114,11 +114,11 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 
 if __name__ == '__main__':
 	#-----------------------------------------------------------------
-	redshift = 'z000p500'
+	redshift = 'z001p000'
 	aperture = 7
-	x_dataset = 'thermodynamic_merging_index'
-	y_dataset = 'c_l'
-	ptype = (2,1)
+	x_dataset = 'm500'
+	y_dataset = 'b_l'
+	ptype = (2,2)
 	axscales = ['log', 'linear']
 	#-----------------------------------------------------------------
 
