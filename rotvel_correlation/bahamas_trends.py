@@ -60,15 +60,10 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 	axes.errorbar(data_plot['median_x'], data_plot['percent84_y'], yerr=data_plot['err_y'],
 	              marker='^', ms=2, alpha=1, linestyle='-.', capsize=0, linewidth=1)
 
-def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, axscales: List[str] = None,  **kwargs):
+def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
-	xx, yy, zz = utils.kde_2d(x, y, axscales=axscales, **kwargs)
-	if not axscales:
-		axscales = ['linear', 'linear']
-	if axscales[0] == 'linear':
-		cset = axes.contour(xx, yy, zz, 10, cmap=plt.cm.bone, origin='lower')
-	elif axscales[0] == 'log':
-		cset = axes.contour(10 ** xx, yy, zz, 10, cmap=plt.cm.bone, origin='lower')
+	kde_results = utils.kde_2d(x, y, **kwargs)
+	cset = axes.contour(*kde_results, 10, cmap=plt.cm.bone, origin='lower')
 	axes.contour(cset, levels=cset.levels[::2], origin='lower')
 
 
