@@ -94,6 +94,10 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	divider = make_axes_locatable(axes)
 	cax = divider.append_axes('right', size='5%', pad=0.05)
 	cbar = plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
+
+	N_levels = len(points_in_level)
+	kde_ticks = np.linspace(np.min(kde_results[-1]), np.max(kde_results[-1]), N_levels+1)
+	cbar.ax.set_yticks(kde_ticks[::2])
 	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::-1][::2]])
 
 
