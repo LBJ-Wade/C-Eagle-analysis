@@ -72,8 +72,8 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 			verts = path.vertices  # (N,2)-shape array of contour line coordinates
 			diameter = np.max(verts.max(axis=0) - verts.min(axis=0))
 			dataset_diameter = max([(x.max()-x.min()), (y.max()-y.min())])
-			if diameter < 0.6*dataset_diameter:  # threshold to be refined for your actual dimensions!
-				del (level.get_paths()[kp])  # no remove() for Path objects:(
+			if diameter > 0.6*dataset_diameter:
+				del (level.get_paths()[kp])
 
 	# Identify points within contours
 	p = clevels.collections[0].get_paths()
