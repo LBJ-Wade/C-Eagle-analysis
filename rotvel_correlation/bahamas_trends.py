@@ -87,7 +87,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	for level in clevels.collections:
 		for kp, path in reversed(list(enumerate(level.get_paths()))):
 			points_in_level.append(np.sum(path.contains_points(tuple(zip(*(x,y))))))
-	print([i/len(x) for i in points_in_level])
+	print([i/len(x) for i in np.cumsum(points_in_level)])
 
 
 
