@@ -11,6 +11,15 @@ from multiprocessing.dummy import Pool as ThreadPool
 
 basepath = '/local/scratch/altamura/analysis_results/alignment_project'
 
+def redshift_str2num(z: str) -> float:
+	"""
+	Converts the redshift of the snapshot from text to numerical,
+	in a format compatible with the file names.
+	E.g. float z = 2.16 <--- str z = 'z002p160'.
+	"""
+	z = z.strip('z').replace('p', '.')
+	return round(float(z), 3)
+
 def pull_halo_output(h5file, clusterID, apertureID, dataset):
 	"""
 	Function to extract a dataset from a Bahamas snapshot output.

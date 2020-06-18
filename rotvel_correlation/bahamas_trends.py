@@ -47,18 +47,18 @@ def save_plot(filepath: str, to_slack: bool = False, **kwargs) -> None:
 
 def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 
-	perc84 = Line2D([], [], color='k', marker='^', linestyle='-.', markersize=3, label=r'$84^{th}$ percentile')
-	perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=3, label=r'median')
-	perc16 = Line2D([], [], color='k', marker='v', linestyle='--', markersize=3, label=r'$16^{th}$ percentile')
-	legend = axes.legend(handles=[perc84, perc50, perc16], loc='best', handlelength=2)
+	perc84 = Line2D([], [], color='k', marker='^', linewidth=1, linestyle='-', markersize=3, label=r'$84^{th}$ percentile')
+	perc50 = Line2D([], [], color='k', marker='o', linewidth=1, linestyle='-', markersize=3, label=r'median')
+	perc16 = Line2D([], [], color='k', marker='v', linewidth=1, linestyle='-', markersize=3, label=r'$16^{th}$ percentile')
+	legend = axes.legend(handles=[perc84, perc50, perc16], loc='bottom right', handlelength=2)
 	axes.add_artist(legend)
 	data_plot = utils.medians_2d(x, y, **kwargs)
 	axes.errorbar(data_plot['median_x'], data_plot['median_y'], yerr=data_plot['err_y'],
-	              marker='o', ms=2, alpha=1, linestyle='-', capsize=0, linewidth=1)
+	              marker='o', ms=2, alpha=1, linestyle='-', capsize=0, linewidth=0.5)
 	axes.errorbar(data_plot['median_x'], data_plot['percent16_y'], yerr=data_plot['err_y'],
-	              marker='v', ms=2, alpha=1, linestyle='--', capsize=0, linewidth=1)
+	              marker='v', ms=2, alpha=1, linestyle='-', capsize=0, linewidth=0.5)
 	axes.errorbar(data_plot['median_x'], data_plot['percent84_y'], yerr=data_plot['err_y'],
-	              marker='^', ms=2, alpha=1, linestyle='-.', capsize=0, linewidth=1)
+	              marker='^', ms=2, alpha=1, linestyle='-', capsize=0, linewidth=0.5)
 
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
@@ -83,6 +83,10 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	ax.scatter(x[~inside], y[~inside], marker='.', color='g', s=2, alpha=0.1)
 
 
+def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
+	label = f"BAHAMAS\nz={utils.redshift_str2num(redshift):2.2f}\nAperture={utils.aperture_labels[aperture]}"
+	axes.text(0.95, 0.95, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top',)
+
 
 redshift = 'z000p000'
 aperture = 7
@@ -101,4 +105,5 @@ ax.set_xlabel(utils.datasets_names['m500'])
 ax.set_ylabel(utils.datasets_names['c_l'])
 kde_plot(ax, m500, c_l[:,1,1], axscales = ['log', 'linear'], gridbins=300)
 median_plot(ax, m500, c_l[:,1,1], axscales = ['log', 'linear'], binning_method = 'equalnumber')
+snap_label(ax, redshift, aperture)
 save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=300)
