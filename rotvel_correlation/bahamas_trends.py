@@ -1,6 +1,7 @@
 import os, sys
 import itertools
 import warnings
+from typing import List
 import numpy as np
 import slack
 import socket
@@ -59,10 +60,10 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 	axes.errorbar(data_plot['median_x'], data_plot['percent84_y'], yerr=data_plot['err_y'],
 	              marker='^', ms=2, alpha=1, linestyle='-.', capsize=0)
 
-def contour_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
+def contour_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, axscales: List[str] = None,  **kwargs):
 
 	xx, yy, zz = utils.kde_2d(x, y, **kwargs)
-	if 'axscales' not in kwargs:
+	if not axscales:
 		axscales = ['linear', 'linear']
 	if axscales[0] == 'linear':
 		cset = axes.contour(xx, yy, zz)
