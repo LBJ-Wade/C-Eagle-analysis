@@ -100,7 +100,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	kde_ticks = np.linspace(np.min(kde_results[-1]), np.max(kde_results[-1]), N_levels+1)
 	cbar.ax.set_yticks(kde_ticks[::2])
 	cbar.ax.set_yticklabels([f"{n/len(x):2.2f}" for n in points_in_level[::2][::-1]])
-	cbar.ax.set_ylabel(r"$\frac{n}{N}$", rotation=0)
+	cbar.ax.set_ylabel(r"$\frac{n}{N}$", rotation=0, fontsize=15)
 
 
 
