@@ -200,7 +200,6 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 	if not axscales:
 		axscales = ['linear', 'linear']
 
-	x_binning = None
 	if binning_method == 'bayesian':
 		x_binning = bayesian_blocks
 	elif binning_method == 'freedman':
@@ -210,10 +209,9 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 	elif binning_method == None:
 		x_binning = bayesian_blocks
 
-	x_bin_stats = np.empty()
 	if axscales[0] == 'linear':
 		x_bin_stats = x_binning(x)
-	elif axscales[0] == 'log':\
+	elif axscales[0] == 'log':
 		x_bin_stats = 10 ** x_binning(np.log10(x))
 
 	median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
