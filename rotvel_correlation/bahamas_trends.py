@@ -92,18 +92,19 @@ redshift = 'z000p000'
 aperture = 7
 #-----------------------------------------------------------------
 
+ptype = (1,1)
 m500 = utils.read_snap_output(redshift, apertureID=aperture, dataset='m500')
-c_l  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')
+c_l  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')[:, ptype[0], ptype[1]]
 figname = f'bahamas_hyd_alignment_{redshift}.png'
-
+plabel_prefix = f"$^{{{utils.partType_labels[ptype[0]]}}}_{{{utils.partType_labels[ptype[1]]}}}$"
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
 ax.set_xscale("log")
 ax.set_yscale("linear")
 ax.set_xlabel(utils.datasets_names['m500'])
-ax.set_ylabel(utils.datasets_names['c_l'])
-kde_plot(ax, m500, c_l[:,1,1], axscales = ['log', 'linear'], gridbins=300)
-median_plot(ax, m500, c_l[:,1,1], axscales = ['log', 'linear'], binning_method = 'equalnumber')
+ax.set_ylabel(plabel_prefix+utils.datasets_names['c_l'])
+kde_plot(ax, m500, c_l, axscales = ['log', 'linear'], gridbins=300)
+median_plot(ax, m500, c_l, axscales = ['log', 'linear'], binning_method = 'equalnumber')
 snap_label(ax, redshift, aperture)
 save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=300)

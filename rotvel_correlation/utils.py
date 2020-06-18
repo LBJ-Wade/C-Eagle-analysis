@@ -435,3 +435,9 @@ aperture_labels = [
     '4.46 $R_{200}$',
     '5.00 $R_{200}$'
 ]
+
+partType_labels = {
+		0 : 'gas',
+		1 : 'CDM',
+		4 : 'stars'
+}
