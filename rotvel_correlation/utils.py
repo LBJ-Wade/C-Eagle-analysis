@@ -218,11 +218,11 @@ def kde_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, gridbins: i
     if axscales[0] == 'linear':
         x_space = np.linspace(np.min(x), np.max(x), gridbins)
     elif axscales[0] == 'log':
-        x_space = np.linspace(np.log10(np.min(x)), np.log10(np.max(x)), gridbins)
+        x_space = np.linspace(np.min(np.log10(x)), np.max(np.log10(x)), gridbins)
     if axscales[1] == 'linear':
         y_space = np.linspace(np.min(y), np.max(y), gridbins)
     elif axscales[1] == 'log':
-        y_space = np.linspace(np.log10(np.min(y)), np.log10(np.max(y)), gridbins)
+        y_space = np.linspace(np.min(np.log10(y)), np.max(np.log10(y)), gridbins)
 
     xx, yy = np.meshgrid(x_space, y_space)
     positions = np.vstack([xx.ravel(), yy.ravel()])
