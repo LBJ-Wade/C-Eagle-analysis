@@ -116,14 +116,14 @@ if __name__ == '__main__':
 	#-----------------------------------------------------------------
 	redshift = 'z001p000'
 	aperture = 7
-	x_dataset = 'm500'
+	x_dataset = 'spin_parameter'
 	y_dataset = 'v_w'
 	ptype = (1,1)
 	axscales = ['log', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
 
-	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:]
+	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 1]
 	y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
