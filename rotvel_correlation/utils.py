@@ -218,7 +218,7 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 		x_bin_stats = x_binning(x)
 	elif axscales[0] == 'log':
 		if binning_method == 'bayesian':
-			x_bin_stats = 10 ** x_binning(np.log10(x), scale=axscales[0])
+			x_bin_stats = x_binning(x, scale=axscales[0])
 		else:
 			x_bin_stats = 10 ** x_binning(np.log10(x))
 		print(x_bin_stats)
