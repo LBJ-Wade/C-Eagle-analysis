@@ -442,7 +442,8 @@ aperture_labels = [
 ]
 
 partType_labels = {
-		0 : 'gas',
-		1 : 'CDM',
-		4 : 'stars'
+		0 : 'total'
+		1 : 'gas',
+		2 : 'CDM',
+		3 : 'stars'
 }

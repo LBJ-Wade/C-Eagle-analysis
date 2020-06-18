@@ -63,6 +63,7 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 	kde_results = utils.kde_2d(x, y, **kwargs)
+	print(sum(kde_results[-1]), max(kde_results[-1]))
 	clevels = axes.contourf(*kde_results, 10, cmap='YlGn_r')
 	# axes.contour(clevels, levels=cset.levels[::2], cmap='YlGn_r')
 
@@ -92,7 +93,7 @@ redshift = 'z001p000'
 aperture = 7
 #-----------------------------------------------------------------
 
-ptype = (1,1)
+ptype = (2,2)
 m500 = utils.read_snap_output(redshift, apertureID=aperture, dataset='m500')
 c_l  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')[:, ptype[0], ptype[1]]
 figname = f'bahamas_hyd_alignment_{redshift}.png'
