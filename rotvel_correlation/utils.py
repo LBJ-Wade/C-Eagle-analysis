@@ -136,6 +136,42 @@ def bayesian_blocks(t: np.ndarray) -> np.ndarray:
 
 	return edges[change_points]
 
+def shimazaki_shinomoto(data: np.ndarray) -> np.ndarray:
+	"""
+	Based on : Shimazaki H. and Shinomoto S., A method for selecting the bin size
+	of a time histogram Neural Computation (2007)
+	:param x:
+	:return:
+	"""
+	data_max = max(data)  # lower end of data
+	data_min = min(data)  # upper end of data
+	n_min = 2  # Minimum number of bins Ideal value = 2
+	n_max = 200  # Maximum number of bins  Ideal value =200
+	n_shift = 30  # number of shifts Ideal value = 30
+	N = np.array(range(n_min, n_max))
+	D = float(data_max - data_min) / N  # Bin width vector
+	Cs = np.zeros((len(D), n_shift))  # Cost function vector
+	# Computation of the cost function
+	for i in np.xrange(np.size(N)):
+		shift = np.linspace(0, D[i], n_shift)
+		for j in np.xrange(n_shift):
+			edges = np.linspace(data_min + shift[j] - D[i] / 2, data_max + shift[j] - D[i] / 2, N[i] + 1)  # shift the Bin edges
+			binindex = np.digitize(data, edges)  # Find binindex of each data point
+			ki = np.bincount(binindex)[1:N[i] + 1]  # Find number of points in each bin
+			k = np.mean(ki)  # Mean of event count
+			v = sum((ki - k) ** 2) / N[i]  # Variance of event count
+			Cs[i, j] += (2 * k - v) / ((D[i]) ** 2)  # The cost Function
+	C = Cs.mean(1)
+
+	# Optimal Bin Size Selection
+	loc = np.argwhere(Cs == Cs.min())[0]
+	cmin = C.min()
+	idx = np.where(C == cmin)
+	idx = idx[0][0]
+	optD = D[idx]
+	edges = np.linspace(data_min + shift[loc[1]] - D[idx] / 2, data_max + shift[loc[1]] - D[idx] / 2, N[idx] + 1)
+	return edges
+
 def freedman_diaconis(x: np.ndarray) -> np.ndarray:
     """
     The binwidth is proportional to the interquartile range (IQR) and inversely proportional to cube root of a.size.
@@ -213,6 +249,8 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 		x_binning = freedman_diaconis
 	elif binning_method == 'equalnumber':
 		x_binning = equal_number_FD
+	elif binning_method == 'shimazaki_shinomoto':
+		x_binning = shimazaki_shinomoto
 	elif binning_method == None:
 		x_binning = bayesian_blocks
 
