@@ -106,7 +106,7 @@ ax.set_xlabel(utils.datasets_names['m500'])
 ax.set_ylabel(utils.datasets_names['c_l'])
 plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
-ax.hline(90, color='orange', linestyle='--')
+ax.hlines(90, color='orange', linestyle='--')
 ax.set_yticks(np.arange(0, 180, 30))
 
 kde_plot(ax, m500, c_l, axscales = ['log', 'linear'], gridbins=300)
