@@ -63,7 +63,7 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 	kde_results = utils.kde_2d(x, y, **kwargs)
-	clevels = axes.contourf(*kde_results, 5, cmap='YlGn_r')
+	clevels = axes.contourf(*kde_results, 10, cmap='YlGn_r')
 	# axes.contour(clevels, levels=cset.levels[::2], cmap='YlGn_r')
 
 	# Delete outer levels
@@ -72,7 +72,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 			verts = path.vertices  # (N,2)-shape array of contour line coordinates
 			diameter = np.max(verts.max(axis=0) - verts.min(axis=0))
 			dataset_diameter = max([(x.max()-x.min()), (y.max()-y.min())])
-			if diameter > 0.6*dataset_diameter:
+			if diameter > 0.7*dataset_diameter:
 				del (level.get_paths()[kp])
 
 	# Identify points within contours
@@ -80,7 +80,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	for level in clevels.collections:
 		for kp, path in reversed(list(enumerate(level.get_paths()))):
 			inside |= path.contains_points(tuple(zip(*(x,y))))
-	ax.scatter(x[~inside], y[~inside], marker='.', color='g', s=2, alpha=0.35)
+	ax.scatter(x[~inside], y[~inside], marker='.', color='g', s=2, alpha=0.1)
 
 
 
