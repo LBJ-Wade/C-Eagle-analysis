@@ -292,6 +292,11 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 	del median_y, percent84_y, percent16_y, count_y, std_y, median_x
 	return median_stats
 
+def get_label_between(label: str, limiters: List[str] = ['(', ')']) -> str:
+	s = label.split(limiters[0], 1)[1]
+	s = s.split(limiters[1], 1)[0]
+	return s
+
 
 """
 clevels = ax.contour(xmesh,ymesh,H.T,lw=.9,cmap='winter')#,zorder=90)

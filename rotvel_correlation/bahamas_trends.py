@@ -104,8 +104,8 @@ ax.set_xscale("log")
 ax.set_yscale("linear")
 ax.set_xlabel(utils.datasets_names['m500'])
 ax.set_ylabel(utils.datasets_names['c_l'])
-plabel = f"$\\theta$({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
-ax.text(0.05, 0.95, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='top')
+plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
+ax.text(0.5, 0.05, plabel, transform=ax.transAxes, horizontalalignment='center', verticalalignment='bottom')
 
 kde_plot(ax, m500, c_l, axscales = ['log', 'linear'], gridbins=300)
 median_plot(ax, m500, c_l, axscales = ['log', 'linear'], binning_method = 'equalnumber')
