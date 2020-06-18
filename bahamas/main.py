@@ -16,11 +16,9 @@ def main():
     )
     from .utils import (
         file_benchmarks,
-        display_benchmarks,
         record_benchmarks,
         time_checkpoint,
-        report_file,
-        error_file
+        report_file
     )
 
     # Upper level relative imports
@@ -28,12 +26,12 @@ def main():
 
     # -----------------------------------------------------------------------
     # Set simulation parameters
-    REDSHIFT = 'z000p500'
+    REDSHIFT = 'z001p750'
 
     # -----------------------------------------------------------------------
     # Initialise benchmarks
     file_benchmarks(REDSHIFT)
-    # halo_load_time = []
+    halo_load_time = []
 
     # -----------------------------------------------------------------------
     # Initialise snapshot output file
@@ -75,12 +73,12 @@ def main():
 
         # -----------------------------------------------------------------------
         # Time it
-        # halo_load_time.append((datetime.datetime.now() - start_1).total_seconds())
-        # if number_halos < 5 or len(halo_load_time) < 5:
-        #     completion_time = sum(halo_load_time)/len(halo_load_time) * number_halos
-        # else:
-        #     completion_time = sum(halo_load_time[-4:]) / 4 * (number_halos-i+1)
-        # pprint(f"[x] ({len(halo_load_time):d}/{number_halos:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
+        halo_load_time.append((datetime.datetime.now() - start_1).total_seconds())
+        if number_halos < 5 or len(halo_load_time) < 6:
+            completion_time = sum(halo_load_time)/len(halo_load_time) * number_halos
+        else:
+            completion_time = sum(halo_load_time[-5:]) / 4 * (number_halos-i+1)
+        pprint(f"[x] ({len(halo_load_time):d}/{number_halos:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
         # -----------------------------------------------------------------------
 
     MPI.COMM_WORLD.Barrier()

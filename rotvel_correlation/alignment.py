@@ -125,9 +125,9 @@ def save_report(cluster: Cluster) -> dict:
 	master_dict = {}
 	for i, r_a in enumerate(apertures):
 		halo_output = {
-				**cluster.group_fofinfo(aperture_radius=cluster.r200),
-				**cluster.group_dynamics(aperture_radius=cluster.r200),
-				**cluster.group_morphology(aperture_radius=cluster.r200)
+				**cluster.group_fofinfo(aperture_radius=r_a),
+				**cluster.group_dynamics(aperture_radius=r_a),
+				**cluster.group_morphology(aperture_radius=r_a)
 		}
 		alignment_dict = group_alignment(halo_output)
 		halo_output = {
