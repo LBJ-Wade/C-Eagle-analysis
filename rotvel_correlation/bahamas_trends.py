@@ -112,7 +112,7 @@ redshift = 'z000p500'
 aperture = 7
 x_dataset = 'thermodynamic_merging_index'
 y_dataset = 'c_l'
-ptype = (2,2)
+ptype = (2,1)
 axscales = ['linear', 'linear']
 #-----------------------------------------------------------------
 
