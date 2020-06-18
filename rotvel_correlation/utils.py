@@ -189,49 +189,49 @@ def kde_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, gridbins: i
         return 10**xx, yy, f
 
 def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning_method: str = None) -> dict:
-    """
+	"""
 
-    :param x: The array for x-values
-    :param y: The array for y-values
-    :param axscales: A list with 2 string entries with the scales of the axes
-    :param binning_method:
-    :return:
-    """
-    if not axscales:
-        axscales = ['linear', 'linear']
+	:param x: The array for x-values
+	:param y: The array for y-values
+	:param axscales: A list with 2 string entries with the scales of the axes
+	:param binning_method:
+	:return:
+	"""
+	if not axscales:
+		axscales = ['linear', 'linear']
 
-    x_binning = None
-    if binning_method == 'bayesian':
-        x_binning = bayesian_blocks
-    elif binning_method == 'freedman':
-        x_binning = freedman_diaconis
-    elif binning_method == 'equalnumber':
-        x_binning = equal_number_FD
-    elif binning_method == None:
-        x_binning = bayesian_blocks
+	x_binning = None
+	if binning_method == 'bayesian':
+		x_binning = bayesian_blocks
+	elif binning_method == 'freedman':
+		x_binning = freedman_diaconis
+	elif binning_method == 'equalnumber':
+		x_binning = equal_number_FD
+	elif binning_method == None:
+		x_binning = bayesian_blocks
 
-    x_bin_stats = np.empty()
-    if axscales[0] == 'linear':
+	x_bin_stats = np.empty()
+	if axscales[0] == 'linear':
 		x_bin_stats = x_binning(x)
-	elif axscales[0] == 'log':
-	    x_bin_stats = 10 ** x_binning(np.log10(x))
+	elif axscales[0] == 'log':\
+		x_bin_stats = 10 ** x_binning(np.log10(x))
 
 	median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
-    percent84_y, _, _ = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
-    percent16_y, _, _ = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
-    count_y, _, _ = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
-    std_y, _, _ = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
-    median_x = edges[: -1] + np.diff(edges) / 2
+	percent84_y, _, _ = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 84), bins=x_bin_stats)
+	percent16_y, _, _ = st.binned_statistic(x, y, statistic=lambda y: np.percentile(y, 16), bins=x_bin_stats)
+	count_y, _, _ = st.binned_statistic(x, y, statistic='count', bins=x_bin_stats)
+	std_y, _, _ = st.binned_statistic(x, y, statistic='std', bins=x_bin_stats)
+	median_x = edges[: -1] + np.diff(edges) / 2
 
-    median_stats = {}
-    median_stats['median_x'] = median_x
-    median_stats['median_y'] = median_y
-    median_stats['percent84_y'] = percent84_y
-    median_stats['percent16_y'] = percent16_y
-    median_stats['count_y'] = count_y
-    median_stats['err_y'] = std_y/np.sqrt(count_y)
-    del median_y, percent84_y, percent16_y, count_y, std_y, median_x
-    return median_stats
+	median_stats = {}
+	median_stats['median_x'] = median_x
+	median_stats['median_y'] = median_y
+	median_stats['percent84_y'] = percent84_y
+	median_stats['percent16_y'] = percent16_y
+	median_stats['count_y'] = count_y
+	median_stats['err_y'] = std_y/np.sqrt(count_y)
+	del median_y, percent84_y, percent16_y, count_y, std_y, median_x
+	return median_stats
 
 
 """
