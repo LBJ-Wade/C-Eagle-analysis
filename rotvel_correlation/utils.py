@@ -152,9 +152,9 @@ def shimazaki_shinomoto(data: np.ndarray) -> np.ndarray:
 	D = float(data_max - data_min) / N  # Bin width vector
 	Cs = np.zeros((len(D), n_shift))  # Cost function vector
 	# Computation of the cost function
-	for i in np.xrange(np.size(N)):
+	for i in range(np.size(N)):
 		shift = np.linspace(0, D[i], n_shift)
-		for j in np.xrange(n_shift):
+		for j in range(n_shift):
 			edges = np.linspace(data_min + shift[j] - D[i] / 2, data_max + shift[j] - D[i] / 2, N[i] + 1)  # shift the Bin edges
 			binindex = np.digitize(data, edges)  # Find binindex of each data point
 			ki = np.bincount(binindex)[1:N[i] + 1]  # Find number of points in each bin
