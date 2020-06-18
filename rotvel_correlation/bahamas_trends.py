@@ -114,7 +114,7 @@ aperture = 7
 
 ptype = (2,2)
 # x = utils.read_snap_output(redshift, apertureID=aperture, dataset='m500')
-x = utils.read_snap_output(redshift, apertureID=aperture, dataset='specific_angular_momentum')[:, ptype[0]]
+x = utils.read_snap_output(redshift, apertureID=aperture, dataset='dynamical_merging_index')[:, ptype[0]]
 y  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')[:, ptype[0], ptype[1]]
 figname = f'bahamas_hyd_alignment_{redshift}.png'
 
@@ -123,7 +123,7 @@ ax = fig.add_subplot(111)
 ax.set_ylim(0, 180)
 ax.set_xscale("log")
 ax.set_yscale("linear")
-ax.set_xlabel(utils.datasets_names['specific_angular_momentum'])
+ax.set_xlabel(utils.datasets_names['dynamical_merging_index'])
 ax.set_ylabel(utils.datasets_names['c_l'])
 plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
