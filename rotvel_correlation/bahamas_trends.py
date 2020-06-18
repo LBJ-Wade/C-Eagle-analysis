@@ -50,7 +50,7 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 	perc84 = Line2D([], [], color='k', marker='^', linewidth=1, linestyle='-', markersize=3, label=r'$84^{th}$ percentile')
 	perc50 = Line2D([], [], color='k', marker='o', linewidth=1, linestyle='-', markersize=3, label=r'median')
 	perc16 = Line2D([], [], color='k', marker='v', linewidth=1, linestyle='-', markersize=3, label=r'$16^{th}$ percentile')
-	legend = axes.legend(handles=[perc84, perc50, perc16], loc='bottom right', handlelength=2)
+	legend = axes.legend(handles=[perc84, perc50, perc16], loc='lower right', handlelength=2)
 	axes.add_artist(legend)
 	data_plot = utils.medians_2d(x, y, **kwargs)
 	axes.errorbar(data_plot['median_x'], data_plot['median_y'], yerr=data_plot['err_y'],
