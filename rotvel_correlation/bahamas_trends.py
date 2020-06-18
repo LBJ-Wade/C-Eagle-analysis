@@ -118,7 +118,7 @@ if __name__ == '__main__':
 	aperture = 7
 	x_dataset = 'm500'
 	y_dataset = 'v_w'
-	ptype = (2,2)
+	ptype = (1,1)
 	axscales = ['log', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
