@@ -219,7 +219,7 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 	if axscales[0] == 'linear':
 		x_bin_stats = x_binning(x)
 	elif axscales[0] == 'log':
-		x_bin_stats = x_binning(x)
+		x_bin_stats = 10 ** x_binning(np.log10(x))
 		print(x_bin_stats)
 
 	# Remove duplicate bin edges
