@@ -15,7 +15,7 @@ os.chdir(dname)
 plt.style.use("mnras.mplstyle")
 
 # Internal packages
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+# sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from . import utils
 
 def save_plot(filepath: str, to_slack: bool = False, **kwargs) -> None:
