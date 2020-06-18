@@ -1,4 +1,4 @@
-import os
+import os, sys
 import itertools
 import warnings
 import numpy as np
@@ -7,7 +7,6 @@ import h5py
 from typing import Dict
 from multiprocessing.dummy import Pool as ThreadPool
 import slack
-import scipy.stats as st
 
 # Graphics packages
 import matplotlib
@@ -19,7 +18,8 @@ os.chdir(dname)
 plt.style.use("mnras.mplstyle")
 
 # Internal packages
-from .utils import datasets_names, aperture_labels, kde_2d, medians_2d
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+from rotvel_correlation.utils import datasets_names, aperture_labels, kde_2d, medians_2d
 
 
 redshift = 'z000p000'

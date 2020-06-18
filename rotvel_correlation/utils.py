@@ -30,17 +30,13 @@ def bayesian_blocks(t):
     t = np.sort(t)
     N = t.size
     # create length-(N + 1) array of cell edges
-    edges = np.concatenate([t[:1],
-                            0.5 * (t[1:] + t[:-1]),
-                            t[-1:]])
+    edges = np.concatenate([t[:1], 0.5 * (t[1:] + t[:-1]), t[-1:]])
     block_length = t[-1] - edges
     # arrays needed for the iteration
     nn_vec = np.ones(N)
     best = np.zeros(N, dtype=float)
     last = np.zeros(N, dtype=int)
-    #-----------------------------------------------------------------
-    # Start with first data cell; add one cell at each iteration
-    #-----------------------------------------------------------------
+
     for K in range(N):
         # Compute the width and count of the final bin for all possible
         # locations of the K^th changepoint
@@ -54,9 +50,7 @@ def bayesian_blocks(t):
         i_max = np.argmax(fit_vec)
         last[K] = i_max
         best[K] = fit_vec[i_max]
-    #-----------------------------------------------------------------
-    # Recover changepoints by iteratively peeling off the last block
-    #-----------------------------------------------------------------
+
     change_points =  np.zeros(N, dtype=int)
     i_cp = N
     ind = N
