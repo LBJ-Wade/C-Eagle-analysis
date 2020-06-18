@@ -10,6 +10,7 @@ import socket
 import matplotlib
 matplotlib.use('Agg')
 from matplotlib.lines import Line2D
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 import matplotlib.pyplot as plt
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -84,10 +85,18 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 	# Count points within each level
 	points_in_level = []
+	inside = np.full_like(x, False, dtype=bool)
 	for level in clevels.collections:
 		for kp, path in reversed(list(enumerate(level.get_paths()))):
-			points_in_level.append(np.sum(path.contains_points(tuple(zip(*(x,y))))))
-	print([i/len(x) for i in np.cumsum(points_in_level)])
+			inside |= path.contains_points(tuple(zip(*(x,y))))
+			points_in_level.append(len(inside[inside==True]))
+	print([i/len(x) for i in points_in_level])
+
+	# Plot colorbat
+	divider = make_axes_locatable(axes)
+	cax = divider.append_axes('right', size='5%', pad=0.05)
+	plt.gcf().colorbar(clevels, cax=cax, orientation='vertical')
+plt
 
 
 
