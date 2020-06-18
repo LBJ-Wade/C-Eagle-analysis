@@ -74,7 +74,7 @@ def output_as_pandas(redshift: str, apertureID: int = 7) -> pd.DataFrame:
 	del snap_dict
 	return snap_pd
 
-def bayesian_blocks(t, scale: str = None):
+def bayesian_blocks(t, scale: str = 'linear'):
     """Bayesian Blocks Implementation
     By Jake Vanderplas.  License: BSD
     Based on algorithm outlined in http://adsabs.harvard.edu/abs/2012arXiv1207.5578S
@@ -92,8 +92,7 @@ def bayesian_blocks(t, scale: str = None):
     datasets.  Alternate fitness functions and prior forms can
     be found in the paper listed above.
     """
-    if not scale:
-	    scale = 'linear'
+
     # copy and sort the array
     t = np.sort(t)
     N = t.size
@@ -218,7 +217,10 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 	if axscales[0] == 'linear':
 		x_bin_stats = x_binning(x)
 	elif axscales[0] == 'log':
-		x_bin_stats = 10 ** x_binning(np.log10(x))
+		if binning_method == 'bayesian':
+			x_bin_stats = 10 ** x_binning(np.log10(x), scale=axscales[0])
+		else:
+			x_bin_stats = 10 ** x_binning(np.log10(x))
 		print(x_bin_stats)
 
 	median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
