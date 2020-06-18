@@ -39,10 +39,6 @@ class Cluster(simulation.Simulation,
 		self.comovingframe = comovingframe
 		self.requires = requires
 
-		if simulation_name == 'bahamas':
-			self.centralFOF_groupNumber = self.halo_num_catalogue_contiguous[self.clusterID] + 1
-		self.file_counter, self.groupfof_counter = self.file_group_indexify()
-
 		if not fastbrowsing:
 			# Set additional cosmoloy attributes from methods
 			self.hubble_param = self.file_hubble_param()

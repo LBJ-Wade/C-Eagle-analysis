@@ -1,10 +1,7 @@
 from __future__ import print_function, division, absolute_import
 import os
-import sys
 from copy import copy
-from typing import Union, Dict
 import numpy as np
-import yaml
 from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
@@ -179,9 +176,8 @@ class Simulation:
             self.pathData = '/scratch/nas_virgo/Cosmo-OWLS/AGN_TUNED_nu0_L400N1024_Planck'
             self.pathSave = '/local/scratch/altamura/analysis_results'
             self.cluster_prefix = 'halo_'
-            self.totalClusters = 14366
+            self.totalClusters = 200000
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
-            self.halo_num_catalogue_contiguous = np.load(os.path.join(self.CURRENT_PATH, 'bahamas_fofnumber_list_10--13.npy'))
             self.subjectsAllowed = ['particledata', 'groups']
             self.centralFOF_groupNumber = None
             self.zcat = {

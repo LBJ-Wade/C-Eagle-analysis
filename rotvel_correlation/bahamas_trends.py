@@ -13,6 +13,9 @@ import scipy.stats as st
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 plt.style.use("mnras.mplstyle")
 
 # Internal packages
