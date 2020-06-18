@@ -214,12 +214,16 @@ def kde_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, gridbins: i
         gridbins = 101
     if not axscales:
         axscales = ['linear', 'linear']
-    x_space = np.linspace(np.min(x), np.max(x), gridbins)
-    y_space = np.linspace(np.min(y), np.max(y), gridbins)
-    if axscales[0] == 'log':
+
+    if axscales[0] == 'linear':
+        x_space = np.linspace(np.min(x), np.max(x), gridbins)
+    elif axscales[0] == 'log':
         x_space = np.linspace(np.log10(np.min(x)), np.log10(np.max(x)), gridbins)
-    if axscales[1] == 'log':
+    if axscales[1] == 'linear':
+        y_space = np.linspace(np.min(y), np.max(y), gridbins)
+    elif axscales[1] == 'log':
         y_space = np.linspace(np.log10(np.min(y)), np.log10(np.max(y)), gridbins)
+
     xx, yy = np.meshgrid(x_space, y_space)
     positions = np.vstack([xx.ravel(), yy.ravel()])
     values = np.vstack([x if axscales[0] == 'linear' else np.log10(x), y])
@@ -228,7 +232,7 @@ def kde_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, gridbins: i
 
     if axscales[0] == 'linear':
         return xx, yy, f
-    else:
+    elif axscales[0] == 'log':
         return 10**xx, yy, f
 
 def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning_method: str = None) -> dict:
