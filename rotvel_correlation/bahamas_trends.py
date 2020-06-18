@@ -60,7 +60,7 @@ ax.set_yscale("linear")
 ax.set_xlabel(utils.datasets_names['m500'])
 ax.set_ylabel(utils.datasets_names['c_l'])
 
-ax.scatter(m500, c_l, marker='.', c='yellowgreen', s=3, alpha=0.3, label='load')
+ax.scatter(m500, c_l[:,1,1], marker='.', c='yellowgreen', s=3, alpha=0.3, label='load')
 save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=300)
 
 
