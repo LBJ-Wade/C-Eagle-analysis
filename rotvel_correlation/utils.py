@@ -38,7 +38,7 @@ def read_snap_output(redshift: str, apertureID: int = 7, dataset: str = None) ->
 	"""
 	snapname = f'bahamas_hyd_alignment_{redshift}.hdf5'
 	h5file = h5py.File(os.path.join(basepath, snapname), 'r')
-	last_halo_key = list(h5file.keys())[:-1]
+	last_halo_key = list(h5file.keys())[-1]
 	last_halo_id = int(last_halo_key[-5:])
 	clusterIDs = list(range(last_halo_id))
 
