@@ -58,7 +58,7 @@ def read_snap_output(redshift: str, apertureID: int = 7, dataset: str = None) ->
 	h5file.close()
 	pool.close()
 	pool.join()
-	results = [x for x in results if x != None]
+	results = [x for x in results if x.all() != None]
 	results = np.asarray(results)
 	return results
 
