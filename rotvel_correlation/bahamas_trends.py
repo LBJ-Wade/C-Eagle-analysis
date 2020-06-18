@@ -68,11 +68,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 	# Delete outer levels
 	for level in clevels.collections:
-		for kp, path in reversed(list(enumerate(level.get_paths()))):
-			verts = path.vertices  # (N,2)-shape array of contour line coordinates
-			diameter = np.max(verts.max(axis=0) - verts.min(axis=0))
-			if diameter < 0.6*(y.max()-y.min()):  # threshold to be refined for your actual dimensions!
-				del (level.get_paths()[kp])  # no remove() for Path objects:(
+		del (level.get_paths()[-1])
 
 	# Identify points within contours
 	p = clevels.collections[0].get_paths()
