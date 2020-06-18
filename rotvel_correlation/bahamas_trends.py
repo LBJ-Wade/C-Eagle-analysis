@@ -72,7 +72,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 			verts = path.vertices  # (N,2)-shape array of contour line coordinates
 			diameter = np.max(verts.max(axis=0) - verts.min(axis=0))
 			dataset_diameter = max([(x.max()-x.min()), (y.max()-y.min())])
-			if diameter > 0.7*dataset_diameter:
+			if diameter > 0.75*dataset_diameter:
 				del (level.get_paths()[kp])
 
 	# Identify points within contours
@@ -110,12 +110,15 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 
 redshift = 'z000p500'
 aperture = 7
+x_dataset = 'thermodynamic_merging_index'
+y_dataset = 'c_l'
+ptype = (2,2)
+axscales = ['linear', 'linear']
 #-----------------------------------------------------------------
 
-ptype = (2,2)
 # x = utils.read_snap_output(redshift, apertureID=aperture, dataset='m500')
-x = utils.read_snap_output(redshift, apertureID=aperture, dataset='dynamical_merging_index')[:, ptype[0]]
-y  = utils.read_snap_output(redshift, apertureID=aperture, dataset='c_l')[:, ptype[0], ptype[1]]
+x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:]
+y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 figname = f'bahamas_hyd_alignment_{redshift}.png'
 
 fig = plt.figure()
@@ -123,14 +126,14 @@ ax = fig.add_subplot(111)
 ax.set_ylim(0, 180)
 # ax.set_xscale("log")
 ax.set_yscale("linear")
-ax.set_xlabel(utils.datasets_names['dynamical_merging_index'])
-ax.set_ylabel(utils.datasets_names['c_l'])
+ax.set_xlabel(utils.datasets_names[x_dataset])
+ax.set_ylabel(utils.datasets_names[y_dataset])
 plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 plt.axhline(90, color='grey', linestyle='-')
 ax.set_yticks(np.arange(0, 210, 30))
 
-kde_plot(ax, x, y, axscales = ['linear', 'linear'], gridbins=400)
-median_plot(ax, x, y, axscales = ['linear', 'linear'], binning_method = 'equalnumber')
+kde_plot(ax, x, y, axscales = axscales, gridbins=400)
+median_plot(ax, x, y, axscales = axscales, binning_method = 'equalnumber')
 snap_label(ax, redshift, aperture)
 save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)
