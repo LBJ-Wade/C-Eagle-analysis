@@ -74,7 +74,7 @@ def output_as_pandas(redshift: str, apertureID: int = 7) -> pd.DataFrame:
 	del snap_dict
 	return snap_pd
 
-def bayesian_blocks(t):
+def bayesian_blocks(t: np.ndarray):
     """Bayesian Blocks Implementation
 
     By Jake Vanderplas.  License: BSD
@@ -98,7 +98,7 @@ def bayesian_blocks(t):
     """
     # copy and sort the array
     t = np.sort(t)
-    N = t.size
+    N = len(t)
 
     # create length-(N + 1) array of cell edges
     edges = np.concatenate([t[:1],
