@@ -108,8 +108,8 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 	axes.text(0.97, 0.97, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top')
 
 
-redshift = 'z001p000'
-aperture = 7
+redshift = 'z000p000'
+aperture = 1
 #-----------------------------------------------------------------
 
 ptype = (2,2)
