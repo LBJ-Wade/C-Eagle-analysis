@@ -63,7 +63,7 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 	kde_results = utils.kde_2d(x, y, **kwargs)
-	clevels = axes.contourf(*kde_results, 10, cmap='YlGn_r')
+	clevels = axes.contourf(*kde_results, 5, cmap='YlGn_r')
 	# axes.contour(clevels, levels=cset.levels[::2], cmap='YlGn_r')
 
 	# Delete outer levels
@@ -78,7 +78,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	p = clevels.collections[0].get_paths()
 	inside = np.full_like(x, False, dtype=bool)
 	for level in p:
-		inside = {**inside, **level.contains_points(zip(*(x, y)))}
+		inside |= level.contains_points(zip(*(x,y)))
 	ax.scatter(x[~inside], y[~inside], 'g,')
 
 
