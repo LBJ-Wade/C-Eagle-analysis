@@ -47,18 +47,18 @@ def save_plot(filepath: str, to_slack: bool = False, **kwargs) -> None:
 
 def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 
-	perc84 = Line2D([], [], color='k', marker='^', linestyle='-.', markersize=5, label=r'$84^{th}$ percentile')
-	perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=5, label=r'median')
-	perc16 = Line2D([], [], color='k', marker='v', linestyle='--', markersize=5, label=r'$16^{th}$ percentile')
+	perc84 = Line2D([], [], color='k', marker='^', linestyle='-.', markersize=3, label=r'$84^{th}$ percentile')
+	perc50 = Line2D([], [], color='k', marker='o', linestyle='-', markersize=3, label=r'median')
+	perc16 = Line2D([], [], color='k', marker='v', linestyle='--', markersize=3, label=r'$16^{th}$ percentile')
 	legend = axes.legend(handles=[perc84, perc50, perc16], loc='best', handlelength=2)
 	axes.add_artist(legend)
 	data_plot = utils.medians_2d(x, y, **kwargs)
 	axes.errorbar(data_plot['median_x'], data_plot['median_y'], yerr=data_plot['err_y'],
-	              marker='o', ms=4, alpha=1, linestyle='-', capsize=0, linewidth=1)
+	              marker='o', ms=2, alpha=1, linestyle='-', capsize=0, linewidth=1)
 	axes.errorbar(data_plot['median_x'], data_plot['percent16_y'], yerr=data_plot['err_y'],
-	              marker='v', ms=4, alpha=1, linestyle='--', capsize=0, linewidth=1)
+	              marker='v', ms=2, alpha=1, linestyle='--', capsize=0, linewidth=1)
 	axes.errorbar(data_plot['median_x'], data_plot['percent84_y'], yerr=data_plot['err_y'],
-	              marker='^', ms=4, alpha=1, linestyle='-.', capsize=0, linewidth=1)
+	              marker='^', ms=2, alpha=1, linestyle='-.', capsize=0, linewidth=1)
 
 def contour_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, axscales: List[str] = None,  **kwargs):
 
@@ -66,9 +66,11 @@ def contour_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, axscales: List[st
 	if not axscales:
 		axscales = ['linear', 'linear']
 	if axscales[0] == 'linear':
-		cset = axes.contour(xx, yy, zz)
+		cset = axes.contour(xx, yy, zz, 10, cmap=plt.cm.bone, origin='lower')
 	elif axscales[0] == 'log':
-		cset = axes.contour(10 ** xx, yy, zz)
+		cset = axes.contour(10 ** xx, yy, zz, 10, cmap=plt.cm.bone, origin='lower')
+	axes.contour(cset, levels=cset.levels[::2], origin='lower')
+
 
 
 redshift = 'z000p000'
