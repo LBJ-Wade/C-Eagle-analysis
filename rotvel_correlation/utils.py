@@ -212,6 +212,7 @@ def medians_2d(x: np.ndarray, y: np.ndarray, axscales: List[str] = None, binning
 	if axscales[0] == 'linear':
 		x_bin_stats = x_binning(x)
 	elif axscales[0] == 'log':
+		print(np.log10(x))
 		x_bin_stats = 10 ** x_binning(np.log10(x))
 
 	median_y, edges, _ = st.binned_statistic(x, y, statistic='median', bins=x_bin_stats)
