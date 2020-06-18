@@ -54,11 +54,11 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 	axes.add_artist(legend)
 	data_plot = utils.medians_2d(x, y, **kwargs)
 	axes.errorbar(data_plot['median_x'], data_plot['median_y'], yerr=data_plot['err_y'],
-	              marker='o', ms=4, alpha=1, linestyle='-', capsize=0, linewidth=0)
+	              marker='o', ms=4, alpha=1, linestyle='-', capsize=0, linewidth=1)
 	axes.errorbar(data_plot['median_x'], data_plot['percent16_y'], yerr=data_plot['err_y'],
-	              marker='v', ms=4, alpha=1, linestyle='--', capsize=0, linewidth=0)
+	              marker='v', ms=4, alpha=1, linestyle='--', capsize=0, linewidth=1)
 	axes.errorbar(data_plot['median_x'], data_plot['percent84_y'], yerr=data_plot['err_y'],
-	              marker='^', ms=4, alpha=1, linestyle='-.', capsize=0, linewidth=0)
+	              marker='^', ms=4, alpha=1, linestyle='-.', capsize=0, linewidth=1)
 
 def contour_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, axscales: List[str] = None,  **kwargs):
 
