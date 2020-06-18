@@ -63,8 +63,8 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 	kde_results = utils.kde_2d(x, y, **kwargs)
-	cset = axes.contourf(*kde_results, 10, cmap='YlGn_r')
-	axes.contour(cset, levels=cset.levels[::2])
+	cset = axes.contourf(*kde_results, 10, cmap='YlGn_r', alpha=0.5)
+	# axes.contour(cset, levels=cset.levels[::2], cmap='YlGn_r')
 
 
 
