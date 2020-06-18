@@ -117,7 +117,7 @@ if __name__ == '__main__':
 	redshift = 'z001p000'
 	aperture = 7
 	x_dataset = 'm500'
-	y_dataset = 'a_l'
+	y_dataset = 'l_w'
 	ptype = (2,2)
 	axscales = ['log', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
