@@ -62,10 +62,24 @@ def median_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray,  **kwargs):
 
 def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
-	X,Y,Z = utils.kde_2d(x, y, **kwargs)
-	threshold = np.where(Z>0.1)[0]
-	cset = axes.contourf(X[threshold],Y[threshold],Z[threshold], 10, cmap='YlGn_r')
-	# axes.contour(cset, levels=cset.levels[::2], cmap='YlGn_r')
+	kde_results = utils.kde_2d(x, y, **kwargs)
+	clevels = axes.contourf(*kde_results, 10, cmap='YlGn_r')
+	# axes.contour(clevels, levels=cset.levels[::2], cmap='YlGn_r')
+
+	# Delete outer levels
+	for level in clevels.collections:
+		for kp, path in reversed(list(enumerate(level.get_paths()))):
+			verts = path.vertices  # (N,2)-shape array of contour line coordinates
+			diameter = np.max(verts.max(axis=0) - verts.min(axis=0))
+			if diameter < 0.6*(y.max()-y.min()):  # threshold to be refined for your actual dimensions!
+				del (level.get_paths()[kp])  # no remove() for Path objects:(
+
+	# Identify points within contours
+	p = clevels.collections[0].get_paths()
+	inside = np.full_like(x, False, dtype=bool)
+	for level in p:
+		inside |= level.contains_points(zip(*(x, y)))
+	ax.scatter(x[~inside], y[~inside], 'g,')
 
 
 
