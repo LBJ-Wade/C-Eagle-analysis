@@ -85,7 +85,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 	label = f"BAHAMAS$^\mathrm{{h}}$\n$z={utils.redshift_str2num(redshift):2.2f}$\n$R_\\mathrm{{aperture}}=${utils.aperture_labels[aperture]}"
-	axes.text(0.95, 0.95, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top')
+	axes.text(0.97, 0.97, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top')
 
 
 redshift = 'z000p000'
@@ -105,7 +105,7 @@ ax.set_yscale("linear")
 ax.set_xlabel(utils.datasets_names['m500'])
 ax.set_ylabel(utils.datasets_names['c_l'])
 plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
-ax.text(0.5, 0.05, plabel, transform=ax.transAxes, horizontalalignment='center', verticalalignment='bottom')
+ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 
 kde_plot(ax, m500, c_l, axscales = ['log', 'linear'], gridbins=300)
 median_plot(ax, m500, c_l, axscales = ['log', 'linear'], binning_method = 'equalnumber')
