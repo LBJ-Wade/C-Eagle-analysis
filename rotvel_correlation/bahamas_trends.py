@@ -88,7 +88,7 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 	axes.text(0.97, 0.97, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top')
 
 
-redshift = 'z000p000'
+redshift = 'z001p000'
 aperture = 7
 #-----------------------------------------------------------------
 
@@ -106,8 +106,8 @@ ax.set_xlabel(utils.datasets_names['m500'])
 ax.set_ylabel(utils.datasets_names['c_l'])
 plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
-plt.axhline(90, color='grey', linestyle='--')
-ax.set_yticks(np.arange(0, 180, 30))
+plt.axhline(90, color='grey', linestyle='-')
+ax.set_yticks(np.arange(0, 210, 30))
 
 kde_plot(ax, m500, c_l, axscales = ['log', 'linear'], gridbins=300)
 median_plot(ax, m500, c_l, axscales = ['log', 'linear'], binning_method = 'equalnumber')
