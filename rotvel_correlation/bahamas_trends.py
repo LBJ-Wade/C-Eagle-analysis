@@ -84,7 +84,7 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 
 
 def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
-	label = f"BAHAMAS\n$z={utils.redshift_str2num(redshift):2.2f}$\n$R_\\mathrm{{aperture}}=${utils.aperture_labels[aperture]}"
+	label = f"BAHAMAS$^\mathrm{{h}}$\n$z={utils.redshift_str2num(redshift):2.2f}$\n$R_\\mathrm{{aperture}}=${utils.aperture_labels[aperture]}"
 	axes.text(0.95, 0.95, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top')
 
 
@@ -99,6 +99,7 @@ figname = f'bahamas_hyd_alignment_{redshift}.png'
 
 fig = plt.figure()
 ax = fig.add_subplot(111)
+ax.set_ylim(0, 180)
 ax.set_xscale("log")
 ax.set_yscale("linear")
 ax.set_xlabel(utils.datasets_names['m500'])
