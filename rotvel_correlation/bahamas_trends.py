@@ -116,9 +116,9 @@ if __name__ == '__main__':
 	#-----------------------------------------------------------------
 	redshift = 'z001p000'
 	aperture = 7
-	x_dataset = 'substructure_fraction'
+	x_dataset = 'triaxiality'
 	y_dataset = 'v_w'
-	ptype = (1,1)
+	ptype = (2,2)
 	axscales = ['linear', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
