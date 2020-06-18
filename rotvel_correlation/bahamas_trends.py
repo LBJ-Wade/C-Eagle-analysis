@@ -78,7 +78,8 @@ def kde_plot(axes: plt.Axes, x: np.ndarray, y: np.ndarray, **kwargs):
 	# Identify points within contours
 	inside = np.full_like(x, False, dtype=bool)
 	for level in clevels.collections:
-		inside |= level.contains_points(tuple(zip(*(x,y))))
+		for kp, path in reversed(list(enumerate(level.get_paths()))):
+			inside |= path.contains_points(tuple(zip(*(x,y))))
 	ax.scatter(x[~inside], y[~inside], marker='.', color='g', s=2, alpha=0.35)
 
 
