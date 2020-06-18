@@ -35,7 +35,7 @@ def pull_halo_output(h5file, clusterID, apertureID, dataset):
 	else:
 		return h5file[f'halo_{clusterID:05d}/aperture{apertureID:02d}/{dataset}'][...]
 
-def read_snap_output(redshift: str, apertureID: int = 7, dataset: str = None) -> np.ndarray:
+def read_snap_output(redshift: str, apertureID: int = None, dataset: str = None) -> np.ndarray:
 	"""
 	Function to collect datasets from all clusters at given redshift and aperture.
 	The function is a wrapper around `pull_halo_output`, called within the multiprocessing/threading
@@ -71,14 +71,14 @@ def read_snap_output(redshift: str, apertureID: int = 7, dataset: str = None) ->
 	results = np.asarray(results)
 	return results
 
-def output_as_dict(redshift: str, apertureID: int = 7) -> Dict[str, np.ndarray]:
+def output_as_dict(*args, **kwargs) -> Dict[str, np.ndarray]:
 	snap_out = {}
-	for dataset in datasets_names:
-		snap_out[dataset] = read_snap_output(redshift, apertureID=apertureID, dataset=dataset)
+	for ds in datasets_names:
+		snap_out[ds] = read_snap_output(*args, dataset=ds, **kwargs)
 	return snap_out
 
-def output_as_pandas(redshift: str, apertureID: int = 7) -> pd.DataFrame:
-	snap_dict = output_as_pandas(redshift, apertureID = apertureID)
+def output_as_pandas(*args, **kwargs) -> pd.DataFrame:
+	snap_dict = output_as_pandas(*args, **kwargs)
 	snap_pd = pd.DataFrame(data=snap_dict, columns=snap_dict.keys())
 	del snap_dict
 	return snap_pd

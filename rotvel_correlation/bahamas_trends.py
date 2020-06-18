@@ -115,7 +115,7 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 if __name__ == '__main__':
 	#-----------------------------------------------------------------
 	redshift = 'z001p000'
-	aperture = 0
+	aperture = 20
 	x_dataset = 'triaxiality'
 	y_dataset = 'v_w'
 	ptype = (2,2)
