@@ -74,7 +74,7 @@ def output_as_pandas(redshift: str, apertureID: int = 7) -> pd.DataFrame:
 	del snap_dict
 	return snap_pd
 
-def bayesian_blocks(t):
+def bayesian_blocks(t, scale: str = None):
     """Bayesian Blocks Implementation
     By Jake Vanderplas.  License: BSD
     Based on algorithm outlined in http://adsabs.harvard.edu/abs/2012arXiv1207.5578S
@@ -92,6 +92,8 @@ def bayesian_blocks(t):
     datasets.  Alternate fitness functions and prior forms can
     be found in the paper listed above.
     """
+    if not scale:
+	    scale = 'linear'
     # copy and sort the array
     t = np.sort(t)
     N = t.size
@@ -106,7 +108,11 @@ def bayesian_blocks(t):
     for K in range(N):
         # Compute the width and count of the final bin for all possible
         # locations of the K^th changepoint
-        width = block_length[:K + 1] - block_length[K + 1]
+        if scale == 'linear':
+            width = block_length[:K + 1] - block_length[K + 1]
+        elif scale == 'log':
+            width = np.log10(block_length[:K + 1]) - np.log10(block_length[K + 1])
+            width = 10**width
         count_vec = np.cumsum(nn_vec[:K + 1][::-1])[::-1]
         # evaluate fitness function for these possibilities
         fit_vec = count_vec * (np.log(count_vec) - np.log(width))
