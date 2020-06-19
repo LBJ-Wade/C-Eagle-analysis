@@ -57,20 +57,20 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 	del eigenvectors
 
 	v_l = np.zeros((4,4), dtype=np.float)
-	v_w = np.zeros_like(v_l)
-	l_w = np.zeros_like(v_l)
-	a_v = np.zeros_like(v_l)
-	a_l = np.zeros_like(v_l)
-	a_w = np.zeros_like(v_l)
-	b_v = np.zeros_like(v_l)
-	b_l = np.zeros_like(v_l)
-	b_w = np.zeros_like(v_l)
-	c_v = np.zeros_like(v_l)
-	c_l = np.zeros_like(v_l)
-	c_w = np.zeros_like(v_l)
-	a_b = np.zeros_like(v_l)
-	b_c = np.zeros_like(v_l)
-	c_a = np.zeros_like(v_l)
+	v_w = np.zeros((4,4), dtype=np.float)
+	l_w = np.zeros((4,4), dtype=np.float)
+	a_v = np.zeros((4,4), dtype=np.float)
+	a_l = np.zeros((4,4), dtype=np.float)
+	a_w = np.zeros((4,4), dtype=np.float)
+	b_v = np.zeros((4,4), dtype=np.float)
+	b_l = np.zeros((4,4), dtype=np.float)
+	b_w = np.zeros((4,4), dtype=np.float)
+	c_v = np.zeros((4,4), dtype=np.float)
+	c_l = np.zeros((4,4), dtype=np.float)
+	c_w = np.zeros((4,4), dtype=np.float)
+	a_b = np.zeros((4,4), dtype=np.float)
+	b_c = np.zeros((4,4), dtype=np.float)
+	c_a = np.zeros((4,4), dtype=np.float)
 
 	for i,j in product(list(range(4)), repeat=2):
 		v_l[i, j] = angle(peculiar_velocity[i], angular_momentum[j])
@@ -99,7 +99,7 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 			int(np.trace(b_c)) is not 0 or
 			int(np.trace(c_a))
 	):
-		warnings.warn('Detected non-orthogonal semiaxes. Check inertia tensor.')
+		warnings.warn('[-] Detected non-orthogonal semiaxes. Check inertia tensor.')
 		print(a_b, b_c, c_a, sep='\n')
 
 	angle_dict = {

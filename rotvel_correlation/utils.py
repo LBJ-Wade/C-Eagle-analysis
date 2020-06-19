@@ -420,10 +420,10 @@ output_labels = [
 datasets_names = dict(zip(output_datasets, output_labels))
 
 aperture_labels = [
-    '30 kpc',
-    '50 kpc',
-    '70 kpc',
+    '80 kpc',
     '100 kpc',
+    '200 kpc',
+    '400 kpc',
     '0.1 $R_{500}$',
     '$R_{2500}$',
     '1.5 $R_{2500}$',
