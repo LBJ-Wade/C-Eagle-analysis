@@ -118,7 +118,7 @@ class Simulation:
             self.totalClusters = 390
             self.clusterIDAllowed = np.linspace(0, self.totalClusters - 1, self.totalClusters, dtype=np.int)
             self.subjectsAllowed = ['particledata', 'groups', 'snapshot', 'snipshot', 'hsmldir', 'groups_snip']
-            self.centralFOF_groupNumber = 1
+            self.centralFOF_groupNumber = 0
             self.sample_completeness = np.load(os.path.join(self.CURRENT_PATH, f'{self.simulation_name}_sample_completeness.npy'))
             self.zcat = {
                     'z_float'   :

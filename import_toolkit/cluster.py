@@ -300,7 +300,7 @@ class Cluster(simulation.Simulation,
 				redshift = redshift_num2str(data['Header']['zred']),
 				fastbrowsing = True
 		)
-		del self.centralFOF_groupNumber , self.file_counter, self.groupfof_counter
+		del self.centralFOF_groupNumber
 
 		self.hubble_param = data['Header']['Hub']
 		self.aexp = data['Header']['aexp']
