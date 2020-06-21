@@ -71,9 +71,17 @@ def read_snap_output(redshift: str, apertureID: int = None, dataset: str = None)
 	# h5file.close()
 	# pool.close()
 	# pool.join()
-	results = [x for x in results if x]
-	results = np.asarray(results)
-	return results
+	results_filtered = []
+	for x in results:
+		if isinstance(x, np.ndarray):
+			if x.all() != None:
+				results_filtered.append(x)
+		else:
+			if x:
+				results_filtered.append(x)
+
+	results_filtered = np.asarray(results_filtered)
+	return results_filtered
 
 def output_as_dict(*args, **kwargs) -> Dict[str, np.ndarray]:
 	snap_out = {}
