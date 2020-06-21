@@ -122,13 +122,13 @@ if __name__ == '__main__':
 	axscales = ['log', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
-
-	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:,2]
-	y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
+	fig = plt.figure()
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
-	fig = plt.figure()
-	ax = fig.add_subplot(111)
+
+	ax = fig.add_subplot(311)
+	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:,2]
+	y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
@@ -138,8 +138,42 @@ if __name__ == '__main__':
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
 	ax.set_yticks(np.arange(0, 210, 30))
-
 	kde_plot(ax, x, y, axscales = axscales, gridbins=400)
 	median_plot(ax, x, y, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
+
+	ax = fig.add_subplot(312)
+	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 2]
+	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
+	ax.set_ylim(0, 180)
+	ax.set_xscale(axscales[0])
+	ax.set_yscale(axscales[1])
+	ax.set_xlabel(utils.datasets_names[x_dataset])
+	ax.set_ylabel(utils.datasets_names[y_dataset])
+	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
+	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
+	plt.axhline(90, color='grey', linestyle='-')
+	ax.set_yticks(np.arange(0, 210, 30))
+	kde_plot(ax, x, y, axscales=axscales, gridbins=400)
+	median_plot(ax, x, y, axscales=axscales, binning_method='equalnumber')
+	snap_label(ax, redshift, aperture)
+
+	ax = fig.add_subplot(313)
+	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 2]
+	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
+	ax.set_ylim(0, 180)
+	ax.set_xscale(axscales[0])
+	ax.set_yscale(axscales[1])
+	ax.set_xlabel(utils.datasets_names[x_dataset])
+	ax.set_ylabel(utils.datasets_names[y_dataset])
+	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
+	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
+	plt.axhline(90, color='grey', linestyle='-')
+	ax.set_yticks(np.arange(0, 210, 30))
+	kde_plot(ax, x, y, axscales=axscales, gridbins=400)
+	median_plot(ax, x, y, axscales=axscales, binning_method='equalnumber')
+	snap_label(ax, redshift, aperture)
+
+
+
 	save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)

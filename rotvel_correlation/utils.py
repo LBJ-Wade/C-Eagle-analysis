@@ -66,11 +66,11 @@ def read_snap_output(redshift: str, apertureID: int = None, dataset: str = None)
 					itertools.repeat(dataset)
 			)
 	)
-
 	# Close the pool and wait for the work to finish
 	h5file.close()
 	pool.close()
 	pool.join()
+
 	results_filtered = []
 	for x in results:
 		if isinstance(x, np.ndarray):
