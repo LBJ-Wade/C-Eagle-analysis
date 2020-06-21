@@ -108,32 +108,12 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 	axes.text(0.97, 0.97, label, transform=axes.transAxes, horizontalalignment='right', verticalalignment='top')
 
 
-def ptype_label(axes: plt.Axes, x: tuple = None, y: tuple = None) -> List[str]:
-	plabel = []
-	if x and len(x) == 1:
-		l = ax.get_xlabel().split('\quad')[0] if '\quad' in ax.get_xlabel() else ax.get_xlabel()
-		plabel.append(f"{l}: {utils.partType_labels[x[0]]}")
-	elif x and len(x) == 2:
-		l1, l2 = utils.get_label_between(ax.get_xlabel()).split(',')
-		plabel.append(f"{l1}$: {utils.partType_labels[x[0]]}")
-		plabel.append(f"${l2}: {utils.partType_labels[x[1]]}")
-
-	if y and len(y) == 1:
-		l = ax.get_ylabel().split('\quad')[0] if '\quad' in ax.get_ylabel() else ax.get_ylabel()
-		plabel.append(f"{l}: {utils.partType_labels[y[0]]}")
-	elif y and len(y) == 2:
-		l1, l2 = utils.get_label_between(ax.get_ylabel()).split(',')
-		plabel.append(f"{l1}$: {utils.partType_labels[y[0]]}")
-		plabel.append(f"${l2}: {utils.partType_labels[y[1]]}")
-	axes.text(0.03, 0.03, '\n'.join(plabel), transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
-	return plabel
-
 if __name__ == '__main__':
 	#-----------------------------------------------------------------
-	redshift = 'z001p750'
+	redshift = 'z001p000'
 	aperture = 7
 	x_dataset = 'aperture_mass'
-	y_dataset = 'c_l'
+	y_dataset = 'a_l'
 	axscales = ['log', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
@@ -144,7 +124,6 @@ if __name__ == '__main__':
 	size = fig.get_size_inches()
 	size[1] *= 3
 	fig.set_size_inches(size[0], size[1], forward=True)
-
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
 
@@ -226,6 +205,6 @@ if __name__ == '__main__':
 	yticks = ax.yaxis.get_major_ticks()
 	yticks[-1].label1.set_visible(False)
 
-	plt.subplots_adjust(hspace=0)
-	plt.tight_layout()
+	fig.subplots_adjust(hspace=0)
+	fig.tight_layout()
 	save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)
