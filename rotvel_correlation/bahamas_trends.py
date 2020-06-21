@@ -144,7 +144,7 @@ if __name__ == '__main__':
 	size = fig.get_size_inches()
 	size[1] *= 3
 	fig.set_size_inches(size[0], size[1], forward=True)
-	plt.subplots_adjust(hspace=.0)
+
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
 
@@ -156,7 +156,8 @@ if __name__ == '__main__':
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
 	ax.set_ylabel(utils.datasets_names[y_dataset])
-	ptype_label(ax, x=(0), y=(0,0))
+	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
+	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
 	ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
@@ -225,5 +226,6 @@ if __name__ == '__main__':
 	yticks = ax.yaxis.get_major_ticks()
 	yticks[-1].label1.set_visible(False)
 
-
+	plt.subplots_adjust(hspace=0)
+	plt.tight_layout()
 	save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)
