@@ -114,8 +114,8 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 
 if __name__ == '__main__':
 	#-----------------------------------------------------------------
-	redshift = 'z001p000'
-	aperture = 20
+	redshift = 'z001p750'
+	aperture = 7
 	x_dataset = 'aperture_mass'
 	y_dataset = 'b_l'
 	axscales = ['log', 'linear']
@@ -138,7 +138,6 @@ if __name__ == '__main__':
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
-	ax.set_xlabel(utils.datasets_names[x_dataset])
 	ax.set_ylabel(utils.datasets_names[y_dataset])
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
@@ -157,7 +156,6 @@ if __name__ == '__main__':
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
-	ax.set_xlabel(utils.datasets_names[x_dataset])
 	ax.set_ylabel(utils.datasets_names[y_dataset])
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
@@ -165,7 +163,6 @@ if __name__ == '__main__':
 	ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
-	snap_label(ax, redshift, aperture)
 
 	# remove last tick label for the second subplot
 	yticks = ax.yaxis.get_major_ticks()
@@ -179,7 +176,6 @@ if __name__ == '__main__':
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
-	ax.set_xlabel(utils.datasets_names[x_dataset])
 	ax.set_ylabel(utils.datasets_names[y_dataset])
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
@@ -187,7 +183,6 @@ if __name__ == '__main__':
 	ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales=axscales, gridbins=400)
 	median_plot(ax, x_dat, y_dat, axscales=axscales, binning_method='equalnumber')
-	snap_label(ax, redshift, aperture)
 
 	# remove last tick label for the second subplot
 	yticks = ax.yaxis.get_major_ticks()
@@ -209,7 +204,6 @@ if __name__ == '__main__':
 	ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
-	snap_label(ax, redshift, aperture)
 
 	# remove last tick label for the second subplot
 	yticks = ax.yaxis.get_major_ticks()
