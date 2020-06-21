@@ -216,7 +216,7 @@ def equal_number(x: np.ndarray) -> np.ndarray:
     :return: np.ndarray
         The bins edges computed using the equal-N method.
     """
-    nbin = 20
+    nbin = 10
     npt = len(x)
     return np.interp(np.linspace(0, npt, nbin + 1),
                      np.arange(npt),
@@ -308,20 +308,6 @@ def get_label_between(label: str, limiters: List[str] = ['(', ')']) -> str:
 	s = label.split(limiters[0], 1)[1]
 	s = s.split(limiters[1], 1)[0]
 	return s
-
-
-"""
-clevels = ax.contour(xmesh,ymesh,H.T,lw=.9,cmap='winter')#,zorder=90)
-
-# Identify points within contours
-p = clevels.collections[0].get_paths()
-inside = np.full_like(x,False,dtype=bool)
-for level in p:
-    inside |= level.contains_points(zip(*(x,y)))
-
-ax.plot(x[~inside],y[~inside],'kx')
-"""
-
 
 output_datasets = [
     'N_particles',

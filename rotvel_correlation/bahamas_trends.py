@@ -111,14 +111,16 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 def ptype_label(axes: plt.Axes, x: tuple = None, y: tuple = None) -> List[str]:
 	plabel = []
 	if x and len(x) == 1:
-		plabel.append(f"{utils.get_label_between(ax.get_xlabel())}: {utils.partType_labels[x[0]]}")
+		l = ax.get_xlabel().split('\quad')[0] if '\quad' in ax.get_xlabel() else ax.get_xlabel()
+		plabel.append(f"{l}: {utils.partType_labels[x[0]]}")
 	elif x and len(x) == 2:
 		l1, l2 = utils.get_label_between(ax.get_xlabel()).split(',')
 		plabel.append(f"{l1}$: {utils.partType_labels[x[0]]}")
 		plabel.append(f"${l2}: {utils.partType_labels[x[1]]}")
 
 	if y and len(y) == 1:
-		plabel.append(f"{utils.get_label_between(ax.get_ylabel())}: {utils.partType_labels[y[0]]}")
+		l = ax.get_ylabel().split('\quad')[0] if '\quad' in ax.get_ylabel() else ax.get_ylabel()
+		plabel.append(f"{l}: {utils.partType_labels[y[0]]}")
 	elif y and len(y) == 2:
 		l1, l2 = utils.get_label_between(ax.get_ylabel()).split(',')
 		plabel.append(f"{l1}$: {utils.partType_labels[y[0]]}")
@@ -154,8 +156,7 @@ if __name__ == '__main__':
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
 	ax.set_ylabel(utils.datasets_names[y_dataset])
-	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
-	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
+	ptype_label(ax, x=(0), y=(0,0))
 	plt.axhline(90, color='grey', linestyle='-')
 	ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
