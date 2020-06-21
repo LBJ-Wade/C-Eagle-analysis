@@ -114,16 +114,16 @@ def snap_label(axes: plt.Axes, redshift: str, aperture: int) -> None:
 
 if __name__ == '__main__':
 	#-----------------------------------------------------------------
-	redshift = 'z001p750'
+	redshift = 'z001p000'
 	aperture = 0
-	x_dataset = 'b_l'
+	x_dataset = 'aperture_mass'
 	y_dataset = 'b_l'
 	ptype = (2,2)
-	axscales = ['linear', 'linear']
+	axscales = ['log', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
 
-	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 0,0]
+	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:,2]
 	y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
