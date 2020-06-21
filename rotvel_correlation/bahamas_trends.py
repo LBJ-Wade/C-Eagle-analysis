@@ -118,10 +118,12 @@ if __name__ == '__main__':
 	aperture = 20
 	x_dataset = 'aperture_mass'
 	y_dataset = 'b_l'
-	ptype = (2,2)
 	axscales = ['log', 'linear']
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
+	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)
+	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)
+
 	fig = plt.figure()
 	size = fig.get_size_inches()
 	size[1] *= 3
@@ -130,8 +132,9 @@ if __name__ == '__main__':
 
 
 	ax = fig.add_subplot(311)
-	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:,2]
-	y  = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
+	x_dat = x[:,0]
+	y_dat = y[:,0,0]
+	ptype = (0,0)
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
@@ -141,13 +144,14 @@ if __name__ == '__main__':
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
 	ax.set_yticks(np.arange(0, 210, 30))
-	kde_plot(ax, x, y, axscales = axscales, gridbins=400)
-	median_plot(ax, x, y, axscales = axscales, binning_method = 'equalnumber')
+	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
+	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
 
-	ax = fig.add_subplot(312,  sharex = ax)
-	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 2]
-	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
+	ax = fig.add_subplot(312, sharex=ax)
+	x_dat = x[:,1]
+	y_dat = y[:,1,1]
+	ptype = (1, 1)
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
@@ -157,13 +161,14 @@ if __name__ == '__main__':
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
 	ax.set_yticks(np.arange(0, 210, 30))
-	kde_plot(ax, x, y, axscales=axscales, gridbins=400)
-	median_plot(ax, x, y, axscales=axscales, binning_method='equalnumber')
+	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
+	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
 
-	ax = fig.add_subplot(313,  sharex = ax)
-	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 2]
-	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
+	ax = fig.add_subplot(313, sharex=ax)
+	x_dat = x[:,2]
+	y_dat = y[:,2,2]
+	ptype = (2, 2)
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
@@ -173,10 +178,9 @@ if __name__ == '__main__':
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
 	ax.set_yticks(np.arange(0, 210, 30))
-	kde_plot(ax, x, y, axscales=axscales, gridbins=400)
-	median_plot(ax, x, y, axscales=axscales, binning_method='equalnumber')
+	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
+	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
-
 
 
 	save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)
