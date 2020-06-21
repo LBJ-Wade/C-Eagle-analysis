@@ -131,7 +131,7 @@ if __name__ == '__main__':
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
 
-	ax = fig.add_subplot(311)
+	ax = fig.add_subplot(411)
 	x_dat = x[:,0]
 	y_dat = y[:,0,0]
 	ptype = (0,0)
@@ -148,7 +148,9 @@ if __name__ == '__main__':
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
 
-	ax = fig.add_subplot(312, sharex=ax)
+	plt.setp(ax.get_xticklabels(), visible=False)
+
+	ax = fig.add_subplot(412, sharex=ax)
 	x_dat = x[:,1]
 	y_dat = y[:,1,1]
 	ptype = (1, 1)
@@ -165,10 +167,37 @@ if __name__ == '__main__':
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
 
-	ax = fig.add_subplot(313, sharex=ax)
-	x_dat = x[:,2]
-	y_dat = y[:,2,2]
+	# remove last tick label for the second subplot
+	yticks = ax.yaxis.get_major_ticks()
+	yticks[-1].label1.set_visible(False)
+	plt.setp(ax.get_xticklabels(), visible=False)
+
+	ax = fig.add_subplot(413, sharex=ax)
+	x_dat = x[:, 2]
+	y_dat = y[:, 2, 2]
 	ptype = (2, 2)
+	ax.set_ylim(0, 180)
+	ax.set_xscale(axscales[0])
+	ax.set_yscale(axscales[1])
+	ax.set_xlabel(utils.datasets_names[x_dataset])
+	ax.set_ylabel(utils.datasets_names[y_dataset])
+	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
+	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
+	plt.axhline(90, color='grey', linestyle='-')
+	ax.set_yticks(np.arange(0, 210, 30))
+	kde_plot(ax, x_dat, y_dat, axscales=axscales, gridbins=400)
+	median_plot(ax, x_dat, y_dat, axscales=axscales, binning_method='equalnumber')
+	snap_label(ax, redshift, aperture)
+
+	# remove last tick label for the second subplot
+	yticks = ax.yaxis.get_major_ticks()
+	yticks[-1].label1.set_visible(False)
+	plt.setp(ax.get_xticklabels(), visible=False)
+
+	ax = fig.add_subplot(414, sharex=ax)
+	x_dat = x[:,3]
+	y_dat = y[:,3,3]
+	ptype = (3, 3)
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
@@ -182,5 +211,9 @@ if __name__ == '__main__':
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
 
+	# remove last tick label for the second subplot
+	yticks = ax.yaxis.get_major_ticks()
+	yticks[-1].label1.set_visible(False)
 
+	plt.subplots_adjust(hspace=.0)
 	save_plot(os.path.join(utils.basepath, figname), to_slack=True, dpi=400)
