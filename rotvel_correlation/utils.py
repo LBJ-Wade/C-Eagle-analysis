@@ -51,26 +51,26 @@ def read_snap_output(redshift: str, apertureID: int = None, dataset: str = None)
 	last_halo_id = int(last_halo_key[-5:])
 	clusterIDs = list(range(last_halo_id))
 
-	results = []
-	for i in clusterIDs:
-		results.append(pull_halo_output(h5file, i, apertureID, dataset))
+	# results = []
+	# for i in clusterIDs:
+	# 	results.append(pull_halo_output(h5file, i, apertureID, dataset))
 
-	# # Make the Pool of workers
-	# pool = ThreadPool(12)
-	# results = pool.starmap(
-	# 		pull_halo_output,
-	# 		zip(
-	# 				itertools.repeat(h5file),
-	# 				clusterIDs,
-	# 				itertools.repeat(apertureID),
-	# 				itertools.repeat(dataset)
-	# 		)
-	# )
-	#
-	# # Close the pool and wait for the work to finish
-	# h5file.close()
-	# pool.close()
-	# pool.join()
+	# Make the Pool of workers
+	pool = ThreadPool(12)
+	results = pool.starmap(
+			pull_halo_output,
+			zip(
+					itertools.repeat(h5file),
+					clusterIDs,
+					itertools.repeat(apertureID),
+					itertools.repeat(dataset)
+			)
+	)
+
+	# Close the pool and wait for the work to finish
+	h5file.close()
+	pool.close()
+	pool.join()
 	results_filtered = []
 	for x in results:
 		if isinstance(x, np.ndarray):
