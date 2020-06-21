@@ -123,6 +123,9 @@ if __name__ == '__main__':
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
 	fig = plt.figure()
+	size = fig.get_size_inches()
+	size[1] *= 3
+	fig.set_size_inches(size[0], size[1], forward=True)
 	figname = f'bahamas_hyd_alignment_{redshift}.png'
 
 
@@ -142,7 +145,7 @@ if __name__ == '__main__':
 	median_plot(ax, x, y, axscales = axscales, binning_method = 'equalnumber')
 	snap_label(ax, redshift, aperture)
 
-	ax = fig.add_subplot(312)
+	ax = fig.add_subplot(312,  sharex = ax)
 	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 2]
 	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 	ax.set_ylim(0, 180)
@@ -158,7 +161,7 @@ if __name__ == '__main__':
 	median_plot(ax, x, y, axscales=axscales, binning_method='equalnumber')
 	snap_label(ax, redshift, aperture)
 
-	ax = fig.add_subplot(313)
+	ax = fig.add_subplot(313,  sharex = ax)
 	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)[:, 2]
 	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)[:, ptype[0], ptype[1]]
 	ax.set_ylim(0, 180)
