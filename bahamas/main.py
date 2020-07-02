@@ -68,13 +68,14 @@ def run(redshift: str = None) -> None:
         record_benchmarks(REDSHIFT, ('compute', i, time_checkpoint(start_2)))
 
         # -----------------------------------------------------------------------
-        # Time it
-        halo_load_time.append((datetime.datetime.now() - start_1).total_seconds())
-        if number_halos < 5 or len(halo_load_time) < 6:
-            completion_time = sum(halo_load_time)/len(halo_load_time) * number_halos
-        else:
-            completion_time = sum(halo_load_time[-5:]) / 4 * (number_halos-i+1)
-        pprint(f"[x] ({len(halo_load_time):d}/{number_halos:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
+        if i%50 == 0:
+            # Time it
+            halo_load_time.append((datetime.datetime.now() - start_1).total_seconds())
+            if number_halos < 5 or len(halo_load_time) < 6:
+                completion_time = sum(halo_load_time)/len(halo_load_time) * number_halos
+            else:
+                completion_time = sum(halo_load_time[-5:]) / 4 * (number_halos-i+1)
+            pprint(f"[x] ({len(halo_load_time):d}/{number_halos:d}) Estimated completion time: {datetime.timedelta(seconds=completion_time)}")
         # -----------------------------------------------------------------------
 
     MPI.COMM_WORLD.Barrier()
