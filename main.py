@@ -75,6 +75,7 @@ def main():
     from bahamas import main as bah
     from rotvel_correlation import benchmarks
 
+    benchmarks.display(redshift='z001p750')
     for z in ['z000p000', 'z001p750', 'z001p000', 'z000p500']:
         bah.run(redshift=z)
         benchmarks.display(redshift=z)
