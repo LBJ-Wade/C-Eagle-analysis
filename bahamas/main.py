@@ -44,21 +44,21 @@ def run(redshift: str = None) -> None:
     snap_partgn = snap_groupnumbers(fofgroups = fofs)
 
     for i in range(number_halos):
-
-        # Extract data from subfind output
-        start_1 = datetime.datetime.now()
-        halo_data = cluster_data(i, header, fofgroups=fofs, groupNumbers=snap_partgn)
-        record_benchmarks(REDSHIFT, ('load', i, time_checkpoint(start_1)))
-
-        # Parse data into Cluster object
-        start_2 = datetime.datetime.now()
-        cluster = Cluster.from_dict(simulation_name='bahamas', data=halo_data)
-        del halo_data
-
-        # Try pushing results into an h5 file
         try:
+            # Extract data from subfind output
+            start_1 = datetime.datetime.now()
+            halo_data = cluster_data(i, header, fofgroups=fofs, groupNumbers=snap_partgn)
+            record_benchmarks(REDSHIFT, ('load', i, time_checkpoint(start_1)))
+
+            # Parse data into Cluster object
+            start_2 = datetime.datetime.now()
+            cluster = Cluster.from_dict(simulation_name='bahamas', data=halo_data)
+            del halo_data
+
+            # Try pushing results into an h5 file
             halo_report = save_report(cluster)
             del cluster
+
         except:
             pprint(f"[-] ERROR Processing cluster{i} failed")
         else:
