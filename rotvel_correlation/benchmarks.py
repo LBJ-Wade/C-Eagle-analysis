@@ -4,7 +4,11 @@ import slack
 from matplotlib import pyplot as plt
 from scipy.optimize import curve_fit
 
-# Plotting controls
+# Plotting controls and change directory in script directory
+import os
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
 plt.style.use("mnras.mplstyle")
 
 pathSave = '/local/scratch/altamura/analysis_results/bahamas_timing/'
