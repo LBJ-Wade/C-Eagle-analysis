@@ -1,18 +1,16 @@
-import os
 import warnings
 import datetime
 from mpi4py import MPI
 warnings.filterwarnings("ignore")
 
-def main():
+def run(redshift: str = None) -> None:
     from .__init__ import pprint
     from .read import (
         find_files,
         fof_header,
         fof_groups,
         snap_groupnumbers,
-        cluster_data,
-        glance_cluster
+        cluster_data
     )
     from .utils import (
         file_benchmarks,
@@ -26,14 +24,12 @@ def main():
 
     # -----------------------------------------------------------------------
     # Set simulation parameters
-    REDSHIFT = 'z000p500'
+    REDSHIFT = redshift
 
-    # -----------------------------------------------------------------------
     # Initialise benchmarks
     file_benchmarks(REDSHIFT)
     halo_load_time = []
 
-    # -----------------------------------------------------------------------
     # Initialise snapshot output file
     snap_file = report_file(REDSHIFT)
 

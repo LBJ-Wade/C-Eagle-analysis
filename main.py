@@ -73,9 +73,11 @@ def time_func(function):
 def main():
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
     from bahamas import main as bah
-    from macsis import main as mac
-    bah.main()
-    # mac.main()
+    from rotvel_correlation import benchmarks
+
+    for z in ['z001p750', 'z001p000', 'z000p500', 'z000p000']:
+        bah.run(redshift=z)
+        benchmarks.display(redshift=z)
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser()
