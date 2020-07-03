@@ -75,10 +75,10 @@ def main():
     from bahamas import main as bah
     from rotvel_correlation import benchmarks
 
-    benchmarks.display(redshift='z001p750')
-    for z in ['z000p000', 'z001p750', 'z001p000', 'z000p500']:
+    if rank==0: benchmarks.display(redshift='z000p000')
+    for z in ['z000p500', 'z000p000', 'z001p750', 'z001p000']:
         bah.run(redshift=z)
-        benchmarks.display(redshift=z)
+        if rank==0: benchmarks.display(redshift=z)
 
 if __name__ == "__main__":
     my_parser = argparse.ArgumentParser()
