@@ -118,7 +118,7 @@ if __name__ == '__main__':
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
 	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)
-	y = np.abs(np.cos(utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)))
+	y = np.abs(np.cos(2*np.pi/180*utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)))
 
 	fig = plt.figure()
 	size = fig.get_size_inches()
