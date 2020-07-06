@@ -411,6 +411,60 @@ output_labels = [
     r'$\mathbf{v}_{p}\quad$[km\,s$^{-1}$]'
 ]
 
+def output_labels_F(parTtype:str=None)->str:
+	superscript = f"({parTtype})"
+	output_labels = [
+			r'$N_\mathrm{particles}$',
+			r'$N_{sub}$',
+			r'$\Omega_0$',
+			r'$\Omega_b$',
+			r'$\Omega_\Lambda$',
+			r'$|\mathbf{a}_\mathcal{I} \cdot \mathbf{J}|',
+			r'$|\mathbf{a}_\mathcal{I} \cdot \mathbf{v}_p|',
+			r'$|\mathbf{a}_\mathcal{I} \cdot \mathbf{\omega}|',
+			r'$\mathbf{J}$',
+			r'$\mathbf{\omega}$',
+			r'$M_\mathrm{aperture}\quad$[M$_\odot$]',
+			r'$\theta(\mathbf{b}_\mathcal{I}, \mathbf{J})\quad$[degrees]',
+			r'$\theta(\mathbf{b}_\mathcal{I}, \mathbf{v}_p)\quad$[degrees]',
+			r'$\theta(\mathbf{b}_\mathcal{I}, \mathbf{\omega})\quad$[degrees]',
+			r'$\theta(\mathbf{c}_\mathcal{I}, \mathbf{J})\quad$[degrees]',
+			r'$\theta(\mathbf{c}_\mathcal{I}, \mathbf{v}_p)\quad$[degrees]',
+			r'$\theta(\mathbf{c}_\mathcal{I}, \mathbf{\omega})\quad$[degrees]',
+			r'Centre of mass',
+			r'Centre of potential',
+			r'Circular velocity$\quad$[km\,s$^{-1}$]',
+			r'Dynamical merging index',
+			r'Eigenvalues',
+			r'Eigenvectors',
+			r'Elongation',
+			r'h',
+			r'$inertia_tensor$',
+			r'$kinetic_energy$',
+			r'$\theta(\mathbf{J}, \mathbf{\omega})\quad$[degrees]',
+			r'$M_{200}\quad$[M$_\odot$]',
+			r'$M_{2500}\quad$[M$_\odot$]',
+			r'$M_{500}\quad$[M$_\odot$]',
+			r'$M_{FoF}\quad$[M$_\odot$]',
+			r'$R_{200}\quad$[Mpc]',
+			r'$R_{2500}\quad$[Mpc]',
+			r'$R_{500}\quad$[Mpc]',
+			r'$R_\mathrm{aperture}\quad$[Mpc]',
+			r'Redshift',
+			r'$J/M$',
+			r'Sphericity',
+			r'Spin parameter',
+			r'$M_{sub}/M$',
+			r'$M_{sub}\quad$[M$_\odot$]',
+			r'Thermal energy',
+			r'Thermodynamic merging index',
+			r'Triaxiality',
+			r'$\theta(\mathbf{v}_p, \mathbf{J})\quad$[degrees]',
+			r'$\theta(\mathbf{v}_p, \mathbf{\omega})\quad$[degrees]',
+			r'$\mathbf{v}_{p}\quad$[km\,s$^{-1}$]'
+	]
+
+
 datasets_names = dict(zip(output_datasets, output_labels))
 
 aperture_labels = [
