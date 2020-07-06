@@ -128,7 +128,7 @@ if __name__ == '__main__':
 
 
 	ax = fig.add_subplot(411)
-	x_dat = x[:,0]
+	x_dat = x
 	y_dat = y[:,0,0]
 	ptype = (0,0)
 	# ax.set_ylim(0, 1)
@@ -146,7 +146,7 @@ if __name__ == '__main__':
 	plt.setp(ax.get_xticklabels(), visible=False)
 
 	ax = fig.add_subplot(412, sharex=ax)
-	x_dat = x[:,0]
+	x_dat = x
 	y_dat = y[:,1,1]
 	ptype = (1, 1)
 	# ax.set_ylim(0, 1)
@@ -166,7 +166,7 @@ if __name__ == '__main__':
 	plt.setp(ax.get_xticklabels(), visible=False)
 
 	ax = fig.add_subplot(413, sharex=ax)
-	x_dat = x[:, 0]
+	x_dat = x
 	y_dat = y[:, 2, 2]
 	ptype = (2, 2)
 	# ax.set_ylim(0, 1)
@@ -186,7 +186,7 @@ if __name__ == '__main__':
 	plt.setp(ax.get_xticklabels(), visible=False)
 
 	ax = fig.add_subplot(414, sharex=ax)
-	x_dat = x[:,0]
+	x_dat = x
 	y_dat = y[:,3,3]
 	ptype = (3, 3)
 	# ax.set_ylim(0, 1)
