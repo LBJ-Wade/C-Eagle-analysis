@@ -137,7 +137,7 @@ if __name__ == '__main__':
 	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
-	plt.axhline(90, color='grey', linestyle='-')
+	# plt.axhline(90, color='grey', linestyle='-')
 	# ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
@@ -155,7 +155,7 @@ if __name__ == '__main__':
 	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
-	plt.axhline(90, color='grey', linestyle='-')
+	# plt.axhline(90, color='grey', linestyle='-')
 	# ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
@@ -175,7 +175,7 @@ if __name__ == '__main__':
 	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
-	plt.axhline(90, color='grey', linestyle='-')
+	# plt.axhline(90, color='grey', linestyle='-')
 	# ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales=axscales, gridbins=400)
 	median_plot(ax, x_dat, y_dat, axscales=axscales, binning_method='equalnumber')
@@ -196,7 +196,7 @@ if __name__ == '__main__':
 	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
-	plt.axhline(90, color='grey', linestyle='-')
+	# plt.axhline(90, color='grey', linestyle='-')
 	# ax.set_yticks(np.arange(0, 210, 30))
 	kde_plot(ax, x_dat, y_dat, axscales = axscales, gridbins=400)
 	median_plot(ax, x_dat, y_dat, axscales = axscales, binning_method = 'equalnumber')
