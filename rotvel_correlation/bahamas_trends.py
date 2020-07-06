@@ -118,7 +118,7 @@ if __name__ == '__main__':
 	# Remember to change the dataset slicing as appropriate to the dataset
 	#-----------------------------------------------------------------
 	x = utils.read_snap_output(redshift, apertureID=aperture, dataset=x_dataset)
-	y = utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)
+	y = np.abs(np.cos(utils.read_snap_output(redshift, apertureID=aperture, dataset=y_dataset)))
 
 	fig = plt.figure()
 	size = fig.get_size_inches()
@@ -134,7 +134,7 @@ if __name__ == '__main__':
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
-	ax.set_ylabel(utils.datasets_names[y_dataset])
+	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
@@ -152,7 +152,7 @@ if __name__ == '__main__':
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
-	ax.set_ylabel(utils.datasets_names[y_dataset])
+	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
@@ -172,7 +172,7 @@ if __name__ == '__main__':
 	ax.set_ylim(0, 180)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
-	ax.set_ylabel(utils.datasets_names[y_dataset])
+	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
@@ -193,7 +193,7 @@ if __name__ == '__main__':
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
 	ax.set_xlabel(utils.datasets_names[x_dataset])
-	ax.set_ylabel(utils.datasets_names[y_dataset])
+	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
 	plabel = f"$({utils.get_label_between(ax.get_ylabel())})$ = ({utils.partType_labels[ptype[0]]}, {utils.partType_labels[ptype[1]]})"
 	ax.text(0.03, 0.03, plabel, transform=ax.transAxes, horizontalalignment='left', verticalalignment='bottom')
 	plt.axhline(90, color='grey', linestyle='-')
