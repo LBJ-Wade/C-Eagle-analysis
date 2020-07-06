@@ -131,7 +131,7 @@ if __name__ == '__main__':
 	x_dat = x[:,0]
 	y_dat = y[:,0,0]
 	ptype = (0,0)
-	ax.set_ylim(0, 180)
+	ax.set_ylim(0, 1)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
 	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
@@ -149,7 +149,7 @@ if __name__ == '__main__':
 	x_dat = x[:,0]
 	y_dat = y[:,1,1]
 	ptype = (1, 1)
-	ax.set_ylim(0, 180)
+	ax.set_ylim(0, 1)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
 	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
@@ -169,7 +169,7 @@ if __name__ == '__main__':
 	x_dat = x[:, 0]
 	y_dat = y[:, 2, 2]
 	ptype = (2, 2)
-	ax.set_ylim(0, 180)
+	ax.set_ylim(0, 1)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
 	ax.set_ylabel("|cos("+utils.datasets_names[y_dataset]+")|")
@@ -189,7 +189,7 @@ if __name__ == '__main__':
 	x_dat = x[:,0]
 	y_dat = y[:,3,3]
 	ptype = (3, 3)
-	ax.set_ylim(0, 180)
+	ax.set_ylim(0, 1)
 	ax.set_xscale(axscales[0])
 	ax.set_yscale(axscales[1])
 	ax.set_xlabel(utils.datasets_names[x_dataset])
