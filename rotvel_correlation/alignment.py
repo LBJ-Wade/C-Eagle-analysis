@@ -2,12 +2,11 @@ import sys
 import os
 import warnings
 import numpy as np
-from typing import Dict, List
+from typing import Dict
 from copy import deepcopy
 from itertools import product
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from import_toolkit.cluster import Cluster
-from save import dict2hdf as write
 angle = deepcopy(Cluster.angle_between_vectors)
 
 def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.ndarray]:
@@ -90,17 +89,13 @@ def group_alignment(groupreport: Dict[str, np.ndarray] = None) -> Dict[str, np.n
 		c_a[i, j] = angle(c_vec[i], a_vec[j])
 
 	# Check eigenvector orthogonality
-	for i in range(4):
-		a_b[i, i] -= 90.
-		b_c[i, i] -= 90.
-		c_a[i, i] -= 90.
+	# Angle should be 90 deg, hence cosine zero
 	if (
-			int(np.trace(a_b)) is not 0 or
-			int(np.trace(b_c)) is not 0 or
-			int(np.trace(c_a))
+			round(float(np.trace(a_b)), 2) != 0. or
+			round(float(np.trace(b_c)), 2) != 0. or
+			round(float(np.trace(c_a)), 2) != 0.
 	):
 		warnings.warn('[-] Detected non-orthogonal semiaxes. Check inertia tensor.')
-		print(a_b, b_c, c_a, sep='\n')
 
 	angle_dict = {
 			'v_l' : v_l,
@@ -124,16 +119,20 @@ def save_report(cluster: Cluster) -> dict:
 	apertures = cluster.generate_apertures()
 	master_dict = {}
 	for i, r_a in enumerate(apertures):
-		halo_output = {
-				**cluster.group_fofinfo(aperture_radius=r_a),
-				**cluster.group_dynamics(aperture_radius=r_a),
-				**cluster.group_morphology(aperture_radius=r_a)
-		}
-		alignment_dict = group_alignment(halo_output)
-		halo_output = {
-				**halo_output,
-				**alignment_dict
-		}
-		master_dict[f'aperture{i:02d}'] = halo_output
-		del alignment_dict, halo_output
+		try:
+			halo_output = {
+					**cluster.group_fofinfo(aperture_radius=r_a),
+					**cluster.group_dynamics(aperture_radius=r_a),
+					**cluster.group_morphology(aperture_radius=r_a)
+			}
+			alignment_dict = group_alignment(halo_output)
+		except:
+			warnings.warn('[-] An exception occurred when computing the cluster reports.')
+		else:
+			halo_output = {
+					**halo_output,
+					**alignment_dict
+			}
+			master_dict[f'aperture{i:02d}'] = halo_output
+			del alignment_dict, halo_output
 	return master_dict

@@ -251,6 +251,68 @@ def cluster_partgroupnumbers(fofgroup: Dict[str, np.ndarray] = None, groupNumber
 			del gn_cores, gn_comm
 	return pgn
 
+def snap_coordinates(fofgroups: Dict[str, np.ndarray] = None):
+	"""
+
+	:param fofgroups:
+	:return:
+	"""
+	coords_allpt = []
+	with h5.File(fofgroups['particlefiles'], 'r') as h5file:
+
+		for pt in ['0', '1', '4']:
+			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
+			st, fh = split(Nparticles)
+			pprint(f"[+] Collecting particleType {pt} coordinates...")
+			coords_cores = h5file[f'/PartType{pt}/Coordinates'][st:fh]
+			coords_pt = commune(coords_cores)
+			coords_allpt.append(coords_pt)
+			del coords_pt
+
+	return coords_allpt
+
+def cluster_partapertures(fofgroup: Dict[str, np.ndarray] = None, coordinatesAll: List[np.ndarray] = None):
+	"""
+
+	:param fofgroup:
+	:param groupNumbers:
+	:return:
+	"""
+	# pprint(f"[+] Find particle groupnumbers for cluster {fofgroup['clusterID']}")
+	block_all = []
+	partTypes = ['0', '1', '4']
+	with h5.File(fofgroup['particlefiles'], 'r') as h5file:
+		for pt in partTypes:
+
+			Nparticles = h5file['Header'].attrs['NumPart_ThisFile'][int(pt)]
+			st, fh = split(Nparticles)
+			coords = coordinatesAll[partTypes.index(pt)][st:fh]
+
+			# Periodic boundary wrapping of particle coordinates
+			boxsize = h5file['Header'].attrs['BoxSize']
+			for coord_axis in range(3):
+				# Right boundary
+				if fofgroup['COP'][coord_axis] + 5 * fofgroup['R200'] > boxsize:
+					beyond_index = np.where(coords[:, coord_axis] < boxsize / 2)[0]
+					coords[beyond_index, coord_axis] += boxsize
+					del beyond_index
+				# Left boundary
+				elif fofgroup['COP'][coord_axis] - 5 * fofgroup['R200'] < 0.:
+					beyond_index = np.where(coords[:, coord_axis] > boxsize / 2)[0]
+					coords[beyond_index, coord_axis] -= boxsize
+					del beyond_index
+
+			block_idx = np.where(
+					(np.abs(coords[:, 0] - fofgroup['COP'][0]) < 5 * fofgroup['R200']) &
+					(np.abs(coords[:, 1] - fofgroup['COP'][1]) < 5 * fofgroup['R200']) &
+					(np.abs(coords[:, 2] - fofgroup['COP'][2]) < 5 * fofgroup['R200'])
+			)[0] + st
+			block_idx_comm = commune(block_idx)
+			block_all.append(block_idx_comm)
+			del block_idx_comm
+
+	return block_all
+
 def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List[np.ndarray] = None):
 	"""
 
@@ -313,7 +375,7 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 
 			# Gather the imports across cores
 			data_out[f'partType{pt}'] = {}
-			data_out[f'partType{pt}']['subgroupnumber'] = commune(subgroup_number)
+			data_out[f'partType{pt}']['subgroupnumber']  = commune(subgroup_number)
 			data_out[f'partType{pt}']['velocity']        = commune(velocity.reshape(-1, 1)).reshape(-1, 3)
 			data_out[f'partType{pt}']['coordinates']     = commune(coordinates.reshape(-1, 1)).reshape(-1, 3)
 			data_out[f'partType{pt}']['mass']            = commune(mass)
@@ -347,7 +409,8 @@ def cluster_particles(fofgroup: Dict[str, np.ndarray] = None, groupNumbers: List
 def cluster_data(clusterID: int,
                  header: Dict[str, float] = None,
                  fofgroups: Dict[str, np.ndarray] = None,
-                 groupNumbers: List[np.ndarray] = None):
+                 groupNumbers: List[np.ndarray] = None,
+                 coordinates: List[np.ndarray] = None):
 	"""
 
 	:param clusterID:
@@ -358,7 +421,8 @@ def cluster_data(clusterID: int,
 	"""
 	pprint(f"[+] Running cluster {clusterID}")
 	group_data  = fof_group(clusterID, fofgroups = fofgroups)
-	halo_partgn = cluster_partgroupnumbers(fofgroup=group_data, groupNumbers=groupNumbers)
+	# halo_partgn = cluster_partgroupnumbers(fofgroup=group_data, groupNumbers=groupNumbers)
+	halo_partgn = cluster_partapertures(fofgroup=group_data, coordinatesAll=coordinates)
 	part_data   = cluster_particles(fofgroup=group_data, groupNumbers= halo_partgn)
 
 	out = {}

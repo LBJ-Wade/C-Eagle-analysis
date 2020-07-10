@@ -295,6 +295,19 @@ class Mixin:
 				'dynamical_merging_index'    : dynamical_merging_index[::-1],
 				'thermodynamic_merging_index': thermodynamic_merging_index[::-1]
 		}
+
+		# WARNINGS
+		if dynamic_dict['N_particles'][0] == 0:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | N_particles is 0. No particles detected.')
+		if dynamic_dict['aperture_mass'][0] == 0:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | aperture_mass is 0. No mass enclosed.')
+		if dynamic_dict['dynamical_merging_index'][0] > 1:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | dynamical_merging_index larger than 1.')
+		if dynamic_dict['thermodynamic_merging_index'][0] > 1:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | thermodynamic_merging_index larger than 1.')
+		if dynamic_dict['substructure_fraction'][0] > 1:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | substructure_fraction larger than 1.')
+
 		return dynamic_dict
 
 	def group_morphology(self, aperture_radius: float = None) -> Dict[str, np.ndarray]:
@@ -437,5 +450,13 @@ class Mixin:
 				'sphericity'    : sphericity[::-1],
 				'elongation'    : elongation[::-1],
 		}
-		return morphology_dict
 
+		# WARNINGS
+		if morphology_dict['triaxiality'][0] > 1:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | triaxiality larger than 1.')
+		if morphology_dict['sphericity'][0] > 1:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | sphericity larger than 1.')
+		if morphology_dict['elongation'][0] > 1:
+			warnings.warn(f'[-] Aperture: {aperture_radius:2.2f} Mpc | elongation larger than 1.')
+
+		return morphology_dict

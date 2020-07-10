@@ -31,27 +31,22 @@ class Mixin:
 
     @staticmethod
     def angle_between_vectors(v1, v2):
-        # v1 is your firsr vector
-        # v2 is your second vector
-
+        """
+        :param v1: v1 is your first vector
+        :param v2: v2 is your second vector
+        :return: Returns the cosine of the angle
+        """
         v1 = np.array(v1)
         v2 = np.array(v2)
-
         # If the vectors are almost equal, then the arccos returns nan because of numerical
         # precision: catch that case and return 0 angle instead.
         if np.abs(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)) - 1) < 1e-14:
-            # print(f"[ Angle between vectors]\t==> Warning: the vectors {v1} and {v2} are very well aligned to better "
-            #       f"than 1e-12. The separation angle has therefore been set to 0. deg")
-            angle = 0.
+            angle = 1.
         elif np.abs(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)) + 1) < 1e-14:
-            # print(f"[ Angle between vectors]\t==> Warning: the vectors {v1} and {v2} are very well anti-aligned to "
-            #       f"better "
-            #       f"than 1e-12. The separation angle has therefore been set to 180. deg")
-            angle = np.pi
+            angle = -1.
         else:
-            angle = np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
-        # Return the result in degrees
-        return angle * 180 / np.pi
+            angle = np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2))
+        return angle
 
     def radial_distance_CoP(self, coords):
         coords = np.asarray(coords)
