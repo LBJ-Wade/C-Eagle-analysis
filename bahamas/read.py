@@ -265,6 +265,7 @@ def snap_coordinates(fofgroups: Dict[str, np.ndarray] = None):
 			st, fh = split(Nparticles)
 			pprint(f"[+] Collecting particleType {pt} coordinates...")
 			coords_cores = h5file[f'/PartType{pt}/Coordinates'][st:fh]
+			print(coords_cores[0])
 			coords_pt = commune(coords_cores.reshape(-1, 1)).reshape(-1, 3)
 			coords_allpt.append(coords_pt)
 			del coords_pt
